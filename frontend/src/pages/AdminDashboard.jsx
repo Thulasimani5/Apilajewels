@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search } from 'lucide-react';
+import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import CategoryContext from '../context/CategoryContext';
 import { useContext } from 'react';
@@ -31,7 +31,7 @@ const AdminDashboard = () => {
       const fetchJewels = async () => {
         setAdminJewelleriesLoading(true);
         try {
-          const res = await fetch(`http://localhost:5000/api/jewellery?category=${encodeURIComponent(selectedAdminCategory)}&limit=500`);
+          const res = await fetch(`http://localhost:5001/api/jewellery?category=${encodeURIComponent(selectedAdminCategory)}&limit=500`);
           const result = await res.json();
           if (result.success) {
             setAdminJewelleries(result.data);
@@ -49,7 +49,7 @@ const AdminDashboard = () => {
   const handleDeleteJewel = async (id) => {
     if (!window.confirm("Are you sure you want to delete this jewel?")) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/jewellery/${id}`, {
+      const res = await fetch(`http://localhost:5001/api/jewellery/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -68,7 +68,7 @@ const AdminDashboard = () => {
       const fetchUsers = async () => {
         setUsersLoading(true);
         try {
-          const res = await fetch('http://localhost:5000/api/auth/users', {
+          const res = await fetch('http://localhost:5001/api/auth/users', {
             headers: { 'Authorization': `Bearer ${token}` }
           });
           const result = await res.json();
@@ -176,7 +176,9 @@ const AdminDashboard = () => {
     stoneName: [],
     stoneColour: ''
   });
-  const [mediaList, setMediaList] = useState([{ type: 'image', file: null }]);
+  const [mediaList, setMediaList] = useState([]);
+  const [dragActive, setDragActive] = useState(false);
+  const [draggedItemIndex, setDraggedItemIndex] = useState(null);
 
   const [loading, setLoading] = useState(false);
 
@@ -184,6 +186,7 @@ const AdminDashboard = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+<<<<<<< HEAD
   // Map stones to default colours
   const stoneColourMap = {
     "Crystal": "Clear",
@@ -210,22 +213,74 @@ const AdminDashboard = () => {
 
   const addMediaField = () => {
     setMediaList([...mediaList, { type: 'image', file: null }]);
+=======
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const addedFiles = Array.from(e.dataTransfer.files);
+      addFilesToList(addedFiles);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const addedFiles = Array.from(e.target.files);
+      addFilesToList(addedFiles);
+    }
+  };
+
+  const addFilesToList = (files) => {
+    const updatedMedia = [...mediaList];
+    files.forEach(file => {
+      const isVideo = file.type.startsWith('video/');
+      const isImage = file.type.startsWith('image/');
+      if (isVideo || isImage) {
+        updatedMedia.push({
+          type: isVideo ? 'video' : 'image',
+          file: file
+        });
+      }
+    });
+    setMediaList(updatedMedia);
+  };
+
+  const handlePreviewDragStart = (e, index) => {
+    setDraggedItemIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handlePreviewDragOver = (e, index) => {
+    e.preventDefault();
+  };
+
+  const handlePreviewDrop = (e, targetIndex) => {
+    e.preventDefault();
+    if (draggedItemIndex === null || draggedItemIndex === targetIndex) return;
+
+    const updatedMedia = [...mediaList];
+    const [movedItem] = updatedMedia.splice(draggedItemIndex, 1);
+    updatedMedia.splice(targetIndex, 0, movedItem);
+    
+    setMediaList(updatedMedia);
+    setDraggedItemIndex(null);
+>>>>>>> 185d7ab (adminpage image dropdown)
   };
 
   const removeMediaField = (index) => {
     const newList = mediaList.filter((_, i) => i !== index);
-    setMediaList(newList);
-  };
-
-  const handleMediaTypeChange = (index, value) => {
-    const newList = [...mediaList];
-    newList[index].type = value;
-    setMediaList(newList);
-  };
-
-  const handleMediaFileChange = (index, file) => {
-    const newList = [...mediaList];
-    newList[index].file = file;
     setMediaList(newList);
   };
 
@@ -262,7 +317,7 @@ const AdminDashboard = () => {
         }
       });
 
-      const url = editingId ? `http://localhost:5000/api/jewellery/${editingId}` : 'http://localhost:5000/api/jewellery';
+      const url = editingId ? `http://localhost:5001/api/jewellery/${editingId}` : 'http://localhost:5001/api/jewellery';
       const method = editingId ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
@@ -289,7 +344,7 @@ const AdminDashboard = () => {
           purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: '',
           stoneName: [], stoneColour: ''
         });
-        setMediaList([{ type: 'image', file: null }]);
+        setMediaList([]);
       } else {
         const err = await res.json();
         alert('Error: ' + err.error);
@@ -411,7 +466,7 @@ const AdminDashboard = () => {
                           material: '', size: '', finish: '',
                           purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: ''
                         });
-                        setMediaList([{ type: 'image', file: null }]);
+                        setMediaList([]);
                         setShowAddForm(true);
                       }}
                       className="flex items-center gap-2 bg-[#B07A85] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#9E6A75] transition-colors shadow-sm"
@@ -458,7 +513,7 @@ const AdminDashboard = () => {
                           material: '', size: '', finish: '',
                           purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: ''
                         });
-                        setMediaList([{ type: 'image', file: null }]);
+                        setMediaList([]);
                         setShowAddForm(true);
                       }}
                       className="flex items-center gap-2 bg-[#B07A85] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#9E6A75] transition-colors shadow-sm"
@@ -741,53 +796,144 @@ const AdminDashboard = () => {
                   </div>
                 </div>
 
-                {/* Media Fields - Dynamic File Upload */}
-                <div className="border border-gray-200 rounded-lg p-4 bg-gray-50/50">
-                  <div className="flex justify-between items-center mb-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Upload Media (Images & Videos) {editingId ? '' : '*'}</label>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {editingId ? "Leave empty to keep existing media, or add new items to append." : "First item MUST be an image. Click 'Add Media' to add more."}
-                      </p>
+                {/* Media Fields - Modern Drag & Drop Uploader */}
+                <div className="border border-gray-200 rounded-lg p-5 bg-gray-50/50">
+                  <div className="mb-4">
+                    <label className="block text-sm font-semibold text-gray-800">Upload Media (Images & Videos) {editingId ? '' : '*'}</label>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {editingId ? "Leave empty to keep existing media, or drag & drop files to append." : "First item MUST be an image. Drag and drop multiple files to upload."}
+                    </p>
+                  </div>
+
+                  {/* Drag and Drop Zone */}
+                  <div 
+                    onDragEnter={handleDrag}
+                    onDragOver={handleDrag}
+                    onDragLeave={handleDrag}
+                    onDrop={handleDrop}
+                    onClick={() => document.getElementById('media-file-input').click()}
+                    className={`relative border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center cursor-pointer transition-all duration-200 min-h-[160px] text-center ${
+                      dragActive 
+                        ? 'border-[#B07A85] bg-[#FFF8F3] scale-[0.99] shadow-inner' 
+                        : 'border-gray-300 bg-white hover:border-[#B07A85] hover:bg-gray-50/50 hover:shadow-sm'
+                    }`}
+                  >
+                    <input 
+                      id="media-file-input"
+                      type="file" 
+                      multiple 
+                      accept="image/*,video/*"
+                      onChange={handleFileChange}
+                      className="hidden" 
+                    />
+                    
+                    <div className="w-12 h-12 rounded-full bg-[#FFF8F3] flex items-center justify-center mb-3 text-[#B07A85]">
+                      <Upload size={22} className="animate-bounce" style={{ animationDuration: '2s' }} />
                     </div>
-                    <button type="button" onClick={addMediaField} className="text-xs flex items-center gap-1 text-[#B07A85] font-medium hover:text-[#9E6A75] bg-white border border-gray-200 px-3 py-1.5 rounded-md shadow-sm">
-                      <Plus size={14} /> Add Media
-                    </button>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    {mediaList.map((media, index) => (
-                      <div key={index} className="flex gap-3 items-center bg-white p-3 rounded-md border border-gray-100 shadow-sm">
-                        <span className="text-xs font-semibold text-gray-400 w-4">{index + 1}.</span>
-                        <select 
-                          value={media.type} 
-                          onChange={(e) => handleMediaTypeChange(index, e.target.value)}
-                          className="w-24 px-2 py-1.5 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm bg-white"
-                        >
-                          <option value="image">Image</option>
-                          <option value="video">Video</option>
-                        </select>
-                        <div className="flex-1">
-                          <input 
-                            type="file" 
-                            accept={media.type === 'image' ? 'image/png, image/svg+xml, image/jpeg, image/webp' : 'video/mp4, video/webm, video/quicktime'}
-                            onChange={(e) => handleMediaFileChange(index, e.target.files[0])}
-                            className="block w-full text-xs text-gray-500
-                              file:mr-3 file:py-1.5 file:px-3
-                              file:rounded-md file:border-0
-                              file:text-xs file:font-medium
-                              file:bg-[#FFF8F3] file:text-[#B07A85]
-                              hover:file:bg-gray-100 transition-colors"
-                          />
-                        </div>
-                        {mediaList.length > 1 && (
-                          <button type="button" onClick={() => removeMediaField(index)} className="p-1.5 text-gray-400 hover:text-red-500 transition-colors rounded-md hover:bg-red-50">
-                            <X size={16} />
-                          </button>
-                        )}
+                    
+                    <p className="text-sm font-semibold text-gray-700">
+                      Drag & drop images/videos here, or <span className="text-[#B07A85] underline">browse files</span>
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Supports PNG, JPG, WEBP, MP4, WEBM
+                    </p>
+
+                    {dragActive && (
+                      <div className="absolute inset-0 rounded-xl bg-[#B07A85]/5 flex items-center justify-center pointer-events-none">
+                        <span className="text-[#B07A85] font-bold text-sm bg-white px-4 py-2 rounded-lg shadow-md border border-[#B07A85]/20 animate-pulse">
+                          Drop files here!
+                        </span>
                       </div>
-                    ))}
+                    )}
                   </div>
+
+                  {/* Dynamic Preview Grid */}
+                  {mediaList.length > 0 && (
+                    <div className="mt-6 space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Added Media ({mediaList.length})</span>
+                        <button 
+                          type="button" 
+                          onClick={() => setMediaList([])}
+                          className="text-xs font-semibold text-red-500 hover:text-red-700 transition-colors"
+                        >
+                          Clear All
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {mediaList.map((media, index) => {
+                          const isVideo = media.type === 'video';
+                          const fileUrl = media.file ? URL.createObjectURL(media.file) : '';
+
+                          return (
+                             <div 
+                               key={index} 
+                               draggable="true"
+                               onDragStart={(e) => handlePreviewDragStart(e, index)}
+                               onDragOver={(e) => handlePreviewDragOver(e, index)}
+                               onDrop={(e) => handlePreviewDrop(e, index)}
+                               className={`relative group border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-all aspect-square flex flex-col justify-between cursor-grab active:cursor-grabbing ${
+                                 draggedItemIndex === index ? 'opacity-40 border-[#B07A85]' : ''
+                               }`}
+                               onClick={(e) => e.stopPropagation()}
+                             >
+                              
+                              {/* Order Badge */}
+                              <div className="absolute top-2 left-2 z-10 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-full backdrop-blur-sm">
+                                Slot {index + 1} {index === 0 && !editingId && " (Cover)"}
+                              </div>
+
+                              {/* Remove Button */}
+                              <button 
+                                type="button" 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  removeMediaField(index);
+                                }}
+                                className="absolute top-2 right-2 z-10 w-6 h-6 rounded-full bg-red-50 hover:bg-red-500 text-red-500 hover:text-white flex items-center justify-center transition-all shadow-sm"
+                              >
+                                <X size={14} />
+                              </button>
+
+                              {/* Thumbnail */}
+                              <div className="flex-1 w-full bg-gray-50 flex items-center justify-center overflow-hidden">
+                                {isVideo ? (
+                                  <div className="relative w-full h-full">
+                                    <video src={fileUrl} className="w-full h-full object-cover" muted playsInline />
+                                    <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
+                                      <div className="w-8 h-8 rounded-full bg-black/60 text-white flex items-center justify-center backdrop-blur-sm">
+                                        <Film size={16} />
+                                      </div>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <img src={fileUrl} alt="Preview" className="w-full h-full object-cover" />
+                                )}
+                              </div>
+
+                              {/* Bottom label */}
+                              <div className="p-2 border-t border-gray-100 bg-gray-50 text-[10px] text-gray-500 truncate flex justify-between items-center font-medium">
+                                <span className="truncate max-w-[70%]">{media.file?.name}</span>
+                                <span className={`px-1.5 py-0.5 rounded font-semibold text-[8px] uppercase tracking-wider ${
+                                  isVideo ? 'bg-indigo-50 text-indigo-600' : 'bg-[#FFF8F3] text-[#B07A85]'
+                                }`}>
+                                  {media.type}
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                      
+                      {/* First item validation tip */}
+                      {!editingId && mediaList.length > 0 && mediaList[0].type !== 'image' && (
+                        <p className="text-xs font-semibold text-red-500 mt-2 flex items-center gap-1">
+                          ⚠️ Warning: Slot 1 MUST be an image (currently a video). Please remove or rearrange files so the first slot is an image.
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
 
                 <div>
