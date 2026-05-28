@@ -164,11 +164,17 @@ const AdminDashboard = () => {
     price: '',
     deposit: '',
     category: 'Moissanite',
-    type: 'Bridal Set',
+    type: [],
     colour: 'Gold',
     material: '',
     size: '',
-    finish: ''
+    finish: '',
+    purchaseAmount: '',
+    rentAmount: '',
+    salesAmount: '',
+    shopName: '',
+    stoneName: [],
+    stoneColour: ''
   });
   const [mediaList, setMediaList] = useState([{ type: 'image', file: null }]);
 
@@ -177,6 +183,30 @@ const AdminDashboard = () => {
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  // Map stones to default colours
+  const stoneColourMap = {
+    "Crystal": "Clear",
+    "Sapphire": "Blue",
+    "Pink Morganite": "Pink",
+    "Ruby": "Red",
+    "Emerald": "Green",
+    "Jade": "Green",
+    "Kemp Stone": "Yellow",
+    "Pearl": "White",
+    "Polki Diamond": "Clear",
+    "Basra Pearl": "White",
+    "Kundan": "Gold",
+    "Glass Beads": "Various",
+    "AD Stone": "Red",
+    "Cubic Zirconia": "Clear"
+  };
+
+  // Auto-select stone colour when stone name changes
+  useEffect(() => {
+    const colour = formData.stoneName && formData.stoneName.length > 0 ? stoneColourMap[formData.stoneName[0]] : "";
+    setFormData(prev => ({ ...prev, stoneColour: colour }));
+  }, [formData.stoneName]);
 
   const addMediaField = () => {
     setMediaList([...mediaList, { type: 'image', file: null }]);
@@ -219,7 +249,12 @@ const AdminDashboard = () => {
     try {
       const payload = new FormData();
       Object.keys(formData).forEach(key => {
-        payload.append(key, formData[key]);
+        const value = formData[key];
+        if (Array.isArray(value)) {
+          value.forEach(val => payload.append(key, val));
+        } else {
+          payload.append(key, value);
+        }
       });
       mediaList.forEach(m => {
         if (m.file) {
@@ -249,8 +284,10 @@ const AdminDashboard = () => {
         setEditingId(null);
         setFormData({
           jewelId: '', name: '', description: '', price: '', deposit: '',
-          category: 'Moissanite', type: 'Bridal Set', colour: 'Gold',
-          material: '', size: '', finish: ''
+          category: 'Moissanite', type: [], colour: 'Gold',
+          material: '', size: '', finish: '',
+          purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: '',
+          stoneName: [], stoneColour: ''
         });
         setMediaList([{ type: 'image', file: null }]);
       } else {
@@ -370,8 +407,9 @@ const AdminDashboard = () => {
                         setEditingId(null);
                         setFormData({
                           jewelId: '', name: '', description: '', price: '', deposit: '',
-                          category: 'Moissanite', type: 'Bridal Set', colour: 'Gold',
-                          material: '', size: '', finish: ''
+                          category: 'Moissanite', type: [], colour: 'Gold',
+                          material: '', size: '', finish: '',
+                          purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: ''
                         });
                         setMediaList([{ type: 'image', file: null }]);
                         setShowAddForm(true);
@@ -416,8 +454,9 @@ const AdminDashboard = () => {
                         setEditingId(null);
                         setFormData({
                           jewelId: '', name: '', description: '', price: '', deposit: '',
-                          category: selectedAdminCategory || 'Moissanite', type: 'Bridal Set', colour: 'Gold',
-                          material: '', size: '', finish: ''
+                          category: selectedAdminCategory || 'Moissanite', type: [], colour: 'Gold',
+                          material: '', size: '', finish: '',
+                          purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: ''
                         });
                         setMediaList([{ type: 'image', file: null }]);
                         setShowAddForm(true);
@@ -479,7 +518,7 @@ const AdminDashboard = () => {
                                 </div>
                               </td>
                               <td className="px-6 py-4 font-mono text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded-md inline-block mt-3">{jewel.jewelId}</td>
-                              <td className="px-6 py-4 text-gray-600">{jewel.type}</td>
+                              <td className="px-6 py-4 text-gray-600">{Array.isArray(jewel.type) ? jewel.type.join(', ') : jewel.type}</td>
                               <td className="px-6 py-4 font-bold text-gray-900">₹{jewel.rentalPrice || jewel.price}</td>
                               <td className="px-6 py-4 text-right flex justify-end gap-2">
                                 <button 
@@ -492,11 +531,17 @@ const AdminDashboard = () => {
                                       price: jewel.price || jewel.rentalPrice || '',
                                       deposit: jewel.deposit || '',
                                       category: jewel.category || 'Moissanite',
-                                      type: jewel.type || 'Bridal Set',
+                                      type: Array.isArray(jewel.type) ? jewel.type : (jewel.type ? [jewel.type] : []),
                                       colour: jewel.colour || 'Gold',
                                       material: jewel.material || '',
                                       size: jewel.size || '',
-                                      finish: jewel.finish || ''
+                                      finish: jewel.finish || '',
+                                      purchaseAmount: jewel.purchaseAmount || '',
+                                      rentAmount: jewel.rentAmount || '',
+                                      salesAmount: jewel.salesAmount || '',
+                                      shopName: jewel.shopName || '',
+                                      stoneName: jewel.stoneName || [],
+                                      stoneColour: []
                                     });
                                     setMediaList([]);
                                     setShowAddForm(true);
@@ -562,10 +607,74 @@ const AdminDashboard = () => {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Type*</label>
-                    <select name="type" value={formData.type} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm bg-white">
-                      {types.map(t => <option key={t} value={t}>{t}</option>)}
-                    </select>
+                    <div className="flex flex-col">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Type* (select multiple)</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {types.map(t => (
+                          <label key={t} className="inline-flex items-center">
+                            <input
+                              type="checkbox"
+                              name="type"
+                              value={t}
+                              checked={formData.type?.includes(t)}
+                              onChange={e => {
+                                const checked = e.target.checked;
+                                setFormData(prev => ({
+                                  ...prev,
+                                  type: checked
+                                    ? [...prev.type, t]
+                                    : prev.type.filter(x => x !== t)
+                                }));
+                              }}
+                              className="mr-2 h-4 w-4 text-[#B07A85] border-gray-300 rounded focus:ring-[#B07A85]"
+                            />
+                            <span className="text-sm text-gray-700">{t}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    {/* Stone Name (multiple) */}
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Stone Name(s)</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {[
+                          "Crystal", "Sapphire", "Pink Morganite", "Ruby", "Emerald", "Jade", "Kemp Stone", "Pearl",
+                          "Polki Diamond", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia"
+                        ].map(s => (
+                          <label key={s} className="inline-flex items-center">
+                            <input
+                              type="checkbox"
+                              name="stoneName"
+                              value={s}
+                              checked={formData.stoneName?.includes(s)}
+                              onChange={e => {
+                            const checked = e.target.checked;
+                            setFormData(prev => ({
+                              ...prev,
+                              stoneName: checked
+                                ? [...(prev.stoneName || []), s]
+                                : (prev.stoneName || []).filter(x => x !== s)
+                            }));
+                          }}
+                              className="mr-2 h-4 w-4 text-[#B07A85] border-gray-300 rounded focus:ring-[#B07A85]"
+                            />
+                            <span className="text-sm text-gray-700">{s}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    {/* Stone Colour */}
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Stone Colour</label>
+                      <input
+                        type="text"
+                        name="stoneColour"
+                        value={formData.stoneColour || ''}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm"
+                        placeholder="e.g. Blue, Red"
+                      />
+                    </div>
                   </div>
                   
                   <div>
@@ -576,7 +685,15 @@ const AdminDashboard = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Material (Optional)</label>
-                    <input type="text" name="material" value={formData.material || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm" placeholder="e.g. Premium Alloy" />
+<select name="material" value={formData.material || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm">
+  <option value="">Select material</option>
+  <option value="Alloy">Alloy</option>
+  <option value="Brass">Brass</option>
+  <option value="Metal">Metal</option>
+  <option value="Zinc Alloy">Zinc Alloy</option>
+  <option value="Copper">Copper</option>
+  <option value="Stainless Steel">Stainless Steel</option>
+</select>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Size (Optional)</label>
@@ -584,7 +701,43 @@ const AdminDashboard = () => {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">Finish (Optional)</label>
-                    <input type="text" name="finish" value={formData.finish || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm" placeholder="e.g. Antique" />
+                    <select name="finish" value={formData.finish || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm">
+                      <option value="">Select finish</option>
+                      <option value="Antique">Antique</option>
+                      <option value="Silver">Silver</option>
+                      <option value="Gold">Gold</option>
+                      <option value="Mehandhi">Mehandhi</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Internal Records Section */}
+                <div className="border border-amber-200 rounded-lg p-4 bg-amber-50/40">
+                  <h3 className="text-sm font-bold text-amber-800 mb-3 flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-amber-500 inline-block"></span>
+                    Internal Records (Admin Only)
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Purchase Amount (₹)</label>
+                      <input type="number" name="purchaseAmount" value={formData.purchaseAmount || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-amber-200 rounded-md focus:outline-none focus:ring-amber-400 focus:border-amber-400 text-sm bg-white" placeholder="Amount paid to buy" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Rent Amount (₹)</label>
+                      <input type="number" name="rentAmount" value={formData.rentAmount || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-amber-200 rounded-md focus:outline-none focus:ring-amber-400 focus:border-amber-400 text-sm bg-white" placeholder="Amount charged for rental" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Sales Amount (₹)</label>
+                      <input type="number" name="salesAmount" value={formData.salesAmount || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-amber-200 rounded-md focus:outline-none focus:ring-amber-400 focus:border-amber-400 text-sm bg-white" placeholder="Amount if sold" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Deposit (₹)</label>
+                      <input type="number" name="deposit" value={formData.deposit || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-amber-200 rounded-md focus:outline-none focus:ring-amber-400 focus:border-amber-400 text-sm bg-white" placeholder="Security deposit" />
+                    </div>
+                    <div className="col-span-2">
+                      <label className="block text-xs font-medium text-gray-600 mb-1">Shop Name (Where Purchased)</label>
+                      <input type="text" name="shopName" value={formData.shopName || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-amber-200 rounded-md focus:outline-none focus:ring-amber-400 focus:border-amber-400 text-sm bg-white" placeholder="e.g. Lalitha Jewellers, Chennai" />
+                    </div>
                   </div>
                 </div>
 

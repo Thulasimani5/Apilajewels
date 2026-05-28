@@ -180,9 +180,12 @@ const JewelleryListing = () => {
 
       // Filter by Type
       if (activeFilters.Type.length > 0) {
-        const matchesType = activeFilters.Type.some(
-          (type) => product.type?.toLowerCase() === type.toLowerCase()
-        );
+        const matchesType = activeFilters.Type.some((type) => {
+          if (Array.isArray(product.type)) {
+            return product.type.some(t => t?.toLowerCase() === type.toLowerCase());
+          }
+          return product.type?.toLowerCase() === type.toLowerCase();
+        });
         if (!matchesType) return false;
       }
 

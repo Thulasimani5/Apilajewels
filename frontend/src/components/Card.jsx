@@ -64,7 +64,7 @@ const Card = ({ jewellery }) => {
       <div className="pt-[5px] pb-[2px]">
         {/* Brand name — italic, small, muted grey */}
         <p className="text-[9px] text-[#888] leading-[1.2] italic tracking-[0.2px]">
-          {jewellery.type}
+          {Array.isArray(jewellery.type) ? jewellery.type.join(', ') : jewellery.type}
         </p>
         {/* Product name — medium weight, truncated, dark */}
         <h3 className="text-[11.5px] font-medium text-[#1A1A1A] truncate leading-[1.3] mt-[1px]">

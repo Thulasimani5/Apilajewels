@@ -151,7 +151,7 @@ const ProductDetails = () => {
           <button onClick={() => navigate(-1)} className="text-black">
             <ArrowLeft size={24} />
           </button>
-          <h1 className="font-semibold text-lg">{product.type || product.category || 'Jewellery'}</h1>
+          <h1 className="font-semibold text-lg">{(Array.isArray(product.type) ? product.type.join(', ') : product.type) || (Array.isArray(product.category) ? product.category.join(', ') : product.category) || 'Jewellery'}</h1>
         </div>
         <div className="flex items-center gap-4 text-gray-700">
           <button onClick={() => setIsSearchOpen(true)} className="text-gray-700"><Search size={22} /></button>
@@ -225,7 +225,7 @@ const ProductDetails = () => {
         <div className="flex justify-between items-start mb-4">
           <div>
             <h1 className="font-bold text-lg text-gray-900 leading-tight">
-              <span className="font-black">{product.type}</span> {product.name.replace(product.type || '', '')}
+              <span className="font-black">{Array.isArray(product.type) ? product.type.join(', ') : product.type}</span> {product.name.replace((Array.isArray(product.type) ? product.type.join(', ') : product.type) || '', '')}
             </h1>
             <p className="text-xl font-semibold mt-2">₹{(product.rentalPrice || product.price || 0).toFixed(2)}</p>
           </div>

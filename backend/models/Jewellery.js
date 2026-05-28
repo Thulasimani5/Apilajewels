@@ -27,9 +27,10 @@ const JewellerySchema = new mongoose.Schema({
     required: [true, 'Please add a category']
   },
   type: {
-    type: String,
+    type: [String],
     required: [true, 'Please add a type'],
-    enum: ["Bridal Set", "Bridal Maid", "Designer", "Reception", "Party Wear", "Small Jewel"]
+    enum: ["Bridal Set", "Bridal Maid", "Designer", "Reception", "Party Wear", "Small Jewel"],
+    default: []
   },
   price: {
     type: Number,
@@ -39,10 +40,14 @@ const JewellerySchema = new mongoose.Schema({
     type: Number,
     required: [true, 'Please add a deposit amount']
   },
-  stones: {
+  stoneName: {
     type: [String],
     default: [],
     enum: ["Crystal", "Sapphire", "Pink Morganite", "Ruby", "Emerald", "Jade", "Kemp Stone", "Pearl", "Polki Diamond", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia"]
+  },
+  stoneColour: {
+    type: [String],
+    default: []
   },
   colour: {
     type: String,
@@ -79,6 +84,22 @@ const JewellerySchema = new mongoose.Schema({
   popularity: {
     type: Number,
     default: 0
+  },
+  purchaseAmount: {
+    type: Number,
+    default: null
+  },
+  rentAmount: {
+    type: Number,
+    default: null
+  },
+  salesAmount: {
+    type: Number,
+    default: null
+  },
+  shopName: {
+    type: String,
+    default: ''
   }
 }, { 
   timestamps: true,
