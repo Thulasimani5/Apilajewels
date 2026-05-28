@@ -5,35 +5,40 @@ const Jewellery = require('../models/Jewellery');
 // @access  Public
 exports.getJewelleries = async (req, res) => {
   try {
-    let query;
-
     // Copy req.query
     const reqQuery = { ...req.query };
 
-    // Fields to exclude
-    const removeFields = ['select', 'sort', 'page', 'limit'];
-
-    // Loop over removeFields and delete them from reqQuery
+    // Fields to exclude from the base filter
+    const removeFields = ['select', 'sort', 'page', 'limit', 'search'];
     removeFields.forEach(param => delete reqQuery[param]);
 
-    // Create query string
+    // Create base filter (convert gt/gte/lt/lte/in operators)
     let queryStr = JSON.stringify(reqQuery);
-
-    // Create operators ($gt, $gte, etc)
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+    const baseFilter = JSON.parse(queryStr);
 
-    // Finding resource
-    query = Jewellery.find(JSON.parse(queryStr));
-
-    // Search by name or code
+    // Build final filter — merge base filter with $or search if provided
+    let finalFilter = { ...baseFilter };
     if (req.query.search) {
-      query = query.find({
+      const searchRegex = { $regex: req.query.search, $options: 'i' };
+      finalFilter = {
+        ...baseFilter,
         $or: [
-          { name: { $regex: req.query.search, $options: 'i' } },
-          { code: { $regex: req.query.search, $options: 'i' } }
+          { name: searchRegex },
+          { jewelId: searchRegex },
+          { category: searchRegex },
+          { type: searchRegex },
+          { colour: searchRegex },
+          { material: searchRegex },
+          { finish: searchRegex },
+          { description: searchRegex },
+          { occasion: searchRegex },
+          { stones: searchRegex }
         ]
-      });
+      };
     }
+
+    let query = Jewellery.find(finalFilter);
 
     // Sort
     if (req.query.sort) {
@@ -108,13 +113,25 @@ exports.getJewellery = async (req, res) => {
 // @access  Private/Admin
 exports.createJewellery = async (req, res) => {
   try {
-    // Add user to req.body if we want to track who created it, not needed here
     let images = [];
     if (req.files && req.files.length > 0) {
       images = req.files.map(file => {
         const normalizedPath = file.path.replace(/\\/g, '/');
-        return `http://localhost:${process.env.PORT || 5000}/${normalizedPath}`;
+        const url = `http://localhost:${process.env.PORT || 5000}/${normalizedPath}`;
+        const type = file.mimetype && file.mimetype.startsWith('video') ? 'video' : 'image';
+        return { type, url };
       });
+    }
+
+    if (req.body.images) {
+      if (typeof req.body.images === 'string') {
+        try {
+          req.body.images = JSON.parse(req.body.images);
+        } catch (e) {}
+      }
+      if (Array.isArray(req.body.images)) {
+        images = [...images, ...req.body.images];
+      }
     }
     
     req.body.images = images;
@@ -141,13 +158,29 @@ exports.updateJewellery = async (req, res) => {
       return res.status(404).json({ success: false, error: 'Jewellery not found' });
     }
 
+    let images = jewellery.images || [];
     if (req.files && req.files.length > 0) {
       const newImages = req.files.map(file => {
         const normalizedPath = file.path.replace(/\\/g, '/');
-        return `http://localhost:${process.env.PORT || 5000}/${normalizedPath}`;
+        const url = `http://localhost:${process.env.PORT || 5000}/${normalizedPath}`;
+        const type = file.mimetype && file.mimetype.startsWith('video') ? 'video' : 'image';
+        return { type, url };
       });
-      req.body.images = [...jewellery.images, ...newImages];
+      images = [...images, ...newImages];
     }
+
+    if (req.body.images) {
+      if (typeof req.body.images === 'string') {
+        try {
+          req.body.images = JSON.parse(req.body.images);
+        } catch (e) {}
+      }
+      if (Array.isArray(req.body.images)) {
+        images = [...images, ...req.body.images];
+      }
+    }
+
+    req.body.images = images;
 
     jewellery = await Jewellery.findByIdAndUpdate(req.params.id, req.body, {
       new: true,

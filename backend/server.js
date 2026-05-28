@@ -24,6 +24,7 @@ app.use('/uploads', express.static('uploads'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/jewellery', require('./routes/jewellery'));
 app.use('/api/bookings', require('./routes/bookings'));
+app.use('/api/categories', require('./routes/category'));
 
 app.get('/', (req, res) => {
   res.send('Apila Jewels API is running...');

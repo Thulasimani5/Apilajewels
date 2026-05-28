@@ -5,20 +5,44 @@ const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token') || null);
+  const [token, setToken] = useState(() => {
+    const savedToken = localStorage.getItem('token');
+    if (savedToken && (savedToken.startsWith('fake-') || savedToken.includes('fake-'))) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      return null;
+    }
+    return savedToken;
+  });
+
+  const [user, setUser] = useState(() => {
+    const savedToken = localStorage.getItem('token');
+    if (savedToken && (savedToken.startsWith('fake-') || savedToken.includes('fake-'))) {
+      return null;
+    }
+    const savedUser = localStorage.getItem('user');
+    try {
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch (e) {
+      return null;
+    }
+  });
 
   useEffect(() => {
     if (token) {
       localStorage.setItem('token', token);
-      // Ideally, decode JWT or fetch user details from /api/auth/me here
-      // For now, simple mock
-      setUser({ role: 'user', token }); 
     } else {
       localStorage.removeItem('token');
-      setUser(null);
     }
   }, [token]);
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }, [user]);
 
   const login = (userData, jwtToken) => {
     setToken(jwtToken);

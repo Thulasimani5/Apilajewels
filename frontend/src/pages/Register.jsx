@@ -5,9 +5,7 @@ import axios from 'axios';
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
+    mobile: '',
     password: '',
     role: 'user'
   });
@@ -25,14 +23,18 @@ const Register = () => {
     setLoading(true);
     
     try {
-      // Mock Register
-      setTimeout(() => {
-        login({ email: formData.email, name: formData.name, role: formData.role }, 'fake-jwt-token');
-        navigate('/');
-      }, 1000);
+      const response = await axios.post('http://localhost:5000/api/auth/register', {
+        mobile: formData.mobile,
+        password: formData.password,
+        role: formData.role
+      });
       
+      const { token: jwtToken, user: userData } = response.data;
+      login(userData, jwtToken);
+      navigate('/');
     } catch (err) {
       setError(err.response?.data?.error || 'Registration failed');
+    } finally {
       setLoading(false);
     }
   };
@@ -51,43 +53,16 @@ const Register = () => {
             {error && <div className="text-red-500 text-sm text-center">{error}</div>}
             
             <div>
-              <label className="block text-sm font-medium text-gray-700">Full Name</label>
+              <label className="block text-sm font-medium text-gray-700">Mobile Number</label>
               <div className="mt-1">
                 <input
-                  name="name"
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] sm:text-sm"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Email address</label>
-              <div className="mt-1">
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  value={formData.email}
-                  onChange={handleChange}
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] sm:text-sm"
-                />
-              </div>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Phone</label>
-              <div className="mt-1">
-                <input
-                  name="phone"
+                  name="mobile"
                   type="tel"
                   required
-                  value={formData.phone}
+                  value={formData.mobile}
                   onChange={handleChange}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] sm:text-sm"
+                  placeholder="Enter your mobile number"
                 />
               </div>
             </div>

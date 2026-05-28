@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from || '/';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,24 +21,36 @@ const Login = () => {
     setLoading(true);
     
     try {
-      // Temporary mock login for UI display
-      // const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
-      // login(res.data.user, res.data.token);
+      const response = await axios.post('http://localhost:5000/api/auth/login', {
+        mobile,
+        password
+      });
       
-      // Mock Success
-      setTimeout(() => {
-        login({ email, role: 'user' }, 'fake-jwt-token');
-        navigate('/');
-      }, 1000);
+      const { token: jwtToken, user: userData } = response.data;
+      login(userData, jwtToken);
       
+      if (userData.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate(from);
+      }
     } catch (err) {
       setError(err.response?.data?.error || 'Invalid credentials');
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#FFF8F3] flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#FFF8F3] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative">
+      {/* Back Button */}
+      <button
+        onClick={() => navigate('/')}
+        className="absolute top-5 left-4 flex items-center gap-1.5 text-gray-600 hover:text-gray-900 transition-colors"
+        aria-label="Go back"
+      >
+        <ArrowLeft size={22} strokeWidth={2} />
+      </button>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-serif font-extrabold text-gray-900">
           Welcome to Apila
@@ -50,14 +65,15 @@ const Login = () => {
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && <div className="text-red-500 text-sm text-center">{error}</div>}
             <div>
-              <label className="block text-sm font-medium text-gray-700">Email address</label>
+              <label className="block text-sm font-medium text-gray-700">Mobile Number</label>
               <div className="mt-1">
                 <input
-                  type="email"
+                  type="text"
                   required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  value={mobile}
+                  onChange={(e) => setMobile(e.target.value)}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] sm:text-sm"
+                  placeholder="Enter your mobile number"
                 />
               </div>
             </div>

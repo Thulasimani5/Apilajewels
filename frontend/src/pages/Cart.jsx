@@ -1,20 +1,51 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import SearchOverlay from '../components/SearchOverlay';
+
 import { ArrowLeft, Search, Heart, Share2, X } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { cartItems, removeFromCart, totalAmount } = useCart();
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const location = useLocation();
+  const { user } = useAuth();
+  const { cartItems, removeFromCart } = useCart();
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login', { state: { from: location.pathname } });
+    }
+  }, [user, navigate, location]);
+
+  useEffect(() => {
+    setSelectedItems(cartItems.map(item => item._id));
+  }, [cartItems]);
+
+  if (!user) return null;
+
+  const toggleSelection = (id) => {
+    setSelectedItems(prev => 
+      prev.includes(id) ? prev.filter(itemId => itemId !== id) : [...prev, id]
+    );
+  };
+
+  const selectedCartItems = cartItems.filter(item => selectedItems.includes(item._id));
+  const selectedTotalAmount = selectedCartItems.reduce((total, item) => total + (item.rentalPrice || item.price || 0), 0);
 
   const handleBookOnWhatsapp = () => {
-    if (cartItems.length === 0) return;
+    if (selectedCartItems.length === 0) {
+      alert("Please select at least one item to book.");
+      return;
+    }
     
     let message = `Hi Apila Jewels, I would like to book the following items:\n\n`;
-    cartItems.forEach((item, index) => {
-      message += `${index + 1}. *${item.name}* (Code: ${item.code || 'N/A'})\n`;
+    selectedCartItems.forEach((item, index) => {
+      message += `${index + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'})\n`;
     });
-    message += `\n*Total Amount: ₹${totalAmount.toFixed(2)}*\n\nPlease let me know the availability.`;
+    message += `\n*Total Amount: ₹${selectedTotalAmount.toFixed(2)}*\n\nPlease let me know the availability.`;
     
     const whatsappUrl = `https://wa.me/+917397721122?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -31,8 +62,8 @@ const Cart = () => {
           <h1 className="font-semibold text-lg">My Cart</h1>
         </div>
         <div className="flex items-center gap-4 text-gray-700">
-          <button><Search size={22} /></button>
-          <button><Heart size={22} /></button>
+          <button onClick={() => setIsSearchOpen(true)}><Search size={22} /></button>
+          <button onClick={() => navigate('/wishlist')}><Heart size={22} /></button>
           <button><Share2 size={22} /></button>
         </div>
       </div>
@@ -52,10 +83,20 @@ const Cart = () => {
                 <X size={16} />
               </button>
               
-              <div className="w-[80px] h-[80px] rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 relative">
-                <img src={item.images?.[0]} alt={item.name} className="w-full h-full object-cover" />
-                <div className="absolute top-1 left-1 bg-[#8B1A10] text-white rounded-full w-4 h-4 flex items-center justify-center">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <div 
+                className="w-[80px] h-[80px] rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 relative cursor-pointer group"
+                onClick={() => toggleSelection(item._id)}
+              >
+                {item.images?.[0]?.type === 'video' ? (
+                  <video src={item.images[0].url} className="w-full h-full object-cover" />
+                ) : (
+                  <img src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" />
+                )}
+                
+                <div className={`absolute inset-0 bg-black/10 transition-opacity ${selectedItems.includes(item._id) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
+                
+                <div className={`absolute top-1 left-1 w-5 h-5 rounded-full flex items-center justify-center transition-colors border-2 ${selectedItems.includes(item._id) ? 'bg-[#8B1A10] border-[#8B1A10] text-white' : 'bg-white/50 border-white text-transparent'}`}>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
                 </div>
               </div>
               
@@ -76,8 +117,8 @@ const Cart = () => {
         {/* Total Summary */}
         {cartItems.length > 0 && (
           <div className="bg-white rounded-2xl p-5 flex justify-between items-center shadow-sm mt-6">
-            <span className="font-bold text-gray-900">Total Amount</span>
-            <span className="font-bold text-gray-900">₹{totalAmount.toFixed(2)}</span>
+            <span className="font-bold text-gray-900">Total Selected</span>
+            <span className="font-bold text-gray-900">₹{selectedTotalAmount.toFixed(2)}</span>
           </div>
         )}
       </div>
@@ -87,12 +128,13 @@ const Cart = () => {
         <div className="fixed bottom-0 left-0 w-full bg-white px-4 py-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
           <button 
             onClick={handleBookOnWhatsapp}
-            className="w-full py-4 bg-[#B07A85] text-white font-semibold rounded-xl text-sm hover:bg-[#9E6A75] transition-colors"
+            className={`w-full py-4 font-semibold rounded-xl text-sm transition-colors ${selectedItems.length > 0 ? 'bg-[#B07A85] text-white hover:bg-[#9E6A75]' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
           >
-            Book On Whatsapp
+            Book Selected ({selectedItems.length})
           </button>
         </div>
       )}
+    <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </div>
   );
 };

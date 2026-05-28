@@ -25,15 +25,21 @@ const sendTokenResponse = (user, statusCode, res) => {
 // @access  Public
 exports.register = async (req, res) => {
   try {
-    const { name, email, password, phone, role } = req.body;
+    const { name, email, password, phone, mobile, role } = req.body;
+
+    const phoneNumber = phone || mobile;
+
+    if (!phoneNumber || !password) {
+      return res.status(400).json({ success: false, error: 'Please provide a mobile number and password' });
+    }
 
     // Create user
     const user = await User.create({
-      name,
-      email,
+      name: name || 'Customer',
+      email: email || undefined,
       password,
-      phone,
-      role
+      phone: phoneNumber,
+      role: role || 'user'
     });
 
     sendTokenResponse(user, 201, res);
@@ -47,15 +53,22 @@ exports.register = async (req, res) => {
 // @access  Public
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, mobile, phone } = req.body;
 
-    // Validate email & password
-    if (!email || !password) {
-      return res.status(400).json({ success: false, error: 'Please provide an email and password' });
+    const identifier = email || mobile || phone;
+
+    // Validate identifier & password
+    if (!identifier || !password) {
+      return res.status(400).json({ success: false, error: 'Please provide a mobile number and password' });
     }
 
-    // Check for user
-    const user = await User.findOne({ email }).select('+password');
+    // Check for user (supports both email and phone login)
+    const user = await User.findOne({
+      $or: [
+        { email: identifier },
+        { phone: identifier }
+      ]
+    }).select('+password');
 
     if (!user) {
       return res.status(401).json({ success: false, error: 'Invalid credentials' });
@@ -79,10 +92,47 @@ exports.login = async (req, res) => {
 // @access  Private
 exports.getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.id).populate('cart');
     res.status(200).json({
       success: true,
       data: user
+    });
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+};
+
+// @desc    Get all users (with populated cart items)
+// @route   GET /api/auth/users
+// @access  Private/Admin
+exports.getUsers = async (req, res) => {
+  try {
+    const users = await User.find({}).populate('cart');
+    res.status(200).json({
+      success: true,
+      data: users
+    });
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+};
+
+// @desc    Update/Sync user cart items in database
+// @route   PUT /api/auth/cart
+// @access  Private
+exports.updateCart = async (req, res) => {
+  try {
+    const { cartItems } = req.body; // Expects an array of Jewellery ObjectIds
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { cart: cartItems || [] },
+      { new: true, runValidators: true }
+    ).populate('cart');
+
+    res.status(200).json({
+      success: true,
+      data: user.cart
     });
   } catch (err) {
     res.status(400).json({ success: false, error: err.message });
