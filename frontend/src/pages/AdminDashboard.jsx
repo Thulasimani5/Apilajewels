@@ -186,7 +186,6 @@ const AdminDashboard = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-<<<<<<< HEAD
   // Map stones to default colours
   const stoneColourMap = {
     "Crystal": "Clear",
@@ -211,9 +210,6 @@ const AdminDashboard = () => {
     setFormData(prev => ({ ...prev, stoneColour: colour }));
   }, [formData.stoneName]);
 
-  const addMediaField = () => {
-    setMediaList([...mediaList, { type: 'image', file: null }]);
-=======
   const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -276,7 +272,6 @@ const AdminDashboard = () => {
     
     setMediaList(updatedMedia);
     setDraggedItemIndex(null);
->>>>>>> 185d7ab (adminpage image dropdown)
   };
 
   const removeMediaField = (index) => {
