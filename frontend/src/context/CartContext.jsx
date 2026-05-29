@@ -15,7 +15,7 @@ export const CartProvider = ({ children }) => {
     const loadCart = async () => {
       if (token) {
         try {
-          const res = await fetch('http://localhost:5001/api/auth/me', {
+          const res = await fetch('http://localhost:5000/api/auth/me', {
             headers: { 'Authorization': `Bearer ${token}` }
           });
           const result = await res.json();
@@ -47,7 +47,7 @@ export const CartProvider = ({ children }) => {
     const syncCart = async () => {
       if (token) {
         try {
-          await fetch('http://localhost:5001/api/auth/cart', {
+          await fetch('http://localhost:5000/api/auth/cart', {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',

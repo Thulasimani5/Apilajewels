@@ -15,14 +15,17 @@ const ArrowIcon = () => (
 );
 
 
+/* ── Base URL ── */
+const baseUrl = 'http://localhost:5000';
+
 /* ── Shop by Occasion data ── */
 const occasions = [
-  { slug: 'bridal', title: 'Bridal Set', img: 'http://localhost:5001/uploads/Bridal%20Set.png' },
-  { slug: 'bridesmaid', title: 'Bridal Maid', img: 'http://localhost:5001/uploads/Bridal%20Maid.png' },
-  { slug: 'designer', title: 'Designer', img: 'http://localhost:5001/uploads/Designer.png', arrow: true },
-  { slug: 'reception', title: 'Reception', img: 'http://localhost:5001/uploads/Reception.png', arrow: true },
-  { slug: 'party', title: 'Party Wear', img: 'http://localhost:5001/uploads/Party%20Wear.png', arrow: true },
-  { slug: 'small', title: 'Small Jewel', img: 'http://localhost:5001/uploads/Small%20Jewel.png', arrow: true },
+  { slug: 'bridal', title: 'Bridal Set', img: `${baseUrl}/uploads/Bridal%20Set.png` },
+  { slug: 'bridesmaid', title: 'Bridal Maid', img: `${baseUrl}/uploads/Bridal%20Maid.png` },
+  { slug: 'designer', title: 'Designer', img: `${baseUrl}/uploads/Designer.png`, arrow: true },
+  { slug: 'reception', title: 'Reception', img: `${baseUrl}/uploads/Reception.png`, arrow: true },
+  { slug: 'party', title: 'Party Wear', img: `${baseUrl}/uploads/Party%20Wear.png`, arrow: true },
+  { slug: 'small', title: 'Small Jewel', img: `${baseUrl}/uploads/Small%20Jewel.png`, arrow: true },
 ];
 
 const Home = () => {
@@ -34,13 +37,13 @@ const Home = () => {
     slug: c.name.toLowerCase().replace(/\s+/g, '-'),
     title: c.name,
     sub: c.subtext || 'Collections',
-    img: c.image || ''
+    img: c.image ? (c.image.startsWith('http') ? c.image : `${baseUrl}${c.image}`) : ''
   }));
 
   useEffect(() => {
     const fetchTrending = async () => {
       try {
-        const res = await fetch('http://localhost:5001/api/jewellery?sort=popularity&limit=8');
+        const res = await fetch('http://localhost:5000/api/jewellery?sort=popularity&limit=8');
         const data = await res.json();
         if (data.success && data.data) {
           // Sort by popularity descending and take top 8
@@ -138,8 +141,7 @@ const Home = () => {
           {/* Left col */}
           <div className="flex flex-col gap-2">
             <Link to="/shop?occasion=bridal" className="relative h-44 rounded-[2rem] overflow-hidden group">
-              <img src="http://localhost:5001/uploads/Bridal%20Set.png" alt="Bridal Set"
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={`${baseUrl}/uploads/Bridal%20Set.png`} alt="Bridal Set" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>
@@ -150,8 +152,7 @@ const Home = () => {
               </div>
             </Link>
             <Link to="/shop?occasion=designer" className="relative h-36 rounded-[2rem] overflow-hidden group">
-              <img src="http://localhost:5001/uploads/Designer.png" alt="Designer"
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={`${baseUrl}/uploads/Designer.png`} alt="Designer" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>
@@ -162,8 +163,7 @@ const Home = () => {
               </div>
             </Link>
             <Link to="/shop?occasion=party" className="relative h-44 rounded-[2rem] overflow-hidden group">
-              <img src="http://localhost:5001/uploads/Party%20Wear.png" alt="Party Wear"
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={`${baseUrl}/uploads/Party%20Wear.png`} alt="Party Wear" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>
@@ -177,8 +177,7 @@ const Home = () => {
           {/* Right col */}
           <div className="flex flex-col gap-2">
             <Link to="/shop?occasion=bridesmaid" className="relative h-36 rounded-[2rem] overflow-hidden group">
-              <img src="http://localhost:5001/uploads/Bridal%20Maid.png" alt="Bridal Maid"
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={`${baseUrl}/uploads/Bridal%20Maid.png`} alt="Bridal Maid" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>
@@ -189,8 +188,7 @@ const Home = () => {
               </div>
             </Link>
             <Link to="/shop?occasion=reception" className="relative h-52 rounded-[2rem] overflow-hidden group">
-              <img src="http://localhost:5001/uploads/Reception.png" alt="Reception"
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={`${baseUrl}/uploads/Reception.png`} alt="Reception" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>
@@ -201,8 +199,7 @@ const Home = () => {
               </div>
             </Link>
             <Link to="/shop?occasion=small" className="relative h-36 rounded-[2rem] overflow-hidden group">
-              <img src="http://localhost:5001/uploads/Small%20Jewel.png" alt="Small Jewel"
-                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={`${baseUrl}/uploads/Small%20Jewel.png`} alt="Small Jewel" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>
@@ -327,7 +324,7 @@ const Home = () => {
         </div>
 
         <button
-          onClick={() => window.open('http://localhost:5001/uploads/Rental%20&%20Delivery%20Guide.pdf', '_blank')}
+          onClick={() => window.open(`${baseUrl}/uploads/Rental%20&%20Delivery%20Guide.pdf`, '_blank')}
           className="bg-[#A56D7A] text-white px-3 py-2 rounded-md text-[8px] font-semibold uppercase tracking-[0.15em] hover:bg-[#935b67] transition-colors"
         >
           Know More

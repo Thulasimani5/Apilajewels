@@ -31,7 +31,7 @@ const ProductDetails = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5001/api/jewellery/${id}`);
+        const response = await fetch(`http://localhost:5000/api/jewellery/${id}`);
         const result = await response.json();
         if (result.success) {
           setProduct(result.data);
@@ -60,7 +60,7 @@ const ProductDetails = () => {
       try {
         // Try same-category items first
         const catRes = await fetch(
-          `http://localhost:5001/api/jewellery?limit=10`
+          `http://localhost:5000/api/jewellery?limit=10`
         );
         const catData = await catRes.json();
         if (catData.success) {

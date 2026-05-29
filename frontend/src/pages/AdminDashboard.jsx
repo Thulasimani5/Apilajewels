@@ -31,7 +31,7 @@ const AdminDashboard = () => {
       const fetchJewels = async () => {
         setAdminJewelleriesLoading(true);
         try {
-          const res = await fetch(`http://localhost:5001/api/jewellery?category=${encodeURIComponent(selectedAdminCategory)}&limit=500`);
+          const res = await fetch(`http://localhost:5000/api/jewellery?category=${encodeURIComponent(selectedAdminCategory)}&limit=500`);
           const result = await res.json();
           if (result.success) {
             setAdminJewelleries(result.data);
@@ -49,7 +49,7 @@ const AdminDashboard = () => {
   const handleDeleteJewel = async (id) => {
     if (!window.confirm("Are you sure you want to delete this jewel?")) return;
     try {
-      const res = await fetch(`http://localhost:5001/api/jewellery/${id}`, {
+      const res = await fetch(`http://localhost:5000/api/jewellery/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -68,7 +68,7 @@ const AdminDashboard = () => {
       const fetchUsers = async () => {
         setUsersLoading(true);
         try {
-          const res = await fetch('http://localhost:5001/api/auth/users', {
+          const res = await fetch('http://localhost:5000/api/auth/users', {
             headers: { 'Authorization': `Bearer ${token}` }
           });
           const result = await res.json();
@@ -312,7 +312,7 @@ const AdminDashboard = () => {
         }
       });
 
-      const url = editingId ? `http://localhost:5001/api/jewellery/${editingId}` : 'http://localhost:5001/api/jewellery';
+      const url = editingId ? `http://localhost:5000/api/jewellery/${editingId}` : 'http://localhost:5000/api/jewellery';
       const method = editingId ? 'PUT' : 'POST';
 
       const res = await fetch(url, {

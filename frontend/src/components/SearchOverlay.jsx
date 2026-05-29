@@ -44,7 +44,7 @@ const SearchOverlay = ({ isOpen, onClose, category, type }) => {
       setLoading(true);
       setError(null);
       try {
-        let url = `http://localhost:5001/api/jewellery?search=${encodeURIComponent(query.trim())}&limit=50`;
+        let url = `http://localhost:5000/api/jewellery?search=${encodeURIComponent(query.trim())}&limit=50`;
         if (category) url += `&category=${encodeURIComponent(category)}`;
         if (type) url += `&type=${encodeURIComponent(type)}`;
         const res = await fetch(url);
