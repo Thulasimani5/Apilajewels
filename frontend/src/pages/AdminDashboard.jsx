@@ -201,7 +201,9 @@ const AdminDashboard = () => {
     "Kundan": "Gold",
     "Glass Beads": "Various",
     "AD Stone": "Red",
-    "Cubic Zirconia": "Clear"
+    "Cubic Zirconia": "Clear",
+    "Amethyst": "Violete",
+    "Amber": "Orange"
   };
 
   // Auto-select stone colour when stone name changes
@@ -282,10 +284,6 @@ const AdminDashboard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!editingId && mediaList.length === 0) {
-      alert("Please add at least one media item.");
-      return;
-    }
     if (!editingId && mediaList.length > 0 && mediaList[0].type !== 'image') {
       alert("The first media item MUST be an image.");
       return;
@@ -689,7 +687,7 @@ const AdminDashboard = () => {
                       <div className="grid grid-cols-2 gap-2">
                         {[
                           "Crystal", "Sapphire", "Pink Morganite", "Ruby", "Emerald", "Jade", "Kemp Stone", "Pearl",
-                          "Polki Diamond", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia"
+                          "Polki Diamond", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia", "Amethyst", "Amber"
                         ].map(s => (
                           <label key={s} className="inline-flex items-center">
                             <input
@@ -794,9 +792,9 @@ const AdminDashboard = () => {
                 {/* Media Fields - Modern Drag & Drop Uploader */}
                 <div className="border border-gray-200 rounded-lg p-5 bg-gray-50/50">
                   <div className="mb-4">
-                    <label className="block text-sm font-semibold text-gray-800">Upload Media (Images & Videos) {editingId ? '' : '*'}</label>
+                    <label className="block text-sm font-semibold text-gray-800">Upload Media (Images & Videos) (Optional)</label>
                     <p className="text-xs text-gray-500 mt-1">
-                      {editingId ? "Leave empty to keep existing media, or drag & drop files to append." : "First item MUST be an image. Drag and drop multiple files to upload."}
+                      {editingId ? "Leave empty to keep existing media, or drag & drop files to append." : "If providing media, first item MUST be an image. Drag and drop multiple files to upload."}
                     </p>
                   </div>
 

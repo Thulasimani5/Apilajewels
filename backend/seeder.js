@@ -108,7 +108,7 @@ const generateSeederData = () => {
         type: designObj.type,
         price,
         deposit,
-        stones: stones.filter(s => ["Crystal", "Sapphire", "Pink Morganite", "Ruby", "Emerald", "Jade", "Kemp Stone", "Pearl", "Polki Diamond", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia"].includes(s)),
+        stones: stones.filter(s => ["Crystal", "Sapphire", "Pink Morganite", "Ruby", "Emerald", "Jade", "Kemp Stone", "Pearl", "Polki Diamond", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia", "Amethyst"].includes(s)),
         colour: colourMap[sourceCat] || 'Gold',
         occasion: idx % 2 === 0 ? ['Bridal', 'Reception', 'Festive'] : ['Engagement', 'Party Wear', 'Festive'],
         material: materialMap[sourceCat] || 'Brass',

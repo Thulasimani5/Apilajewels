@@ -1,4 +1,97 @@
 const Jewellery = require('../models/Jewellery');
+const fs = require('fs');
+const path = require('path');
+
+const getAutoImages = (jewelId) => {
+  if (!jewelId) return null;
+
+  const uploadsPath = path.join(__dirname, '..', 'uploads');
+  if (!fs.existsSync(uploadsPath)) return null;
+
+  try {
+    let dirsToSearch = [];
+    // Normalize IDs like AM010 to match folder naming (AM0010)
+    let normalizedId = jewelId;
+    if (/^[A-Z]{2}0[1-9]\d$/.test(jewelId)) {
+      // Insert an extra zero after the prefix, e.g., AM010 -> AM0010
+      normalizedId = `${jewelId.slice(0, 2)}0${jewelId.slice(2)}`;
+    }
+    const upperJewelId = normalizedId.toUpperCase();
+    const originalUpper = jewelId.toUpperCase();
+    
+    if (upperJewelId.startsWith('AM') || originalUpper.startsWith('AM')) {
+      dirsToSearch.push(path.join(uploadsPath, 'AD Mehandi'));
+    } else if (upperJewelId.startsWith('AG') || originalUpper.startsWith('AG')) {
+      dirsToSearch.push(path.join(uploadsPath, 'AD Gold'));
+    } else if (upperJewelId.startsWith('AS') || originalUpper.startsWith('AS')) {
+      dirsToSearch.push(path.join(uploadsPath, 'AD Silver'));
+    }
+
+    dirsToSearch = dirsToSearch.filter(dir => fs.existsSync(dir));
+
+    if (dirsToSearch.length === 0) {
+      const items = fs.readdirSync(uploadsPath, { withFileTypes: true });
+      // Get all subdirectories, and also the root uploads path
+      dirsToSearch = [uploadsPath, ...items.filter(item => item.isDirectory()).map(dir => path.join(uploadsPath, dir.name))];
+    }
+    
+    const escapedJewelId = upperJewelId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const escapedOriginal = originalUpper.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regexPattern = escapedJewelId === escapedOriginal ? escapedJewelId : `(${escapedJewelId}|${escapedOriginal})`;
+    const regex = new RegExp(`^${regexPattern}(?![a-zA-Z0-9]).*\\.(jpg|jpeg|png|webp|gif|mp4|mov|avi)$`, 'i');
+    
+    let allMatchedFiles = [];
+
+    for (const dirPath of dirsToSearch) {
+      try {
+        const files = fs.readdirSync(dirPath);
+        const matched = files.filter(file => regex.test(file));
+        
+        if (matched.length > 0) {
+          const relativeDir = path.relative(uploadsPath, dirPath).replace(/\\/g, '/');
+          matched.forEach(file => {
+            allMatchedFiles.push({ file, relativeDir });
+          });
+        }
+      } catch (e) {
+        // ignore errors for unreadable dirs
+      }
+    }
+
+    if (allMatchedFiles.length > 0) {
+      allMatchedFiles.sort((aObj, bObj) => {
+        const a = aObj.file;
+        const b = bObj.file;
+        
+        const isBaseA = new RegExp(`^${regexPattern}\\.\\w+$`, 'i').test(a);
+        const isBaseB = new RegExp(`^${regexPattern}\\.\\w+$`, 'i').test(b);
+        
+        if (isBaseA && !isBaseB) return -1;
+        if (!isBaseA && isBaseB) return 1;
+        
+        const matchA = a.match(/\((\d+)\)/);
+        const matchB = b.match(/\((\d+)\)/);
+        
+        const numA = matchA ? parseInt(matchA[1], 10) : 9999;
+        const numB = matchB ? parseInt(matchB[1], 10) : 9999;
+        
+        if (numA !== numB) return numA - numB;
+        
+        return a.localeCompare(b);
+      });
+      
+      return allMatchedFiles.map(obj => {
+        const urlPath = obj.relativeDir ? `${obj.relativeDir}/${obj.file}` : obj.file;
+        const url = encodeURI(`http://localhost:${process.env.PORT || 5000}/uploads/${urlPath}`);
+        const type = obj.file.match(/\.(mp4|mov|avi)$/i) ? 'video' : 'image';
+        return { type, url };
+      });
+    }
+  } catch (error) {
+    console.error("Error reading directory:", error);
+  }
+  return null;
+};
 
 // @desc    Get all jewellery
 // @route   GET /api/jewellery
@@ -60,6 +153,16 @@ exports.getJewelleries = async (req, res) => {
     // Executing query
     const jewelleries = await query;
 
+    const data = jewelleries.map(jewellery => {
+      const doc = jewellery.toObject();
+      const autoImages = getAutoImages(doc.jewelId);
+      if (autoImages && autoImages.length > 0) {
+        // Option to combine or override; overriding prioritizes folder structure
+        doc.images = autoImages;
+      }
+      return doc;
+    });
+
     // Pagination result
     const pagination = {};
 
@@ -79,9 +182,9 @@ exports.getJewelleries = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      count: jewelleries.length,
+      count: data.length,
       pagination,
-      data: jewelleries
+      data: data
     });
   } catch (err) {
     res.status(400).json({ success: false, error: err.message });
@@ -99,9 +202,15 @@ exports.getJewellery = async (req, res) => {
       return res.status(404).json({ success: false, error: 'Jewellery not found' });
     }
 
+    const data = jewellery.toObject();
+    const autoImages = getAutoImages(data.jewelId);
+    if (autoImages && autoImages.length > 0) {
+      data.images = autoImages;
+    }
+
     res.status(200).json({
       success: true,
-      data: jewellery
+      data: data
     });
   } catch (err) {
     res.status(400).json({ success: false, error: err.message });
@@ -138,9 +247,15 @@ exports.createJewellery = async (req, res) => {
 
     const jewellery = await Jewellery.create(req.body);
 
+    const data = jewellery.toObject();
+    const autoImages = getAutoImages(data.jewelId);
+    if (autoImages && autoImages.length > 0) {
+      data.images = autoImages;
+    }
+
     res.status(201).json({
       success: true,
-      data: jewellery
+      data: data
     });
   } catch (err) {
     res.status(400).json({ success: false, error: err.message });
@@ -187,9 +302,15 @@ exports.updateJewellery = async (req, res) => {
       runValidators: true
     });
 
+    const data = jewellery.toObject();
+    const autoImages = getAutoImages(data.jewelId);
+    if (autoImages && autoImages.length > 0) {
+      data.images = autoImages;
+    }
+
     res.status(200).json({
       success: true,
-      data: jewellery
+      data: data
     });
   } catch (err) {
     res.status(400).json({ success: false, error: err.message });
