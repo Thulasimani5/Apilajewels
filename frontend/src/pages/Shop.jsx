@@ -99,7 +99,7 @@ const JewelleryListing = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/api/jewellery?limit=100');
+        const response = await fetch('http://localhost:5001/api/jewellery?limit=100');
         const result = await response.json();
         if (result.success) {
           setProducts(result.data);
