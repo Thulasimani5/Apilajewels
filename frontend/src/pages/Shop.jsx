@@ -226,7 +226,11 @@ useEffect(() => {
 
 const getHeaderTitle = () => {
     if (activeFilters.Category.length > 0) {
-      return `${activeFilters.Category.join(', ')} Jewels`;
+      const categoryName = activeFilters.Category.join(', ');
+      if (categoryName.toLowerCase().includes('jewel') || categoryName.toLowerCase().includes('jewellery')) {
+        return categoryName;
+      }
+      return `${categoryName} Jewels`;
     }
     if (activeFilters.Type.length > 0) {
       if (activeFilters.Type.length === 1) {
