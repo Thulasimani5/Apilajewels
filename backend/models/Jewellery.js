@@ -43,7 +43,7 @@ const JewellerySchema = new mongoose.Schema({
   stoneName: {
     type: [String],
     default: [],
-    enum: ["Crystal", "Sapphire", "Pink Morganite", "Ruby", "Emerald", "Jade", "Kemp Stone", "Pearl", "Polki Diamond", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia", "Amethyst", "Amber"]
+    enum: ["Crystal", "Sapphire", "Pink Morganite", "Ruby", "Emerald", "Jade", "Kemp Stone", "Pearl", "Moissanite Stone", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia", "Amethyst", "Amber", "Pink Topaz", "Navarathna", "Polki Stone", "Rose Quartz", "Green Onyx"]
   },
   stoneColour: {
     type: [String],

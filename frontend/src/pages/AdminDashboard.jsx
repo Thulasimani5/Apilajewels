@@ -174,7 +174,7 @@ const AdminDashboard = () => {
     salesAmount: '',
     shopName: '',
     stoneName: [],
-    stoneColour: ''
+    stoneColour: []
   });
   const [mediaList, setMediaList] = useState([]);
   const [dragActive, setDragActive] = useState(false);
@@ -186,31 +186,7 @@ const AdminDashboard = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Map stones to default colours
-  const stoneColourMap = {
-    "Crystal": "Clear",
-    "Sapphire": "Blue",
-    "Pink Morganite": "Pink",
-    "Ruby": "Red",
-    "Emerald": "Green",
-    "Jade": "Green",
-    "Kemp Stone": "Yellow",
-    "Pearl": "White",
-    "Polki Diamond": "Clear",
-    "Basra Pearl": "White",
-    "Kundan": "Gold",
-    "Glass Beads": "Various",
-    "AD Stone": "Red",
-    "Cubic Zirconia": "Clear",
-    "Amethyst": "Violete",
-    "Amber": "Orange"
-  };
-
-  // Auto-select stone colour when stone name changes
-  useEffect(() => {
-    const colour = formData.stoneName && formData.stoneName.length > 0 ? stoneColourMap[formData.stoneName[0]] : "";
-    setFormData(prev => ({ ...prev, stoneColour: colour }));
-  }, [formData.stoneName]);
+  // Stone colour is now manually selected via checkboxes
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -335,7 +311,7 @@ const AdminDashboard = () => {
           category: 'Moissanite', type: [], colour: 'Gold',
           material: '', size: '', finish: '',
           purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: '',
-          stoneName: [], stoneColour: ''
+          stoneName: [], stoneColour: []
         });
         setMediaList([]);
       } else {
@@ -589,7 +565,7 @@ const AdminDashboard = () => {
                                       salesAmount: jewel.salesAmount || '',
                                       shopName: jewel.shopName || '',
                                       stoneName: jewel.stoneName || [],
-                                      stoneColour: []
+                                      stoneColour: Array.isArray(jewel.stoneColour) ? jewel.stoneColour : (jewel.stoneColour ? [jewel.stoneColour] : [])
                                     });
                                     setMediaList([]);
                                     setShowAddForm(true);
@@ -640,7 +616,7 @@ const AdminDashboard = () => {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)*</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Rental Price (₹)*</label>
                     <input required type="number" name="price" value={formData.price} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm" placeholder="e.g. 1500" />
                   </div>
                   <div>
@@ -687,7 +663,7 @@ const AdminDashboard = () => {
                       <div className="grid grid-cols-2 gap-2">
                         {[
                           "Crystal", "Sapphire", "Pink Morganite", "Ruby", "Emerald", "Jade", "Kemp Stone", "Pearl",
-                          "Polki Diamond", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia", "Amethyst", "Amber"
+                          "Moissanite Stone", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia", "Amethyst", "Amber", "Pink Topaz", "Navarathna", "Polki Stone", "Rose Quartz", "Green Onyx"
                         ].map(s => (
                           <label key={s} className="inline-flex items-center">
                             <input
@@ -713,15 +689,32 @@ const AdminDashboard = () => {
                     </div>
                     {/* Stone Colour */}
                     <div className="mt-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Stone Colour</label>
-                      <input
-                        type="text"
-                        name="stoneColour"
-                        value={formData.stoneColour || ''}
-                        onChange={handleInputChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm"
-                        placeholder="e.g. Blue, Red"
-                      />
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Stone Colour(s)</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {[
+                          "Clear", "Blue", "Pink", "Red", "Green", "Yellow", "White", "Gold", "Various", "Violete", "Orange", "Black", "Purple", "Silver"
+                        ].map(c => (
+                          <label key={c} className="inline-flex items-center">
+                            <input
+                              type="checkbox"
+                              name="stoneColour"
+                              value={c}
+                              checked={Array.isArray(formData.stoneColour) ? formData.stoneColour.includes(c) : false}
+                              onChange={e => {
+                                const checked = e.target.checked;
+                                setFormData(prev => ({
+                                  ...prev,
+                                  stoneColour: checked
+                                    ? [...(Array.isArray(prev.stoneColour) ? prev.stoneColour : []), c]
+                                    : (Array.isArray(prev.stoneColour) ? prev.stoneColour : []).filter(x => x !== c)
+                                }));
+                              }}
+                              className="mr-2 h-4 w-4 text-[#B07A85] border-gray-300 rounded focus:ring-[#B07A85]"
+                            />
+                            <span className="text-sm text-gray-700">{c}</span>
+                          </label>
+                        ))}
+                      </div>
                     </div>
                   </div>
                   
@@ -769,10 +762,6 @@ const AdminDashboard = () => {
                     <div>
                       <label className="block text-xs font-medium text-gray-600 mb-1">Purchase Amount (₹)</label>
                       <input type="number" name="purchaseAmount" value={formData.purchaseAmount || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-amber-200 rounded-md focus:outline-none focus:ring-amber-400 focus:border-amber-400 text-sm bg-white" placeholder="Amount paid to buy" />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Rent Amount (₹)</label>
-                      <input type="number" name="rentAmount" value={formData.rentAmount || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-amber-200 rounded-md focus:outline-none focus:ring-amber-400 focus:border-amber-400 text-sm bg-white" placeholder="Amount charged for rental" />
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-gray-600 mb-1">Sales Amount (₹)</label>

@@ -16,6 +16,10 @@ const getAutoImages = (jewelId) => {
       dirsToSearch.push(path.join(uploadsPath, 'AD Gold'));
     } else if (upperJewelId.startsWith('AS')) {
       dirsToSearch.push(path.join(uploadsPath, 'AD Silver'));
+    } else if (upperJewelId.startsWith('MP')) {
+      dirsToSearch.push(path.join(uploadsPath, 'Mois Polki'));
+    } else if (upperJewelId.startsWith('PB')) {
+      dirsToSearch.push(path.join(uploadsPath, 'Premium Gold Bridal Jewels'));
     }
 
     dirsToSearch = dirsToSearch.filter(dir => fs.existsSync(dir));
