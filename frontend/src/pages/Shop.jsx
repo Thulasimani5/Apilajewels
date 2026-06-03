@@ -7,6 +7,7 @@ import FilterSidebar from '../components/FilterSidebar';
 import CategoryContext from '../context/CategoryContext';
 import SortBottomSheet from '../components/SortBottomSheet';
 import SearchOverlay from '../components/SearchOverlay';
+import API_BASE_URL from '../config/api';
 
 /* ── Sort options ── */
 const SORT_OPTIONS = [
@@ -108,7 +109,7 @@ const JewelleryListing = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/api/jewellery?limit=500');
+        const response = await fetch(`${API_BASE_URL}/api/jewellery?limit=500`);
         const result = await response.json();
         if (result.success) {
           setProducts(result.data);
@@ -311,7 +312,7 @@ const JewelleryListing = () => {
       </header>
 
       {/* ── Mobile-only Filter & Sort bar ── (hidden on md+) */}
-      <div className="md:hidden flex justify-between items-center px-4 py-[8px] border-b border-[#F0EDED]">
+      <div className="md:hidden flex justify-between items-center px-4 py-[8px] border-b border-[#F0EDED] sticky top-[60px] z-20 bg-white">
         <button
           onClick={() => setIsFilterOpen(true)}
           className="flex items-center gap-[3px] text-[13px] font-medium text-[#1A1A1A]"

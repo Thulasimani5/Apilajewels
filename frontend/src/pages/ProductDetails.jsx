@@ -8,6 +8,7 @@ import Card from '../components/Card';
 import ShareBottomSheet from '../components/ShareBottomSheet';
 import SearchOverlay from '../components/SearchOverlay';
 import FullScreenMediaViewer from '../components/FullScreenMediaViewer';
+import API_BASE_URL from '../config/api';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -31,7 +32,7 @@ const ProductDetails = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:5001/api/jewellery/${id}`);
+        const response = await fetch(`${API_BASE_URL}/api/jewellery/${id}`);
         const result = await response.json();
         if (result.success) {
           setProduct(result.data);
@@ -60,7 +61,7 @@ const ProductDetails = () => {
       try {
         // Try same-category items first
         const catRes = await fetch(
-          `http://localhost:5001/api/jewellery?limit=10`
+          `${API_BASE_URL}/api/jewellery?limit=10`
         );
         const catData = await catRes.json();
         if (catData.success) {
@@ -231,8 +232,8 @@ const ProductDetails = () => {
         </button>
       </div>
 
-      {/* Sticky Action Buttons */}
-      <div className="sticky bottom-0 left-0 right-0 bg-[#FFF8F3] pt-4 pb-6 z-30">
+      {/* Sticky Action Buttons (Mobile only) */}
+      <div className="sticky md:static bottom-0 left-0 right-0 bg-[#FFF8F3] pt-4 pb-6 z-30">
         <div className="flex gap-3">
           <button
             onClick={handleAddToCart}

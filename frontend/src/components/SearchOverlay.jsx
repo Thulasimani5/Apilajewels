@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ArrowLeft, Search as SearchIcon, X, Loader2 } from 'lucide-react';
+import API_BASE_URL from '../config/api';
+
 import { useNavigate } from 'react-router-dom';
 
 const SearchOverlay = ({ isOpen, onClose, category, type }) => {
@@ -44,7 +45,7 @@ const SearchOverlay = ({ isOpen, onClose, category, type }) => {
       setLoading(true);
       setError(null);
       try {
-        let url = `http://localhost:5001/api/jewellery?search=${encodeURIComponent(query.trim())}&limit=50`;
+        let url = `${API_BASE_URL}/api/jewellery?search=${encodeURIComponent(query.trim())}&limit=50`;
         if (category) url += `&category=${encodeURIComponent(category)}`;
         if (type) url += `&type=${encodeURIComponent(type)}`;
         const res = await fetch(url);

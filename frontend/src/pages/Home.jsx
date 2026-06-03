@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Card from '../components/Card';
 import CategoryContext from '../context/CategoryContext';
-import { useContext } from 'react';
+import API_BASE_URL from '../config/api';
 
 /* ── Arrow button ── */
 const ArrowIcon = () => (
@@ -16,7 +16,7 @@ const ArrowIcon = () => (
 
 
 /* ── Base URL ── */
-const baseUrl = 'http://localhost:5001';
+const baseUrl = API_BASE_URL;
 
 /* ── Shop by Occasion data ── */
 const occasions = [
@@ -43,7 +43,7 @@ const Home = () => {
   useEffect(() => {
     const fetchTrending = async () => {
       try {
-        const res = await fetch('http://localhost:5001/api/jewellery?sort=popularity&limit=8');
+        const res = await fetch(`${API_BASE_URL}/api/jewellery?sort=popularity&limit=8`);
         const data = await res.json();
         if (data.success && data.data) {
           // Sort by popularity descending and take top 8

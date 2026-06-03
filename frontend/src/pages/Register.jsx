@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -23,7 +24,7 @@ const Register = () => {
     setLoading(true);
     
     try {
-      const response = await axios.post('http://localhost:5001/api/auth/register', {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/register`, {
         mobile: formData.mobile,
         password: formData.password,
         role: formData.role
