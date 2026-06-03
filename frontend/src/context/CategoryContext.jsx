@@ -10,7 +10,7 @@ export const CategoryProvider = ({ children }) => {
 
   const fetchCategories = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/categories');
+      const res = await axios.get('http://localhost:5001/api/categories');
       setCategories(res.data.data || []);
       setLoading(false);
     } catch (err) {
@@ -31,7 +31,7 @@ export const CategoryProvider = ({ children }) => {
         }
       };
       // Axios automatically sets Content-Type to multipart/form-data when passing FormData
-      const res = await axios.post('http://localhost:5000/api/categories', formData, config);
+      const res = await axios.post('http://localhost:5001/api/categories', formData, config);
       setCategories([res.data.data, ...(categories || [])]);
       return res.data;
     } catch (err) {
@@ -42,7 +42,7 @@ export const CategoryProvider = ({ children }) => {
   const deleteCategory = async (id, token) => {
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      await axios.delete(`http://localhost:5000/api/categories/${id}`, config);
+      await axios.delete(`http://localhost:5001/api/categories/${id}`, config);
       setCategories((categories || []).filter(cat => cat._id !== id));
     } catch (err) {
       throw err;
@@ -52,7 +52,7 @@ export const CategoryProvider = ({ children }) => {
   const updateCategory = async (id, formData, token) => {
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
-      const res = await axios.put(`http://localhost:5000/api/categories/${id}`, formData, config);
+      const res = await axios.put(`http://localhost:5001/api/categories/${id}`, formData, config);
       setCategories((categories || []).map(cat => cat._id === id ? res.data.data : cat));
       return res.data;
     } catch (err) {

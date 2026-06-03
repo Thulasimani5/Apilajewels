@@ -16,7 +16,7 @@ const ArrowIcon = () => (
 
 
 /* ── Base URL ── */
-const baseUrl = 'http://localhost:5000';
+const baseUrl = 'http://localhost:5001';
 
 /* ── Shop by Occasion data ── */
 const occasions = [
@@ -43,7 +43,7 @@ const Home = () => {
   useEffect(() => {
     const fetchTrending = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/jewellery?sort=popularity&limit=8');
+        const res = await fetch('http://localhost:5001/api/jewellery?sort=popularity&limit=8');
         const data = await res.json();
         if (data.success && data.data) {
           // Sort by popularity descending and take top 8

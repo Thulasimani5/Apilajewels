@@ -13,11 +13,11 @@ const router = express.Router();
 
 router.route('/')
   .get(getJewelleries)
-  .post(protect, authorize('admin'), upload.array('images', 5), createJewellery);
+  .post(protect, authorize('admin'), upload.array('images', 20), createJewellery);
 
 router.route('/:id')
   .get(getJewellery)
-  .put(protect, authorize('admin'), upload.array('images', 5), updateJewellery)
+  .put(protect, authorize('admin'), upload.array('images', 20), updateJewellery)
   .delete(protect, authorize('admin'), deleteJewellery);
 
 module.exports = router;

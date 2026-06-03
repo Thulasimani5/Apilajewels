@@ -48,6 +48,18 @@ app.get('/', (req, res) => {
   res.send('Apila Jewels API is running...');
 });
 
+// Global error handler — catches multer errors and other unhandled errors
+app.use((err, req, res, next) => {
+  if (err && err.code === 'LIMIT_UNEXPECTED_FILE') {
+    return res.status(400).json({ success: false, error: 'Too many files uploaded. Maximum allowed is 20.' });
+  }
+  if (err && err.code && err.code.startsWith('LIMIT_')) {
+    return res.status(400).json({ success: false, error: err.message });
+  }
+  console.error('Unhandled error:', err);
+  res.status(500).json({ success: false, error: err.message || 'Server Error' });
+});
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
