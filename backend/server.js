@@ -6,8 +6,6 @@ const connectDB = require('./config/db');
 // Load env vars
 dotenv.config();
 
-// Connect to database
-connectDB(); 
 
 const app = express();
 
@@ -38,6 +36,17 @@ app.use((req, res, next) => {
 });
 
 // Note: Static file serving removed — images are now served via Cloudinary.
+
+// Lazily connect to MongoDB on the first request (required for Vercel serverless)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error('DB connection failed:', err.message);
+    res.status(500).json({ success: false, error: 'Database connection failed' });
+  }
+});
 
 // Mount routers
 app.use('/api/auth', require('./routes/auth'));
