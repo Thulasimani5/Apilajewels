@@ -29,6 +29,12 @@ const getAutoImages = (jewelId) => {
       dirsToSearch.push(path.join(uploadsPath, 'Mois Polki'));
     } else if (upperJewelId.startsWith('PB') || originalUpper.startsWith('PB')) {
       dirsToSearch.push(path.join(uploadsPath, 'Premium Gold Bridal Jewels'));
+    } else if (upperJewelId.startsWith('BA') || originalUpper.startsWith('BA')) {
+      dirsToSearch.push(path.join(uploadsPath, 'Gold Bridal Jewels'));
+    } else if (upperJewelId.startsWith('HJ') || originalUpper.startsWith('HJ')) {
+      dirsToSearch.push(path.join(uploadsPath, 'Haritage Jewels'));
+    } else if (upperJewelId.startsWith('PK') || originalUpper.startsWith('PK')) {
+      dirsToSearch.push(path.join(uploadsPath, 'Kundan'));
     }
 
     dirsToSearch = dirsToSearch.filter(dir => fs.existsSync(dir));
@@ -278,24 +284,48 @@ exports.updateJewellery = async (req, res) => {
     }
 
     let images = jewellery.images || [];
-    if (req.files && req.files.length > 0) {
-      const newImages = req.files.map(file => {
-        const normalizedPath = file.path.replace(/\\/g, '/');
-        const url = `http://localhost:${process.env.PORT || 5000}/${normalizedPath}`;
-        const type = file.mimetype && file.mimetype.startsWith('video') ? 'video' : 'image';
-        return { type, url };
-      });
-      images = [...images, ...newImages];
-    }
+    
+    // Check if frontend provided a strict reordered list
+    if (req.body.reorderedImages) {
+      try {
+        const reordered = JSON.parse(req.body.reorderedImages);
+        let newFileIndex = 0;
+        const newImages = req.files ? req.files.map(file => {
+          const normalizedPath = file.path.replace(/\\/g, '/');
+          const url = `http://localhost:${process.env.PORT || 5000}/${normalizedPath}`;
+          const type = file.mimetype && file.mimetype.startsWith('video') ? 'video' : 'image';
+          return { type, url };
+        }) : [];
 
-    if (req.body.images) {
-      if (typeof req.body.images === 'string') {
-        try {
-          req.body.images = JSON.parse(req.body.images);
-        } catch (e) {}
+        images = reordered.map(item => {
+          if (item.isNew) {
+            return newImages[newFileIndex++];
+          }
+          return { type: item.type, url: item.url };
+        }).filter(Boolean); // Filter out any undefined just in case
+      } catch (e) {
+        console.error("Error parsing reorderedImages", e);
       }
-      if (Array.isArray(req.body.images)) {
-        images = [...images, ...req.body.images];
+    } else {
+      // Legacy behavior if reorderedImages is not sent
+      if (req.files && req.files.length > 0) {
+        const newImages = req.files.map(file => {
+          const normalizedPath = file.path.replace(/\\/g, '/');
+          const url = `http://localhost:${process.env.PORT || 5000}/${normalizedPath}`;
+          const type = file.mimetype && file.mimetype.startsWith('video') ? 'video' : 'image';
+          return { type, url };
+        });
+        images = [...images, ...newImages];
+      }
+      if (req.body.images) {
+        if (typeof req.body.images === 'string') {
+          try {
+            req.body.images = JSON.parse(req.body.images);
+          } catch (e) {}
+        }
+        if (Array.isArray(req.body.images)) {
+          images = [...images, ...req.body.images];
+        }
       }
     }
 

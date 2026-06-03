@@ -72,7 +72,9 @@ const Card = ({ jewellery }) => {
         </h3>
         {/* Price — regular weight, gray color */}
         <p className="text-[11.5px] text-[#666666] leading-[1.2] mt-[1px] tracking-[-0.1px]">
-          ₹{jewellery.rentalPrice?.toFixed(2)}
+          {jewellery.rentalPrice >= 2000 
+            ? 'Premium Collection' 
+            : `₹${jewellery.rentalPrice?.toFixed(2)}`}
         </p>
       </div>
     </Link>

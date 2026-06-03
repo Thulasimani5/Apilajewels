@@ -264,8 +264,9 @@ const AdminDashboard = () => {
       alert("The first media item MUST be an image.");
       return;
     }
-    if (mediaList.length > 0 && mediaList.some(m => !m.file)) {
-      alert("Please select a file for all media inputs.");
+    // Only new media items need a file
+    if (mediaList.length > 0 && mediaList.some(m => !m.file && !m.url)) {
+      alert("Please select a file for all new media inputs.");
       return;
     }
 
@@ -280,6 +281,14 @@ const AdminDashboard = () => {
           payload.append(key, value);
         }
       });
+      
+      // Pass the complete order of images back to server
+      const existingImages = mediaList.map(m => {
+        if (m.file) return { isNew: true, type: m.type };
+        return { type: m.type, url: m.url };
+      });
+      payload.append('reorderedImages', JSON.stringify(existingImages));
+
       mediaList.forEach(m => {
         if (m.file) {
           payload.append('images', m.file);
@@ -328,10 +337,14 @@ const AdminDashboard = () => {
   const filteredAdminJewelleries = (adminJewelleries || []).filter(jewel => {
     const q = adminJewellerySearch.toLowerCase().trim();
     if (!q) return true;
+    // jewel.type can be an array or a string — normalise to a lowercase string before searching
+    const typeStr = Array.isArray(jewel.type)
+      ? jewel.type.join(' ').toLowerCase()
+      : (jewel.type || '').toLowerCase();
     return (
       jewel.name?.toLowerCase().includes(q) ||
       jewel.jewelId?.toLowerCase().includes(q) ||
-      jewel.type?.toLowerCase().includes(q) ||
+      typeStr.includes(q) ||
       jewel.description?.toLowerCase().includes(q)
     );
   });
@@ -567,7 +580,11 @@ const AdminDashboard = () => {
                                       stoneName: jewel.stoneName || [],
                                       stoneColour: Array.isArray(jewel.stoneColour) ? jewel.stoneColour : (jewel.stoneColour ? [jewel.stoneColour] : [])
                                     });
-                                    setMediaList([]);
+                                    setMediaList(jewel.images ? jewel.images.map(img => ({
+                                      type: img.type || 'image',
+                                      url: img.url || img,
+                                      file: null
+                                    })) : []);
                                     setShowAddForm(true);
                                   }}
                                   className="text-xs bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-600 hover:text-white transition-all font-semibold shadow-sm"
@@ -846,7 +863,7 @@ const AdminDashboard = () => {
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         {mediaList.map((media, index) => {
                           const isVideo = media.type === 'video';
-                          const fileUrl = media.file ? URL.createObjectURL(media.file) : '';
+                          const fileUrl = media.file ? URL.createObjectURL(media.file) : media.url;
 
                           return (
                              <div 

@@ -1,24 +1,33 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { ArrowLeft, Search, Heart, ShoppingCart, ChevronDown } from 'lucide-react';
+import React, { useState, useMemo, useEffect, useRef, useContext } from 'react';
+import { ArrowLeft, Search, Heart, ShoppingCart, ChevronDown, X, SlidersHorizontal } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Card from '../components/Card';
 import FilterBottomSheet from '../components/FilterBottomSheet';
+import FilterSidebar from '../components/FilterSidebar';
 import CategoryContext from '../context/CategoryContext';
-import { useContext } from 'react';
 import SortBottomSheet from '../components/SortBottomSheet';
 import SearchOverlay from '../components/SearchOverlay';
+
+/* ── Sort options ── */
+const SORT_OPTIONS = [
+  { id: 'recommended', label: 'Recommended' },
+  { id: 'newest', label: 'Newest First' },
+  { id: 'price_low_high', label: 'Price: Low to High' },
+  { id: 'price_high_low', label: 'Price: High to Low' },
+  { id: 'popularity', label: 'Popularity' },
+];
 
 const JewelleryListing = () => {
   // Modal toggle states
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
 
   // Infinite scroll state
   const [visibleCount, setVisibleCount] = useState(20); // start with 20 items
   const loadMoreRef = useRef(null);
-
-// infinite scroll effect moved below
+  const sortDropdownRef = useRef(null);
 
   // Read URL search params
   const [searchParams] = useSearchParams();
@@ -99,7 +108,7 @@ const JewelleryListing = () => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:5000/api/jewellery?limit=100');
+        const response = await fetch('http://localhost:5000/api/jewellery?limit=500');
         const result = await response.json();
         if (result.success) {
           setProducts(result.data);
@@ -118,19 +127,12 @@ const JewelleryListing = () => {
 
   const handleApplyFilters = (newFilters) => {
     setActiveFilters(newFilters);
-    console.log('Applied filters:', newFilters);
+    setVisibleCount(20); // Reset scroll on filter change
   };
 
   const getSortLabel = (sortId) => {
-    switch (sortId) {
-      case 'newest': return 'Newest First';
-      case 'price_low_high': return 'Price: Low to High';
-      case 'price_high_low': return 'Price: High to Low';
-      case 'popularity': return 'Popularity';
-      case 'recommended':
-      default:
-        return 'Recommended';
-    }
+    const opt = SORT_OPTIONS.find(o => o.id === sortId);
+    return opt ? opt.label : 'Recommended';
   };
 
   // Filter products by selected categories, colours, occasions, and price ranges
@@ -211,20 +213,33 @@ const JewelleryListing = () => {
   }, [filteredProducts, activeSort]);
 
   // Infinite scroll effect
-useEffect(() => {
-  if (!loadMoreRef.current) return;
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        setVisibleCount(prev => Math.min(prev + 20, sortedProducts.length));
-      }
-    });
-  }, { rootMargin: '200px' });
-  observer.observe(loadMoreRef.current);
-  return () => observer.disconnect();
-}, [sortedProducts]);
+  useEffect(() => {
+    if (!loadMoreRef.current) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          setVisibleCount(prev => Math.min(prev + 20, sortedProducts.length));
+        }
+      });
+    }, { rootMargin: '200px' });
+    observer.observe(loadMoreRef.current);
+    return () => observer.disconnect();
+  }, [sortedProducts]);
 
-const getHeaderTitle = () => {
+  // Close sort dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (sortDropdownRef.current && !sortDropdownRef.current.contains(e.target)) {
+        setIsSortDropdownOpen(false);
+      }
+    };
+    if (isSortDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isSortDropdownOpen]);
+
+  const getHeaderTitle = () => {
     if (activeFilters.Category.length > 0) {
       return `${activeFilters.Category.join(', ')} Jewels`;
     }
@@ -243,11 +258,33 @@ const getHeaderTitle = () => {
     return 'Moissanite Jewels';
   };
 
+  /* ── Collect all active filter pills for display ── */
+  const activeFilterPills = useMemo(() => {
+    const pills = [];
+    Object.entries(activeFilters).forEach(([section, values]) => {
+      values.forEach(value => {
+        pills.push({ section, value });
+      });
+    });
+    return pills;
+  }, [activeFilters]);
+
+  /* ── Remove a single filter pill ── */
+  const removeFilterPill = (section, value) => {
+    setActiveFilters(prev => ({
+      ...prev,
+      [section]: prev[section].filter(v => v !== value),
+    }));
+  };
+
+  /* ── Total active filter count ── */
+  const totalFilterCount = activeFilterPills.length;
+
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-white min-h-screen flex flex-col">
 
       {/* ── Header ── sticky white bar with back arrow, title, and action icons */}
-      <header className="sticky top-0 bg-white z-40 px-4 py-[11px] flex items-center justify-between">
+      <header className="sticky top-0 bg-white z-50 px-4 h-[60px] flex items-center justify-between border-b border-[#F0EDED]">
         <div className="flex items-center gap-[10px]">
           <Link to="/" className="text-[#1A1A1A] flex items-center justify-center">
             <ArrowLeft size={22} strokeWidth={2.2} />
@@ -269,8 +306,8 @@ const getHeaderTitle = () => {
         </div>
       </header>
 
-      {/* ── Filter & Sort bar ── */}
-      <div className="flex justify-between items-center px-4 py-[8px]">
+      {/* ── Mobile-only Filter & Sort bar ── (hidden on md+) */}
+      <div className="md:hidden flex justify-between items-center px-4 py-[8px] border-b border-[#F0EDED]">
         <button
           onClick={() => setIsFilterOpen(true)}
           className="flex items-center gap-[3px] text-[13px] font-medium text-[#1A1A1A]"
@@ -287,36 +324,143 @@ const getHeaderTitle = () => {
         </div>
       </div>
 
-      {/* ── Product Grid ── 2-col grid, tight 10px gap, symmetric horizontal padding */}
-      <div className="px-[14px] pt-[4px] pb-8">
-        {loading ? (
-          <div className="flex flex-col justify-center items-center py-24 text-gray-500 gap-2">
-            <div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
-            <span className="text-xs font-semibold tracking-wider text-gray-400 uppercase">Loading Jewels...</span>
-          </div>
-        ) : error ? (
-          <div className="flex justify-center items-center py-20 text-red-500 font-semibold text-xs uppercase tracking-wider">
-            {error}
-          </div>
-        ) : sortedProducts.length === 0 ? (
-          <div className="flex justify-center items-center py-20 text-gray-400 font-semibold text-xs uppercase tracking-wider">
-            No matching jewellery found
-          </div>
-        ) : (
-          <>
-            {/* ── Product Grid ── responsive grid with infinite scroll ── */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[10px]">
-              {sortedProducts.slice(0, visibleCount).map(product => (
-                <Card key={product._id} jewellery={product} />
-              ))}
+      {/* ═══════════════════════════════════════════════════════════════
+          MAIN CONTENT — 2-column on desktop, single column on mobile
+          ═══════════════════════════════════════════════════════════════ */}
+      <div className="flex flex-1 items-start">
+
+        {/* ── Desktop Sidebar (hidden on mobile) ── */}
+        <div className="hidden md:block sticky top-[60px] h-[calc(100vh-60px)] z-30">
+          <FilterSidebar
+            activeFilters={activeFilters}
+            onFilterChange={handleApplyFilters}
+            products={products}
+          />
+        </div>
+
+        {/* ── Right Content Area: Active pills bar + product grid ── */}
+        <div className="flex-1 min-w-0">
+
+          {/* ── Desktop Active Filters Bar + Sort ── (hidden on mobile) */}
+          <div className="hidden md:flex items-center justify-between px-5 py-3 border-b border-[#F0EDED] bg-white sticky top-[60px] z-40">
+            <div className="flex items-center gap-2 flex-wrap flex-1 min-w-0">
+              {/* Result count */}
+              <span className="text-[13px] text-[#666] font-medium flex-shrink-0">
+                {sortedProducts.length} {sortedProducts.length === 1 ? 'item' : 'items'}
+              </span>
+
+              {/* Active filter pills */}
+              {activeFilterPills.length > 0 && (
+                <>
+                  <span className="text-[#D5D5D5] mx-1 flex-shrink-0">|</span>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    {activeFilterPills.map(({ section, value }) => (
+                      <button
+                        key={`${section}-${value}`}
+                        onClick={() => removeFilterPill(section, value)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#FFF8F3] text-[#A56D7A] rounded-full text-[11px] font-semibold border border-[#A56D7A]/15 hover:bg-[#A56D7A] hover:text-white transition-all duration-200 group"
+                      >
+                        {value}
+                        <X size={12} className="text-[#A56D7A]/60 group-hover:text-white transition-colors" />
+                      </button>
+                    ))}
+                    {totalFilterCount > 1 && (
+                      <button
+                        onClick={() => handleApplyFilters({ Colour: [], Type: [], Price: [], Occasion: [], Category: [] })}
+                        className="text-[11px] text-[#A56D7A] font-bold uppercase tracking-wide hover:text-[#935b67] transition-colors ml-1"
+                      >
+                        Clear All
+                      </button>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
-            {/* sentinel element for infinite scroll */}
-            <div ref={loadMoreRef} className="h-1"></div>
-          </>
-        )}
+
+            {/* Desktop Sort Dropdown */}
+            <div className="relative flex-shrink-0 ml-4" ref={sortDropdownRef}>
+              <button
+                onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
+                className="flex items-center gap-1.5 text-[12px] cursor-pointer px-3 py-1.5 rounded-lg border border-[#EBEBEB] hover:border-[#A56D7A]/30 transition-colors bg-white"
+              >
+                <span className="text-[#999] font-normal">Sort by :</span>
+                <span className="text-[#1A1A1A] font-semibold">{getSortLabel(activeSort)}</span>
+                <ChevronDown size={12} strokeWidth={2.2} className={`text-[#1A1A1A] transition-transform duration-200 ${isSortDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {/* Sort dropdown menu */}
+              {isSortDropdownOpen && (
+                <div className="absolute right-0 top-full mt-1.5 w-[210px] bg-white border border-[#EBEBEB] rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] py-1.5 z-50 overflow-hidden">
+                  {SORT_OPTIONS.map(option => (
+                    <button
+                      key={option.id}
+                      onClick={() => {
+                        setActiveSort(option.id);
+                        setIsSortDropdownOpen(false);
+                      }}
+                      className={`w-full text-left px-4 py-2.5 text-[13px] transition-colors ${
+                        activeSort === option.id
+                          ? 'text-[#A56D7A] font-semibold bg-[#FFF8F3]'
+                          : 'text-[#333] hover:bg-[#FDFBFA] font-normal'
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* ── Product Grid ── */}
+          <div className="px-[14px] md:px-5 pt-[4px] md:pt-4 pb-8">
+            {loading ? (
+              <div className="flex flex-col justify-center items-center py-24 text-gray-500 gap-2">
+                <div className="w-8 h-8 border-4 border-[#A56D7A] border-t-transparent rounded-full animate-spin"></div>
+                <span className="text-xs font-semibold tracking-wider text-gray-400 uppercase">Loading Jewels...</span>
+              </div>
+            ) : error ? (
+              <div className="flex justify-center items-center py-20 text-red-500 font-semibold text-xs uppercase tracking-wider">
+                {error}
+              </div>
+            ) : sortedProducts.length === 0 ? (
+              <div className="flex flex-col justify-center items-center py-20 gap-3">
+                <div className="w-16 h-16 rounded-full bg-[#FCF8F5] flex items-center justify-center">
+                  <SlidersHorizontal size={24} className="text-[#A56D7A]/60" />
+                </div>
+                <p className="text-[#999] font-semibold text-xs uppercase tracking-wider">
+                  No matching jewellery found
+                </p>
+                <button
+                  onClick={() => handleApplyFilters({ Colour: [], Type: [], Price: [], Occasion: [], Category: [] })}
+                  className="text-[12px] text-[#A56D7A] font-bold underline underline-offset-2 hover:text-[#935b67] transition-colors"
+                >
+                  Clear all filters
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* ── Responsive Product Grid with infinite scroll ── */}
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[10px] md:gap-4">
+                  {sortedProducts.slice(0, visibleCount).map(product => (
+                    <Card key={product._id} jewellery={product} />
+                  ))}
+                </div>
+                {/* sentinel element for infinite scroll */}
+                <div ref={loadMoreRef} className="h-1"></div>
+                {/* Loading more indicator */}
+                {visibleCount < sortedProducts.length && (
+                  <div className="flex justify-center py-6">
+                    <div className="w-6 h-6 border-3 border-[#A56D7A] border-t-transparent rounded-full animate-spin"></div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
       </div>
 
-      {/* ── Filter Bottom Sheet Modal ── */}
+      {/* ── Mobile Filter Bottom Sheet Modal ── */}
       <FilterBottomSheet
         isOpen={isFilterOpen}
         onClose={() => setIsFilterOpen(false)}
@@ -324,7 +468,7 @@ const getHeaderTitle = () => {
         onApply={handleApplyFilters}
       />
 
-      {/* ── Sort Bottom Sheet Modal ── */}
+      {/* ── Mobile Sort Bottom Sheet Modal ── */}
       <SortBottomSheet
         isOpen={isSortOpen}
         onClose={() => setIsSortOpen(false)}

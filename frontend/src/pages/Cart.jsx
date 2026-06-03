@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import SearchOverlay from '../components/SearchOverlay';
+import ShareBottomSheet from '../components/ShareBottomSheet';
 
 import { ArrowLeft, Search, Heart, Share2, X } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -9,6 +10,7 @@ import { useAuth } from '../context/AuthContext';
 const Cart = () => {
   const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
   const location = useLocation();
   const { user } = useAuth();
   const { cartItems, removeFromCart } = useCart();
@@ -64,7 +66,7 @@ const Cart = () => {
         <div className="flex items-center gap-4 text-gray-700">
           <button onClick={() => setIsSearchOpen(true)}><Search size={22} /></button>
           <button onClick={() => navigate('/wishlist')}><Heart size={22} /></button>
-          <button><Share2 size={22} /></button>
+          <button onClick={() => setIsShareOpen(true)}><Share2 size={22} /></button>
         </div>
       </div>
 
@@ -135,6 +137,7 @@ const Cart = () => {
         </div>
       )}
     <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+    <ShareBottomSheet isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} customTitle="Check out my cart at Apila Jewels!" />
     </div>
   );
 };

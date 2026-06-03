@@ -1,12 +1,12 @@
 import React from 'react';
 import { X, Link2, Share2 } from 'lucide-react';
 
-const ShareBottomSheet = ({ isOpen, onClose, product }) => {
-  if (!isOpen || !product) return null;
+const ShareBottomSheet = ({ isOpen, onClose, product, customTitle }) => {
+  if (!isOpen) return null;
 
   const url = window.location.href;
-  const title = `Check out ${product.name} at Apila Jewels!`;
-  const image = product.images?.[0]?.url;
+  const title = customTitle || (product ? `Check out ${product.name} at Apila Jewels!` : 'Check out Apila Jewels!');
+  const image = product?.images?.[0]?.url || '';
 
   const shareOptions = [
     {

@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
 import SearchOverlay from '../components/SearchOverlay';
+import ShareBottomSheet from '../components/ShareBottomSheet';
 
 const Wishlist = () => {
   const { wishlistItems, toggleWishlist } = useWishlist();
@@ -11,6 +12,7 @@ const Wishlist = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -33,7 +35,7 @@ const Wishlist = () => {
         <div className="flex items-center gap-4 text-gray-700">
           <button onClick={() => setIsSearchOpen(true)} className="text-gray-700"><Search size={22} /></button>
           <Link to="/cart"><ShoppingCart size={22} /></Link>
-          <button><Share2 size={22} /></button>
+          <button onClick={() => setIsShareOpen(true)}><Share2 size={22} /></button>
         </div>
       </div>
 
@@ -92,6 +94,7 @@ const Wishlist = () => {
         )}
       </div>
     <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+    <ShareBottomSheet isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} customTitle="Check out my wishlist at Apila Jewels!" />
     </div>
   );
 };
