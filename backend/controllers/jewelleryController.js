@@ -1,107 +1,42 @@
 const Jewellery = require('../models/Jewellery');
-const fs = require('fs');
-const path = require('path');
+const { cloudinary } = require('../config/cloudinary');
 
-const getAutoImages = (jewelId) => {
+// Auto-assign images from Cloudinary by searching for files matching the jewelId
+const getAutoImages = async (jewelId) => {
   if (!jewelId) return null;
-
-  const uploadsPath = path.join(__dirname, '..', 'uploads');
-  if (!fs.existsSync(uploadsPath)) return null;
+  // Only run if Cloudinary is properly configured
+  if (!process.env.CLOUDINARY_CLOUD_NAME) return null;
 
   try {
-    let dirsToSearch = [];
-    // Normalize IDs like AM010 to match folder naming (AM0010)
+    // Normalize IDs like AM010 -> AM0010
     let normalizedId = jewelId;
     if (/^[A-Z]{2}0[1-9]\d$/.test(jewelId)) {
-      // Insert an extra zero after the prefix, e.g., AM010 -> AM0010
       normalizedId = `${jewelId.slice(0, 2)}0${jewelId.slice(2)}`;
     }
     const upperJewelId = normalizedId.toUpperCase();
     const originalUpper = jewelId.toUpperCase();
-    
-    if (upperJewelId.startsWith('AM') || originalUpper.startsWith('AM')) {
-      dirsToSearch.push(path.join(uploadsPath, 'AD Mehandi'));
-    } else if (upperJewelId.startsWith('AG') || originalUpper.startsWith('AG')) {
-      dirsToSearch.push(path.join(uploadsPath, 'AD Gold'));
-    } else if (upperJewelId.startsWith('AS') || originalUpper.startsWith('AS')) {
-      dirsToSearch.push(path.join(uploadsPath, 'AD Silver'));
-    } else if (upperJewelId.startsWith('MP') || originalUpper.startsWith('MP')) {
-      dirsToSearch.push(path.join(uploadsPath, 'Mois Polki'));
-    } else if (upperJewelId.startsWith('PB') || originalUpper.startsWith('PB')) {
-      dirsToSearch.push(path.join(uploadsPath, 'Premium Gold Bridal Jewels'));
-    } else if (upperJewelId.startsWith('BA') || originalUpper.startsWith('BA')) {
-      dirsToSearch.push(path.join(uploadsPath, 'Gold Bridal Jewels'));
-    } else if (upperJewelId.startsWith('HJ') || originalUpper.startsWith('HJ')) {
-      dirsToSearch.push(path.join(uploadsPath, 'Haritage Jewels'));
-    } else if (upperJewelId.startsWith('PK') || originalUpper.startsWith('PK')) {
-      dirsToSearch.push(path.join(uploadsPath, 'Kundan'));
-    }
 
-    dirsToSearch = dirsToSearch.filter(dir => fs.existsSync(dir));
+    // Build expression to search Cloudinary for files whose filename starts with the jewelId
+    const expression = `folder:apila_jewels/* AND (public_id:*/${upperJewelId}* OR public_id:*/${originalUpper}*)`;
 
-    if (dirsToSearch.length === 0) {
-      const items = fs.readdirSync(uploadsPath, { withFileTypes: true });
-      // Get all subdirectories, and also the root uploads path
-      dirsToSearch = [uploadsPath, ...items.filter(item => item.isDirectory()).map(dir => path.join(uploadsPath, dir.name))];
-    }
-    
-    const escapedJewelId = upperJewelId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const escapedOriginal = originalUpper.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regexPattern = escapedJewelId === escapedOriginal ? escapedJewelId : `(${escapedJewelId}|${escapedOriginal})`;
-    const regex = new RegExp(`^${regexPattern}(?![a-zA-Z0-9]).*\\.(jpg|jpeg|png|webp|gif|mp4|mov|avi)$`, 'i');
-    
-    let allMatchedFiles = [];
+    const result = await cloudinary.search
+      .expression(expression)
+      .sort_by('public_id', 'asc')
+      .max_results(30)
+      .execute();
 
-    for (const dirPath of dirsToSearch) {
-      try {
-        const files = fs.readdirSync(dirPath);
-        const matched = files.filter(file => regex.test(file));
-        
-        if (matched.length > 0) {
-          const relativeDir = path.relative(uploadsPath, dirPath).replace(/\\/g, '/');
-          matched.forEach(file => {
-            allMatchedFiles.push({ file, relativeDir });
-          });
-        }
-      } catch (e) {
-        // ignore errors for unreadable dirs
-      }
-    }
-
-    if (allMatchedFiles.length > 0) {
-      allMatchedFiles.sort((aObj, bObj) => {
-        const a = aObj.file;
-        const b = bObj.file;
-        
-        const isBaseA = new RegExp(`^${regexPattern}\\.\\w+$`, 'i').test(a);
-        const isBaseB = new RegExp(`^${regexPattern}\\.\\w+$`, 'i').test(b);
-        
-        if (isBaseA && !isBaseB) return -1;
-        if (!isBaseA && isBaseB) return 1;
-        
-        const matchA = a.match(/\((\d+)\)/);
-        const matchB = b.match(/\((\d+)\)/);
-        
-        const numA = matchA ? parseInt(matchA[1], 10) : 9999;
-        const numB = matchB ? parseInt(matchB[1], 10) : 9999;
-        
-        if (numA !== numB) return numA - numB;
-        
-        return a.localeCompare(b);
-      });
-      
-      return allMatchedFiles.map(obj => {
-        const urlPath = obj.relativeDir ? `${obj.relativeDir}/${obj.file}` : obj.file;
-        const url = encodeURI(`http://localhost:${process.env.PORT || 5000}/uploads/${urlPath}`);
-        const type = obj.file.match(/\.(mp4|mov|avi)$/i) ? 'video' : 'image';
-        return { type, url };
-      });
+    if (result && result.resources && result.resources.length > 0) {
+      return result.resources.map(resource => ({
+        type: resource.resource_type === 'video' ? 'video' : 'image',
+        url: resource.secure_url
+      }));
     }
   } catch (error) {
-    console.error("Error reading directory:", error);
+    console.error('Cloudinary auto-image search error:', error.message);
   }
   return null;
 };
+
 
 // @desc    Get all jewellery
 // @route   GET /api/jewellery
@@ -163,15 +98,15 @@ exports.getJewelleries = async (req, res) => {
     // Executing query
     const jewelleries = await query;
 
-    const data = jewelleries.map(jewellery => {
+    const data = await Promise.all(jewelleries.map(async jewellery => {
       const doc = jewellery.toObject();
-      const autoImages = getAutoImages(doc.jewelId);
+      const autoImages = await getAutoImages(doc.jewelId);
       if (autoImages && autoImages.length > 0) {
         // Option to combine or override; overriding prioritizes folder structure
         doc.images = autoImages;
       }
       return doc;
-    });
+    }));
 
     // Pagination result
     const pagination = {};
@@ -213,7 +148,7 @@ exports.getJewellery = async (req, res) => {
     }
 
     const data = jewellery.toObject();
-    const autoImages = getAutoImages(data.jewelId);
+    const autoImages = await getAutoImages(data.jewelId);
     if (autoImages && autoImages.length > 0) {
       data.images = autoImages;
     }
@@ -235,8 +170,7 @@ exports.createJewellery = async (req, res) => {
     let images = [];
     if (req.files && req.files.length > 0) {
       images = req.files.map(file => {
-        const normalizedPath = file.path.replace(/\\/g, '/');
-        const url = `http://localhost:${process.env.PORT || 5000}/${normalizedPath}`;
+        const url = file.path;
         const type = file.mimetype && file.mimetype.startsWith('video') ? 'video' : 'image';
         return { type, url };
       });
@@ -258,7 +192,7 @@ exports.createJewellery = async (req, res) => {
     const jewellery = await Jewellery.create(req.body);
 
     const data = jewellery.toObject();
-    const autoImages = getAutoImages(data.jewelId);
+    const autoImages = await getAutoImages(data.jewelId);
     if (autoImages && autoImages.length > 0) {
       data.images = autoImages;
     }
@@ -291,8 +225,7 @@ exports.updateJewellery = async (req, res) => {
         const reordered = JSON.parse(req.body.reorderedImages);
         let newFileIndex = 0;
         const newImages = req.files ? req.files.map(file => {
-          const normalizedPath = file.path.replace(/\\/g, '/');
-          const url = `http://localhost:${process.env.PORT || 5000}/${normalizedPath}`;
+          const url = file.path;
           const type = file.mimetype && file.mimetype.startsWith('video') ? 'video' : 'image';
           return { type, url };
         }) : [];
@@ -310,8 +243,7 @@ exports.updateJewellery = async (req, res) => {
       // Legacy behavior if reorderedImages is not sent
       if (req.files && req.files.length > 0) {
         const newImages = req.files.map(file => {
-          const normalizedPath = file.path.replace(/\\/g, '/');
-          const url = `http://localhost:${process.env.PORT || 5000}/${normalizedPath}`;
+          const url = file.path;
           const type = file.mimetype && file.mimetype.startsWith('video') ? 'video' : 'image';
           return { type, url };
         });
@@ -337,7 +269,7 @@ exports.updateJewellery = async (req, res) => {
     });
 
     const data = jewellery.toObject();
-    const autoImages = getAutoImages(data.jewelId);
+    const autoImages = await getAutoImages(data.jewelId);
     if (autoImages && autoImages.length > 0) {
       data.images = autoImages;
     }

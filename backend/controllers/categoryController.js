@@ -35,8 +35,7 @@ exports.addCategory = async (req, res) => {
 
     let image = null;
     if (req.file) {
-      const normalizedPath = req.file.path.replace(/\\/g, '/');
-      image = `http://localhost:${process.env.PORT || 5000}/${normalizedPath}`;
+      image = req.file.path;
     }
 
     const category = await Category.create({ name, image, subtext: subtext.trim() });
@@ -61,8 +60,7 @@ exports.updateCategory = async (req, res) => {
     if (subtext !== undefined) updateData.subtext = subtext;
 
     if (req.file) {
-      const normalizedPath = req.file.path.replace(/\\/g, '/');
-      updateData.image = `http://localhost:${process.env.PORT || 5000}/${normalizedPath}`;
+      updateData.image = req.file.path;
     }
 
     const category = await Category.findByIdAndUpdate(

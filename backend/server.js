@@ -26,7 +26,9 @@ app.use((req, res, next) => {
     if (body) {
       try {
         let str = JSON.stringify(body);
-        str = str.replace(/http:\/\/localhost:5000/g, `http://localhost:${PORT}`);
+        // Replace legacy localhost:5000 with the actual request host and protocol
+        const hostUrl = `${req.protocol}://${req.get('host')}`;
+        str = str.replace(/http:\/\/localhost:5000/g, hostUrl);
         body = JSON.parse(str);
       } catch (e) {}
     }
@@ -35,8 +37,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Make uploads folder publicly accessible
-app.use('/uploads', express.static('uploads'));
+// Note: Static file serving removed — images are now served via Cloudinary.
 
 // Mount routers
 app.use('/api/auth', require('./routes/auth'));
@@ -60,6 +61,10 @@ app.use((err, req, res, next) => {
   res.status(500).json({ success: false, error: err.message || 'Server Error' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
