@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import API_BASE_URL from '../config/api';
-
+import { ArrowLeft, Search as SearchIcon, X, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const SearchOverlay = ({ isOpen, onClose, category, type }) => {
