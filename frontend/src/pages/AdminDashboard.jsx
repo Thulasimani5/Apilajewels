@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image } from 'lucide-react';
+import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import CategoryContext from '../context/CategoryContext';
 import { useContext } from 'react';
@@ -12,10 +12,6 @@ const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
-  
-  const [showQuickEditModal, setShowQuickEditModal] = useState(false);
-  const [quickEditData, setQuickEditData] = useState({});
-  const [quickEditLoading, setQuickEditLoading] = useState(false);
   
   const [users, setUsers] = useState([]);
   const [usersLoading, setUsersLoading] = useState(false);
@@ -217,6 +213,46 @@ const AdminDashboard = () => {
   const [draggedItemIndex, setDraggedItemIndex] = useState(null);
 
   const [loading, setLoading] = useState(false);
+  const [savingField, setSavingField] = useState(null);
+  const [savedField, setSavedField] = useState(null);
+
+  const handleSaveField = async (fieldName, value) => {
+    if (!editingId) return;
+    setSavingField(fieldName);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/jewellery/${editingId}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ [fieldName]: value })
+      });
+      if (res.ok) {
+        setSavedField(fieldName);
+        setTimeout(() => setSavedField(prev => prev === fieldName ? null : prev), 2500);
+      } else {
+        const err = await res.json();
+        alert('Error saving field: ' + err.error);
+      }
+    } catch (err) {
+      alert('Network error while saving field.');
+    } finally {
+      setSavingField(null);
+    }
+  };
+
+  const FieldUpdateBtn = ({ field, value }) => !editingId ? null : (
+    <button
+      type="button"
+      onClick={() => handleSaveField(field, value)}
+      disabled={savingField === field}
+      className={`text-[10px] font-bold px-2 py-0.5 rounded-full transition-all flex-shrink-0 flex items-center gap-1 ${
+        savingField === field ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+        : savedField === field ? 'bg-emerald-100 text-emerald-600'
+        : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white'
+      }`}
+    >
+      {savingField === field ? '…' : savedField === field ? <><Check size={9} /> Saved</> : 'Update'}
+    </button>
+  );
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -593,23 +629,7 @@ const AdminDashboard = () => {
                               <td className="px-6 py-4 font-mono text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded-md inline-block mt-3">{jewel.jewelId}</td>
                               <td className="px-6 py-4 text-gray-600">{Array.isArray(jewel.type) ? jewel.type.join(', ') : jewel.type}</td>
                               <td className="px-6 py-4 font-bold text-gray-900">₹{jewel.rentalPrice || jewel.price}</td>
-                              <td className="px-6 py-4 text-right flex justify-end gap-2">
-                                <button 
-                                  onClick={() => {
-                                    setQuickEditData({
-                                      _id: jewel._id,
-                                      jewelId: jewel.jewelId || '',
-                                      name: jewel.name || '',
-                                      price: jewel.price || jewel.rentalPrice || '',
-                                      deposit: jewel.deposit || '',
-                                      category: jewel.category || 'Moissanite',
-                                    });
-                                    setShowQuickEditModal(true);
-                                  }}
-                                  className="text-xs bg-green-50 text-green-600 px-3 py-1.5 rounded-lg hover:bg-green-600 hover:text-white transition-all font-semibold shadow-sm"
-                                >
-                                  Quick Edit
-                                </button>
+                              <td className="px-6 py-4 text-right flex justify-end gap-2 items-center">
                                 <button 
                                   onClick={() => {
                                     setEditingId(jewel._id);
@@ -639,15 +659,17 @@ const AdminDashboard = () => {
                                     })) : []);
                                     setShowAddForm(true);
                                   }}
-                                  className="text-xs bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-600 hover:text-white transition-all font-semibold shadow-sm"
+                                  title="Edit jewellery"
+                                  className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-sm"
                                 >
-                                  Full Edit
+                                  <Pencil size={14} />
                                 </button>
                                 <button 
                                   onClick={() => handleDeleteJewel(jewel._id)}
-                                  className="text-xs bg-red-50 text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-600 hover:text-white transition-all font-semibold shadow-sm"
+                                  title="Delete jewellery"
+                                  className="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all shadow-sm"
                                 >
-                                  Delete
+                                  <Trash2 size={14} />
                                 </button>
                               </td>
                             </tr>
@@ -658,54 +680,6 @@ const AdminDashboard = () => {
                   )}
                 </>
               )}
-            </div>
-          )}
-
-          {activeTab === 'jewellery' && showQuickEditModal && (
-            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-              <div className="bg-white rounded-xl max-w-md w-full shadow-xl">
-                <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                  <h2 className="text-lg font-bold text-gray-900">Quick Edit Jewel</h2>
-                  <button onClick={() => setShowQuickEditModal(false)} className="text-gray-400 hover:text-gray-600">
-                    <X size={20} />
-                  </button>
-                </div>
-                <form onSubmit={handleQuickEditSubmit} className="p-6 space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
-                    <input required type="text" value={quickEditData.name || ''} onChange={e => setQuickEditData({...quickEditData, name: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] text-sm" />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Jewel ID</label>
-                      <input required type="text" value={quickEditData.jewelId || ''} onChange={e => setQuickEditData({...quickEditData, jewelId: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] text-sm" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                      <select value={quickEditData.category || ''} onChange={e => setQuickEditData({...quickEditData, category: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] text-sm">
-                        {(categories || []).map(c => <option key={c._id} value={c.name}>{c.name}</option>)}
-                      </select>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
-                      <input required type="number" value={quickEditData.price || ''} onChange={e => setQuickEditData({...quickEditData, price: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] text-sm" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Deposit (₹)</label>
-                      <input required type="number" value={quickEditData.deposit || ''} onChange={e => setQuickEditData({...quickEditData, deposit: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] text-sm" />
-                    </div>
-                  </div>
-                  
-                  <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
-                    <button type="button" onClick={() => setShowQuickEditModal(false)} className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">Cancel</button>
-                    <button type="submit" disabled={quickEditLoading} className="px-4 py-2 text-sm font-medium text-white bg-[#B07A85] hover:bg-[#9E6A75] rounded-lg disabled:opacity-50">
-                      {quickEditLoading ? 'Saving...' : 'Save Changes'}
-                    </button>
-                  </div>
-                </form>
-              </div>
             </div>
           )}
 
@@ -724,32 +698,50 @@ const AdminDashboard = () => {
               <form onSubmit={handleSubmit} className="p-6 space-y-6">
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Jewel ID (Unique Code)*</label>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="text-sm font-medium text-gray-700">Jewel ID (Unique Code)*</label>
+                      <FieldUpdateBtn field="jewelId" value={formData.jewelId} />
+                    </div>
                     <input required type="text" name="jewelId" value={formData.jewelId} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm" placeholder="e.g. JWL-12345" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Product Name*</label>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="text-sm font-medium text-gray-700">Product Name*</label>
+                      <FieldUpdateBtn field="name" value={formData.name} />
+                    </div>
                     <input required type="text" name="name" value={formData.name} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm" placeholder="e.g. Royal Kundan Choker" />
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Rental Price (₹)*</label>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="text-sm font-medium text-gray-700">Rental Price (₹)*</label>
+                      <FieldUpdateBtn field="price" value={formData.price} />
+                    </div>
                     <input required type="number" name="price" value={formData.price} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm" placeholder="e.g. 1500" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Security Deposit (₹)*</label>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="text-sm font-medium text-gray-700">Security Deposit (₹)*</label>
+                      <FieldUpdateBtn field="deposit" value={formData.deposit} />
+                    </div>
                     <input required type="number" name="deposit" value={formData.deposit} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm" placeholder="e.g. 500" />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Category*</label>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="text-sm font-medium text-gray-700">Category*</label>
+                      <FieldUpdateBtn field="category" value={formData.category} />
+                    </div>
                     <select name="category" value={formData.category} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm bg-white">
                       {(categories || []).map(c => <option key={c._id} value={c.name}>{c.name}</option>)}
                     </select>
                   </div>
                   <div>
                     <div className="flex flex-col">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Type* (select multiple)</label>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="text-sm font-medium text-gray-700">Type* (select multiple)</label>
+                        <FieldUpdateBtn field="type" value={formData.type} />
+                      </div>
                       <div className="grid grid-cols-2 gap-2">
                         {types.map(t => (
                           <label key={t} className="inline-flex items-center">
@@ -776,7 +768,10 @@ const AdminDashboard = () => {
                     </div>
                     {/* Stone Name (multiple) */}
                     <div className="mt-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Stone Name(s)</label>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="text-sm font-medium text-gray-700">Stone Name(s)</label>
+                        <FieldUpdateBtn field="stoneName" value={formData.stoneName} />
+                      </div>
                       <div className="grid grid-cols-2 gap-2">
                         {[
                           "Crystal", "Sapphire", "Pink Morganite", "Ruby", "Emerald", "Jade", "Kemp Stone", "Pearl",
@@ -806,7 +801,10 @@ const AdminDashboard = () => {
                     </div>
                     {/* Stone Colour */}
                     <div className="mt-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Stone Colour(s)</label>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="text-sm font-medium text-gray-700">Stone Colour(s)</label>
+                        <FieldUpdateBtn field="stoneColour" value={formData.stoneColour} />
+                      </div>
                       <div className="grid grid-cols-2 gap-2">
                         {[
                           "Clear", "Blue", "Pink", "Red", "Green", "Yellow", "White", "Gold", "Various", "Violete", "Orange", "Black", "Purple", "Silver"
@@ -836,13 +834,19 @@ const AdminDashboard = () => {
                   </div>
                   
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Colour*</label>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="text-sm font-medium text-gray-700">Colour*</label>
+                      <FieldUpdateBtn field="colour" value={formData.colour} />
+                    </div>
                     <select name="colour" value={formData.colour} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm bg-white">
                       {colours.map(c => <option key={c} value={c}>{c}</option>)}
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Material (Optional)</label>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="text-sm font-medium text-gray-700">Material (Optional)</label>
+                      <FieldUpdateBtn field="material" value={formData.material} />
+                    </div>
 <select name="material" value={formData.material || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm">
   <option value="">Select material</option>
   <option value="Alloy">Alloy</option>
@@ -854,11 +858,17 @@ const AdminDashboard = () => {
 </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Size (Optional)</label>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="text-sm font-medium text-gray-700">Size (Optional)</label>
+                      <FieldUpdateBtn field="size" value={formData.size} />
+                    </div>
                     <input type="text" name="size" value={formData.size || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm" placeholder="e.g. Adjustable" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Finish (Optional)</label>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="text-sm font-medium text-gray-700">Finish (Optional)</label>
+                      <FieldUpdateBtn field="finish" value={formData.finish} />
+                    </div>
                     <select name="finish" value={formData.finish || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm">
                       <option value="">Select finish</option>
                       <option value="Antique">Antique</option>
@@ -877,19 +887,31 @@ const AdminDashboard = () => {
                   </h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Purchase Amount (₹)</label>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="text-xs font-medium text-gray-600">Purchase Amount (₹)</label>
+                        <FieldUpdateBtn field="purchaseAmount" value={formData.purchaseAmount} />
+                      </div>
                       <input type="number" name="purchaseAmount" value={formData.purchaseAmount || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-amber-200 rounded-md focus:outline-none focus:ring-amber-400 focus:border-amber-400 text-sm bg-white" placeholder="Amount paid to buy" />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Sales Amount (₹)</label>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="text-xs font-medium text-gray-600">Sales Amount (₹)</label>
+                        <FieldUpdateBtn field="salesAmount" value={formData.salesAmount} />
+                      </div>
                       <input type="number" name="salesAmount" value={formData.salesAmount || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-amber-200 rounded-md focus:outline-none focus:ring-amber-400 focus:border-amber-400 text-sm bg-white" placeholder="Amount if sold" />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Deposit (₹)</label>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="text-xs font-medium text-gray-600">Deposit (₹)</label>
+                        <FieldUpdateBtn field="deposit" value={formData.deposit} />
+                      </div>
                       <input type="number" name="deposit" value={formData.deposit || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-amber-200 rounded-md focus:outline-none focus:ring-amber-400 focus:border-amber-400 text-sm bg-white" placeholder="Security deposit" />
                     </div>
                     <div className="col-span-2">
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Shop Name (Where Purchased)</label>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="text-xs font-medium text-gray-600">Shop Name (Where Purchased)</label>
+                        <FieldUpdateBtn field="shopName" value={formData.shopName} />
+                      </div>
                       <input type="text" name="shopName" value={formData.shopName || ''} onChange={handleInputChange} className="w-full px-3 py-2 border border-amber-200 rounded-md focus:outline-none focus:ring-amber-400 focus:border-amber-400 text-sm bg-white" placeholder="e.g. Lalitha Jewellers, Chennai" />
                     </div>
                   </div>
@@ -1036,7 +1058,10 @@ const AdminDashboard = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Description*</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="text-sm font-medium text-gray-700">Description*</label>
+                    <FieldUpdateBtn field="description" value={formData.description} />
+                  </div>
                   <textarea required rows={4} name="description" value={formData.description} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm" placeholder="Detailed product description..."></textarea>
                 </div>
 
@@ -1045,7 +1070,7 @@ const AdminDashboard = () => {
                     Cancel
                   </button>
                   <button type="submit" disabled={loading} className="px-6 py-2 bg-[#B07A85] text-white rounded-lg text-sm font-medium hover:bg-[#9E6A75] transition-colors flex items-center gap-2">
-                    {loading ? 'Saving...' : <><Save size={16} /> Save Product</>}
+                    {loading ? 'Saving...' : <><Save size={16} /> {editingId ? 'Save All Changes' : 'Save Product'}</>}
                   </button>
                 </div>
               </form>
