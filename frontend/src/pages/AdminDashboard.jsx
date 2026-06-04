@@ -1346,7 +1346,7 @@ const AdminDashboard = () => {
                 <p className="text-gray-500 text-sm leading-relaxed">{viewingJewel.description || 'No description provided.'}</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-x-6 gap-y-6 border-y border-gray-100 py-6 mb-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-6 border-y border-gray-100 py-6 mb-6">
                 <div>
                   <h4 className="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">Category</h4>
                   <p className="font-medium text-gray-900">{viewingJewel.category || 'N/A'}</p>
@@ -1362,6 +1362,14 @@ const AdminDashboard = () => {
                 <div>
                   <h4 className="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">Finish</h4>
                   <p className="font-medium text-gray-900">{viewingJewel.finish || 'N/A'}</p>
+                </div>
+                <div>
+                  <h4 className="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">Stone Name</h4>
+                  <p className="font-medium text-gray-900">{Array.isArray(viewingJewel.stoneName) ? viewingJewel.stoneName.join(', ') : (viewingJewel.stoneName || 'N/A')}</p>
+                </div>
+                <div>
+                  <h4 className="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">Stone Colour</h4>
+                  <p className="font-medium text-gray-900">{Array.isArray(viewingJewel.stoneColour) ? viewingJewel.stoneColour.join(', ') : (viewingJewel.stoneColour || 'N/A')}</p>
                 </div>
               </div>
 
