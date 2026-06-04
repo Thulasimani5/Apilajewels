@@ -254,9 +254,9 @@ const FilterSidebar = ({ activeFilters, onFilterChange, products = [] }) => {
   };
 
   return (
-    <aside className="w-[260px] flex-shrink-0 bg-white border-r border-[#F0EDED] h-full">
+    <aside className="w-[260px] flex-shrink-0 bg-white border-r border-[#F0EDED] h-full flex flex-col">
       {/* ── Sidebar Header ── */}
-      <div className="sticky top-0 bg-white z-10 px-5 py-4 border-b border-[#F0EDED] flex items-center justify-between">
+      <div className="flex-shrink-0 bg-white z-10 px-5 py-4 border-b border-[#F0EDED] flex items-center justify-between">
         <div className="flex items-center gap-2">
           <h2 className="text-[14px] font-bold text-[#1A1A1A] uppercase tracking-[0.08em]">
             Filters
@@ -277,17 +277,19 @@ const FilterSidebar = ({ activeFilters, onFilterChange, products = [] }) => {
         )}
       </div>
 
-      {/* ── Filter Sections ── */}
-      {renderFilterSection('Category', 'Category', categoryOptions, true)}
-      {renderFilterSection('Price', 'Price', PRICE_OPTIONS)}
-      {renderFilterSection('Colour', 'Colour', COLOUR_OPTIONS, true)}
-      {renderFilterSection('Type', 'Type', TYPE_OPTIONS)}
-      {renderFilterSection('Occasion', 'Occasion', OCCASION_OPTIONS)}
-      {renderFilterSection('Stone Name', 'StoneName', STONE_OPTIONS, true)}
-      {renderFilterSection('Stone Colour', 'StoneColour', STONE_COLOUR_OPTIONS, true)}
+      {/* ── Filter Sections (scrollable) ── */}
+      <div className="flex-1 overflow-y-auto">
+        {renderFilterSection('Category', 'Category', categoryOptions, true)}
+        {renderFilterSection('Price', 'Price', PRICE_OPTIONS)}
+        {renderFilterSection('Colour', 'Colour', COLOUR_OPTIONS, true)}
+        {renderFilterSection('Type', 'Type', TYPE_OPTIONS)}
+        {renderFilterSection('Occasion', 'Occasion', OCCASION_OPTIONS)}
+        {renderFilterSection('Stone Name', 'StoneName', STONE_OPTIONS, true)}
+        {renderFilterSection('Stone Colour', 'StoneColour', STONE_COLOUR_OPTIONS, true)}
 
-      {/* Bottom padding */}
-      <div className="h-6" />
+        {/* Bottom padding */}
+        <div className="h-6" />
+      </div>
     </aside>
   );
 };
