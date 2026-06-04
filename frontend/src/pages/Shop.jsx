@@ -286,7 +286,7 @@ const JewelleryListing = () => {
     if (searchParams.get('explore') === 'true') {
       return '';
     }
-    return 'Moissanite Jewels';
+    return 'All Jewels';
   };
 
   /* ── Collect all active filter pills for display ── */

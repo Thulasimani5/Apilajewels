@@ -257,7 +257,7 @@ const ProductDetails = () => {
       {/* Mobile Header */}
       <div className="md:hidden fixed top-0 w-full bg-white z-40 px-4 py-[11px] flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="text-black">
+          <button onClick={() => navigate('/shop')} className="text-black">
             <ArrowLeft size={24} />
           </button>
           <h1 className="font-semibold text-lg truncate max-w-[200px]">{product.name}</h1>
