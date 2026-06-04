@@ -17,15 +17,16 @@ const ArrowIcon = () => (
 
 /* ── Base URL ── */
 const baseUrl = API_BASE_URL;
+const CLOUD_BASE = import.meta.env.VITE_CLOUDINARY_BASE || API_BASE_URL;
 
 /* ── Shop by Occasion data ── */
 const occasions = [
-  { slug: 'bridal', title: 'Bridal Set', img: `${baseUrl}/uploads/Bridal%20Set.png` },
-  { slug: 'bridesmaid', title: 'Bridal Maid', img: `${baseUrl}/uploads/Bridal%20Maid.png` },
-  { slug: 'designer', title: 'Designer', img: `${baseUrl}/uploads/Designer.png`, arrow: true },
-  { slug: 'reception', title: 'Reception', img: `${baseUrl}/uploads/Reception.png`, arrow: true },
-  { slug: 'party', title: 'Party Wear', img: `${baseUrl}/uploads/Party%20Wear.png`, arrow: true },
-  { slug: 'small', title: 'Small Jewel', img: `${baseUrl}/uploads/Small%20Jewel.png`, arrow: true },
+  { slug: 'bridal', title: 'Bridal Set', img: `${CLOUD_BASE}/Bridal%20Set.png` },
+  { slug: 'bridesmaid', title: 'Bridal Maid', img: `${CLOUD_BASE}/Bridal%20Maid.png` },
+  { slug: 'designer', title: 'Designer', img: `${CLOUD_BASE}/Designer.png`, arrow: true },
+  { slug: 'reception', title: 'Reception', img: `${CLOUD_BASE}/Reception.png`, arrow: true },
+  { slug: 'party', title: 'Party Wear', img: `${CLOUD_BASE}/Party%20Wear.png`, arrow: true },
+  { slug: 'small', title: 'Small Jewel', img: `${CLOUD_BASE}/Small%20Jewel.png`, arrow: true },
 ];
 
 const Home = () => {
@@ -141,7 +142,7 @@ const Home = () => {
           {/* Left col */}
           <div className="flex flex-col gap-2">
             <Link to="/shop?occasion=bridal" className="relative h-44 rounded-[2rem] overflow-hidden group">
-              <img src={`${baseUrl}/uploads/Bridal%20Set.png`} alt="Bridal Set" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={`${CLOUD_BASE}/Bridal%20Set.png`} alt="Bridal Set" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>
@@ -152,7 +153,7 @@ const Home = () => {
               </div>
             </Link>
             <Link to="/shop?occasion=designer" className="relative h-36 rounded-[2rem] overflow-hidden group">
-              <img src={`${baseUrl}/uploads/Designer.png`} alt="Designer" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={`${CLOUD_BASE}/Designer.png`} alt="Designer" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>
@@ -163,7 +164,7 @@ const Home = () => {
               </div>
             </Link>
             <Link to="/shop?occasion=party" className="relative h-44 rounded-[2rem] overflow-hidden group">
-              <img src={`${baseUrl}/uploads/Party%20Wear.png`} alt="Party Wear" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={`${CLOUD_BASE}/Party%20Wear.png`} alt="Party Wear" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>
@@ -177,7 +178,7 @@ const Home = () => {
           {/* Right col */}
           <div className="flex flex-col gap-2">
             <Link to="/shop?occasion=bridesmaid" className="relative h-36 rounded-[2rem] overflow-hidden group">
-              <img src={`${baseUrl}/uploads/Bridal%20Maid.png`} alt="Bridal Maid" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={`${CLOUD_BASE}/Bridal%20Maid.png`} alt="Bridal Maid" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>
@@ -188,7 +189,7 @@ const Home = () => {
               </div>
             </Link>
             <Link to="/shop?occasion=reception" className="relative h-52 rounded-[2rem] overflow-hidden group">
-              <img src={`${baseUrl}/uploads/Reception.png`} alt="Reception" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={`${CLOUD_BASE}/Reception.png`} alt="Reception" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>
@@ -199,7 +200,7 @@ const Home = () => {
               </div>
             </Link>
             <Link to="/shop?occasion=small" className="relative h-36 rounded-[2rem] overflow-hidden group">
-              <img src={`${baseUrl}/uploads/Small%20Jewel.png`} alt="Small Jewel" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <img src={`${CLOUD_BASE}/Small%20Jewel.png`} alt="Small Jewel" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>
@@ -324,7 +325,7 @@ const Home = () => {
         </div>
 
         <button
-          onClick={() => window.open(`${baseUrl}/uploads/Rental%20&%20Delivery%20Guide.pdf`, '_blank')}
+          onClick={() => window.open(`${CLOUD_BASE}/Rental%20%26%20Delivery%20Guide.pdf`, '_blank')}
           className="bg-[#A56D7A] text-white px-3 py-2 rounded-md text-[8px] font-semibold uppercase tracking-[0.15em] hover:bg-[#935b67] transition-colors"
         >
           Know More
