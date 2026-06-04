@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2, Eye } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import CategoryContext from '../context/CategoryContext';
@@ -22,6 +22,10 @@ const AdminDashboard = () => {
   const [adminJewelleriesLoading, setAdminJewelleriesLoading] = useState(false);
   const [adminJewellerySearch, setAdminJewellerySearch] = useState('');
   const [viewingJewel, setViewingJewel] = useState(null);
+
+  if (!user || user.role !== 'admin') {
+    return <Navigate to="/login" replace />;
+  }
 
   useEffect(() => {
     // Reset search query when changing categories
