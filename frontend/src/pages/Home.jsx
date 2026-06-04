@@ -17,7 +17,7 @@ const ArrowIcon = () => (
 
 /* ── Base URL ── */
 const baseUrl = API_BASE_URL;
-const CLOUD_BASE = import.meta.env.VITE_CLOUDINARY_BASE || API_BASE_URL;
+const CLOUD_BASE = import.meta.env.VITE_CLOUDINARY_BASE || 'https://res.cloudinary.com/apilajewels/image/upload/apila_jewels';
 
 /* ── Shop by Occasion data ── */
 const occasions = [
