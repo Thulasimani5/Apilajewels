@@ -7,6 +7,8 @@ const COLOUR_OPTIONS = ['Gold', 'Silver', 'Rose Gold', 'Emerald Green', 'Ruby Re
 const TYPE_OPTIONS = ['Bridal Set', 'Bridal Maid', 'Designer', 'Reception', 'Party Wear', 'Small Jewel'];
 const PRICE_OPTIONS = ['Under ₹1000', '₹1000 - ₹2000', '₹2000 - ₹3000', 'Above ₹3000'];
 const OCCASION_OPTIONS = ['Bridal', 'Festive', 'Party Wear', 'Engagement', 'Daily Wear'];
+const STONE_OPTIONS = ["Crystal", "Sapphire", "Pink Morganite", "Ruby", "Emerald", "Jade", "Kemp Stone", "Pearl", "Moissanite Stone", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia", "Amethyst", "Amber", "Pink Topaz", "Navarathna", "Polki Stone", "Rose Quartz", "Green Onyx"];
+const STONE_COLOUR_OPTIONS = ["Clear", "Blue", "Pink", "Red", "Green", "Yellow", "White", "Gold", "Various", "Violete", "Orange", "Black", "Purple", "Silver"];
 
 /* ── Colour swatch map ── */
 const COLOUR_SWATCHES = {
@@ -146,6 +148,24 @@ const FilterSidebar = ({ activeFilters, onFilterChange, products = [] }) => {
         });
       }
 
+      // Stone Name counts
+      const stones = Array.isArray(p.stoneName) ? p.stoneName : [p.stoneName];
+      stones.forEach(s => {
+        if (s) {
+          result.StoneName = result.StoneName || {};
+          result.StoneName[s] = (result.StoneName[s] || 0) + 1;
+        }
+      });
+
+      // Stone Colour counts
+      const stoneColours = Array.isArray(p.stoneColour) ? p.stoneColour : [p.stoneColour];
+      stoneColours.forEach(sc => {
+        if (sc) {
+          result.StoneColour = result.StoneColour || {};
+          result.StoneColour[sc] = (result.StoneColour[sc] || 0) + 1;
+        }
+      });
+
       // Price range counts
       if (p.price != null) {
         if (p.price < 1000) result.Price['Under ₹1000'] = (result.Price['Under ₹1000'] || 0) + 1;
@@ -175,6 +195,8 @@ const FilterSidebar = ({ activeFilters, onFilterChange, products = [] }) => {
       Price: [],
       Occasion: [],
       Category: [],
+      StoneName: [],
+      StoneColour: [],
     });
   };
 
@@ -261,6 +283,8 @@ const FilterSidebar = ({ activeFilters, onFilterChange, products = [] }) => {
       {renderFilterSection('Colour', 'Colour', COLOUR_OPTIONS, true)}
       {renderFilterSection('Type', 'Type', TYPE_OPTIONS)}
       {renderFilterSection('Occasion', 'Occasion', OCCASION_OPTIONS)}
+      {renderFilterSection('Stone Name', 'StoneName', STONE_OPTIONS, true)}
+      {renderFilterSection('Stone Colour', 'StoneColour', STONE_COLOUR_OPTIONS, true)}
 
       {/* Bottom padding */}
       <div className="h-6" />

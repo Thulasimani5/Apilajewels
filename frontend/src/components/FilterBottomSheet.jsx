@@ -8,6 +8,8 @@ const INITIAL_FILTER_SECTIONS = {
   Type: ['Bridal Set', 'Bridal Maid', 'Designer', 'Reception', 'Party Wear', 'Small Jewel'],
   Price: ['Under ₹1000', '₹1000 - ₹2000', '₹2000 - ₹3000', 'Above ₹3000'],
   Occasion: ['Bridal', 'Festive', 'Party Wear', 'Engagement', 'Daily Wear'],
+  StoneName: ["Crystal", "Sapphire", "Pink Morganite", "Ruby", "Emerald", "Jade", "Kemp Stone", "Pearl", "Moissanite Stone", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia", "Amethyst", "Amber", "Pink Topaz", "Navarathna", "Polki Stone", "Rose Quartz", "Green Onyx"],
+  StoneColour: ["Clear", "Blue", "Pink", "Red", "Green", "Yellow", "White", "Gold", "Various", "Violete", "Orange", "Black", "Purple", "Silver"],
   Category: [] // Populated dynamically
 };
 
@@ -30,7 +32,9 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
     Type: [],
     Price: [],
     Occasion: [],
-    Category: []
+    Category: [],
+    StoneName: [],
+    StoneColour: []
   });
 
   // Sync local state when modal opens
@@ -41,7 +45,9 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
         Type: initialFilters.Type || [],
         Price: initialFilters.Price || [],
         Occasion: initialFilters.Occasion || [],
-        Category: initialFilters.Category || []
+        Category: initialFilters.Category || [],
+        StoneName: initialFilters.StoneName || [],
+        StoneColour: initialFilters.StoneColour || []
       });
     }
   }, [isOpen, initialFilters]);
@@ -77,7 +83,9 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
       Type: [],
       Price: [],
       Occasion: [],
-      Category: []
+      Category: [],
+      StoneName: [],
+      StoneColour: []
     });
   };
 

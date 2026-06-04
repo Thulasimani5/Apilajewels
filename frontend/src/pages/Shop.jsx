@@ -41,7 +41,9 @@ const JewelleryListing = () => {
     Type: [],
     Price: [],
     Occasion: [],
-    Category: []
+    Category: [],
+    StoneName: [],
+    StoneColour: []
   });
 
   // Selected sorting criteria state
@@ -95,7 +97,9 @@ const JewelleryListing = () => {
       Type: newTypeFilters,
       Price: [],
       Occasion: [],
-      Category: newCategoryFilters
+      Category: newCategoryFilters,
+      StoneName: [],
+      StoneColour: []
     });
   }, [searchParams, categories]);
 
@@ -190,6 +194,28 @@ const JewelleryListing = () => {
           return product.type?.toLowerCase() === type.toLowerCase();
         });
         if (!matchesType) return false;
+      }
+
+      // Filter by Stone Name
+      if (activeFilters.StoneName && activeFilters.StoneName.length > 0) {
+        const matchesStoneName = activeFilters.StoneName.some((stone) => {
+          if (Array.isArray(product.stoneName)) {
+            return product.stoneName.some(s => s?.toLowerCase() === stone.toLowerCase());
+          }
+          return product.stoneName?.toLowerCase() === stone.toLowerCase();
+        });
+        if (!matchesStoneName) return false;
+      }
+
+      // Filter by Stone Colour
+      if (activeFilters.StoneColour && activeFilters.StoneColour.length > 0) {
+        const matchesStoneColour = activeFilters.StoneColour.some((scolor) => {
+          if (Array.isArray(product.stoneColour)) {
+            return product.stoneColour.some(s => s?.toLowerCase() === scolor.toLowerCase());
+          }
+          return product.stoneColour?.toLowerCase() === scolor.toLowerCase();
+        });
+        if (!matchesStoneColour) return false;
       }
 
       return true;
@@ -371,7 +397,7 @@ const JewelleryListing = () => {
                     ))}
                     {totalFilterCount > 1 && (
                       <button
-                        onClick={() => handleApplyFilters({ Colour: [], Type: [], Price: [], Occasion: [], Category: [] })}
+                        onClick={() => handleApplyFilters({ Colour: [], Type: [], Price: [], Occasion: [], Category: [], StoneName: [], StoneColour: [] })}
                         className="text-[11px] text-[#A56D7A] font-bold uppercase tracking-wide hover:text-[#935b67] transition-colors ml-1"
                       >
                         Clear All
@@ -437,7 +463,7 @@ const JewelleryListing = () => {
                   No matching jewellery found
                 </p>
                 <button
-                  onClick={() => handleApplyFilters({ Colour: [], Type: [], Price: [], Occasion: [], Category: [] })}
+                  onClick={() => handleApplyFilters({ Colour: [], Type: [], Price: [], Occasion: [], Category: [], StoneName: [], StoneColour: [] })}
                   className="text-[12px] text-[#A56D7A] font-bold underline underline-offset-2 hover:text-[#935b67] transition-colors"
                 >
                   Clear all filters
