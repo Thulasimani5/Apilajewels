@@ -312,7 +312,7 @@ const JewelleryListing = () => {
   const totalFilterCount = activeFilterPills.length;
 
   return (
-    <div className="bg-white min-h-screen flex flex-col">
+    <div className="bg-white min-h-screen md:h-screen md:overflow-hidden flex flex-col">
 
       {/* ── Header ── sticky white bar with back arrow, title, and action icons */}
       <header className="sticky top-0 bg-white z-50 px-4 h-[60px] flex items-center justify-between border-b border-[#F0EDED]">
@@ -358,7 +358,7 @@ const JewelleryListing = () => {
       {/* ═══════════════════════════════════════════════════════════════
           MAIN CONTENT — 2-column on desktop, single column on mobile
           ═══════════════════════════════════════════════════════════════ */}
-      <div className="flex flex-1 items-start">
+      <div className="flex flex-1 items-start md:overflow-hidden md:min-h-0">
 
         {/* ── Desktop Sidebar (hidden on mobile) ── */}
         <div className="hidden md:block sticky top-[60px] h-[calc(100vh-60px)] z-30">
@@ -370,10 +370,10 @@ const JewelleryListing = () => {
         </div>
 
         {/* ── Right Content Area: Active pills bar + product grid ── */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 md:h-full md:overflow-y-auto md:flex md:flex-col">
 
           {/* ── Desktop Active Filters Bar + Sort ── (hidden on mobile) */}
-          <div className="hidden md:flex items-center justify-between px-5 py-3 border-b border-[#F0EDED] bg-white sticky top-[60px] z-40">
+          <div className="hidden md:flex items-center justify-between px-5 py-3 border-b border-[#F0EDED] bg-white sticky top-0 z-40">
             <div className="flex items-center gap-2 flex-wrap flex-1 min-w-0">
               {/* Result count */}
               <span className="text-[13px] text-[#666] font-medium flex-shrink-0">
