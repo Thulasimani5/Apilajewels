@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2 } from 'lucide-react';
+import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2, Eye } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import CategoryContext from '../context/CategoryContext';
 import { useContext } from 'react';
@@ -630,6 +630,15 @@ const AdminDashboard = () => {
                               <td className="px-6 py-4 text-gray-600">{Array.isArray(jewel.type) ? jewel.type.join(', ') : jewel.type}</td>
                               <td className="px-6 py-4 font-bold text-gray-900">₹{jewel.rentalPrice || jewel.price}</td>
                               <td className="px-6 py-4 text-right flex justify-end gap-2 items-center">
+                                <a 
+                                  href={`/shop/${jewel._id}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  title="View jewellery details"
+                                  className="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center hover:bg-green-600 hover:text-white transition-all shadow-sm"
+                                >
+                                  <Eye size={14} />
+                                </a>
                                 <button 
                                   onClick={() => {
                                     setEditingId(jewel._id);
