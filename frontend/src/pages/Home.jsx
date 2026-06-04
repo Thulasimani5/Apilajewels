@@ -325,7 +325,7 @@ const Home = () => {
         </div>
 
         <button
-          onClick={() => window.open(`https://res.cloudinary.com/apilajewels/image/upload/v1780560102/apila_jewels/Rental_Delivery_Guide.pdf`, '_blank')}
+          onClick={() => window.open(`/Rental_Delivery_Guide.pdf`, '_blank')}
           className="bg-[#A56D7A] text-white px-3 py-2 rounded-md text-[8px] font-semibold uppercase tracking-[0.15em] hover:bg-[#935b67] transition-colors"
         >
           Know More

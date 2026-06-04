@@ -11,7 +11,7 @@ const getBaseUrl = () => {
     const hostname = window.location.hostname;
     // If accessed via local network IP (e.g. 192.168.x.x), use that IP with port 5000
     if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
-      return `http://${hostname}:5000`;
+      return `https://${hostname}:5000`;
     }
   }
   
