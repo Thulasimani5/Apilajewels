@@ -21,6 +21,7 @@ const AdminDashboard = () => {
   const [adminJewelleries, setAdminJewelleries] = useState([]);
   const [adminJewelleriesLoading, setAdminJewelleriesLoading] = useState(false);
   const [adminJewellerySearch, setAdminJewellerySearch] = useState('');
+  const [viewingJewel, setViewingJewel] = useState(null);
 
   useEffect(() => {
     // Reset search query when changing categories
@@ -630,15 +631,13 @@ const AdminDashboard = () => {
                               <td className="px-6 py-4 text-gray-600">{Array.isArray(jewel.type) ? jewel.type.join(', ') : jewel.type}</td>
                               <td className="px-6 py-4 font-bold text-gray-900">₹{jewel.rentalPrice || jewel.price}</td>
                               <td className="px-6 py-4 text-right flex justify-end gap-2 items-center">
-                                <a 
-                                  href={`/shop/${jewel._id}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  title="View jewellery details"
+                                <button 
+                                  onClick={() => setViewingJewel(jewel)}
+                                  title="View internal details"
                                   className="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center hover:bg-green-600 hover:text-white transition-all shadow-sm"
                                 >
                                   <Eye size={14} />
-                                </a>
+                                </button>
                                 <button 
                                   onClick={() => {
                                     setEditingId(jewel._id);
@@ -1311,6 +1310,94 @@ const AdminDashboard = () => {
                 ₹{selectedUserCart.cart.reduce((total, item) => total + (item.rentalPrice || item.price || 0), 0).toFixed(2)}
               </span>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Jewel Details Modal (Internal) */}
+      {viewingJewel && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+          <div className="absolute inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" onClick={() => setViewingJewel(null)}></div>
+          <div className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+            
+            <button 
+              onClick={() => setViewingJewel(null)}
+              className="absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center rounded-full bg-black/10 hover:bg-black/20 text-gray-800 transition-colors"
+            >
+              <X size={18} />
+            </button>
+
+            {/* Left: Image/Video */}
+            <div className="w-full md:w-2/5 h-64 md:h-auto bg-gray-100 flex-shrink-0 relative">
+              {viewingJewel.images?.[0]?.type === 'video' ? (
+                <video src={viewingJewel.images[0].url} className="w-full h-full object-cover" autoPlay muted loop playsInline />
+              ) : (
+                <img src={viewingJewel.images?.[0]?.url || viewingJewel.images?.[0]} alt={viewingJewel.name} className="w-full h-full object-cover" />
+              )}
+            </div>
+
+            {/* Right: Details */}
+            <div className="flex-1 overflow-y-auto p-6 md:p-8">
+              <div className="mb-6">
+                <span className="inline-block px-3 py-1 bg-purple-100 text-purple-700 text-xs font-bold rounded-full mb-3 uppercase tracking-wider">
+                  Code: {viewingJewel.jewelId}
+                </span>
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{viewingJewel.name}</h2>
+                <p className="text-gray-500 text-sm leading-relaxed">{viewingJewel.description || 'No description provided.'}</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-x-6 gap-y-6 border-y border-gray-100 py-6 mb-6">
+                <div>
+                  <h4 className="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">Category</h4>
+                  <p className="font-medium text-gray-900">{viewingJewel.category || 'N/A'}</p>
+                </div>
+                <div>
+                  <h4 className="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">Type</h4>
+                  <p className="font-medium text-gray-900">{Array.isArray(viewingJewel.type) ? viewingJewel.type.join(', ') : (viewingJewel.type || 'N/A')}</p>
+                </div>
+                <div>
+                  <h4 className="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">Material</h4>
+                  <p className="font-medium text-gray-900">{viewingJewel.material || 'N/A'}</p>
+                </div>
+                <div>
+                  <h4 className="text-xs text-gray-400 uppercase tracking-wider font-semibold mb-1">Finish</h4>
+                  <p className="font-medium text-gray-900">{viewingJewel.finish || 'N/A'}</p>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 rounded-xl p-5 mb-6 border border-gray-100">
+                <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <span className="w-1.5 h-4 bg-green-500 rounded-full"></span>
+                  Financial Details (Internal)
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div>
+                    <span className="block text-xs text-gray-500 mb-1">Public Price</span>
+                    <span className="block font-bold text-lg text-gray-900">₹{viewingJewel.rentalPrice || viewingJewel.price || 0}</span>
+                  </div>
+                  <div>
+                    <span className="block text-xs text-gray-500 mb-1">Deposit</span>
+                    <span className="block font-bold text-lg text-gray-900">₹{viewingJewel.deposit || 0}</span>
+                  </div>
+                  <div>
+                    <span className="block text-xs text-gray-500 mb-1">Purchase Amt</span>
+                    <span className="block font-bold text-lg text-red-600">₹{viewingJewel.purchaseAmount || 0}</span>
+                  </div>
+                  <div>
+                    <span className="block text-xs text-gray-500 mb-1">Sales Amt</span>
+                    <span className="block font-bold text-lg text-green-600">₹{viewingJewel.salesAmount || 0}</span>
+                  </div>
+                </div>
+              </div>
+
+              {viewingJewel.shopName && (
+                <div className="flex items-center gap-3 text-sm text-gray-600 bg-blue-50/50 p-4 rounded-lg border border-blue-100">
+                  <Package size={18} className="text-blue-500" />
+                  <span>Sourced from: <strong className="text-gray-900">{viewingJewel.shopName}</strong></span>
+                </div>
+              )}
+            </div>
+
           </div>
         </div>
       )}
