@@ -1,17 +1,26 @@
 const Category = require('../models/Category');
 
+const Jewellery = require('../models/Jewellery');
+
 // @desc    Get all categories
 // @route   GET /api/categories
 // @access  Public
 exports.getCategories = async (req, res) => {
   try {
     const categories = await Category.find().sort({ createdAt: -1 });
+    
+    const categoriesWithCount = await Promise.all(categories.map(async (cat) => {
+      const count = await Jewellery.countDocuments({ category: cat.name });
+      return { ...cat.toObject(), jewelCount: count };
+    }));
+
     res.status(200).json({
       success: true,
-      count: categories.length,
-      data: categories
+      count: categoriesWithCount.length,
+      data: categoriesWithCount
     });
   } catch (error) {
+    console.error(error);
     res.status(500).json({
       success: false,
       error: 'Server Error'

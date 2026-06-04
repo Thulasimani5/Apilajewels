@@ -534,9 +534,12 @@ const AdminDashboard = () => {
                       <div 
                         key={c._id} 
                         onClick={() => setSelectedAdminCategory(c.name)} 
-                        className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:border-[#B07A85] hover:shadow-md cursor-pointer transition-all flex flex-col items-center justify-center gap-4 group"
+                        className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:border-[#B07A85] hover:shadow-md cursor-pointer transition-all flex flex-col items-center justify-center gap-4 group relative"
                       >
-                        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                        <div className="absolute top-4 right-4 bg-white text-gray-600 border border-gray-200 text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">
+                          {c.jewelCount || 0}
+                        </div>
+                        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform mt-2">
                           <Package className="text-[#B07A85]" size={28} />
                         </div>
                         <span className="font-bold text-gray-800 text-lg text-center">{c.name}</span>
@@ -605,6 +608,7 @@ const AdminDashboard = () => {
                       <table className="w-full text-left border-collapse text-sm">
                         <thead>
                           <tr className="bg-white border-b border-gray-100 text-gray-400 font-semibold uppercase text-xs tracking-wider">
+                            <th className="px-6 py-4 w-16">S.No</th>
                             <th className="px-6 py-4">Image & Name</th>
                             <th className="px-6 py-4">Code</th>
                             <th className="px-6 py-4">Type</th>
@@ -613,8 +617,9 @@ const AdminDashboard = () => {
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">
-                          {filteredAdminJewelleries.map(jewel => (
+                          {filteredAdminJewelleries.map((jewel, index) => (
                             <tr key={jewel._id} className="hover:bg-gray-50/50 transition-colors">
+                              <td className="px-6 py-4 text-sm font-semibold text-gray-400 text-center">{index + 1}</td>
                               <td className="px-6 py-4">
                                 <div className="flex items-center gap-4">
                                   <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
