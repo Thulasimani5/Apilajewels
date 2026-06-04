@@ -13,6 +13,10 @@ const AdminDashboard = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   
+  const [showQuickEditModal, setShowQuickEditModal] = useState(false);
+  const [quickEditData, setQuickEditData] = useState({});
+  const [quickEditLoading, setQuickEditLoading] = useState(false);
+  
   const [users, setUsers] = useState([]);
   const [usersLoading, setUsersLoading] = useState(false);
   const [selectedUserCart, setSelectedUserCart] = useState(null);
@@ -61,6 +65,37 @@ const AdminDashboard = () => {
       }
     } catch (e) {
       alert("Error deleting jewel");
+    }
+  };
+
+  const handleQuickEditSubmit = async (e) => {
+    e.preventDefault();
+    setQuickEditLoading(true);
+    try {
+      const payload = { ...quickEditData };
+      const url = `${API_BASE_URL}/api/jewellery/${quickEditData._id}`;
+      
+      const res = await fetch(url, {
+        method: 'PUT',
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        alert('Jewel updated quickly successfully!');
+        setShowQuickEditModal(false);
+        setAdminJewelleries(prev => prev.map(j => j._id === quickEditData._id ? { ...j, ...payload } : j));
+      } else {
+        const err = await res.json();
+        alert('Error: ' + err.error);
+      }
+    } catch (err) {
+      alert('Network error. Could not connect to server.');
+    } finally {
+      setQuickEditLoading(false);
     }
   };
 
@@ -561,6 +596,22 @@ const AdminDashboard = () => {
                               <td className="px-6 py-4 text-right flex justify-end gap-2">
                                 <button 
                                   onClick={() => {
+                                    setQuickEditData({
+                                      _id: jewel._id,
+                                      jewelId: jewel.jewelId || '',
+                                      name: jewel.name || '',
+                                      price: jewel.price || jewel.rentalPrice || '',
+                                      deposit: jewel.deposit || '',
+                                      category: jewel.category || 'Moissanite',
+                                    });
+                                    setShowQuickEditModal(true);
+                                  }}
+                                  className="text-xs bg-green-50 text-green-600 px-3 py-1.5 rounded-lg hover:bg-green-600 hover:text-white transition-all font-semibold shadow-sm"
+                                >
+                                  Quick Edit
+                                </button>
+                                <button 
+                                  onClick={() => {
                                     setEditingId(jewel._id);
                                     setFormData({
                                       jewelId: jewel.jewelId || '',
@@ -590,7 +641,7 @@ const AdminDashboard = () => {
                                   }}
                                   className="text-xs bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-600 hover:text-white transition-all font-semibold shadow-sm"
                                 >
-                                  Edit
+                                  Full Edit
                                 </button>
                                 <button 
                                   onClick={() => handleDeleteJewel(jewel._id)}
@@ -607,6 +658,54 @@ const AdminDashboard = () => {
                   )}
                 </>
               )}
+            </div>
+          )}
+
+          {activeTab === 'jewellery' && showQuickEditModal && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+              <div className="bg-white rounded-xl max-w-md w-full shadow-xl">
+                <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+                  <h2 className="text-lg font-bold text-gray-900">Quick Edit Jewel</h2>
+                  <button onClick={() => setShowQuickEditModal(false)} className="text-gray-400 hover:text-gray-600">
+                    <X size={20} />
+                  </button>
+                </div>
+                <form onSubmit={handleQuickEditSubmit} className="p-6 space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+                    <input required type="text" value={quickEditData.name || ''} onChange={e => setQuickEditData({...quickEditData, name: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] text-sm" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Jewel ID</label>
+                      <input required type="text" value={quickEditData.jewelId || ''} onChange={e => setQuickEditData({...quickEditData, jewelId: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] text-sm" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                      <select value={quickEditData.category || ''} onChange={e => setQuickEditData({...quickEditData, category: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] text-sm">
+                        {(categories || []).map(c => <option key={c._id} value={c.name}>{c.name}</option>)}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
+                      <input required type="number" value={quickEditData.price || ''} onChange={e => setQuickEditData({...quickEditData, price: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] text-sm" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Deposit (₹)</label>
+                      <input required type="number" value={quickEditData.deposit || ''} onChange={e => setQuickEditData({...quickEditData, deposit: e.target.value})} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] text-sm" />
+                    </div>
+                  </div>
+                  
+                  <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
+                    <button type="button" onClick={() => setShowQuickEditModal(false)} className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg">Cancel</button>
+                    <button type="submit" disabled={quickEditLoading} className="px-4 py-2 text-sm font-medium text-white bg-[#B07A85] hover:bg-[#9E6A75] rounded-lg disabled:opacity-50">
+                      {quickEditLoading ? 'Saving...' : 'Save Changes'}
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
           )}
 
