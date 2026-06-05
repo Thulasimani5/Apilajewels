@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SearchOverlay from '../components/SearchOverlay';
 import ShareBottomSheet from '../components/ShareBottomSheet';
-
+import LazyImage from '../components/LazyImage';
 import { ArrowLeft, Search, Heart, Share2, X } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
@@ -92,7 +92,7 @@ const Cart = () => {
                 {item.images?.[0]?.type === 'video' ? (
                   <video src={item.images[0].url} className="w-full h-full object-cover" />
                 ) : (
-                  <img src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" />
+              <LazyImage src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" />
                 )}
                 
                 <div className={`absolute inset-0 bg-black/10 transition-opacity ${selectedItems.includes(item._id) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />

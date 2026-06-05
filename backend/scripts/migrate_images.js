@@ -22,8 +22,8 @@ cloudinary.config({
 const connectDB = require('../config/db');
 
 // Models
-const Jewellery = require('../models/jewellery');
-const Category = require('../models/category');
+const Jewellery = require('../models/Jewellery');
+const Category = require('../models/Category');
 
 // Helper: decide whether a URL needs migration
 function needsMigration(url) {
@@ -61,7 +61,7 @@ async function migrateJewellery() {
       const img = item.images[i];
       if (img.url && img.url.includes('localhost')) {
         const filename = filenameFromUrl(img.url);
-        const localPath = path.resolve(__dirname, '..', '..', 'uploads', filename);
+        const localPath = path.resolve(__dirname, '..', 'uploads', filename);
         if (fs.existsSync(localPath)) {
           const cloudUrl = await uploadFile(localPath);
           if (cloudUrl) {
@@ -74,7 +74,7 @@ async function migrateJewellery() {
         }
       }
     }
-    if (changed) await item.save();
+    if (changed) await item.save({ validateBeforeSave: false });
   }
 }
 
@@ -84,7 +84,7 @@ async function migrateCategories() {
   for (const cat of cats) {
     if (cat.image && cat.image.includes('localhost')) {
       const filename = filenameFromUrl(cat.image);
-      const localPath = path.resolve(__dirname, '..', '..', 'uploads', filename);
+      const localPath = path.resolve(__dirname, '..', 'uploads', filename);
       if (fs.existsSync(localPath)) {
         const cloudUrl = await uploadFile(localPath);
         if (cloudUrl) {

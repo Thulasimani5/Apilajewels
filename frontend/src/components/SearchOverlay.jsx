@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import API_BASE_URL from '../config/api';
+import LazyImage from '../components/LazyImage';
 import { ArrowLeft, Search as SearchIcon, X, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -138,7 +138,7 @@ const SearchOverlay = ({ isOpen, onClose, category, type }) => {
                   {item.images?.[0]?.type === 'video' ? (
                      <video src={item.images[0].url} className="w-full h-full object-cover" />
                   ) : (
-                     <img src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" />
+                     <LazyImage src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">

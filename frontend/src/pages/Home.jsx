@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Card from '../components/Card';
+import LazyImage from '../components/LazyImage';
 import CategoryContext from '../context/CategoryContext';
 import API_BASE_URL from '../config/api';
 
@@ -80,11 +81,11 @@ const Home = () => {
             to={`/shop?category=${cat.slug}`}
             className="relative rounded-[1.5rem] overflow-hidden group w-[55vw] sm:w-[300px] shrink-0 snap-start h-[40vh] shadow-sm"
           >
-            <img
-              src={cat.img}
-              alt={cat.title}
-              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-            />
+            <LazyImage
+                src={cat.img}
+                alt={cat.title}
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+              />
 
             <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60" />
 
@@ -123,7 +124,7 @@ const Home = () => {
           {occasions.map((occ) => (
             <Link key={occ.slug} to={`/shop?occasion=${occ.slug}`}
               className="relative h-64 lg:h-72 rounded-2xl overflow-hidden group">
-              <img src={occ.img} alt={occ.title}
+              <LazyImage src={occ.img} alt={occ.title}
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
               <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between text-white">
@@ -142,7 +143,7 @@ const Home = () => {
           {/* Left col */}
           <div className="flex flex-col gap-2">
             <Link to="/shop?occasion=bridal" className="relative h-44 rounded-[2rem] overflow-hidden group">
-              <img src={`${CLOUD_BASE}/Bridal_Set.png`} alt="Bridal Set" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <LazyImage src={`${CLOUD_BASE}/Bridal_Set.png`} alt="Bridal Set" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>
@@ -153,7 +154,7 @@ const Home = () => {
               </div>
             </Link>
             <Link to="/shop?occasion=designer" className="relative h-36 rounded-[2rem] overflow-hidden group">
-              <img src={`${CLOUD_BASE}/Designer.png`} alt="Designer" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <LazyImage src={`${CLOUD_BASE}/Designer.png`} alt="Designer" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>
@@ -164,7 +165,7 @@ const Home = () => {
               </div>
             </Link>
             <Link to="/shop?occasion=party" className="relative h-44 rounded-[2rem] overflow-hidden group">
-              <img src={`${CLOUD_BASE}/Party_Wear.png`} alt="Party Wear" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <LazyImage src={`${CLOUD_BASE}/Party_Wear.png`} alt="Party Wear" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>
@@ -178,7 +179,7 @@ const Home = () => {
           {/* Right col */}
           <div className="flex flex-col gap-2">
             <Link to="/shop?occasion=bridesmaid" className="relative h-36 rounded-[2rem] overflow-hidden group">
-              <img src={`${CLOUD_BASE}/Bridal_Maid.png`} alt="Bridal Maid" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <LazyImage src={`${CLOUD_BASE}/Bridal_Maid.png`} alt="Bridal Maid" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>
@@ -189,7 +190,7 @@ const Home = () => {
               </div>
             </Link>
             <Link to="/shop?occasion=reception" className="relative h-52 rounded-[2rem] overflow-hidden group">
-              <img src={`${CLOUD_BASE}/Reception.png`} alt="Reception" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <LazyImage src={`${CLOUD_BASE}/Reception.png`} alt="Reception" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>
@@ -200,7 +201,7 @@ const Home = () => {
               </div>
             </Link>
             <Link to="/shop?occasion=small" className="relative h-36 rounded-[2rem] overflow-hidden group">
-              <img src={`${CLOUD_BASE}/Small_Jewel.png`} alt="Small Jewel" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+              <LazyImage src={`${CLOUD_BASE}/Small_Jewel.png`} alt="Small Jewel" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
               <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
                 <div>

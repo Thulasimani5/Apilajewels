@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, Heart, ShoppingCart, Menu, X, User } from 'lucide-react';
+import { Search, Heart, ShoppingCart, Menu, X, User, LogOut } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import ApilaLogo01 from '../assets/Apila Logo01.svg';
 import SearchOverlay from './SearchOverlay';
@@ -116,7 +116,8 @@ const Navbar = () => {
             </Link>
             
             {user ? (
-              <div className="relative" ref={dropdownRef}>
+              <div className="flex items-center space-x-4" ref={dropdownRef}>
+                {/* User dropdown */}
                 <button 
                   onClick={() => setDropdownOpen(!dropdownOpen)} 
                   className="hover:text-brand-black transition-colors duration-200 flex items-center gap-1.5 focus:outline-none"
@@ -127,7 +128,14 @@ const Navbar = () => {
                     {user.name || 'Customer'}
                   </span>
                 </button>
-                
+                {/* Visible Logout button */}
+                <button 
+                  onClick={logout}
+                  className="hover:text-red-600 transition-colors duration-200"
+                  aria-label="Logout"
+                >
+                  <LogOut size={20} strokeWidth={2} />
+                </button>
                 {dropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-[0_10px_30px_rgba(0,0,0,0.08)] py-2 z-50">
                     <div className="px-4 py-2 border-b border-gray-50">
@@ -159,7 +167,7 @@ const Navbar = () => {
               <Link to="/login" aria-label="Account" className="hover:text-brand-black transition-colors duration-200">
                 <User size={20} strokeWidth={2} />
               </Link>
-            )}
+            )
           </div>
         </div>
       </div>

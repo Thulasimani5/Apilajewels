@@ -159,7 +159,7 @@ const ProductDetails = () => {
         {isVideo ? (
           <video src={url} className="w-full h-full object-cover pointer-events-none" autoPlay muted loop playsInline />
         ) : (
-          <img src={url} alt={`${product.name} - ${idx}`} className="w-full h-full object-cover pointer-events-none" />
+              <LazyImage src={url} alt={`${product.name} - ${idx}`} className="w-full h-full object-cover pointer-events-none" />
         )}
       </div>
     );
@@ -344,7 +344,7 @@ const ProductDetails = () => {
                     {isVideo ? (
                       <video src={url} className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500" autoPlay muted loop playsInline />
                     ) : (
-                      <img src={url} alt={`${product.name} - ${idx}`} className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <LazyImage src={url} alt={`${product.name} - ${idx}`} className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500" />
                     )}
                   </div>
                 )
