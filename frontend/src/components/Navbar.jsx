@@ -167,7 +167,7 @@ const Navbar = () => {
               <Link to="/login" aria-label="Account" className="hover:text-brand-black transition-colors duration-200">
                 <User size={20} strokeWidth={2} />
               </Link>
-            )
+            )}
           </div>
         </div>
       </div>
