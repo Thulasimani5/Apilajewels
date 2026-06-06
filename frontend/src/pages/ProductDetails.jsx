@@ -10,6 +10,7 @@ import SearchOverlay from '../components/SearchOverlay';
 import FullScreenMediaViewer from '../components/FullScreenMediaViewer';
 import API_BASE_URL from '../config/api';
 import LazyImage from '../components/LazyImage';
+import { useProduct } from '../hooks/useProduct';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -18,36 +19,15 @@ const ProductDetails = () => {
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { user } = useAuth();
   
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { data: product, isLoading: loading, error: queryError } = useProduct(id);
+  const error = queryError?.message;
+  
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMediaViewerOpen, setIsMediaViewerOpen] = useState(false);
   const [clickedMediaIndex, setClickedMediaIndex] = useState(0);
 
   const [relatedProducts, setRelatedProducts] = useState([]);
-
-  // Fetch current product
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`${API_BASE_URL}/api/jewellery/${id}`);
-        const result = await response.json();
-        if (result.success) {
-          setProduct(result.data);
-        } else {
-          setError(result.error || 'Failed to fetch item');
-        }
-      } catch (err) {
-        setError(err.message || 'Could not connect to server');
-      } finally {
-        setLoading(false);
-      }
-    };
-    if (id) fetchProduct();
-  }, [id]);
 
   // Scroll to top and reset media index on route change
   useEffect(() => {

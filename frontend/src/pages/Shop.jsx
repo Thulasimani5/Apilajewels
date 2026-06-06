@@ -7,7 +7,8 @@ import FilterSidebar from '../components/FilterSidebar';
 import CategoryContext from '../context/CategoryContext';
 import SortBottomSheet from '../components/SortBottomSheet';
 import SearchOverlay from '../components/SearchOverlay';
-import API_BASE_URL from '../config/api';
+import ProductGridSkeleton from '../components/ProductGridSkeleton';
+import { useAllProducts } from '../hooks/useProducts';
 
 /* ── Sort options ── */
 const SORT_OPTIONS = [
@@ -103,32 +104,9 @@ const JewelleryListing = () => {
     });
   }, [searchParams, categories]);
 
-  // API Data states
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // Fetch products from the backend database on mount
-  React.useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`${API_BASE_URL}/api/jewellery?limit=500`);
-        const result = await response.json();
-        if (result.success) {
-          setProducts(result.data);
-        } else {
-          setError(result.error || 'Failed to fetch items');
-        }
-      } catch (err) {
-        setError(err.message || 'Could not connect to server');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
+  // Phase 5+6: React Query replaces manual fetch — cached across navigations
+  const { data: productsData, isLoading, isError, error } = useAllProducts();
+  const products = productsData?.data || [];
 
   const handleApplyFilters = (newFilters) => {
     setActiveFilters(newFilters);
@@ -445,14 +423,12 @@ const JewelleryListing = () => {
 
           {/* ── Product Grid ── */}
           <div className="px-[14px] md:px-5 pt-[4px] md:pt-4 pb-8">
-            {loading ? (
-              <div className="flex flex-col justify-center items-center py-24 text-gray-500 gap-2">
-                <div className="w-8 h-8 border-4 border-[#A56D7A] border-t-transparent rounded-full animate-spin"></div>
-                <span className="text-xs font-semibold tracking-wider text-gray-400 uppercase">Loading Jewels...</span>
-              </div>
-            ) : error ? (
+            {isLoading ? (
+              /* Phase 7: Skeleton loader — no more blocking spinner */
+              <ProductGridSkeleton count={12} />
+            ) : isError ? (
               <div className="flex justify-center items-center py-20 text-red-500 font-semibold text-xs uppercase tracking-wider">
-                {error}
+                {error?.message || 'Failed to load products'}
               </div>
             ) : sortedProducts.length === 0 ? (
               <div className="flex flex-col justify-center items-center py-20 gap-3">
@@ -482,7 +458,7 @@ const JewelleryListing = () => {
                 {/* Loading more indicator */}
                 {visibleCount < sortedProducts.length && (
                   <div className="flex justify-center py-6">
-                    <div className="w-6 h-6 border-3 border-[#A56D7A] border-t-transparent rounded-full animate-spin"></div>
+                    <div className="w-6 h-6 border-[3px] border-[#A56D7A] border-t-transparent rounded-full animate-spin"></div>
                   </div>
                 )}
               </>

@@ -4,19 +4,31 @@ import { Heart } from 'lucide-react';
 import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
 import { getOptimizedCloudinaryUrl } from '../utils/imageUtils';
+import { useQueryClient } from '@tanstack/react-query';
+import { fetchProduct } from '../hooks/useProduct';
 
 const Card = ({ jewellery, priority = false }) => {
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const liked = isInWishlist(jewellery._id || jewellery.code);
   
   const imageUrl = jewellery.images?.[0]?.url || 'https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=800&q=80';
+
+  const prefetchProduct = (id) => {
+    queryClient.prefetchQuery({
+      queryKey: ["product", id],
+      queryFn: () => fetchProduct(id),
+      staleTime: 5 * 60 * 1000,
+    });
+  };
 
   return (
     <Link
       to={`/shop/${jewellery._id || jewellery.code}`}
       className="block group"
+      onMouseEnter={() => prefetchProduct(jewellery._id || jewellery.code)}
     >
       {/* Image container — square aspect to fit more items on screen, 10px radius */}
       <div className="relative aspect-square rounded-[10px] overflow-hidden bg-[#F0EDED]">
