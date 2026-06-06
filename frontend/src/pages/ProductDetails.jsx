@@ -9,6 +9,7 @@ import ShareBottomSheet from '../components/ShareBottomSheet';
 import SearchOverlay from '../components/SearchOverlay';
 import FullScreenMediaViewer from '../components/FullScreenMediaViewer';
 import API_BASE_URL from '../config/api';
+import LazyImage from '../components/LazyImage';
 
 const ProductDetails = () => {
   const { id } = useParams();
