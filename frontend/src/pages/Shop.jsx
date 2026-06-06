@@ -473,8 +473,8 @@ const JewelleryListing = () => {
               <>
                 {/* ── Responsive Product Grid with infinite scroll ── */}
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[10px] md:gap-4">
-                  {sortedProducts.slice(0, visibleCount).map(product => (
-                    <Card key={product._id} jewellery={product} />
+                  {sortedProducts.slice(0, visibleCount).map((product, index) => (
+                    <Card key={product._id} jewellery={product} priority={index < 6} />
                   ))}
                 </div>
                 {/* sentinel element for infinite scroll */}

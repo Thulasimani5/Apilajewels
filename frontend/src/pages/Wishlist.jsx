@@ -5,6 +5,7 @@ import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
 import SearchOverlay from '../components/SearchOverlay';
 import ShareBottomSheet from '../components/ShareBottomSheet';
+import LazyImage from '../components/LazyImage';
 
 const Wishlist = () => {
   const { wishlistItems, toggleWishlist } = useWishlist();
@@ -70,7 +71,7 @@ const Wishlist = () => {
                 {item.images?.[0]?.type === 'video' ? (
                   <video src={item.images[0].url} className="w-full h-full object-cover" />
                 ) : (
-                  <LazyImage src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" />
+                  <LazyImage src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" width={80} height={80} />
                 )}
                 <div className="absolute top-1 left-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
                   <Heart size={8} fill="white" strokeWidth={0} />

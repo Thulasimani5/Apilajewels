@@ -92,7 +92,7 @@ const Cart = () => {
                 {item.images?.[0]?.type === 'video' ? (
                   <video src={item.images[0].url} className="w-full h-full object-cover" />
                 ) : (
-              <LazyImage src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" />
+              <LazyImage src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" width={80} height={80} />
                 )}
                 
                 <div className={`absolute inset-0 bg-black/10 transition-opacity ${selectedItems.includes(item._id) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />

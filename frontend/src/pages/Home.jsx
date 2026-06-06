@@ -75,7 +75,7 @@ const Home = () => {
 
       {/* ── SECTION 1 — Full-viewport hero carousel (All Categories) ── */}
       <section className="flex space-x-2 overflow-x-auto snap-x snap-mandatory hide-scrollbar mt-4 mb-4 ml-4 pr-4">
-        {displayCategories.map((cat) => (
+        {displayCategories.map((cat, index) => (
           <Link
             key={cat.slug}
             to={`/shop?category=${cat.slug}`}
@@ -84,6 +84,7 @@ const Home = () => {
             <LazyImage
                 src={cat.img}
                 alt={cat.title}
+                priority={index === 0}
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
               />
 
@@ -109,7 +110,6 @@ const Home = () => {
           </Link>
         ))}
       </section>
-
 
       {/* ════════════════════════════════════════════
           SECTION 3 — Shop by Occasion
@@ -228,8 +228,8 @@ const Home = () => {
             </div>
           ) : trending.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[10px]">
-              {trending.map((item) => (
-                <Card key={item._id} jewellery={item} />
+              {trending.map((item, index) => (
+                <Card key={item._id} jewellery={item} priority={index < 4} />
               ))}
             </div>
           ) : (

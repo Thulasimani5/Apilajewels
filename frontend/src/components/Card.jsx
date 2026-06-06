@@ -3,12 +3,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Heart } from 'lucide-react';
 import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
+import { getOptimizedCloudinaryUrl } from '../utils/imageUtils';
 
-const Card = ({ jewellery }) => {
+const Card = ({ jewellery, priority = false }) => {
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { user } = useAuth();
   const navigate = useNavigate();
   const liked = isInWishlist(jewellery._id || jewellery.code);
+  
+  const imageUrl = jewellery.images?.[0]?.url || 'https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=800&q=80';
 
   return (
     <Link
@@ -28,10 +31,23 @@ const Card = ({ jewellery }) => {
           />
         ) : (
           <img
-            src={jewellery.images?.[0]?.url || 'https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=800&q=80'}
+            src={getOptimizedCloudinaryUrl(imageUrl, { width: 400, height: 400 })}
+            srcSet={`
+              ${getOptimizedCloudinaryUrl(imageUrl, { width: 200, height: 200 })} 200w,
+              ${getOptimizedCloudinaryUrl(imageUrl, { width: 400, height: 400 })} 400w,
+              ${getOptimizedCloudinaryUrl(imageUrl, { width: 800, height: 800 })} 800w
+            `}
+            sizes="
+              (max-width: 640px) 50vw,
+              (max-width: 1024px) 33vw,
+              25vw
+            "
+            width={400}
+            height={400}
             alt={jewellery.name}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-            loading="lazy"
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : "auto"}
           />
         )}
 

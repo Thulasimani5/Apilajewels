@@ -1,64 +1,47 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
+import { getOptimizedCloudinaryUrl } from '../utils/imageUtils';
 
 /**
  * LazyImage component
- * - Uses IntersectionObserver to load image when it enters viewport.
- * - Applies Cloudinary automatic format and quality optimizations.
- * - Shows a blurred low‑quality placeholder while loading.
- * - Accepts all standard img props (src, alt, className, etc.).
+ * - Uses Cloudinary optimized URLs via getOptimizedCloudinaryUrl
+ * - Implements a low-quality blur placeholder
+ * - Fades into the full resolution image (w_1200) once loaded
  */
-const LazyImage = ({ src, alt = '', className = '', placeholderClass = 'bg-gray-200 animate-pulse', ...rest }) => {
-  const [isInView, setIsInView] = useState(false);
+const LazyImage = ({ src, alt = '', className = '', priority = false, width = 1200, height = 1200, ...rest }) => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const imgRef = useRef(null);
 
-  // Build Cloudinary optimized URL if src is a Cloudinary base URL
-  const getOptimizedUrl = (url) => {
-    try {
-      const hasUpload = url.includes('/upload/');
-      if (hasUpload) {
-        // Insert transformation string after /upload/
-        return url.replace('/upload/', '/upload/f_auto,q_auto,dpr_auto/');
-      }
-      // If not a Cloudinary URL, return as‑is
-      return url;
-    } catch {
-      return url;
-    }
-  };
+  // Phase 5: Blur Placeholder URL
+  const blurUrl = getOptimizedCloudinaryUrl(src, {
+    width: 20,
+    quality: 1,
+  });
 
-  useEffect(() => {
-    if (!imgRef.current) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsInView(true);
-            observer.disconnect();
-          }
-        });
-      },
-      { rootMargin: '200px' }
-    );
-    observer.observe(imgRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  const finalSrc = isInView ? getOptimizedUrl(src) : '';
+  // Phase 4: Full Resolution URL (w_1200)
+  const finalSrc = getOptimizedCloudinaryUrl(src, {
+    width: 1200,
+  });
 
   return (
-    <div ref={imgRef} className={`relative ${className}`} {...rest}>
-      {!isLoaded && (
-        <div className={`absolute inset-0 ${placeholderClass}`} />
-      )}
-      {finalSrc && (
-        <img
-          src={finalSrc}
-          alt={alt}
-          className={`w-full h-full object-cover ${isLoaded ? 'opacity-100' : 'opacity-0'} transition-opacity duration-500`}
-          onLoad={() => setIsLoaded(true)}
-        />
-      )}
+    <div className={`relative overflow-hidden ${className}`} {...rest}>
+      {/* Blurred Placeholder */}
+      <img
+        src={blurUrl}
+        alt={alt}
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${isLoaded ? 'opacity-0' : 'opacity-100 scale-110 blur-md'}`}
+        aria-hidden="true"
+      />
+      
+      {/* Final Image */}
+      <img
+        src={finalSrc}
+        alt={alt}
+        className={`w-full h-full object-cover transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        onLoad={() => setIsLoaded(true)}
+        loading={priority ? "eager" : "lazy"}
+        fetchPriority={priority ? "high" : "auto"}
+        width={width}
+        height={height}
+      />
     </div>
   );
 };
