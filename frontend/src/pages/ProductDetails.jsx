@@ -270,17 +270,7 @@ const ProductDetails = () => {
             )}
           </div>
 
-          {/* AJIO Style Carousel Pagination Dots */}
-          {mediaList.length > 1 && (
-            <div className="absolute bottom-4 left-0 right-0 flex justify-center items-center gap-1.5 z-30">
-              {mediaList.map((_, idx) => (
-                <div 
-                  key={idx}
-                  className={`h-[6px] rounded-full transition-all duration-300 ${activeMediaIndex === idx ? 'w-5 bg-gray-900' : 'w-[6px] bg-gray-400/80'}`}
-                />
-              ))}
-            </div>
-          )}
+
         </div>
 
         {/* Details Container */}
