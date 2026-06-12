@@ -27,7 +27,7 @@ const Navbar = () => {
   useEffect(() => {
     const onScroll = () => {
       const currentScrollY = window.scrollY;
-      
+
       setScrolled(currentScrollY > 15);
 
       if (currentScrollY > lastScrollY.current && currentScrollY > 80) {
@@ -38,7 +38,7 @@ const Navbar = () => {
 
       lastScrollY.current = currentScrollY;
     };
-    
+
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -82,9 +82,8 @@ const Navbar = () => {
         className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${navBgClass} ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}
       >
         <div
-          className={`mx-auto px-4 sm:px-6 lg:px-8 ${
-            isHomePage ? "md:max-w-none md:px-12 lg:px-20" : "max-w-7xl"
-          }`}
+          className={`mx-auto px-4 sm:px-6 lg:px-8 ${isHomePage ? "md:max-w-none md:px-12 lg:px-20" : "max-w-7xl"
+            }`}
         >
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Left Section: Hamburger Menu · Search */}
@@ -118,14 +117,24 @@ const Navbar = () => {
               {isHomePage && (
                 <button
                   onClick={() => setIsSearchOpen(true)}
-                  className={`hidden md:flex items-center gap-2.5 rounded-full border-2 min-w-[148px] px-5 py-[9px] focus:outline-none transition-all duration-200 hover:opacity-90 ${
-                    scrolled
-                      ? "border-gray-200 bg-gray-50 text-gray-600"
-                      : "border-brand-search bg-white/5 backdrop-blur-sm text-white/90"
-                  }`}
+                  className={`hidden md:flex items-center gap-2.5 pl-4 focus:outline-none transition-all duration-200 hover:opacity-90 ${scrolled
+                    ? "border-gray-200 bg-gray-50 text-gray-600"
+                    : "text-white backdrop-blur-sm"
+                    }`}
+                  style={{
+                    width: "264px",
+                    height: "37px",
+                    borderRadius: "18.5px",
+                    border: scrolled ? "1px solid #e5e7eb" : "1px solid rgba(255, 255, 255, 0.1)",
+                    backgroundColor: scrolled ? "#f9fafb" : "rgba(255, 255, 255, 0.1)",
+                  }}
                   aria-label="Search"
                 >
-                  <Search size={15} strokeWidth={2} />
+                  <Search 
+                    color={scrolled ? "currentColor" : "white"} 
+                    strokeWidth={2} 
+                    style={{ width: "17.943px", height: "18px", flexShrink: 0 }} 
+                  />
                   <span className="text-[13px] font-light select-none tracking-wide">
                     Search
                   </span>
@@ -153,8 +162,10 @@ const Navbar = () => {
                 <img
                   src={logoImage}
                   alt="Apila Jewels"
-                  className="h-11 w-auto md:h-[52px]"
+                  className="object-contain"
                   style={{
+                    width: "auto",
+                    height: "140px",
                     filter: logoFilterClass,
                     transition: "filter 0.3s ease",
                   }}

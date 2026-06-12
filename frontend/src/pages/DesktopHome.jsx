@@ -19,6 +19,15 @@ import iconDoorstepDelivery from '../assets/icons/Doorstepdelivery.svg';
 import iconTimelyReturn from '../assets/icons/TimelyReturn.svg';
 import iconHassleFree from '../assets/icons/HassleFree.svg';
 
+// Footer icons
+import iconCall from '../assets/icons/call.svg';
+import iconMail from '../assets/icons/mail.svg';
+import iconLocation from '../assets/icons/location.svg';
+import iconInstagram from '../assets/icons/instagram.svg';
+import iconFacebook from '../assets/icons/facebook.svg';
+import iconPinterest from '../assets/icons/pinterest.svg';
+import iconWhatsapp from '../assets/icons/whatsapp.svg';
+
 // Carousel images (from Figma design — all 7 cards)
 import carouselImg1 from '../assets/images/carousel1.jpg';
 import carouselImg2 from '../assets/images/carousel2.jpg';
@@ -31,7 +40,7 @@ import carouselImg7 from '../assets/images/carousel7.jpg';
 /* small inline-SVG helpers */
 const Icon = {
   search: (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.65)" strokeWidth="2">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" />
     </svg>
   ),
@@ -52,8 +61,8 @@ const Icon = {
     </svg>
   ),
   arrow: (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" />
+    <svg width="8.403" height="16.807" viewBox="80 0 11 17" fill="none" stroke="currentColor" strokeWidth="1" xmlns="http://www.w3.org/2000/svg">
+      <path d="M82.1462 15.6236L81.7927 15.9772L82.4998 16.6843L82.8533 16.3307L82.4998 15.9772L82.1462 15.6236ZM90.1348 8.34218L90.4883 8.69574C90.6836 8.50047 90.6836 8.18389 90.4883 7.98863L90.1348 8.34218ZM82.4998 15.9772L82.8533 16.3307L90.4883 8.69574L90.1348 8.34218L89.7812 7.98863L82.1462 15.6236L82.4998 15.9772ZM90.1348 8.34218L90.4883 7.98863L82.8533 0.35364L82.4998 0.707194L82.1462 1.06075L89.7812 8.69574L90.1348 8.34218Z" fill="currentColor"/>
     </svg>
   ),
   phone: (
@@ -145,18 +154,18 @@ export default function Home() {
 
   /* ---- Context & API logic ---- */
   const TRENDING_SAMPLES = [
-    { id: 's1',  name: 'Moissinate Jewels',        desc: 'Moissanite Designer Polki Necklace',  price: '₹1299.00 / 3 Days', img: carouselImg1 },
-    { id: 's2',  name: 'American Diamond',          desc: 'American Diamond Necklace Set',       price: '₹1299.00 / 3 Days', img: carouselImg2 },
-    { id: 's3',  name: 'Gold Antique Jewels',       desc: 'Gold Antique Premium Necklace',       price: '₹1299.00 / 3 Days', img: carouselImg3 },
-    { id: 's4',  name: 'Kundan Jewels',             desc: 'Kundan Bridal Necklace Set',          price: '₹1299.00 / 3 Days', img: carouselImg4 },
-    { id: 's5',  name: 'Gold Bangles',              desc: 'Gold Plated Bangle Set',              price: '₹1299.00 / 3 Days', img: carouselImg5 },
-    { id: 's6',  name: 'American Diamond Bangles',  desc: 'American Diamond Bangle Set',         price: '₹1299.00 / 3 Days', img: carouselImg6 },
-    { id: 's7',  name: 'Accessories',               desc: 'Bridal Jewellery Accessories',        price: '₹1299.00 / 3 Days', img: carouselImg7 },
-    { id: 's8',  name: 'Moissinate Jewels',         desc: 'Moissanite Designer Polki Necklace',  price: '₹1299.00 / 3 Days', img: carouselImg1 },
-    { id: 's9',  name: 'American Diamond',          desc: 'American Diamond Necklace Set',       price: '₹1299.00 / 3 Days', img: carouselImg2 },
-    { id: 's10', name: 'Gold Antique Jewels',       desc: 'Gold Antique Premium Necklace',       price: '₹1299.00 / 3 Days', img: carouselImg3 },
-    { id: 's11', name: 'Kundan Jewels',             desc: 'Kundan Bridal Necklace Set',          price: '₹1299.00 / 3 Days', img: carouselImg4 },
-    { id: 's12', name: 'Gold Bangles',              desc: 'Gold Plated Bangle Set',              price: '₹1299.00 / 3 Days', img: carouselImg5 },
+    { id: 's1', name: 'Moissinate Jewels', desc: 'Moissanite Designer Polki Necklace', price: '₹1299.00', img: carouselImg1 },
+    { id: 's2', name: 'American Diamond', desc: 'American Diamond Necklace Set', price: '₹1299.00', img: carouselImg2 },
+    { id: 's3', name: 'Gold Antique Jewels', desc: 'Gold Antique Premium Necklace', price: '₹1299.00', img: carouselImg3 },
+    { id: 's4', name: 'Kundan Jewels', desc: 'Kundan Bridal Necklace Set', price: '₹1299.00', img: carouselImg4 },
+    { id: 's5', name: 'Gold Bangles', desc: 'Gold Plated Bangle Set', price: '₹1299.00', img: carouselImg5 },
+    { id: 's6', name: 'American Diamond Bangles', desc: 'American Diamond Bangle Set', price: '₹1299.00', img: carouselImg6 },
+    { id: 's7', name: 'Accessories', desc: 'Bridal Jewellery Accessories', price: '₹1299.00', img: carouselImg7 },
+    { id: 's8', name: 'Moissinate Jewels', desc: 'Moissanite Designer Polki Necklace', price: '₹1299.00', img: carouselImg1 },
+    { id: 's9', name: 'American Diamond', desc: 'American Diamond Necklace Set', price: '₹1299.00', img: carouselImg2 },
+    { id: 's10', name: 'Gold Antique Jewels', desc: 'Gold Antique Premium Necklace', price: '₹1299.00', img: carouselImg3 },
+    { id: 's11', name: 'Kundan Jewels', desc: 'Kundan Bridal Necklace Set', price: '₹1299.00', img: carouselImg4 },
+    { id: 's12', name: 'Gold Bangles', desc: 'Gold Plated Bangle Set', price: '₹1299.00', img: carouselImg5 },
   ];
 
   const [trending, setTrending] = useState([]);
@@ -171,14 +180,14 @@ export default function Home() {
           const sorted = [...data.data]
             .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))
             .slice(0, 12);
-          
+
           setTrending(sorted.map(item => ({
             id: item._id,
             name: item.name,
             desc: item.description,
-            price: `₹${item.rentalPrice} / 3 Days`,
-            img: item.images && item.images.length > 0 
-              ? (item.images[0].startsWith('http') ? item.images[0] : `${API_BASE_URL}${item.images[0]}`) 
+            price: `₹${item.rentalPrice}`,
+            img: item.images && item.images.length > 0
+              ? (item.images[0].startsWith('http') ? item.images[0] : `${API_BASE_URL}${item.images[0]}`)
               : "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=cover&w=400&q=80"
           })));
         } else {
@@ -199,13 +208,13 @@ export default function Home() {
 
   /* Carousel — 7 static cards matching Figma design */
   const CAROUSEL = [
-    { title: "Moissinate Jewels",         sub: "Premium Necklace", img: carouselImg1, slug: "moissinate-jewels" },
-    { title: "American Diamond",          sub: "Necklace Sets",    img: carouselImg2, slug: "american-diamond" },
-    { title: "Gold Antique Jewels",       sub: "Premium Necklace", img: carouselImg3, slug: "gold-antique-jewels" },
-    { title: "Kundan Jewels",             sub: "Necklace Sets",    img: carouselImg4, slug: "kundan-jewels" },
-    { title: "Gold Bangles",              sub: "Bangle Sets",      img: carouselImg5, slug: "gold-bangles" },
-    { title: "American Diamond Bangles",  sub: "Bangle Sets",      img: carouselImg6, slug: "american-diamond-bangles" },
-    { title: "Accessories",               sub: "Others",           img: carouselImg7, slug: "accessories" },
+    { title: "Moissinate Jewels", sub: "Premium Necklace", img: carouselImg1, slug: "moissinate-jewels" },
+    { title: "American Diamond", sub: "Necklace Sets", img: carouselImg2, slug: "american-diamond" },
+    { title: "Gold Antique Jewels", sub: "Premium Necklace", img: carouselImg3, slug: "gold-antique-jewels" },
+    { title: "Kundan Jewels", sub: "Necklace Sets", img: carouselImg4, slug: "kundan-jewels" },
+    { title: "Gold Bangles", sub: "Bangle Sets", img: carouselImg5, slug: "gold-bangles" },
+    { title: "American Diamond Bangles", sub: "Bangle Sets", img: carouselImg6, slug: "american-diamond-bangles" },
+    { title: "Accessories", sub: "Others", img: carouselImg7, slug: "accessories" },
   ];
 
   /* ---- carousel logic ---- */
@@ -264,23 +273,24 @@ export default function Home() {
     setTranslatePx(current * (cardW + gap));
   }, [current]);
 
-  const dotCount = Math.max(1, maxSlide() + 1);
+  const dotCount = 3;
+  const activeDotIndex = maxSlide() > 0 ? Math.round((current / maxSlide()) * (dotCount - 1)) : 0;
 
   // Row 1: Bridal Set, Bridesmaid, Designer — Row 2: Reception, Party Wear, Small Jewel
   const OCCASIONS = [
-    { img: imgC1, label: "Bridal Set",  sub: "Collections", slug: "bridal-set" },
-    { img: imgC2, label: "Bridesmaid",  sub: "Collections", slug: "bridesmaid" },
-    { img: imgC3, label: "Designer",    sub: "Collections", slug: "designer" },
-    { img: imgC4, label: "Reception",   sub: "Collections", slug: "reception" },
-    { img: imgC5, label: "Party Wear",  sub: "Collections", slug: "party-wear" },
+    { img: imgC1, label: "Bridal Set", sub: "Collections", slug: "bridal-set" },
+    { img: imgC2, label: "Bridesmaid", sub: "Collections", slug: "bridesmaid" },
+    { img: imgC3, label: "Designer", sub: "Collections", slug: "designer" },
+    { img: imgC4, label: "Reception", sub: "Collections", slug: "reception" },
+    { img: imgC5, label: "Party Wear", sub: "Collections", slug: "party-wear" },
     { img: imgC6, label: "Small Jewel", sub: "Collections", slug: "small-jewel" }
   ];
 
   const DELIVERY = [
-    { icon: iconSecurePackaging,  head: "Secure Packaging",       desc: "Tamper proof packaging for your precious jewels." },
-    { icon: iconDoorstepDelivery, head: "Doorstep Delivery",      desc: "Delivered safely to your doorstep on time." },
-    { icon: iconTimelyReturn,     head: "Timely Return Pickup",   desc: "We pick up your jewels at your convenience." },
-    { icon: iconHassleFree,       head: "Hassle Free Experience", desc: "Smooth, easy & worry-free from start to finish." }
+    { icon: iconSecurePackaging, head: "Secure Packaging", desc: "Tamper proof packaging for your precious jewels." },
+    { icon: iconDoorstepDelivery, head: "Doorstep Delivery", desc: "Delivered safely to your doorstep on time." },
+    { icon: iconTimelyReturn, head: "Timely Return Pickup", desc: "We pick up your jewels at your convenience." },
+    { icon: iconHassleFree, head: "Hassle Free Experience", desc: "Smooth, easy & worry-free from start to finish." }
   ];
 
   return (
@@ -310,7 +320,6 @@ export default function Home() {
       {/* HERO */}
       <section className="hero">
         <img className="hero-bg" src={heroBanner} alt="Bridal Jewellery" />
-        <div className="hero-overlay" />
         <div className="hero-content">
           <h1 className="hero-title">{"Premium Bridal Jewellery\nRental in Chennai"}</h1>
           <p className="hero-sub">
@@ -342,15 +351,15 @@ export default function Home() {
         </div>
         <div className="carousel-nav">
           <button className="carousel-nav-btn" aria-label="Previous"
-            onClick={() => goTo(current - 1)}>‹</button>
+            onClick={() => goTo(current - 1)}><span style={{ transform: 'scaleX(-1)', display: 'flex' }}>{Icon.arrow}</span></button>
           {Array.from({ length: dotCount }).map((_, i) => (
             <span key={i}
-              className={`carousel-dot${i === Math.min(current, dotCount - 1) ? " active" : ""}`}
+              className={`carousel-dot${i === activeDotIndex ? " active" : ""}`}
               role="button" aria-label={`Slide ${i + 1}`}
-              onClick={() => goTo(i)} />
+              onClick={() => goTo(maxSlide() > 0 ? Math.round((i / (dotCount - 1)) * maxSlide()) : 0)} />
           ))}
           <button className="carousel-nav-btn" aria-label="Next"
-            onClick={() => goTo(current + 1)}>›</button>
+            onClick={() => goTo(current + 1)}>{Icon.arrow}</button>
         </div>
       </section>
 
@@ -400,7 +409,7 @@ export default function Home() {
           {DELIVERY.map((d, i) => (
             <div className="delivery-item" key={i}>
               <div className="delivery-icon">
-                <img src={d.icon} alt={d.head} width="42" height="42" style={{ objectFit: 'contain' }} />
+                <img src={d.icon} alt={d.head} style={{ objectFit: 'contain', width: '26.6px', height: '26px', opacity: 1 }} />
               </div>
               <div>
                 <p className="delivery-head">{d.head}</p>
@@ -445,27 +454,24 @@ export default function Home() {
           </div>
           <div>
             <span className="footer-col-head">Contact</span>
-            <div className="footer-contact-row">{Icon.phone}<span className="footer-contact-text">+91 73977 21122</span></div>
-            <div className="footer-contact-row">{Icon.mail}<span className="footer-contact-text">apila.jewels@gmail.com</span></div>
-            <div className="footer-contact-row">{Icon.pin}<span className="footer-contact-text">SIS Marakesh, Karanai Puducherry Rd,<br />Urapakkam, Chennai, Tamil Nadu 603202</span></div>
+            <div className="footer-contact-row"><img src={iconCall} alt="Phone" className="footer-contact-icon" /><span className="footer-contact-text">+91 73977 21122</span></div>
+            <div className="footer-contact-row"><img src={iconMail} alt="Mail" className="footer-contact-icon" /><span className="footer-contact-text">apila.jewels@gmail.com</span></div>
+            <div className="footer-contact-row"><img src={iconLocation} alt="Location" className="footer-contact-icon" /><span className="footer-contact-text">SIS Marakesh, Karanai Puducherry Rd, Urapakkam, Chennai, Tamil Nadu 603202</span></div>
           </div>
           <div>
             <span className="footer-follow-label">Follow Us</span>
             <div className="social-row">
               <a className="social-btn" href="#" aria-label="Instagram">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="2" y="2" width="20" height="20" rx="5" /><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" /><line x1="17.5" y1="6.5" x2="17.51" y2="6.5" /></svg>
+                <img src={iconInstagram} alt="Instagram" width="22" height="22" style={{ objectFit: 'contain' }} />
               </a>
               <a className="social-btn" href="#" aria-label="Facebook">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" /></svg>
+                <img src={iconFacebook} alt="Facebook" width="22" height="22" style={{ objectFit: 'contain' }} />
               </a>
               <a className="social-btn" href="#" aria-label="Pinterest">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M8 20l3-9.5"/>
-                  <path d="M11 10.5c-.5-1.5.5-4.5 3.5-4.5s5 2 5 4.5-2 5-5 5c-1.5 0-2.5-.5-3-1.5"/>
-                </svg>
+                <img src={iconPinterest} alt="Pinterest" width="22" height="22" style={{ objectFit: 'contain' }} />
               </a>
               <a className="social-btn" href="https://wa.me/+917397721122" target="_blank" rel="noreferrer" aria-label="WhatsApp">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg>
+                <img src={iconWhatsapp} alt="WhatsApp" width="22" height="22" style={{ objectFit: 'contain' }} />
               </a>
             </div>
           </div>
