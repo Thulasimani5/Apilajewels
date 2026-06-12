@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef, useContext } from 'react';
 import { ArrowLeft, Search, Heart, ShoppingCart, ChevronDown, X, SlidersHorizontal } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
+import DesktopShop from './DesktopShop';
 import Card from '../components/Card';
 import FilterBottomSheet from '../components/FilterBottomSheet';
 import FilterSidebar from '../components/FilterSidebar';
@@ -20,6 +21,15 @@ const SORT_OPTIONS = [
 ];
 
 const JewelleryListing = () => {
+  // Desktop breakpoint routing (>768px → DesktopShop)
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth > 768);
+  useEffect(() => {
+    const handler = () => setIsDesktop(window.innerWidth > 768);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+  if (isDesktop) return <DesktopShop />;
+
   // Modal toggle states
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);

@@ -167,6 +167,94 @@
 .reveal{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease;}
 .reveal.visible{opacity:1;transform:translateY(0);}
 
+/* SHOP PAGE — Figma: wy1ChVBrHp3WiTJ93wATqI node 263:1322 */
+
+/* full-width topbar: FILTER label (left 447px) | breadcrumb + sort (right) */
+.shop-topbar{display:flex;align-items:stretch;margin-top:72px;position:sticky;top:72px;min-height:56px;background:#fff;z-index:50;}
+.shop-topbar-left{width:447px;flex-shrink:0;display:flex;align-items:center;gap:15px;padding-left:80px;border-right:1px solid rgba(0,0,0,.08);}
+.shop-topbar-filter-label{font-family:var(--f-gotham-m);font-size:15px;font-weight:500;color:#000;letter-spacing:1.05px;text-transform:uppercase;}
+.shop-topbar-right{flex:1;display:flex;align-items:center;justify-content:space-between;padding:0 48px;}
+
+/* breadcrumb */
+.shop-breadcrumb{display:flex;align-items:center;font-family:var(--f-gotham-b);font-size:15px;font-weight:400;letter-spacing:1.05px;text-transform:uppercase;color:#000;}
+.shop-bc-home{color:#000;opacity:.50;text-decoration:none;transition:opacity .2s;}
+.shop-bc-home:hover{opacity:.85;}
+.shop-bc-sep{display:inline-block;width:1px;height:16px;background:#000;opacity:.35;margin:0 22px;vertical-align:middle;flex-shrink:0;}
+.shop-bc-current{color:#000;}
+
+/* sort dropdown */
+.shop-sort-wrap{position:relative;}
+.shop-sort-btn{display:flex;align-items:center;gap:5px;background:none;border:none;padding:0;cursor:pointer;font-family:var(--f-gotham-b);font-size:15px;font-weight:400;letter-spacing:1.05px;text-transform:uppercase;color:#000;}
+.shop-sort-label{color:#8a8a8a;}
+.shop-sort-value{color:#000;}
+.shop-sort-chevron{display:flex;align-items:center;color:#000;transition:transform .2s;margin-left:2px;}
+.shop-sort-chevron.open{transform:rotate(180deg);}
+.shop-sort-menu{position:absolute;right:0;top:calc(100% + 8px);width:220px;background:#fff;border:1px solid rgba(0,0,0,.10);box-shadow:0 8px 28px rgba(0,0,0,.08);z-index:200;}
+.shop-sort-item{display:block;width:100%;text-align:left;padding:11px 20px;background:none;border:none;font-family:var(--f-gotham-b);font-size:13px;font-weight:400;color:#333;cursor:pointer;letter-spacing:.65px;text-transform:uppercase;transition:background .15s;}
+.shop-sort-item:hover{background:#fdf9f6;}
+.shop-sort-item.active{color:#ab6281;font-weight:500;}
+
+/* body below topbar: filter panel + content */
+.shop-body{display:flex;align-items:flex-start;}
+
+/* LEFT FILTER PANEL */
+.shop-filter-panel{width:447px;flex-shrink:0;position:sticky;top:128px;height:calc(100vh - 128px);overflow-y:auto;border-right:1px solid rgba(0,0,0,.08);}
+.shop-filter-section{}
+
+/* section header row */
+.shop-filter-head{width:100%;display:flex;align-items:center;justify-content:space-between;padding:14px 78px 13px;cursor:pointer;background:none;border:none;text-align:left;}
+.shop-filter-head-text{font-family:var(--f-gotham-m);font-size:15px;font-weight:500;color:#000;letter-spacing:1.05px;text-transform:uppercase;}
+.shop-filter-arrow{display:flex;align-items:center;color:#000;opacity:.55;transition:transform .2s;}
+.shop-filter-arrow.open{transform:rotate(90deg);}
+
+/* expanded items list */
+.shop-filter-items{padding:2px 0 16px;}
+.shop-filter-item{display:flex;align-items:center;gap:17px;height:41px;padding-left:78px;cursor:pointer;width:100%;}
+.shop-filter-cb{width:12px;height:12px;flex-shrink:0;border:1px solid #000;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+.shop-filter-cb.checked{background:#080808;}
+.shop-filter-item-text{font-family:var(--f-gotham-b);font-size:15px;font-weight:400;color:#000;letter-spacing:1.05px;text-transform:uppercase;line-height:1;user-select:none;}
+
+/* PRODUCT GRID AREA */
+.shop-content{flex:1;min-width:0;padding-left:48px;padding-right:48px;padding-bottom:80px;}
+.shop-count{font-family:var(--f-gotham-b);font-size:13px;font-weight:400;color:#000;opacity:.45;letter-spacing:.65px;text-transform:uppercase;padding:20px 0 20px;}
+
+/* 3-column grid, matching Figma col positions (447→852→1255→1643) */
+.shop-grid{display:grid;grid-template-columns:repeat(3,1fr);column-gap:17px;row-gap:40px;}
+
+/* product card */
+.shop-card{display:block;cursor:pointer;text-decoration:none;color:inherit;}
+.shop-card-img-wrap{position:relative;height:439px;overflow:hidden;background:#f5f5f5;margin-bottom:24px;}
+.shop-card-img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease;}
+.shop-card:hover .shop-card-img{transform:scale(1.04);}
+.shop-card-wish{position:absolute;top:11px;right:11px;width:34px;height:34px;background:rgba(255,255,255,.92);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#999;border:none;cursor:pointer;transition:color .2s;z-index:2;}
+.shop-card-wish:hover,.shop-card-wish.active{color:#ab6281;}
+.shop-card-name{font-family:var(--f-gotham-m);font-size:14px;font-weight:500;color:#000;letter-spacing:.98px;text-transform:uppercase;line-height:1;margin-bottom:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.shop-card-desc{font-family:var(--f-gotham-b);font-size:16px;font-weight:400;color:#000;opacity:.60;letter-spacing:-.16px;line-height:1;margin-bottom:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.shop-card-price{font-family:var(--f-gotham-m);font-size:15px;font-weight:500;color:#000;letter-spacing:0;line-height:1;}
+
+/* skeleton */
+.shop-card-skeleton{animation:shimmer 1.4s infinite;}
+.shop-card-img-skel{height:439px;background:#f0f0f0;margin-bottom:24px;}
+.shop-card-txt-skel{height:14px;background:#f0f0f0;margin-bottom:12px;width:80%;}
+.shop-card-txt-skel.short{width:50%;}
+@keyframes shimmer{0%,100%{opacity:1}50%{opacity:.55}}
+
+/* empty / error states */
+.shop-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 0;gap:14px;}
+.shop-empty p{font-family:var(--f-gotham-b);font-size:14px;font-weight:400;color:#999;letter-spacing:.7px;text-transform:uppercase;}
+.shop-clear-btn{font-family:var(--f-gotham-m);font-size:13px;font-weight:500;color:#ab6281;background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+.shop-clear-btn:hover{color:#964f6e;}
+.shop-error{padding:80px 0;text-align:center;font-family:var(--f-gotham-m);font-size:13px;color:#e55;letter-spacing:.5px;text-transform:uppercase;}
+
+/* pagination — Figma: 1  2  3  > — active has underline, > shown only when not last page */
+.shop-pagination{display:flex;align-items:center;justify-content:center;gap:40px;padding:52px 0 32px;}
+.shop-pag-num{font-family:var(--f-gotham-b);font-size:14px;font-weight:400;color:#000;letter-spacing:.98px;background:none;border:none;border-bottom:1.5px solid transparent;padding:0 0 4px;cursor:pointer;transition:color .2s,border-color .2s;line-height:1;}
+.shop-pag-num:hover{color:#ab6281;}
+.shop-pag-num.active{font-family:var(--f-gotham-m);font-weight:500;color:#000;border-bottom-color:#000;}
+.shop-pag-btn{font-family:var(--f-gotham-b);font-size:15px;color:#000;opacity:.6;background:none;border:none;cursor:pointer;padding:0;line-height:1;transition:opacity .2s;}
+.shop-pag-btn:hover{opacity:1;}
+.shop-pag-ellipsis{font-family:var(--f-gotham-b);font-size:14px;color:#999;letter-spacing:.5px;}
+
 /* RESPONSIVE */
 @media(max-width:1024px){
   .carousel-card{flex:0 0 50%;min-width:50%;height:500px;}
