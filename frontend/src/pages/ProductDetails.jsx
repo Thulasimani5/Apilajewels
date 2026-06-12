@@ -11,6 +11,7 @@ import FullScreenMediaViewer from '../components/FullScreenMediaViewer';
 import API_BASE_URL from '../config/api';
 import LazyImage from '../components/LazyImage';
 import { useProduct } from '../hooks/useProduct';
+import DesktopProduct from './DesktopProduct';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -42,7 +43,7 @@ const ProductDetails = () => {
       try {
         // Try same-category items first
         const catRes = await fetch(
-          `${API_BASE_URL}/api/jewellery?limit=10`
+          `${API_BASE_URL}/api/jewellery?limit=20`
         );
         const catData = await catRes.json();
         if (catData.success) {
@@ -50,12 +51,12 @@ const ProductDetails = () => {
             item => item._id !== product._id && item.category === product.category
           );
           if (sameCategory.length >= 4) {
-            setRelatedProducts(sameCategory.slice(0, 6));
+            setRelatedProducts(sameCategory.slice(0, 10));
             return;
           }
           // Fallback: use any other items excluding current
           const others = catData.data.filter(item => item._id !== product._id);
-          setRelatedProducts(others.slice(0, 6));
+          setRelatedProducts(others.slice(0, 10));
         }
       } catch (err) {
         console.error('Failed to fetch related products:', err);
@@ -122,6 +123,10 @@ const ProductDetails = () => {
         <button onClick={() => navigate(-1)} className="px-6 py-2 bg-[#B07A85] text-white rounded-lg text-sm font-medium">Go Back</button>
       </div>
     );
+  }
+
+  if (window.innerWidth > 768) {
+    return <DesktopProduct product={product} relatedProducts={relatedProducts} />;
   }
 
   // Shared media rendering helper
