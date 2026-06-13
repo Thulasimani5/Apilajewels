@@ -379,12 +379,12 @@
 
 .carousel-card-sub {
   font-family: var(--f-gotham-b);
-  font-size: 19px;
-  font-weight: 400;
+  font-size: 16px;
+  font-weight: normal;
   font-style: normal;
   line-height: 100%;
   color: #fff;
-  letter-spacing: -0.38px;
+  letter-spacing: -0.16px;
   opacity: 0.7;
 }
 
@@ -501,10 +501,10 @@
 .occasion-sub {
   font-family: var(--f-gotham-b);
   font-size: 16px;
+  font-weight: normal;
   font-style: normal;
-  font-weight: 400;
   line-height: 100%;
-  letter-spacing: -0.1px;
+  letter-spacing: -0.16px;
   color: #fff;
   opacity: 0.7;
 }
