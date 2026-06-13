@@ -9,6 +9,7 @@ import SortBottomSheet from '../components/SortBottomSheet';
 import SearchOverlay from '../components/SearchOverlay';
 import ProductGridSkeleton from '../components/ProductGridSkeleton';
 import { useAllProducts } from '../hooks/useProducts';
+import DesktopShop from './DesktopShop';
 
 /* ── Sort options ── */
 const SORT_OPTIONS = [
@@ -289,6 +290,10 @@ const JewelleryListing = () => {
 
   /* ── Total active filter count ── */
   const totalFilterCount = activeFilterPills.length;
+
+  if (window.innerWidth > 768) {
+    return <DesktopShop />;
+  }
 
   return (
     <div className="bg-white min-h-screen md:h-screen md:overflow-hidden flex flex-col">

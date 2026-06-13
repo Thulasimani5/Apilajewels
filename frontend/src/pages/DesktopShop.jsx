@@ -128,7 +128,7 @@ export default function DesktopShop() {
 
   /* ── Section open/closed state ── */
   const [open, setOpen] = useState({
-    Category: true, Occasion: false,
+    Category: true, Occasion: true,
     Price: false, Colour: false, StoneColour: false, Stone: false,
   });
 
