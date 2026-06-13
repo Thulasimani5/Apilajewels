@@ -107,27 +107,28 @@ export default function DesktopWishlist() {
 
       {/* ── MAIN CONTENT ── */}
       <div className="wl-page">
-        <h1 className="wl-title">My Wishlist</h1>
-        <p className="wl-notice">
-          Save your favorite jewellery pieces in one place for easy access.
-        </p>
-
         {wishlistItems.length === 0 ? (
           <div className="wl-empty">
-            <p className="wl-empty-text">Your wishlist is empty.</p>
-            <Link to="/shop" className="wl-empty-link">Explore Collection</Link>
+            <h1 className="wl-empty-title">YOUR WISHLIST IS EMPTY</h1>
+            <p className="wl-empty-subtitle">Your saved jewellery will appear here</p>
           </div>
         ) : (
-          <div className="wl-grid">
-            {wishlistItems.map(item => (
-              <WishlistCard
-                key={item._id}
-                item={item}
-                onRemove={handleRemove}
-                onMoveToBag={handleMoveToBag}
-              />
-            ))}
-          </div>
+          <>
+            <h1 className="wl-title">My Wishlist</h1>
+            <p className="wl-notice">
+              Save your favorite jewellery pieces in one place for easy access.
+            </p>
+            <div className="wl-grid">
+              {wishlistItems.map(item => (
+                <WishlistCard
+                  key={item._id}
+                  item={item}
+                  onRemove={handleRemove}
+                  onMoveToBag={handleMoveToBag}
+                />
+              ))}
+            </div>
+          </>
         )}
       </div>
 
