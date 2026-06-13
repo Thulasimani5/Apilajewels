@@ -421,7 +421,7 @@ export default function DesktopShop() {
 
           {/* Product grid */}
           {isLoading ? (
-            <div className="products-grid">
+            <div className="shop-grid">
               {Array.from({ length: 12 }).map((_, i) => (
                 <div key={i} className="shop-card-skeleton">
                   <div className="shop-card-img-skel"/>
@@ -439,7 +439,7 @@ export default function DesktopShop() {
               <button className="shop-clear-btn" onClick={clearAll}>Clear all filters</button>
             </div>
           ) : (
-            <div className="products-grid">
+            <div className="shop-grid">
               {paginated.map(p => <ShopCard key={p._id} product={p}/>)}
             </div>
           )}
