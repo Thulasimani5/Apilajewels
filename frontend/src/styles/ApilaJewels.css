@@ -571,7 +571,7 @@
 
 .product-img-wrap {
   position: relative;
-  height: 45 0px;
+  height: 450px;
   overflow: hidden;
   margin-bottom: 14px;
   background: #f5f5f5;
@@ -1373,6 +1373,11 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   column-gap: 17px;
   row-gap: 40px;
+}
+
+.shop-grid .product-img-wrap {
+  height: 439px;
+  width: 100%;
 }
 
 /* product card — min-width:0 prevents card from inflating its grid track */

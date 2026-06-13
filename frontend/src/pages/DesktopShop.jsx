@@ -70,7 +70,7 @@ function FilterItem({ label, checked, onToggle }) {
   );
 }
 
-/* ── Product card ── */
+/* ── Product card — matches homepage trending collections UI ── */
 function ShopCard({ product }) {
   const navigate = useNavigate();
   const { toggleWishlist, isInWishlist } = useWishlist();
@@ -82,16 +82,10 @@ function ShopCard({ product }) {
   const category = Array.isArray(product.category) ? product.category[0] : product.category;
 
   return (
-    <Link to={`/shop/${product._id}`} className="shop-card">
-      <div className="shop-card-img-wrap">
-        <img
-          className="shop-card-img"
-          src={getOptimizedCloudinaryUrl(imgUrl, { width: 390, height: 440 })}
-          alt={product.name}
-          loading="lazy"
-        />
+    <Link to={`/shop/${product._id}`} className="product-card">
+      <div className="product-img-wrap">
         <button
-          className={`shop-card-wish${liked ? ' active' : ''}`}
+          className={`product-wish${liked ? ' active' : ''}`}
           aria-label={liked ? 'Remove from wishlist' : 'Add to wishlist'}
           onClick={(e) => {
             e.preventDefault(); e.stopPropagation();
@@ -99,16 +93,21 @@ function ShopCard({ product }) {
             else toggleWishlist(product);
           }}
         >
-          <svg width="17" height="17" viewBox="0 0 24 24"
+          <svg width="16" height="16" viewBox="0 0 24 24"
             fill={liked ? '#ab6281' : 'none'}
-            stroke={liked ? '#ab6281' : 'currentColor'} strokeWidth="1.5">
+            stroke={liked ? '#ab6281' : 'currentColor'} strokeWidth="1.6">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
           </svg>
         </button>
+        <img
+          src={getOptimizedCloudinaryUrl(imgUrl, { width: 390, height: 450 })}
+          alt={product.name}
+          loading="lazy"
+        />
       </div>
-      <p className="shop-card-name">{product.name}</p>
-      <p className="shop-card-desc">{category || 'Jewels'}</p>
-      <p className="shop-card-price">{priceText}</p>
+      <p className="product-name">{product.name}</p>
+      <p className="product-desc">{category || 'Jewels'}</p>
+      <p className="product-price">{priceText}</p>
     </Link>
   );
 }
