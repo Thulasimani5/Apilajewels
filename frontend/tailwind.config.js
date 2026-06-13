@@ -18,7 +18,7 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'Roboto', 'Outfit', 'sans-serif'],
-        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+        serif: ['"Belgant Aesthetic"', 'Georgia', 'serif'],
       },
       boxShadow: {
         'luxury': '0 4px 20px rgba(0, 0, 0, 0.08)',
