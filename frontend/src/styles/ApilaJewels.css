@@ -95,7 +95,7 @@
   justify-content: space-between;
   padding: 16px 48px;
   gap: 24px;
-  transition: background .35s, box-shadow .35s, transform .42s cubic-bezier(.25, .46, .45, .94);
+  transition: background .35s, transform .42s cubic-bezier(.25, .46, .45, .94);
 }
 
 .navbar.nav-hidden {
@@ -204,7 +204,6 @@
   background: rgba(255, 255, 255, .97);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 1px 14px rgba(0, 0, 0, .08);
 }
 
 .navbar.scrolled::after {

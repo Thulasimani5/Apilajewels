@@ -425,12 +425,7 @@ export default function DesktopShop() {
         {/* ── RIGHT PRODUCT AREA ── */}
         <div className="shop-content">
 
-          {/* Item count + clear */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-            {Object.values(activeFilters).some(v => v.length > 0) && (
-              <button className="shop-clear-btn" onClick={clearAll}>Clear All</button>
-            )}
-          </div>
+          {/* (Item count and clear removed) */}
 
           {/* Product grid */}
           {isLoading ? (
