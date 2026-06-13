@@ -85,7 +85,7 @@
 
 /* NAVBAR */
 .navbar {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
@@ -93,13 +93,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 48px;
+  padding: 0 48px;
+  height: 72px;
   gap: 24px;
-  transition: background .35s, box-shadow .35s, transform .42s cubic-bezier(.25, .46, .45, .94);
+  transition: background .35s, box-shadow .35s;
 }
 
 .navbar.nav-hidden {
-  transform: translateY(-100%);
+  /* kept static — no transform */
 }
 
 .nav-left {
@@ -159,8 +160,8 @@
 }
 
 .nav-logo-img {
-  width: 135.002px;
-  height: 70px;
+  height: 44px;
+  width: auto;
   object-fit: contain;
   filter: brightness(0) invert(1);
   transition: filter .35s;
@@ -200,7 +201,6 @@
 }
 
 .navbar.scrolled {
-  position: fixed;
   background: rgba(255, 255, 255, .97);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -1622,11 +1622,8 @@
    Panel:  left 1149px (45px gap), width 528px, right 50px
    ══════════════════════════════════════════════════════════════ */
 
-/* Breadcrumb bar — sticky below 72px fixed navbar */
+/* Breadcrumb bar — normal flow */
 .pdp-breadcrumb-bar {
-  position: sticky;
-  top: 72px;
-  z-index: 48;
   background: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, .06);
   padding: 0 46px;
@@ -1677,6 +1674,13 @@
 .pdp-images {
   flex: 1;
   min-width: 0;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+}
+
+.pdp-images::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .pdp-img-grid {
@@ -2444,11 +2448,12 @@
 .cart-coupon {
   display: flex;
   height: 61px;
-  border: 1px solid #bdbdbd;
 }
 .cart-coupon-input {
   flex: 1;
-  border: none;
+  height: 100%;
+  border: 1px solid #bdbdbd;
+  border-right: none;
   outline: none;
   padding: 0 28px;
   font-family: var(--f-gotham-b);
@@ -2460,10 +2465,10 @@
 .cart-coupon-input::placeholder { opacity: .5; }
 .cart-coupon-btn {
   width: 194px;
+  height: 100%;
   flex-shrink: 0;
   background: #fff4ea;
-  border: none;
-  border-left: 1px solid #bdbdbd;
+  border: 1px solid #bdbdbd;
   cursor: pointer;
   font-family: var(--f-gotham-m);
   font-size: 17px;

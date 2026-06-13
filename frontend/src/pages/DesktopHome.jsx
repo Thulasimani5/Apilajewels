@@ -135,18 +135,9 @@ export default function Home() {
 
   /* ---- navbar scroll state ---- */
   const [scrolled, setScrolled] = useState(false);
-  const [navHidden, setNavHidden] = useState(false);
   useEffect(() => {
-    let lastY = window.scrollY;
     const onScroll = () => {
-      const y = window.scrollY;
-      setScrolled(y > 60);
-      if (y <= 60) {
-        setNavHidden(false);
-      } else {
-        setNavHidden(y > lastY);
-      }
-      lastY = y;
+      setScrolled(window.scrollY > 60);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -297,7 +288,7 @@ export default function Home() {
     <div className="apila">
       {/* NAVBAR */}
       <header>
-        <nav className={`navbar${scrolled ? " scrolled" : ""}${navHidden ? " nav-hidden" : ""}`}>
+        <nav className={`navbar${scrolled ? " scrolled" : ""}`}>
           <div className="nav-left">
             <div className="nav-hamburger" role="button" aria-label="Menu" tabIndex={0}>
               <span /><span /><span />

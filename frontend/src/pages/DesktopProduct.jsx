@@ -11,8 +11,8 @@ import iconWhatsapp from '../assets/icons/icon-whatsapp-support.svg';
 import '../styles/ApilaJewels.css';
 
 /* ── Accordion ── */
-function Accordion({ title, children }) {
-  const [open, setOpen] = useState(false);
+function Accordion({ title, children, defaultOpen = true }) {
+  const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="pdp-accordion">
       <button className="pdp-accordion-btn" onClick={() => setOpen(o => !o)}>
@@ -83,18 +83,6 @@ export default function DesktopProduct({ product, relatedProducts }) {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { user } = useAuth();
-  const [navHidden, setNavHidden] = useState(false);
-
-  useEffect(() => {
-    let lastY = window.scrollY;
-    const handler = () => {
-      const y = window.scrollY;
-      setNavHidden(y > lastY && y > 80);
-      lastY = y;
-    };
-    window.addEventListener('scroll', handler, { passive: true });
-    return () => window.removeEventListener('scroll', handler);
-  }, []);
 
   const mediaList = product.media?.length ? product.media : product.images || [];
   const liked = isInWishlist(product._id);
@@ -125,11 +113,11 @@ export default function DesktopProduct({ product, relatedProducts }) {
   };
 
   return (
-    <div className="apila">
+    <div className="apila" style={{ paddingTop: '72px' }}>
 
       {/* ── NAVBAR (always white on PDP) ── */}
       <header>
-        <nav className={`navbar scrolled${navHidden ? ' nav-hidden' : ''}`}>
+        <nav className={`navbar scrolled`} style={{ height: '72px', padding: '0 48px' }}>
           <div className="nav-left">
             <div className="nav-hamburger" role="button" tabIndex={0}>
               <span/><span/><span/>
@@ -142,7 +130,7 @@ export default function DesktopProduct({ product, relatedProducts }) {
             </div>
           </div>
           <div className="nav-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-            <img className="nav-logo-img" src={apilaLogo} alt="Apila Jewels"/>
+            <img className="nav-logo-img" src={apilaLogo} alt="Apila Jewels" style={{ height: '44px', width: 'auto' }}/>
           </div>
           <div className="nav-right">
             <button className="nav-icon-btn" aria-label="Wishlist" onClick={() => navigate('/wishlist')}>
@@ -167,7 +155,7 @@ export default function DesktopProduct({ product, relatedProducts }) {
         </nav>
       </header>
 
-      {/* ── BREADCRUMB BAR — sticky below navbar ── */}
+      {/* ── BREADCRUMB BAR ── */}
       <div className="pdp-breadcrumb-bar">
         <Link to="/" className="pdp-bc-link">Home</Link>
         <span className="pdp-bc-arrow">
@@ -175,7 +163,7 @@ export default function DesktopProduct({ product, relatedProducts }) {
             <path d="M1 1l3 3.5L1 8" stroke="rgba(0,0,0,.40)" strokeWidth="1.2" strokeLinecap="round"/>
           </svg>
         </span>
-        <Link to="/shop" className="pdp-bc-link">{category || 'Jewellery'}</Link>
+        <Link to={category ? `/shop?category=${encodeURIComponent(category.toLowerCase().replace(/\s+/g, '-'))}` : '/shop'} className="pdp-bc-link">{category || 'Jewellery'}</Link>
         <span className="pdp-bc-arrow">
           <svg width="5" height="9" viewBox="0 0 5 9" fill="none">
             <path d="M1 1l3 3.5L1 8" stroke="rgba(0,0,0,.40)" strokeWidth="1.2" strokeLinecap="round"/>

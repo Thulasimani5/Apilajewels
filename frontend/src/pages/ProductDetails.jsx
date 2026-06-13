@@ -13,6 +13,27 @@ import LazyImage from '../components/LazyImage';
 import { useProduct } from '../hooks/useProduct';
 import DesktopProduct from './DesktopProduct';
 
+/* ── Accordion ── */
+const Accordion = ({ title, children, defaultOpen = true }) => {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="border-t border-gray-200/80">
+      <button 
+        className="w-full flex justify-between items-center py-4 text-left font-semibold text-gray-900 focus:outline-none" 
+        onClick={() => setOpen(!open)}
+      >
+        <span className="text-sm font-bold text-black">{title}</span>
+        <ChevronDown size={18} className={`text-gray-500 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <div className="pb-4 text-xs md:text-sm text-gray-600 leading-relaxed space-y-2">
+          {children}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -197,26 +218,21 @@ const ProductDetails = () => {
           <h3 className="font-bold text-black mb-1 text-xs">Description</h3>
           <p className="text-[13px] leading-relaxed">{product.description || 'No description available.'}</p>
         </div>
-
-        <div className="text-[13px]">
-          <p><span className="font-bold text-black">Material : </span>{product.material || 'Premium Alloy'}</p>
-          <p className="mt-1"><span className="font-bold text-black">Size : </span>{product.size || 'Adjustable'}</p>
-          <p className="mt-1"><span className="font-bold text-black">Finish : </span>{product.finish || 'Antique'}</p>
-        </div>
-
-        <div className="pt-2">
-          <h3 className="font-bold text-black mb-1 text-xs">Delivery and Return Policy:</h3>
-          <p className="text-[13px] leading-relaxed mb-1">There are many variations of passages of Lorem Ipsum available, but the majority have suffered.</p>
-          <a href="#" className="font-bold text-black text-[13px] underline">View Policy - Here</a>
-        </div>
       </div>
 
       {/* Accordions */}
-      <div className="border border-gray-200 rounded-lg bg-white mb-2">
-        <button className="w-full flex justify-between items-center px-4 py-3 text-sm font-semibold text-gray-800">
-          Care Instructions
-          <ChevronDown size={18} />
-        </button>
+      <div className="border-b border-gray-200/80 mb-6">
+        <Accordion title="Specifications">
+          <p><span className="font-bold text-black">Material : </span>{product.material || 'Premium Alloy'}</p>
+          <p className="mt-1"><span className="font-bold text-black">Size : </span>{product.size || 'Adjustable'}</p>
+          <p className="mt-1"><span className="font-bold text-black">Finish : </span>{product.finish || 'Antique'}</p>
+        </Accordion>
+        <Accordion title="Delivery & Return Policy">
+          <p>Standard delivery within 3–5 business days. Easy returns within 7 days of receipt.</p>
+        </Accordion>
+        <Accordion title="Care Instructions">
+          <p>Store in a dry place. Avoid contact with water, perfume, and harsh chemicals. Clean gently with a soft cloth.</p>
+        </Accordion>
       </div>
 
       {/* Sticky Action Buttons (Mobile only) */}
@@ -299,7 +315,7 @@ const ProductDetails = () => {
       <div className="hidden md:block pt-6 px-4">
         {/* Breadcrumb */}
         <div className="text-sm text-gray-500 mb-4">
-          <Link to="/" className="hover:text-gray-800">Home</Link> / <Link to="/shop" className="hover:text-gray-800">Jewellery</Link> / <span className="font-semibold text-gray-800">{product.name}</span>
+          <Link to="/" className="hover:text-gray-800">Home</Link> / <Link to={product?.category ? `/shop?category=${encodeURIComponent(product.category.toLowerCase().replace(/\s+/g, '-'))}` : '/shop'} className="hover:text-gray-800">{product?.category || 'Jewellery'}</Link> / <span className="font-semibold text-gray-800">{product.name}</span>
         </div>
 
         <div className="flex gap-6 lg:gap-10">
