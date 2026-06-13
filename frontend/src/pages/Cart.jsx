@@ -6,6 +6,7 @@ import { ArrowLeft, Search, Heart, Share2, X } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
+import DesktopCart from './DesktopCart';
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -27,6 +28,10 @@ const Cart = () => {
   }, [cartItems]);
 
   if (!user) return null;
+
+  if (window.innerWidth > 768) {
+    return <DesktopCart />;
+  }
 
   const toggleSelection = (id) => {
     setSelectedItems(prev => 

@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import SearchOverlay from '../components/SearchOverlay';
 import ShareBottomSheet from '../components/ShareBottomSheet';
 import LazyImage from '../components/LazyImage';
+import DesktopWishlist from './DesktopWishlist';
 
 const Wishlist = () => {
   const { wishlistItems, toggleWishlist } = useWishlist();
@@ -22,6 +23,10 @@ const Wishlist = () => {
   }, [user, navigate, location]);
 
   if (!user) return null;
+
+  if (window.innerWidth > 768) {
+    return <DesktopWishlist />;
+  }
 
   return (
     <div className="bg-[#FFF8F3] min-h-screen pb-28">
