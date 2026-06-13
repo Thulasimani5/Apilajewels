@@ -98,8 +98,7 @@ function ShopCard({ product }) {
           aria-label={liked ? 'Remove from wishlist' : 'Add to wishlist'}
           onClick={(e) => {
             e.preventDefault(); e.stopPropagation();
-            if (!user) navigate('/login');
-            else toggleWishlist(product);
+            toggleWishlist(product);
           }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24"
@@ -292,7 +291,6 @@ export default function DesktopShop() {
           <div className="nav-right">
             <button className="nav-icon-btn" aria-label="Wishlist" onClick={() => navigate('/wishlist')}>{navIcons.heart}</button>
             <button className="nav-icon-btn" aria-label="Cart" onClick={() => navigate('/cart')}>{navIcons.cart}</button>
-            <button className="nav-icon-btn" aria-label="Account" onClick={() => navigate('/login')}>{navIcons.acct}</button>
           </div>
         </nav>
       </header>

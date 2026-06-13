@@ -1,8 +1,32 @@
 const User = require('../models/User');
+const GuestCart = require('../models/GuestCart');
 const jwt = require('jsonwebtoken');
 
 // Get token from model, create cookie and send response
-const sendTokenResponse = (user, statusCode, res) => {
+const sendTokenResponse = async (user, statusCode, res, req) => {
+  // Merge guest cart if it exists
+  if (req && req.visitorId) {
+    const guestCart = await GuestCart.findOne({ visitorId: req.visitorId });
+    if (guestCart && guestCart.cart && guestCart.cart.length > 0) {
+      const userCartSet = new Set(user.cart.map(id => id.toString()));
+      let merged = false;
+      
+      guestCart.cart.forEach(itemId => {
+        if (!userCartSet.has(itemId.toString())) {
+          user.cart.push(itemId);
+          merged = true;
+        }
+      });
+      
+      if (merged) {
+        await user.save();
+      }
+      
+      // Delete the guest cart after merging
+      await GuestCart.deleteOne({ _id: guestCart._id });
+    }
+  }
+
   // Create token
   const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
     expiresIn: '30d'
@@ -42,7 +66,7 @@ exports.register = async (req, res) => {
       role: role || 'user'
     });
 
-    sendTokenResponse(user, 201, res);
+    await sendTokenResponse(user, 201, res, req);
   } catch (err) {
     res.status(400).json({ success: false, error: err.message });
   }
@@ -81,7 +105,41 @@ exports.login = async (req, res) => {
       return res.status(401).json({ success: false, error: 'Invalid credentials' });
     }
 
-    sendTokenResponse(user, 200, res);
+    await sendTokenResponse(user, 200, res, req);
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+};
+
+// @desc    Email-only login (Passwordless)
+// @route   POST /api/auth/email-login
+// @access  Public
+exports.emailLogin = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ success: false, error: 'Please provide an email address' });
+    }
+
+    // Check if user exists
+    let user = await User.findOne({ email });
+
+    // If user doesn't exist, create a new one with a dummy password and phone
+    if (!user) {
+      const dummyPassword = Math.random().toString(36).slice(-10) + 'A1!'; // random secure password
+      const dummyPhone = '0000000000'; // dummy phone to satisfy schema
+
+      user = await User.create({
+        name: email.split('@')[0], // Use part of email as name
+        email,
+        password: dummyPassword,
+        phone: dummyPhone,
+        role: 'user'
+      });
+    }
+
+    await sendTokenResponse(user, 200, res, req);
   } catch (err) {
     res.status(400).json({ success: false, error: err.message });
   }

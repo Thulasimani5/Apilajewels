@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 // Central API base URL — reads from Vite environment variable at build time.
 // In development: dynamically resolves to local IP if accessed via LAN, else localhost:5000
 // In production: set VITE_API_URL in your hosting provider's environment config.
@@ -19,5 +21,8 @@ const getBaseUrl = () => {
 };
 
 const API_BASE_URL = getBaseUrl();
+
+// Configure axios globally to always send cookies
+axios.defaults.withCredentials = true;
 
 export default API_BASE_URL;

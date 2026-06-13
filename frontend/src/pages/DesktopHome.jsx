@@ -303,7 +303,6 @@ export default function Home() {
           <div className="nav-right">
             <button className="nav-icon-btn" aria-label="Wishlist">{Icon.heart}</button>
             <button className="nav-icon-btn" aria-label="Cart" onClick={() => navigate('/cart')}>{Icon.cart}</button>
-            <button className="nav-icon-btn" aria-label="Account" onClick={() => navigate('/login')}>{Icon.account}</button>
           </div>
         </nav>
       </header>

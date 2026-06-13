@@ -68,11 +68,7 @@ const Card = ({ jewellery, priority = false }) => {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (!user) {
-              navigate('/login', { state: { from: window.location.pathname } });
-            } else {
-              toggleWishlist(jewellery);
-            }
+            toggleWishlist(jewellery);
           }}
           className={`absolute top-2.5 right-2.5 w-[20px] h-[20px] rounded-full backdrop-blur-sm flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 ${liked ? 'bg-white' : 'bg-white/5 hover:bg-white/20'}`}
           aria-label={liked ? 'Remove from wishlist' : 'Add to wishlist'}

@@ -52,8 +52,7 @@ function RelatedCard({ product }) {
           aria-label={liked ? 'Remove from wishlist' : 'Add to wishlist'}
           onClick={e => {
             e.preventDefault(); e.stopPropagation();
-            if (!user) navigate('/login');
-            else toggleWishlist(product);
+            toggleWishlist(product);
           }}
         >
           <svg width="14" height="14" viewBox="0 0 24 24"
@@ -91,10 +90,6 @@ export default function DesktopProduct({ product, relatedProducts }) {
   const category = Array.isArray(product.category) ? product.category[0] : product.category;
 
   const handleAddToCart = () => {
-    if (!user) {
-      navigate('/login', { state: { from: window.location.pathname } });
-      return;
-    }
     addToCart(product);
     navigate('/cart');
   };
@@ -143,12 +138,6 @@ export default function DesktopProduct({ product, relatedProducts }) {
                 <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
                 <line x1="3" y1="6" x2="21" y2="6"/>
                 <path d="M16 10a4 4 0 0 1-8 0"/>
-              </svg>
-            </button>
-            <button className="nav-icon-btn" aria-label="Account" onClick={() => navigate('/login')}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
               </svg>
             </button>
           </div>
@@ -218,8 +207,7 @@ export default function DesktopProduct({ product, relatedProducts }) {
                 className="pdp-icon-btn"
                 aria-label={liked ? 'Remove from wishlist' : 'Add to wishlist'}
                 onClick={() => {
-                  if (!user) navigate('/login', { state: { from: window.location.pathname } });
-                  else toggleWishlist(product);
+                  toggleWishlist(product);
                 }}
               >
                 <svg width="17" height="17" viewBox="0 0 24 24"

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { ArrowLeft, Search, ShoppingCart, Share2, X, Heart } from 'lucide-react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
 import SearchOverlay from '../components/SearchOverlay';
@@ -10,19 +10,12 @@ import DesktopWishlist from './DesktopWishlist';
 
 const Wishlist = () => {
   const { wishlistItems, toggleWishlist } = useWishlist();
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
 
-  useEffect(() => {
-    if (!user) {
-      navigate('/login', { state: { from: location.pathname } });
-    }
-  }, [user, navigate, location]);
+  // Guest users can access the wishlist; items are stored in localStorage.
 
-  if (!user) return null;
+  // Guest access is allowed - wishlist is stored in localStorage.
 
   if (window.innerWidth > 768) {
     return <DesktopWishlist />;

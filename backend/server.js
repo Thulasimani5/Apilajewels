@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
 
 // Load env vars
@@ -14,8 +15,24 @@ const PORT = process.env.PORT || 5000;
 // Body parser
 app.use(express.json());
 
+// Cookie parser
+app.use(cookieParser());
+
 // Enable CORS
-app.use(cors());
+const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174', 'https://apilajewels.in', 'https://apilajewels.vercel.app'];
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Allow any for development, change to false in strict prod
+    }
+  },
+  credentials: true
+}));
+
+// Apply visitor middleware globally to ensure visitor_id cookie is present
+app.use(require('./middleware/visitor'));
 
 // Middleware to dynamically rewrite legacy port 5000 image/file URLs to the active port
 app.use((req, res, next) => {
@@ -53,6 +70,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/jewellery', require('./routes/jewellery'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/categories', require('./routes/category'));
+app.use('/api/cart', require('./routes/cart'));
 
 app.get('/', (req, res) => {
   res.send('Apila Jewels API is running...');

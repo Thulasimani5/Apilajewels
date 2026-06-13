@@ -112,10 +112,10 @@ const ProductDetails = () => {
   };
 
   const handleAddToCart = () => {
-    if (!user) {
-      navigate('/login', { state: { from: `/shop/${id}` } });
-      return;
-    }
+    // if (!user) {
+    //   navigate('/login', { state: { from: `/shop/${id}` } });
+    //   return;
+    // }
     if (product) {
       addToCart(product);
       navigate('/cart');
@@ -190,11 +190,11 @@ const ProductDetails = () => {
         <div className="flex gap-2">
           <button 
             onClick={() => {
-              if (!user) {
-                navigate('/login', { state: { from: window.location.pathname } });
-              } else {
+              // if (!user) {
+              //   navigate('/login', { state: { from: window.location.pathname } });
+              // } else {
                 toggleWishlist(product);
-              }
+              // }
             }}
             className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center bg-white shadow-sm transition-colors"
           >
