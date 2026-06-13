@@ -14,7 +14,7 @@ import { useProduct } from '../hooks/useProduct';
 import DesktopProduct from './DesktopProduct';
 
 /* ── Accordion ── */
-const Accordion = ({ title, children, defaultOpen = true }) => {
+const Accordion = ({ title, children, defaultOpen = false }) => {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="border-t border-gray-200/80">
@@ -296,7 +296,7 @@ const ProductDetails = () => {
         </div>
 
         {/* Details Container */}
-        <div className="bg-[#FFF8F3] relative pt-4 px-4">
+        <div className="bg-[#FFF8F3] relative pt-4 px-2">
           <ProductInfo />
 
           {/* Related Jewels Section */}

@@ -11,7 +11,7 @@ import iconWhatsapp from '../assets/icons/icon-whatsapp-support.svg';
 import '../styles/ApilaJewels.css';
 
 /* ── Accordion ── */
-function Accordion({ title, children, defaultOpen = true }) {
+function Accordion({ title, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="pdp-accordion">
@@ -70,6 +70,24 @@ function RelatedCard({ product }) {
       </p>
     </Link>
   );
+}
+
+function renderDescription(text) {
+  if (!text) return <p className="pdp-desc-text">No description available.</p>;
+  const LABELS = ['Set Includes:', 'Styling Tip:'];
+  const regex = new RegExp(`(${LABELS.map(l => l.replace(':', '\\:')).join('|')})`);
+  const segments = text.split(regex);
+  const lines = [];
+  if (segments[0] && segments[0].trim()) lines.push({ label: null, content: segments[0].trim() });
+  for (let i = 1; i < segments.length; i += 2) {
+    lines.push({ label: segments[i], content: (segments[i + 1] || '').trim() });
+  }
+  return lines.map((item, idx) => (
+    <p key={idx} className="pdp-desc-text">
+      {item.label && <strong>{item.label}</strong>}
+      {item.content ? (item.label ? ` ${item.content}` : item.content) : ''}
+    </p>
+  ));
 }
 
 /* ══════════════════════════════════════════════════════
@@ -266,10 +284,10 @@ export default function DesktopProduct({ product, relatedProducts }) {
             </div>
           </div>
 
-          {/* Description */}
+          {/* Description Section */}
           <div className="pdp-desc-section">
             <p className="pdp-section-head">Description</p>
-            <p className="pdp-desc-text">{product.description || 'No description available.'}</p>
+            {renderDescription(product.description)}
           </div>
 
           {/* Accordions */}
