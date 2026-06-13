@@ -277,7 +277,7 @@ export default function DesktopShop() {
 
       {/* ── NAVBAR ── */}
       <header>
-        <nav className={`navbar scrolled${navHidden ? ' nav-hidden' : ''}`}>
+        <nav className={`navbar shop-nav scrolled${navHidden ? ' nav-hidden' : ''}`}>
           <div className="nav-left">
             <div className="nav-hamburger" role="button" tabIndex={0}>
               <span /><span /><span />

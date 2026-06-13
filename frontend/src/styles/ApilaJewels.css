@@ -210,6 +210,11 @@
   background: rgba(0, 0, 0, .07);
 }
 
+.shop-nav::after {
+  left: 0;
+  right: 0;
+}
+
 .navbar.scrolled .nav-hamburger span {
   background: #000;
 }
