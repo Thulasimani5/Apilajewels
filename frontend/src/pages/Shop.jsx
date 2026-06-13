@@ -9,7 +9,6 @@ import SortBottomSheet from '../components/SortBottomSheet';
 import SearchOverlay from '../components/SearchOverlay';
 import ProductGridSkeleton from '../components/ProductGridSkeleton';
 import { useAllProducts } from '../hooks/useProducts';
-import DesktopShop from './DesktopShop';
 
 /* ── Sort options ── */
 const SORT_OPTIONS = [
@@ -21,7 +20,6 @@ const SORT_OPTIONS = [
 ];
 
 const JewelleryListing = () => {
-  if (window.innerWidth > 768) return <DesktopShop />;
 
   // Modal toggle states
   const [isFilterOpen, setIsFilterOpen] = useState(false);
