@@ -11,7 +11,6 @@ import FullScreenMediaViewer from '../components/FullScreenMediaViewer';
 import API_BASE_URL from '../config/api';
 import LazyImage from '../components/LazyImage';
 import { useProduct } from '../hooks/useProduct';
-import DesktopProduct from './DesktopProduct';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -125,9 +124,6 @@ const ProductDetails = () => {
     );
   }
 
-  if (window.innerWidth > 768) {
-    return <DesktopProduct product={product} relatedProducts={relatedProducts} />;
-  }
 
   // Shared media rendering helper
   const renderMediaItem = (item, idx, className) => {
