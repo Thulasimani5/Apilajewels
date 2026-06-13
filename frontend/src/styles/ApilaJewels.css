@@ -93,7 +93,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 48px;
+  padding: 28px 48px 24px;
   gap: 24px;
   transition: background .35s, transform .42s cubic-bezier(.25, .46, .45, .94);
 }
@@ -193,10 +193,11 @@
   content: '';
   position: absolute;
   bottom: 0;
-  left: 48px;
-  right: 48px;
+  left: 0;
+  right: 0;
   height: 1px;
-  background: rgba(255, 255, 255, .14);
+  background: rgba(255, 255, 255, .20);
+  transition: background .35s;
 }
 
 .navbar.scrolled {
@@ -208,11 +209,6 @@
 
 .navbar.scrolled::after {
   background: rgba(0, 0, 0, .07);
-}
-
-.shop-nav::after {
-  left: 0;
-  right: 0;
 }
 
 .navbar.scrolled .nav-hamburger span {
@@ -2162,8 +2158,8 @@
   }
 
   .navbar::after {
-    left: 20px;
-    right: 20px;
+    left: 0;
+    right: 0;
   }
 
   .hero-content {
@@ -2610,7 +2606,7 @@
    ══════════════════════════════════════════════════════ */
 
 .wl-page {
-  padding-top: 44px;
+  padding-top: 122px;
   max-width: 1728px;
   margin-left: auto;
   margin-right: auto;
@@ -2618,6 +2614,7 @@
 .wl-title {
   font-family: var(--f-bacasime);
   font-size: 36px;
+  font-style: normal;
   font-weight: 400;
   line-height: 39px;
   letter-spacing: -1.08px;
@@ -2627,11 +2624,13 @@
 .wl-notice {
   font-family: var(--f-gotham-b);
   font-size: 15px;
+  font-style: normal;
   font-weight: 400;
+  line-height: normal;
   letter-spacing: -0.15px;
-  color: rgba(0,0,0,.6);
-  margin: 9px 0 0 139px;
-  line-height: 1.4;
+  color: #000;
+  opacity: 0.6;
+  margin: 9px 0 27px 139px;
 }
 .wl-notice-link {
   color: rgba(0,0,0,.6);
@@ -2643,7 +2642,6 @@
   column-gap: 26px;
   row-gap: 54px;
   padding: 0 139px 80px;
-  margin-top: 43px;
 }
 .wl-card { display: flex; flex-direction: column; }
 .wl-img-wrap {
@@ -2683,21 +2681,23 @@
 .wl-name {
   font-family: var(--f-gotham-m);
   font-size: 15px;
+  font-style: normal;
   font-weight: 500;
+  line-height: normal;
   letter-spacing: -0.15px;
   color: #000;
-  margin: 0;
-  line-height: 1.3;
+  margin: 0 0 6px;
 }
 .wl-desc {
   font-family: var(--f-gotham-b);
   font-size: 15px;
+  font-style: normal;
   font-weight: 400;
+  line-height: normal;
   letter-spacing: -0.15px;
   color: #000;
-  opacity: .6;
-  margin: 5px 0 0;
-  line-height: 1.3;
+  opacity: 1;
+  margin: 0 0 12px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -2707,7 +2707,9 @@
   font-size: 15px;
   font-weight: 500;
   color: #000;
-  margin: 10px 0 0;
+  letter-spacing: 0;
+  line-height: 1;
+  margin: 0;
 }
 .wl-bag-btn {
   width: 343px;
@@ -2721,7 +2723,7 @@
   letter-spacing: 1.96px;
   text-transform: uppercase;
   color: #000;
-  margin-top: 15px;
+  margin-top: 20px;
   flex-shrink: 0;
   transition: background .15s, color .15s;
 }
