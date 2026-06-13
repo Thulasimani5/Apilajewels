@@ -6,6 +6,8 @@ import { getOptimizedCloudinaryUrl } from '../utils/imageUtils';
 import apilaLogo from '../assets/Apila Logo01.svg';
 import iconDeliveryTruck from '../assets/icons/icon-delivery-truck.svg';
 import iconSecurePayments from '../assets/icons/icon-secure-payments.svg';
+import iconPremiumJewel from '../assets/icons/Premium JewelIcon.svg';
+import iconDesignerCollection from '../assets/icons/Designer CollectionIcon.svg';
 import '../styles/ApilaJewels.css';
 
 /* ── Cart item card ── */
@@ -41,23 +43,25 @@ function CartItemCard({ item, onRemove }) {
         <p className="cc-ref">Ref : {ref}</p>
         <div className="cc-tags">
           <span className="cc-tag">
-            <svg width="9" height="8" viewBox="0 0 9 8" fill="none">
-              <path d="M4.5 0.5L8 4L4.5 7.5L1 4Z" stroke="black" strokeWidth="0.8" strokeLinejoin="round"/>
-            </svg>
+            <img src={iconPremiumJewel} alt="Premium Jewel" width="12" height="11" />
             Premium Jewel
           </span>
           <span className="cc-tag">
-            <svg width="9" height="8" viewBox="0 0 9 8" fill="none">
-              <path d="M4.5 0.5L8 4L4.5 7.5L1 4Z" stroke="black" strokeWidth="0.8" strokeLinejoin="round"/>
-            </svg>
+            <img src={iconDesignerCollection} alt="Designer Collection" width="12" height="11" />
             Designer Collection
           </span>
         </div>
         <div className="cc-bottom">
           <div className="cc-qty">
             <span className="cc-qty-num">1</span>
-            <svg width="8" height="5" viewBox="0 0 8 5" fill="none">
-              <path d="M1 1l3 3 3-3" stroke="black" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+            <svg
+              width="8"
+              height="12"
+              viewBox="0 0 7 12"
+              fill="none"
+              style={{ transform: 'rotate(-90deg)', opacity: 0.5, flexShrink: 0 }}
+            >
+              <path d="M6 1L1 6l5 5" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
           <span className="cc-price">{priceText}</span>
@@ -67,7 +71,7 @@ function CartItemCard({ item, onRemove }) {
       {/* Delete */}
       <button className="cc-delete" onClick={() => onRemove(item._id)} aria-label="Remove item">
         <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
-          <path d="M1 1l9 9M10 1l-9 9" stroke="black" strokeWidth="1.3" strokeLinecap="round"/>
+          <path d="M1 1l9 9M10 1l-9 9" stroke="black" strokeWidth="1.3" strokeLinecap="round" />
         </svg>
       </button>
     </div>
@@ -102,32 +106,26 @@ export default function DesktopCart() {
   };
 
   return (
-    <div className="apila">
+    <div className="apila apila-cart">
 
       {/* ── NAVBAR ── */}
       <header>
-        <nav className="navbar scrolled">
+        <nav className="navbar scrolled cart-navbar">
           <div className="nav-left">
             <Link to="/shop" className="cart-nav-back">
               <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
-                <path d="M6 1L1 6l5 5" stroke="black" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M6 1L1 6l5 5" stroke="black" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               <span>Back to shop</span>
             </Link>
           </div>
           <div className="nav-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-            <img className="nav-logo-img" src={apilaLogo} alt="Apila Jewels"/>
+            <img className="nav-logo-img" src={apilaLogo} alt="Apila Jewels" />
           </div>
           <div className="nav-right">
             <button className="nav-icon-btn" aria-label="Wishlist" onClick={() => navigate('/wishlist')}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-              </svg>
-            </button>
-            <button className="nav-icon-btn" aria-label="Profile" onClick={() => navigate('/profile')}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
               </svg>
             </button>
           </div>
@@ -184,7 +182,7 @@ export default function DesktopCart() {
               <span className="cart-sumlabel">Discount</span>
               <span className="cart-sumval">₹0</span>
             </div>
-            <div className="cart-sum-divider"/>
+            <div className="cart-sum-divider" />
             <div className="cart-totalrow">
               <span className="cart-totallabel">Total</span>
               <span className="cart-totalval">₹{subtotal.toFixed(2)}</span>
@@ -193,7 +191,7 @@ export default function DesktopCart() {
 
           {/* Delivery Banner */}
           <div className="cart-delivery">
-            <img src={iconDeliveryTruck} width="27" height="20" alt=""/>
+            <img src={iconDeliveryTruck} width="27" height="20" alt="" />
             <span className="cart-delivery-text">Estimated Delivery: 3 - 4 days</span>
           </div>
 
@@ -209,7 +207,7 @@ export default function DesktopCart() {
 
           {/* Secure Payments */}
           <div className="cart-secure">
-            <img src={iconSecurePayments} width="19" height="20" alt=""/>
+            <img src={iconSecurePayments} width="19" height="20" alt="" />
             <span className="cart-secure-text">100% Secure Payments</span>
           </div>
         </div>

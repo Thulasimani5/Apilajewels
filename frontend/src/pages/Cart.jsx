@@ -17,17 +17,17 @@ const Cart = () => {
   const { cartItems, removeFromCart } = useCart();
   const [selectedItems, setSelectedItems] = useState([]);
 
-  useEffect(() => {
-    if (!user) {
-      navigate('/login', { state: { from: location.pathname } });
-    }
-  }, [user, navigate, location]);
+//   useEffect(() => {
+//     if (!user) {
+//       navigate('/login', { state: { from: location.pathname } });
+//     }
+//   }, [user, navigate, location]);
 
   useEffect(() => {
     setSelectedItems(cartItems.map(item => item._id));
   }, [cartItems]);
 
-  if (!user) return null;
+  // if (!user) return null;
 
   if (window.innerWidth > 768) {
     return <DesktopCart />;

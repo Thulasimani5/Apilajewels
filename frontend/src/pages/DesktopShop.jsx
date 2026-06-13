@@ -98,13 +98,12 @@ function ShopCard({ product }) {
           aria-label={liked ? 'Remove from wishlist' : 'Add to wishlist'}
           onClick={(e) => {
             e.preventDefault(); e.stopPropagation();
-            if (!user) navigate('/login');
-            else toggleWishlist(product);
+            toggleWishlist(product);
           }}
         >
           <svg width="16" height="16" viewBox="0 0 24 24"
-            fill={liked ? '#ab6281' : 'none'}
-            stroke={liked ? '#ab6281' : 'currentColor'} strokeWidth="1.6">
+            fill={liked ? '#fff' : 'none'}
+            stroke={liked ? '#fff' : 'currentColor'} strokeWidth="1.6">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
           </svg>
         </button>
@@ -292,7 +291,6 @@ export default function DesktopShop() {
           <div className="nav-right">
             <button className="nav-icon-btn" aria-label="Wishlist" onClick={() => navigate('/wishlist')}>{navIcons.heart}</button>
             <button className="nav-icon-btn" aria-label="Cart" onClick={() => navigate('/cart')}>{navIcons.cart}</button>
-            <button className="nav-icon-btn" aria-label="Account" onClick={() => navigate('/login')}>{navIcons.acct}</button>
           </div>
         </nav>
       </header>
