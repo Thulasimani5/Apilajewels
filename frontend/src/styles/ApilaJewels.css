@@ -2732,8 +2732,8 @@
 
 .wl-img-wrap {
   position: relative;
-  width: 100%;
-  aspect-ratio: 343/427;
+  width: 343px;
+  height: 427px;
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -2808,7 +2808,7 @@
 }
 
 .wl-bag-btn {
-  width: 100%;
+  width: 343px;
   height: 59px;
   background: transparent;
   border: 1px solid #ab6281;
@@ -3089,14 +3089,3 @@
   }
 }
 
-/* ── Wishlist single-column on very small desktop ── */
-@media(max-width:740px) {
-  .wl-grid {
-    grid-template-columns: 1fr;
-    padding: 0 24px 60px;
-  }
-  .wl-title,
-  .wl-notice {
-    margin-left: 24px;
-  }
-}
