@@ -3500,7 +3500,7 @@
   font-size: 13px;
   color: rgba(0, 0, 0, 0.60);
   letter-spacing: -0.13px;
-  margin: 0 0 auto;
+  margin: 0 0 10px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -3510,13 +3510,18 @@
 .srch-product-details {
   font-family: var(--f-gotham-m);
   font-size: 14px;
-  color: #000;
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  color: rgba(0, 0, 0, 0.55);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.55);
+  padding-bottom: 0;
+  line-height: 1;
   letter-spacing: -0.14px;
   display: inline-block;
-  margin-top: 16px;
+  align-self: flex-start;
+  margin-top: 40px;
+  transition: color 0.18s ease, border-color 0.18s ease;
 }
 .srch-product-details:hover {
   color: #ab6281;
+  border-bottom-color: #ab6281;
 }
