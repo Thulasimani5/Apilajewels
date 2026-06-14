@@ -142,7 +142,7 @@ export default function DesktopCart() {
           {cartCount === 0 ? (
             <div className="cart-empty">
               <p>Your cart is empty.</p>
-              <Link to="/shop" className="cart-empty-link">Continue Shopping</Link>
+              <Link to="/shop" className="btn-know"><span>Continue Shopping</span></Link>
             </div>
           ) : (
             <div className="cart-items-list">
