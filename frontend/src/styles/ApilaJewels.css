@@ -3089,3 +3089,434 @@
   }
 }
 
+/* ═══════════════════════════════════════════════════
+   MENU DRAWER  (Figma node 491:2)
+   Panel: 483 px wide, full-height, white
+   Backdrop: rgba(2,1,1,0.50) over the rest
+═══════════════════════════════════════════════════ */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 900;
+  pointer-events: none;
+}
+.menu-overlay.open {
+  pointer-events: auto;
+}
+
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 1, 1, 0.50);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 900;
+}
+.menu-overlay.open .menu-backdrop {
+  opacity: 1;
+}
+
+.menu-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 483px;
+  height: 100vh;
+  background: #fff;
+  transform: translateX(-483px);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  z-index: 901;
+  display: flex;
+  flex-direction: column;
+}
+.menu-overlay.open .menu-panel {
+  transform: translateX(0);
+}
+
+/* ── Topbar: holds close button + search bar ── */
+.menu-topbar {
+  position: relative;
+  height: 92px;
+  flex-shrink: 0;
+}
+
+/* ── Scrollable nav area (grows to fill, Contact Us stays below) ── */
+.menu-nav-scroll {
+  flex: 1;
+  min-height: 0;          /* essential: lets the flex child shrink and scroll */
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.menu-close-btn {
+  position: absolute;
+  top: 39.5px;
+  left: 65px;
+  width: 13.5px;
+  height: 13.5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-searchbar {
+  position: absolute;
+  top: 28px;
+  left: 118px;
+  width: 264px;
+  height: 37px;
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  border-radius: 18.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 19px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.menu-search-placeholder {
+  font-family: var(--f-gotham-b);
+  font-size: 13px;
+  color: #000;
+  opacity: 0.50;
+}
+
+/* ── Nav sections ── */
+.menu-section {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-section--first {
+  padding-top: 14px;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 41px;
+  padding: 0 63px;
+}
+
+.menu-item-link {
+  font-family: var(--f-gotham-b);
+  font-size: 13px;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.91px;
+  color: #000;
+  text-decoration: none;
+  line-height: 1;
+}
+.menu-item-link:hover {
+  color: var(--c-accent, #ab6281);
+}
+
+.menu-chevron {
+  flex-shrink: 0;
+  opacity: 0.40;
+}
+
+/* Horizontal divider between sections */
+.menu-rule {
+  border: none;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.10);
+  margin: 6px 63px 20px;
+}
+
+/* ── Contact block — always pinned at bottom, never scrolls ── */
+.menu-contact {
+  flex-shrink: 0;
+  padding: 14px 63px 20px;
+}
+
+.menu-contact-heading {
+  font-family: var(--f-gotham-b);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.98px;
+  color: #000;
+  opacity: 0.20;
+  margin: 0 0 12px;
+}
+
+.menu-rule--contact {
+  margin: 0 0 16px;
+}
+
+.menu-contact-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 0;
+  text-decoration: none;
+}
+
+.menu-contact-row span {
+  font-family: var(--f-gotham-b);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.98px;
+  color: #000;
+}
+
+/* ═══════════════════════════════════════════════════
+   SEARCH OVERLAY  (Figma 524:1413)
+   White panel: 100vw × 588px
+   Two columns: suggestions (428px) | results (flex 1)
+   Backdrop: rgba(0,0,0,0.5) below the panel
+═══════════════════════════════════════════════════ */
+
+.srch-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+}
+
+/* ── White search panel ── */
+.srch-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 588px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dark backdrop — below white panel */
+.srch-backdrop {
+  position: absolute;
+  top: 588px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.50);
+  cursor: pointer;
+}
+
+/* ── Topbar (92px — mirrors main navbar height) ── */
+.srch-topbar {
+  position: relative;
+  height: 92px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Search icon + input — left: 70px matches Figma cursor at 112.5px */
+.srch-field {
+  position: absolute;
+  left: 70px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.srch-input {
+  border: none;
+  outline: none;
+  font-family: var(--f-gotham-b);
+  font-size: 18px;
+  color: #000;
+  width: 380px;
+  background: transparent;
+  letter-spacing: -0.18px;
+  line-height: 1;
+}
+.srch-input::placeholder {
+  color: rgba(0, 0, 0, 0.50);
+}
+
+/* Centred logo */
+.srch-logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+/* Right nav icons — mirrors main nav-right */
+.srch-nav-right {
+  position: absolute;
+  right: 48px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  color: #000;
+}
+
+/* Topbar bottom divider — matches navbar line */
+.srch-divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.10);
+  margin: 0 77px;
+  flex-shrink: 0;
+}
+
+/* ── Two-column content area ── */
+.srch-content {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ── Left column: 428px (Figma product images start at x=428) ── */
+.srch-left {
+  width: 428px;
+  flex-shrink: 0;
+  padding: 24px 0 20px 113px;   /* label at y=116 → 24px from divider */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Shared section labels */
+.srch-section-label {
+  font-family: var(--f-gotham-b);
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.50);
+  letter-spacing: -0.13px;
+  margin: 0 0 16px;
+}
+
+/* Category suggestion list */
+.srch-suggestion-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Each category link — 38px row height, uppercase, 0.91px tracking */
+.srch-suggestion-link {
+  display: block;
+  font-family: var(--f-gotham-b);
+  font-size: 13px;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.91px;
+  color: #000;
+  text-decoration: none;
+  line-height: 38px;
+}
+.srch-suggestion-link:hover {
+  color: #ab6281;
+}
+
+/* Pushes "Connect us" to the bottom of the left column */
+.srch-left-spacer { flex: 1; }
+
+.srch-connect-link {
+  line-height: 1;
+  padding-top: 0;
+}
+
+/* ── Right column: product results ── */
+.srch-right {
+  flex: 1;
+  padding: 24px 0 0 0;
+  overflow: hidden;
+}
+
+.srch-results-label {
+  font-size: 15px;
+  letter-spacing: -0.15px;
+}
+
+/* 2-row grid */
+.srch-results-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Each row holds 2 product cards side by side */
+.srch-results-row {
+  display: flex;
+}
+
+/* ── Single product card: 190px thumb + info text ── */
+.srch-product-card {
+  flex: 1;
+  display: flex;
+  gap: 25px;
+  padding-right: 16px;
+}
+
+.srch-product-thumb {
+  width: 190px;
+  height: 190px;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: #f5f0ea;
+  cursor: pointer;
+}
+.srch-product-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.srch-product-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #ede8e3;
+}
+
+.srch-product-info {
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+  min-width: 0;
+}
+
+/* Gotham Medium 14px, tracking -0.14px */
+.srch-product-name {
+  font-family: var(--f-gotham-m);
+  font-size: 14px;
+  color: #000;
+  letter-spacing: -0.14px;
+  margin: 0 0 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Gotham Book 13px, opacity 60%, tracking -0.13px */
+.srch-product-desc {
+  font-family: var(--f-gotham-b);
+  font-size: 13px;
+  color: rgba(0, 0, 0, 0.60);
+  letter-spacing: -0.13px;
+  margin: 0 0 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* "Details" underlined link — Gotham Medium 14px */
+.srch-product-details {
+  font-family: var(--f-gotham-m);
+  font-size: 14px;
+  color: #000;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  letter-spacing: -0.14px;
+  display: inline-block;
+  margin-top: 16px;
+}
+.srch-product-details:hover {
+  color: #ab6281;
+}
