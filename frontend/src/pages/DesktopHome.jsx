@@ -38,6 +38,10 @@ import carouselImg5 from '../assets/images/carousel5.jpg';
 import carouselImg6 from '../assets/images/carousel6.jpg';
 import carouselImg7 from '../assets/images/carousel7.jpg';
 
+/* Module-level cache for Trending grid — persists across re-renders & overlay toggles */
+let trendingGridMemCache = null;
+const TRENDING_GRID_CACHE_KEY = 'apila_trending_grid';
+
 /* small inline-SVG helpers */
 const Icon = {
   search: (
@@ -189,32 +193,60 @@ export default function Home() {
   const [wishlisted, setWishlisted] = useState({});
 
   useEffect(() => {
-    const fetchTrending = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}/api/jewellery?sort=popularity&limit=12`);
-        const data = await res.json();
-        if (data.success && data.data && data.data.length > 0) {
-          const sorted = [...data.data]
-            .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))
-            .slice(0, 12);
+    const toCard = item => {
+      const rawImg = item.images?.[0];
+      const imgUrl = rawImg?.url || rawImg?.secure_url
+        || (typeof rawImg === 'string' && rawImg.startsWith('http') ? rawImg : '')
+        || '';
+      const price = (item.rentalPrice || 0) >= 2000
+        ? 'Price on Request'
+        : `₹${item.rentalPrice || 0}`;
+      return {
+        id: item._id,
+        name: item.name || '',
+        desc: item.description || item.material || '',
+        price,
+        img: imgUrl,
+      };
+    };
 
-          setTrending(sorted.map(item => ({
-            id: item._id,
-            name: item.name,
-            desc: item.description,
-            price: `₹${item.rentalPrice}`,
-            img: item.images && item.images.length > 0
-              ? (item.images[0].startsWith('http') ? item.images[0] : `${API_BASE_URL}${item.images[0]}`)
-              : "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=cover&w=400&q=80"
-          })));
-        } else {
-          setTrending([]);
+    /* Step 1 — show cache instantly, zero loading time on revisit */
+    if (trendingGridMemCache) {
+      setTrending(trendingGridMemCache);
+    } else {
+      try {
+        const stored = localStorage.getItem(TRENDING_GRID_CACHE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          trendingGridMemCache = parsed;
+          setTrending(parsed);
+        }
+      } catch {}
+    }
+
+    /* Step 2 — fetch fresh random 12 items in background, update cache */
+    const refresh = async () => {
+      try {
+        const page = Math.floor(Math.random() * 4) + 1;
+        const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=12&page=${page}`);
+        const data = await res.json();
+        let list = Array.isArray(data) ? data : (data.data || data.products || []);
+        if (list.length === 0) {
+          const fb = await fetch(`${API_BASE_URL}/api/jewellery?limit=12`);
+          const fbData = await fb.json();
+          list = Array.isArray(fbData) ? fbData : (fbData.data || fbData.products || []);
+        }
+        if (list.length > 0) {
+          const cards = list.slice(0, 12).map(toCard);
+          trendingGridMemCache = cards;
+          try { localStorage.setItem(TRENDING_GRID_CACHE_KEY, JSON.stringify(cards)); } catch {}
+          setTrending(cards);
         }
       } catch (err) {
         console.error('Failed to fetch trending items:', err);
       }
     };
-    fetchTrending();
+    refresh();
   }, []);
 
   const toggleWishlist = (e, id) => {
@@ -490,10 +522,12 @@ export default function Home() {
         <h2 className="section-title">Trending Collections</h2>
         <div className="products-grid">
           {(trending.length > 0 ? trending : TRENDING_SAMPLES).map((p, i) => (
-            <Reveal as={Link} to={`/shop/${p.id}`} className="product-card" key={i}>
+            <Reveal as={Link} to={`/shop/${p.id}`} className="product-card" key={p.id || i}>
               <div className="product-img-wrap">
                 <WishButton active={wishlisted[p.id]} onClick={(e) => toggleWishlist(e, p.id)} />
-                <img src={p.img} alt={p.name} />
+                {p.img
+                  ? <img src={p.img} alt={p.name} />
+                  : <div className="product-img-placeholder" />}
               </div>
               <p className="product-name">{p.name}</p>
               <p className="product-desc">{p.desc}</p>
