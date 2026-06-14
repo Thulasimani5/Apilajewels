@@ -2732,8 +2732,8 @@
 
 .wl-img-wrap {
   position: relative;
-  width: 343px;
-  height: 427px;
+  width: 100%;
+  aspect-ratio: 343/427;
   overflow: hidden;
   flex-shrink: 0;
 }
@@ -2808,7 +2808,7 @@
 }
 
 .wl-bag-btn {
-  width: 343px;
+  width: 100%;
   height: 59px;
   background: transparent;
   border: 1px solid #ab6281;
@@ -3012,5 +3012,91 @@
 
   .wl-empty {
     padding: 60px 24px;
+  }
+}
+
+/* ── Product Detail Page responsive ── */
+@media(max-width:1400px) {
+  .pdp-main {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+  .pdp-panel {
+    margin-left: 32px;
+  }
+}
+
+@media(max-width:1200px) {
+  .pdp-images {
+    flex: 0 0 56%;
+  }
+  .pdp-panel {
+    margin-left: 28px;
+  }
+  .pdp-main {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+@media(max-width:1024px) {
+  .pdp-main {
+    flex-direction: column;
+    padding: 0 24px 60px;
+  }
+  .pdp-images {
+    flex: none;
+    width: 100%;
+  }
+  .pdp-panel {
+    margin-left: 0;
+    margin-top: 36px;
+    position: static;
+    width: 100%;
+    max-width: 720px;
+  }
+  .pdp-breadcrumb-bar {
+    padding: 0 24px;
+  }
+}
+
+@media(max-width:860px) {
+  .pdp-img-grid {
+    grid-template-columns: 1fr;
+  }
+  .pdp-btn-outline,
+  .pdp-btn-filled {
+    height: 52px;
+  }
+}
+
+/* ── Cart card responsive ── */
+@media(max-width:860px) {
+  .cc-card {
+    height: auto;
+    min-height: 180px;
+    flex-wrap: nowrap;
+    align-items: stretch;
+  }
+  .cc-img-wrap {
+    width: 160px;
+    height: auto;
+    flex-shrink: 0;
+  }
+  .cc-body {
+    position: relative;
+    min-height: 180px;
+  }
+}
+
+/* ── Wishlist single-column on very small desktop ── */
+@media(max-width:740px) {
+  .wl-grid {
+    grid-template-columns: 1fr;
+    padding: 0 24px 60px;
+  }
+  .wl-title,
+  .wl-notice {
+    margin-left: 24px;
   }
 }
