@@ -78,9 +78,9 @@ const JewelleryListing = () => {
       } else if (normalized === 'kundan') {
         newCategoryFilters.push('Kundan');
       } else if (normalized === 'american-diamond' || normalized === 'american-diamond-bangles') {
-        newCategoryFilters.push('AD Jewellery');
+        newCategoryFilters.push('AD Jewels');
       } else if (normalized.includes('ad')) {
-        newCategoryFilters.push('AD Jewellery');
+        newCategoryFilters.push('AD Jewels');
       } else if (normalized === 'polki') {
         newCategoryFilters.push('Polki');
       } else if (normalized.includes('antique') || normalized === 'gold') {

@@ -180,7 +180,7 @@ export default function DesktopShop() {
         || (norm === 'moissanite' || norm === 'moissinate-jewels' ? 'Moissanite' : null)
         || (norm.includes('temple') ? 'Temple Jewellery' : null)
         || (norm === 'kundan' || norm === 'kundan-jewels' ? 'Kundan' : null)
-        || (norm === 'american-diamond' || norm === 'american-diamond-bangles' || norm === 'ad-jewels' ? 'AD Jewellery' : null)
+        || (norm === 'american-diamond' || norm === 'american-diamond-bangles' || norm === 'ad-jewels' ? 'AD Jewels' : null)
         || (norm.includes('antique') ? 'Antique Jewel' : null)
         || (norm === 'polki' ? 'Polki' : null)
         || (categories.length ? cat : null); // fallback only if categories loaded
