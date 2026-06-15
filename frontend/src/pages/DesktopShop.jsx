@@ -172,15 +172,18 @@ export default function DesktopShop() {
     const occ = searchParams.get('occasion');
     
     let newCategory = [];
-    if (cat && categories.length) {
+    if (cat) {
       const norm = cat.toLowerCase();
+      // Try to match DB category name first
       const matched = categories.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === norm);
       const name = matched?.name
-        || (norm === 'moissanite' ? 'Moissanite' : null)
+        || (norm === 'moissanite' || norm === 'moissinate-jewels' ? 'Moissanite' : null)
         || (norm.includes('temple') ? 'Temple Jewellery' : null)
-        || (norm === 'kundan' ? 'Kundan' : null)
-        || (norm.includes('ad') ? 'AD Jewellery' : null)
-        || cat;
+        || (norm === 'kundan' || norm === 'kundan-jewels' ? 'Kundan' : null)
+        || (norm === 'american-diamond' || norm === 'american-diamond-bangles' || norm === 'ad-jewels' ? 'AD Jewellery' : null)
+        || (norm.includes('antique') ? 'Antique Jewel' : null)
+        || (norm === 'polki' ? 'Polki' : null)
+        || (categories.length ? cat : null); // fallback only if categories loaded
       if (name) newCategory = [name];
     }
     

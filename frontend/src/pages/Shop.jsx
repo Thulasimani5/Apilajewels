@@ -77,6 +77,8 @@ const JewelleryListing = () => {
         newCategoryFilters.push('Temple Jewellery');
       } else if (normalized === 'kundan') {
         newCategoryFilters.push('Kundan');
+      } else if (normalized === 'american-diamond' || normalized === 'american-diamond-bangles') {
+        newCategoryFilters.push('AD Jewellery');
       } else if (normalized.includes('ad')) {
         newCategoryFilters.push('AD Jewellery');
       } else if (normalized === 'polki') {
