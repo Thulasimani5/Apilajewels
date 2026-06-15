@@ -169,7 +169,7 @@
 .nav-right {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 35px;
   flex: 1;
   justify-content: flex-end;
 }
@@ -1778,8 +1778,13 @@
   background: rgba(255, 255, 255, 0.28);
 }
 
-.pdp-lightbox-prev { left: 24px; }
-.pdp-lightbox-next { right: 24px; }
+.pdp-lightbox-prev {
+  left: 24px;
+}
+
+.pdp-lightbox-next {
+  right: 24px;
+}
 
 .pdp-lightbox-content {
   max-width: 88vw;
