@@ -2356,9 +2356,6 @@
   display: flex;
   height: calc(100vh - 65px);
   margin-top: 65px;
-  max-width: 1728px;
-  margin-left: auto;
-  margin-right: auto;
   width: 100%;
   overflow: hidden;
   background: linear-gradient(to right, #fdf9f4 63.83%, #fff 63.83%);
@@ -2938,11 +2935,12 @@
 }
 
 .wl-empty {
-  padding: 80px 139px;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 24px;
+  align-items: center;
+  justify-content: center;
+  /* gap: 20px; */
+  padding: 100px 0;
 }
 
 .wl-empty-text {
@@ -2979,7 +2977,7 @@
   letter-spacing: -1.38px;
   text-transform: uppercase;
   color: #000;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .wl-empty-subtitle {
@@ -3030,7 +3028,7 @@
   }
 
   .wl-empty {
-    padding: 60px 80px;
+    padding: 0;
   }
 }
 
@@ -3048,7 +3046,7 @@
   }
 
   .wl-empty {
-    padding: 60px 48px;
+    padding: 100px 48px;
   }
 }
 
@@ -3059,7 +3057,7 @@
   }
 }
 
-@media(max-width:1100px) {
+@media(max-width:1500px) {
   .cart-page {
     flex-direction: column;
   }
@@ -3074,7 +3072,7 @@
     width: 100%;
     max-width: 640px;
     margin: 0 auto;
-    padding: 40px 32px 48px;
+    padding: 0;
   }
 
   .cart-coupon-btn {
@@ -3101,7 +3099,7 @@
   }
 
   .cart-empty {
-    padding: 40px 24px;
+    padding: 0;
   }
 
   .wl-grid {
@@ -3129,6 +3127,7 @@
     padding-left: 32px;
     padding-right: 32px;
   }
+
   .pdp-panel {
     margin-left: 32px;
   }
@@ -3138,9 +3137,11 @@
   .pdp-images {
     flex: 0 0 56%;
   }
+
   .pdp-panel {
     margin-left: 28px;
   }
+
   .pdp-main {
     padding-left: 24px;
     padding-right: 24px;
@@ -3152,10 +3153,12 @@
     flex-direction: column;
     padding: 0 24px 60px;
   }
+
   .pdp-images {
     flex: none;
     width: 100%;
   }
+
   .pdp-panel {
     margin-left: 0;
     margin-top: 36px;
@@ -3163,6 +3166,7 @@
     width: 100%;
     max-width: 720px;
   }
+
   .pdp-breadcrumb-bar {
     padding: 0 24px;
   }
@@ -3172,6 +3176,7 @@
   .pdp-img-grid {
     grid-template-columns: 1fr;
   }
+
   .pdp-btn-outline,
   .pdp-btn-filled {
     height: 52px;
@@ -3186,11 +3191,13 @@
     flex-wrap: nowrap;
     align-items: stretch;
   }
+
   .cc-img-wrap {
     width: 160px;
     height: auto;
     flex-shrink: 0;
   }
+
   .cc-body {
     position: relative;
     min-height: 180px;
@@ -3208,6 +3215,7 @@
   z-index: 900;
   pointer-events: none;
 }
+
 .menu-overlay.open {
   pointer-events: auto;
 }
@@ -3220,6 +3228,7 @@
   transition: opacity 0.35s ease;
   z-index: 900;
 }
+
 .menu-overlay.open .menu-backdrop {
   opacity: 1;
 }
@@ -3238,6 +3247,7 @@
   display: flex;
   flex-direction: column;
 }
+
 .menu-overlay.open .menu-panel {
   transform: translateX(0);
 }
@@ -3252,7 +3262,8 @@
 /* ── Scrollable nav area (grows to fill, Contact Us stays below) ── */
 .menu-nav-scroll {
   flex: 1;
-  min-height: 0;          /* essential: lets the flex child shrink and scroll */
+  min-height: 0;
+  /* essential: lets the flex child shrink and scroll */
   overflow-y: auto;
   overflow-x: hidden;
   overscroll-behavior: contain;
@@ -3326,6 +3337,7 @@
   text-decoration: none;
   line-height: 1;
 }
+
 .menu-item-link:hover {
   color: var(--c-accent, #ab6281);
 }
@@ -3444,6 +3456,7 @@
   letter-spacing: -0.18px;
   line-height: 1;
 }
+
 .srch-input::placeholder {
   color: rgba(0, 0, 0, 0.50);
 }
@@ -3487,7 +3500,8 @@
 .srch-left {
   width: 428px;
   flex-shrink: 0;
-  padding: 24px 0 20px 113px;   /* label at y=116 → 24px from divider */
+  padding: 24px 0 20px 113px;
+  /* label at y=116 → 24px from divider */
   display: flex;
   flex-direction: column;
 }
@@ -3520,12 +3534,15 @@
   text-decoration: none;
   line-height: 38px;
 }
+
 .srch-suggestion-link:hover {
   color: #ab6281;
 }
 
 /* Pushes "Connect us" to the bottom of the left column */
-.srch-left-spacer { flex: 1; }
+.srch-left-spacer {
+  flex: 1;
+}
 
 .srch-connect-link {
   line-height: 1;
@@ -3572,11 +3589,13 @@
   background: #f5f0ea;
   cursor: pointer;
 }
+
 .srch-product-thumb img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
+
 .srch-product-placeholder {
   width: 100%;
   height: 100%;
@@ -3629,6 +3648,7 @@
   margin-top: 40px;
   transition: color 0.18s ease, border-color 0.18s ease;
 }
+
 .srch-product-details:hover {
   color: #ab6281;
   border-bottom-color: #ab6281;
