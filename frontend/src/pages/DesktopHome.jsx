@@ -40,7 +40,7 @@ import carouselImg7 from '../assets/images/carousel7.jpg';
 
 /* Module-level cache for Trending grid — persists across re-renders & overlay toggles */
 let trendingGridMemCache = null;
-const TRENDING_GRID_CACHE_KEY = 'apila_trending_grid';
+const TRENDING_GRID_CACHE_KEY = 'apila_trending_grid_v2';
 
 /* small inline-SVG helpers */
 const Icon = {
@@ -175,42 +175,47 @@ export default function Home() {
 
   /* ---- Context & API logic ---- */
   const TRENDING_SAMPLES = [
-    { id: 's1', name: 'Moissinate Jewels', desc: 'Moissanite Designer Polki Necklace', price: '₹1299.00', img: carouselImg1 },
-    { id: 's2', name: 'American Diamond', desc: 'American Diamond Necklace Set', price: '₹1299.00', img: carouselImg2 },
-    { id: 's3', name: 'Gold Antique Jewels', desc: 'Gold Antique Premium Necklace', price: '₹1299.00', img: carouselImg3 },
-    { id: 's4', name: 'Kundan Jewels', desc: 'Kundan Bridal Necklace Set', price: '₹1299.00', img: carouselImg4 },
-    { id: 's5', name: 'Gold Bangles', desc: 'Gold Plated Bangle Set', price: '₹1299.00', img: carouselImg5 },
-    { id: 's6', name: 'American Diamond Bangles', desc: 'American Diamond Bangle Set', price: '₹1299.00', img: carouselImg6 },
-    { id: 's7', name: 'Accessories', desc: 'Bridal Jewellery Accessories', price: '₹1299.00', img: carouselImg7 },
-    { id: 's8', name: 'Moissinate Jewels', desc: 'Moissanite Designer Polki Necklace', price: '₹1299.00', img: carouselImg1 },
-    { id: 's9', name: 'American Diamond', desc: 'American Diamond Necklace Set', price: '₹1299.00', img: carouselImg2 },
-    { id: 's10', name: 'Gold Antique Jewels', desc: 'Gold Antique Premium Necklace', price: '₹1299.00', img: carouselImg3 },
-    { id: 's11', name: 'Kundan Jewels', desc: 'Kundan Bridal Necklace Set', price: '₹1299.00', img: carouselImg4 },
-    { id: 's12', name: 'Gold Bangles', desc: 'Gold Plated Bangle Set', price: '₹1299.00', img: carouselImg5 },
+    { id: 's1', category: 'Moissanite Jewels', name: 'Moissanite Designer Polki Necklace', price: '₹1299.00', img: carouselImg1 },
+    { id: 's2', category: 'AD Jewels', name: 'American Diamond Necklace Set', price: '₹1299.00', img: carouselImg2 },
+    { id: 's3', category: 'Antique Jewel', name: 'Gold Antique Premium Necklace', price: '₹1299.00', img: carouselImg3 },
+    { id: 's4', category: 'Kundan Jewels', name: 'Kundan Bridal Necklace Set', price: '₹1299.00', img: carouselImg4 },
+    { id: 's5', category: 'Gold Bangles', name: 'Gold Plated Bangle Set', price: '₹1299.00', img: carouselImg5 },
+    { id: 's6', category: 'AD Jewels', name: 'American Diamond Bangle Set', price: '₹1299.00', img: carouselImg6 },
+    { id: 's7', category: 'Accessories', name: 'Bridal Jewellery Accessories', price: '₹1299.00', img: carouselImg7 },
+    { id: 's8', category: 'Moissanite Jewels', name: 'Moissanite Designer Polki Necklace', price: '₹1299.00', img: carouselImg1 },
+    { id: 's9', category: 'AD Jewels', name: 'American Diamond Necklace Set', price: '₹1299.00', img: carouselImg2 },
+    { id: 's10', category: 'Antique Jewel', name: 'Gold Antique Premium Necklace', price: '₹1299.00', img: carouselImg3 },
+    { id: 's11', category: 'Kundan Jewels', name: 'Kundan Bridal Necklace Set', price: '₹1299.00', img: carouselImg4 },
+    { id: 's12', category: 'Gold Bangles', name: 'Gold Plated Bangle Set', price: '₹1299.00', img: carouselImg5 },
   ];
 
   const [trending, setTrending] = useState([]);
   const [wishlisted, setWishlisted] = useState({});
 
   useEffect(() => {
+    localStorage.removeItem('apila_trending_grid'); // clear old v1 cache key
     const toCard = item => {
       const rawImg = item.images?.[0];
       const imgUrl = rawImg?.url || rawImg?.secure_url
         || (typeof rawImg === 'string' && rawImg.startsWith('http') ? rawImg : '')
         || '';
-      const price = (item.rentalPrice || 0) >= 2000
-        ? 'Price on Request'
-        : `₹${item.rentalPrice || 0}`;
+      const priceVal = item.rentalPrice || item.price || 0;
+      const price = priceVal >= 2000 ? 'Premium Collection' : `₹${priceVal.toFixed(2)}`;
+      const category = Array.isArray(item.category) ? item.category[0] : (item.category || 'Jewels');
       return {
         id: item._id,
+        category,
         name: item.name || '',
-        desc: item.description || item.material || '',
         price,
         img: imgUrl,
       };
     };
 
-    /* Step 1 — show cache instantly, zero loading time on revisit */
+    /* Step 1 — show cache instantly, zero loading time on revisit.
+       Invalidate cache if it predates the category field (schema v2). */
+    if (trendingGridMemCache && !trendingGridMemCache[0]?.category) {
+      trendingGridMemCache = null;
+    }
     if (trendingGridMemCache) {
       setTrending(trendingGridMemCache);
     } else {
@@ -421,15 +426,15 @@ export default function Home() {
             {/* Section 2 — occasion collections */}
             <ul className="menu-section">
               {[
-                { label: 'Bridal Set',          slug: 'bridal-set' },
+                { label: 'Bridal Set',          slug: 'bridal' },
                 { label: 'Bridesmaid',          slug: 'bridesmaid' },
-                { label: 'Designer Collection', slug: 'designer-collection' },
-                { label: 'Reception Jewels',    slug: 'reception-jewels' },
-                { label: 'Party Wear',          slug: 'party-wear' },
-                { label: 'Small Jewels',        slug: 'small-jewels' },
+                { label: 'Designer Collection', slug: 'designer' },
+                { label: 'Reception Jewels',    slug: 'reception' },
+                { label: 'Party Wear',          slug: 'party' },
+                { label: 'Small Jewels',        slug: 'small' },
               ].map(item => (
                 <li key={item.slug} className="menu-item">
-                  <Link to={`/shop?category=${item.slug}`} className="menu-item-link" onClick={() => setMenuOpen(false)}>
+                  <Link to={`/shop?occasion=${item.slug}`} className="menu-item-link" onClick={() => setMenuOpen(false)}>
                     {item.label}
                   </Link>
                   <svg className="menu-chevron" width="5" height="9" viewBox="0 0 5 9" fill="none">
@@ -529,8 +534,8 @@ export default function Home() {
                   ? <img src={p.img} alt={p.name} />
                   : <div className="product-img-placeholder" />}
               </div>
-              <p className="product-name">{p.name}</p>
-              <p className="product-desc">{p.desc}</p>
+              <p className="product-name">{p.category}</p>
+              <p className="product-desc">{p.name}</p>
               <p className="product-price">{p.price}</p>
             </Reveal>
           ))}

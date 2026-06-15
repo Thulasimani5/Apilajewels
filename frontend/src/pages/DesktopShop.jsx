@@ -166,45 +166,46 @@ export default function DesktopShop() {
     window.scrollTo(0, 0);
   }, []);
 
-  /* ── Initialise Category and Occasion filters from URL ── */
+  /* ── Initialise filters from URL — full reset to prevent stale filters ── */
   useEffect(() => {
     const cat = searchParams.get('category');
     const occ = searchParams.get('occasion');
-    
-    let newCategory = [];
-    if (cat) {
-      const norm = cat.toLowerCase();
-      // Try to match DB category name first
-      const matched = categories.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === norm);
-      const name = matched?.name
-        || (norm === 'moissanite' || norm === 'moissinate-jewels' ? 'Moissanite' : null)
-        || (norm.includes('temple') ? 'Temple Jewellery' : null)
-        || (norm === 'kundan' || norm === 'kundan-jewels' ? 'Kundan' : null)
-        || (norm === 'american-diamond' || norm === 'american-diamond-bangles' || norm === 'ad-jewels' ? 'AD Jewels' : null)
-        || (norm.includes('antique') ? 'Antique Jewel' : null)
-        || (norm === 'polki' ? 'Polki' : null)
-        || (categories.length ? cat : null); // fallback only if categories loaded
-      if (name) newCategory = [name];
-    }
-    
-    let newOccasion = [];
+
     if (occ) {
       const norm = occ.toLowerCase();
-      if (norm === 'bridal-set' || norm === 'bridal') newOccasion = ['Bridal Set'];
-      else if (norm === 'bridesmaid') newOccasion = ['Bridal Maid'];
-      else if (norm === 'designer' || norm === 'designer-collection') newOccasion = ['Designer'];
-      else if (norm === 'reception' || norm === 'reception-jewels') newOccasion = ['Reception'];
-      else if (norm === 'party' || norm === 'party-wear') newOccasion = ['Party Wear'];
-      else if (norm === 'small-jewel' || norm === 'small-jewels') newOccasion = ['Small Jewel'];
+      const typeMap = {
+        bridal: 'Bridal Set',
+        'bridal-set': 'Bridal Set',
+        bridesmaid: 'Bridal Maid',
+        designer: 'Designer',
+        'designer-collection': 'Designer',
+        reception: 'Reception',
+        'reception-jewels': 'Reception',
+        party: 'Party Wear',
+        'party-wear': 'Party Wear',
+        small: 'Small Jewel',
+        'small-jewel': 'Small Jewel',
+        'small-jewels': 'Small Jewel',
+      };
+      const typeName = typeMap[norm];
+      if (typeName) {
+        setActiveFilters({ Category: [], Occasion: [typeName], Price: [], Colour: [], StoneColour: [], Stone: [] });
+        return;
+      }
     }
 
-    if (newCategory.length || newOccasion.length) {
-      setActiveFilters(f => ({ 
-        ...f, 
-        ...(newCategory.length ? { Category: newCategory } : {}),
-        ...(newOccasion.length ? { Occasion: newOccasion } : {})
-      }));
-    }
+    if (!cat || !categories.length) return;
+    const norm = cat.toLowerCase();
+    const matched = categories.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === norm);
+    const name = matched?.name
+      || (norm === 'moissanite' || norm === 'moissinate-jewels' ? 'Moissanite' : null)
+      || (norm.includes('temple') ? 'Temple Jewellery' : null)
+      || (norm === 'kundan' || norm === 'kundan-jewels' ? 'Kundan' : null)
+      || (norm === 'american-diamond' || norm === 'american-diamond-bangles' || norm === 'ad-jewels' ? 'AD Jewels' : null)
+      || (norm.includes('antique') ? 'Antique Jewel' : null)
+      || (norm === 'polki' ? 'Polki' : null)
+      || cat;
+    setActiveFilters({ Category: [name], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
   }, [searchParams, categories]);
 
   /* ── Data ── */
@@ -229,9 +230,9 @@ export default function DesktopShop() {
     if (activeFilters.Category.length > 0 &&
       !activeFilters.Category.some(c => cats.some(pc => pc?.toLowerCase() === c.toLowerCase()))) return false;
 
-    const occ = Array.isArray(p.type) ? p.type : [p.type];
+    const types = Array.isArray(p.type) ? p.type : [p.type];
     if (activeFilters.Occasion.length > 0 &&
-      !activeFilters.Occasion.some(o => occ.some(po => po?.toLowerCase() === o.toLowerCase()))) return false;
+      !activeFilters.Occasion.some(o => types.some(pt => pt?.toLowerCase() === o.toLowerCase()))) return false;
 
     const cols = Array.isArray(p.colour) ? p.colour : [p.colour];
     if (activeFilters.Colour.length > 0 &&
@@ -571,15 +572,15 @@ export default function DesktopShop() {
             {/* Section 2 — occasion collections */}
             <ul className="menu-section">
               {[
-                { label: 'Bridal Set',          slug: 'bridal-set' },
+                { label: 'Bridal Set',          slug: 'bridal' },
                 { label: 'Bridesmaid',          slug: 'bridesmaid' },
-                { label: 'Designer Collection', slug: 'designer-collection' },
-                { label: 'Reception Jewels',    slug: 'reception-jewels' },
-                { label: 'Party Wear',          slug: 'party-wear' },
-                { label: 'Small Jewels',        slug: 'small-jewels' },
+                { label: 'Designer Collection', slug: 'designer' },
+                { label: 'Reception Jewels',    slug: 'reception' },
+                { label: 'Party Wear',          slug: 'party' },
+                { label: 'Small Jewels',        slug: 'small' },
               ].map(item => (
                 <li key={item.slug} className="menu-item">
-                  <Link to={`/shop?category=${item.slug}`} className="menu-item-link" onClick={() => setIsDrawerOpen(false)}>
+                  <Link to={`/shop?occasion=${item.slug}`} className="menu-item-link" onClick={() => setIsDrawerOpen(false)}>
                     {item.label}
                   </Link>
                   <svg className="menu-chevron" width="5" height="9" viewBox="0 0 5 9" fill="none">

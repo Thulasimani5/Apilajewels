@@ -1030,12 +1030,15 @@
   justify-content: center;
   color: rgba(0, 0, 0, .52);
   cursor: pointer;
-  transition: opacity .2s, color .2s;
+  transition: opacity .2s, filter .2s;
 }
 
 .social-btn:hover {
-  opacity: 0.7;
-  color: #ab6281;
+  opacity: 1;
+}
+
+.social-btn:hover img {
+  filter: invert(55%) sepia(20%) saturate(700%) hue-rotate(290deg) brightness(90%) contrast(90%);
 }
 
 /* same 6.71% margin + 1.68% padding-left keeps copyright text aligned with col1 */
