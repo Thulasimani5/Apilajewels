@@ -33,7 +33,7 @@ const SORT_OPTIONS = [
   { id: 'popularity', label: 'Popularity' },
 ];
 
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 18;
 
 /* ── Funnel icon ── */
 const FilterIcon = () => (
@@ -432,7 +432,7 @@ export default function DesktopShop() {
           {/* Product grid */}
           {isLoading ? (
             <div className="shop-grid">
-              {Array.from({ length: 12 }).map((_, i) => (
+              {Array.from({ length: 18 }).map((_, i) => (
                 <div key={i} className="shop-card-skeleton">
                   <div className="shop-card-img-skel" />
                   <div className="shop-card-txt-skel" />
