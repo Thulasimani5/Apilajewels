@@ -19,7 +19,7 @@ import backArrowIcon from '../assets/icons/BackArrow.svg';
 import '../styles/ApilaJewels.css';
 
 /* ── Filter data ── */
-const OCCASION_OPTIONS = ['Bridal Set', 'Bridesmaid', 'Designer Collection', 'Reception Jewels', 'Party Wear', 'Small Jewels'];
+const OCCASION_OPTIONS = ['Bridal Set', 'Bridal Maid', 'Designer', 'Reception', 'Party Wear', 'Small Jewel'];
 const PRICE_OPTIONS = ['Under ₹1000', '₹1000 - ₹2000', '₹2000 - ₹3000', 'Above ₹3000'];
 const COLOR_OPTIONS = ['Gold', 'Silver', 'Rose Gold', 'Emerald Green', 'Ruby Red', 'Mehndi Polish'];
 const STONE_COLOR_OPT = ['Clear', 'Blue', 'Pink', 'Red', 'Green', 'Yellow', 'White', 'Gold', 'Various', 'Orange', 'Black', 'Purple'];
@@ -161,19 +161,47 @@ export default function DesktopShop() {
     return () => window.removeEventListener('scroll', handler);
   }, []);
 
-  /* ── Initialise Category filter from URL ── */
+  /* ── Scroll to top on mount and path change ── */
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  /* ── Initialise Category and Occasion filters from URL ── */
   useEffect(() => {
     const cat = searchParams.get('category');
-    if (!cat || !categories.length) return;
-    const norm = cat.toLowerCase();
-    const matched = categories.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === norm);
-    const name = matched?.name
-      || (norm === 'moissanite' ? 'Moissanite' : null)
-      || (norm.includes('temple') ? 'Temple Jewellery' : null)
-      || (norm === 'kundan' ? 'Kundan' : null)
-      || (norm.includes('ad') ? 'AD Jewellery' : null)
-      || cat;
-    setActiveFilters(f => ({ ...f, Category: [name] }));
+    const occ = searchParams.get('occasion');
+    
+    let newCategory = [];
+    if (cat && categories.length) {
+      const norm = cat.toLowerCase();
+      const matched = categories.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === norm);
+      const name = matched?.name
+        || (norm === 'moissanite' ? 'Moissanite' : null)
+        || (norm.includes('temple') ? 'Temple Jewellery' : null)
+        || (norm === 'kundan' ? 'Kundan' : null)
+        || (norm.includes('ad') ? 'AD Jewellery' : null)
+        || cat;
+      if (name) newCategory = [name];
+    }
+    
+    let newOccasion = [];
+    if (occ) {
+      const norm = occ.toLowerCase();
+      if (norm === 'bridal-set' || norm === 'bridal') newOccasion = ['Bridal Set'];
+      else if (norm === 'bridesmaid') newOccasion = ['Bridal Maid'];
+      else if (norm === 'designer' || norm === 'designer-collection') newOccasion = ['Designer'];
+      else if (norm === 'reception' || norm === 'reception-jewels') newOccasion = ['Reception'];
+      else if (norm === 'party' || norm === 'party-wear') newOccasion = ['Party Wear'];
+      else if (norm === 'small-jewel' || norm === 'small-jewels') newOccasion = ['Small Jewel'];
+    }
+
+    if (newCategory.length || newOccasion.length) {
+      setActiveFilters(f => ({ 
+        ...f, 
+        ...(newCategory.length ? { Category: newCategory } : {}),
+        ...(newOccasion.length ? { Occasion: newOccasion } : {})
+      }));
+    }
   }, [searchParams, categories]);
 
   /* ── Data ── */
@@ -198,7 +226,7 @@ export default function DesktopShop() {
     if (activeFilters.Category.length > 0 &&
       !activeFilters.Category.some(c => cats.some(pc => pc?.toLowerCase() === c.toLowerCase()))) return false;
 
-    const occ = Array.isArray(p.occasion) ? p.occasion : [p.occasion];
+    const occ = Array.isArray(p.type) ? p.type : [p.type];
     if (activeFilters.Occasion.length > 0 &&
       !activeFilters.Occasion.some(o => occ.some(po => po?.toLowerCase() === o.toLowerCase()))) return false;
 

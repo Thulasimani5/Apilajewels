@@ -52,6 +52,11 @@ const JewelleryListing = () => {
   // Selected sorting criteria state
   const [activeSort, setActiveSort] = useState('recommended');
 
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Initialize active filters from URL query parameters dynamically
   React.useEffect(() => {
     const categoryParam = searchParams.get('category');
@@ -87,12 +92,12 @@ const JewelleryListing = () => {
     const newTypeFilters = [];
     if (occasionParam) {
       const normalized = occasionParam.toLowerCase();
-      if (normalized === 'bridal') newTypeFilters.push('Bridal Set');
-      else if (normalized === 'reception') newTypeFilters.push('Reception');
-      else if (normalized === 'party') newTypeFilters.push('Party Wear');
+      if (normalized === 'bridal' || normalized === 'bridal-set') newTypeFilters.push('Bridal Set');
+      else if (normalized === 'reception' || normalized === 'reception-jewels') newTypeFilters.push('Reception');
+      else if (normalized === 'party' || normalized === 'party-wear') newTypeFilters.push('Party Wear');
       else if (normalized === 'bridesmaid') newTypeFilters.push('Bridal Maid');
-      else if (normalized === 'designer') newTypeFilters.push('Designer');
-      else if (normalized === 'small') newTypeFilters.push('Small Jewel');
+      else if (normalized === 'designer' || normalized === 'designer-collection') newTypeFilters.push('Designer');
+      else if (normalized === 'small' || normalized === 'small-jewel' || normalized === 'small-jewels') newTypeFilters.push('Small Jewel');
     }
 
     setActiveFilters({
