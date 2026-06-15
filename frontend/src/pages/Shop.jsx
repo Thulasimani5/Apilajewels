@@ -58,19 +58,35 @@ const JewelleryListing = () => {
   }, []);
 
   // Initialize active filters from URL query parameters dynamically
-  React.useEffect(() => {
+  useEffect(() => {
     const categoryParam = searchParams.get('category');
     const occasionParam = searchParams.get('occasion');
 
     const newCategoryFilters = [];
+    const newTypeFilters = [];
+
+    // Helper to map normalized strings to display names
+    const typeMap = {
+      'bridal-set': 'Bridal Set',
+      'bridal-maid': 'Bridal Maid',
+      'designer': 'Designer',
+      'reception': 'Reception',
+      'party-wear': 'Party Wear',
+      'small-jewel': 'Small Jewel',
+      'small-jewels': 'Small Jewel',
+    };
+
     if (categoryParam) {
       const normalized = categoryParam.toLowerCase();
-      const matchedCategory = categories.find(c => 
+      // First try to match a known category in the data model
+      const matchedCategory = categories.find(c =>
         c.name.toLowerCase().replace(/\s+/g, '-') === normalized
       );
-
       if (matchedCategory) {
         newCategoryFilters.push(matchedCategory.name);
+      } else if (typeMap[normalized]) {
+        // If the param actually represents a type/occasion, push to type filters
+        newTypeFilters.push(typeMap[normalized]);
       } else if (normalized === 'moissanite') {
         newCategoryFilters.push('Moissanite');
       } else if (normalized.includes('temple')) {
@@ -91,7 +107,6 @@ const JewelleryListing = () => {
       }
     }
 
-    const newTypeFilters = [];
     if (occasionParam) {
       const normalized = occasionParam.toLowerCase();
       if (normalized === 'bridal' || normalized === 'bridal-set') newTypeFilters.push('Bridal Set');
@@ -100,6 +115,7 @@ const JewelleryListing = () => {
       else if (normalized === 'bridesmaid') newTypeFilters.push('Bridal Maid');
       else if (normalized === 'designer' || normalized === 'designer-collection') newTypeFilters.push('Designer');
       else if (normalized === 'small' || normalized === 'small-jewel' || normalized === 'small-jewels') newTypeFilters.push('Small Jewel');
+      else if (typeMap[normalized]) newTypeFilters.push(typeMap[normalized]); // fallback for other type mappings
     }
 
     setActiveFilters({

@@ -2435,7 +2435,8 @@
 .cc-card {
   background: #fff;
   height: 249px;
-  width: 900px;
+  width: 100%;
+  max-width: 900px;
   display: flex;
   position: relative;
   overflow: hidden;
