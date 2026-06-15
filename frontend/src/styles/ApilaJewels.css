@@ -982,6 +982,12 @@
   align-items: flex-start;
   gap: 10px;
   margin-bottom: 24px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.footer-contact-row:hover .footer-contact-text {
+  color: #ab6281;
 }
 
 .footer-contact-icon {

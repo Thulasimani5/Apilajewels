@@ -437,30 +437,30 @@ export default function DesktopProduct({ product, relatedProducts }) {
             <Link className="footer-link-lg" to="/terms">Rental Terms</Link>
             <Link className="footer-link-lg" to="/faqs">FAQ</Link>
             <Link className="footer-link-lg" to="/care">Care Instructions</Link>
-            <Link className="footer-link-lg" to="/contact">Contact Us</Link>
+            <Link className="footer-link-lg" to="/" state={{ scrollTo: 'footer-contact' }}>Contact Us</Link>
           </div>
           <div>
             <span className="footer-col-head">Contact</span>
-            <div className="footer-contact-row">
+            <a href="tel:+917397721122" className="footer-contact-row">
               <svg className="footer-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
               </svg>
               <span className="footer-contact-text">+91 73977 21122</span>
-            </div>
-            <div className="footer-contact-row">
+            </a>
+            <a href="mailto:apila.jewels@gmail.com" className="footer-contact-row">
               <svg className="footer-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                 <polyline points="22,6 12,13 2,6"/>
               </svg>
               <span className="footer-contact-text">apila.jewels@gmail.com</span>
-            </div>
-            <div className="footer-contact-row">
+            </a>
+            <a href="https://maps.google.com/?q=SIS+Marakesh,Karanai+Puducherry+Rd,Urapakkam,Chennai,Tamil+Nadu+603202" target="_blank" rel="noreferrer" className="footer-contact-row">
               <svg className="footer-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
                 <circle cx="12" cy="10" r="3"/>
               </svg>
               <span className="footer-contact-text">SIS Marakesh, Karanai Puducherry Rd,<br/>Urapakkam, Chennai, Tamil Nadu 603202</span>
-            </div>
+            </a>
           </div>
           <div>
             <span className="footer-follow-label">Follow Us</span>
