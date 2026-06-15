@@ -5,6 +5,7 @@ import { useAllProducts } from '../hooks/useProducts';
 import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
 import { getOptimizedCloudinaryUrl } from '../utils/imageUtils';
+import DesktopSearchOverlay from './DesktopSearchOverlay';
 import apilaLogo from '../assets/Apila Logo01.svg';
 import iconCall from '../assets/icons/call.svg';
 import iconMail from '../assets/icons/mail.svg';
@@ -147,6 +148,8 @@ export default function DesktopShop() {
 
   /* ── Navbar hide on scroll-down ── */
   const [navHidden, setNavHidden] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   useEffect(() => {
     let lastY = window.scrollY;
     const handler = () => {
@@ -278,10 +281,10 @@ export default function DesktopShop() {
       <header>
         <nav className={`navbar shop-nav scrolled${navHidden ? ' nav-hidden' : ''}`}>
           <div className="nav-left">
-            <div className="nav-hamburger" role="button" tabIndex={0}>
+            <div className="nav-hamburger" role="button" tabIndex={0} onClick={() => setIsDrawerOpen(true)} style={{ cursor: 'pointer' }}>
               <span /><span /><span />
             </div>
-            <div className="nav-search" role="button" tabIndex={0} onClick={() => navigate('/shop')}>
+            <div className="nav-search" role="button" tabIndex={0} onClick={() => setIsSearchOpen(true)}>
               {navIcons.search}<span>Search</span>
             </div>
           </div>
@@ -484,6 +487,92 @@ export default function DesktopShop() {
         </div>
       </div>
 
+      {/* ── Search Overlay ── */}
+      {isSearchOpen && <DesktopSearchOverlay onClose={() => setIsSearchOpen(false)} />}
+
+      {/* ── MENU DRAWER (Figma 491:2) ── */}
+      <div className={`menu-overlay${isDrawerOpen ? ' open' : ''}`} aria-hidden={!isDrawerOpen}>
+        <div className="menu-backdrop" onClick={() => setIsDrawerOpen(false)} />
+        <div className="menu-panel">
+
+          {/* Topbar: close button + search bar */}
+          <div className="menu-topbar">
+            <button className="menu-close-btn" onClick={() => setIsDrawerOpen(false)} aria-label="Close menu">
+              <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                <path d="M1 1l11 11M12 1L1 12" stroke="#000" strokeWidth="1.3" strokeLinecap="round"/>
+              </svg>
+            </button>
+            <div className="menu-searchbar" onClick={() => { setIsDrawerOpen(false); setIsSearchOpen(true); }}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.45)" strokeWidth="2">
+                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+              </svg>
+              <span className="menu-search-placeholder">Search</span>
+            </div>
+          </div>
+
+          {/* ── scrollable nav area ── */}
+          <div className="menu-nav-scroll">
+
+            {/* Section 1 — jewel collections */}
+            <ul className="menu-section menu-section--first">
+              {[
+                { label: 'Moissinate Jewels', slug: 'moissinate-jewels' },
+                { label: 'AD Jewels',          slug: 'ad-jewels' },
+                { label: 'Gold Antique Jewels',slug: 'gold-antique-jewels' },
+                { label: 'Kundan Jewels',      slug: 'kundan-jewels' },
+                { label: 'AD Bangles',         slug: 'ad-bangles' },
+                { label: 'Gold Bangles',       slug: 'gold-bangles' },
+                { label: 'Accessories',        slug: 'accessories' },
+              ].map(item => (
+                <li key={item.slug} className="menu-item">
+                  <Link to={`/shop?category=${item.slug}`} className="menu-item-link" onClick={() => setIsDrawerOpen(false)}>
+                    {item.label}
+                  </Link>
+                  <svg className="menu-chevron" width="5" height="9" viewBox="0 0 5 9" fill="none">
+                    <path d="M1 1l3 3.5L1 8" stroke="#000" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </li>
+              ))}
+            </ul>
+
+            <hr className="menu-rule" />
+
+            {/* Section 2 — occasion collections */}
+            <ul className="menu-section">
+              {[
+                { label: 'Bridal Set',          slug: 'bridal-set' },
+                { label: 'Bridesmaid',          slug: 'bridesmaid' },
+                { label: 'Designer Collection', slug: 'designer-collection' },
+                { label: 'Reception Jewels',    slug: 'reception-jewels' },
+                { label: 'Party Wear',          slug: 'party-wear' },
+                { label: 'Small Jewels',        slug: 'small-jewels' },
+              ].map(item => (
+                <li key={item.slug} className="menu-item">
+                  <Link to={`/shop?category=${item.slug}`} className="menu-item-link" onClick={() => setIsDrawerOpen(false)}>
+                    {item.label}
+                  </Link>
+                  <svg className="menu-chevron" width="5" height="9" viewBox="0 0 5 9" fill="none">
+                    <path d="M1 1l3 3.5L1 8" stroke="#000" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </li>
+              ))}
+            </ul>
+
+          </div>
+
+          {/* ── static Contact Us (always visible at bottom) ── */}
+          <div className="menu-contact">
+            <p className="menu-contact-heading">Contact Us</p>
+            <hr className="menu-rule menu-rule--contact" />
+            <a href="tel:+917397721122" className="menu-contact-row">
+              <img src={iconCall} width="14" height="14" alt="" />
+              <span>+91 73977 21122</span>
+            </a>
+          </div>
+
+        </div>
+      </div>
+
       {/* ── FOOTER ── */}
       <footer className="footer">
         <div className="footer-main">
@@ -512,16 +601,16 @@ export default function DesktopShop() {
           <div>
             <span className="footer-col-head">Follow Us</span>
             <div className="social-row">
-              <a className="social-btn" href="#" aria-label="Instagram">
+              <a className="social-btn" href="https://www.instagram.com/apila_jewels/" target="_blank" rel="noreferrer" aria-label="Instagram">
                 <img src={iconInstagram} alt="Instagram" width="22" height="22" style={{ objectFit: 'contain' }} />
               </a>
-              <a className="social-btn" href="#" aria-label="Facebook">
+              <a className="social-btn" href="https://www.facebook.com/profile.php?id=61590540475572" target="_blank" rel="noreferrer" aria-label="Facebook">
                 <img src={iconFacebook} alt="Facebook" width="22" height="22" style={{ objectFit: 'contain' }} />
               </a>
-              <a className="social-btn" href="#" aria-label="Pinterest">
+              <a className="social-btn" href="https://in.pinterest.com/apilajewels/" target="_blank" rel="noreferrer" aria-label="Pinterest">
                 <img src={iconPinterest} alt="Pinterest" width="22" height="22" style={{ objectFit: 'contain' }} />
               </a>
-              <a className="social-btn" href="https://wa.me/+917397721122" target="_blank" rel="noreferrer" aria-label="WhatsApp">
+              <a className="social-btn" href="http://whatsapp.com/catalog/917397721122" target="_blank" rel="noreferrer" aria-label="WhatsApp">
                 <img src={iconWhatsapp} alt="WhatsApp" width="22" height="22" style={{ objectFit: 'contain' }} />
               </a>
             </div>
