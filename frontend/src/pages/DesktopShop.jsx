@@ -170,49 +170,28 @@ export default function DesktopShop() {
   useEffect(() => {
     const cat = searchParams.get('category');
     const occ = searchParams.get('occasion');
-    let newCategory = [];
-    let newOccasion = [];
 
-    const typeMap = {
+    const occasionMap = {
+      bridal: 'Bridal Set',
       'bridal-set': 'Bridal Set',
       'bridal-maid': 'Bridal Maid',
-      'bridesmaid': 'Bridal Maid',
-      'designer': 'Designer',
+      bridesmaid: 'Bridal Maid',
+      designer: 'Designer',
       'designer-collection': 'Designer',
-      'reception': 'Reception',
+      reception: 'Reception',
       'reception-jewels': 'Reception',
+      party: 'Party Wear',
       'party-wear': 'Party Wear',
-      'party': 'Party Wear',
+      small: 'Small Jewel',
       'small-jewel': 'Small Jewel',
       'small-jewels': 'Small Jewel',
     };
 
-    if (cat) {
-      const norm = cat.toLowerCase();
-      // Try to match DB category name first
-      const matched = categories.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === norm);
-      if (matched) {
-        newCategory = [matched.name];
-      } else if (typeMap[norm]) {
-        newOccasion = [typeMap[norm]];
-      } else {
-        const name = (norm === 'moissanite' || norm === 'moissinate-jewels' ? 'Moissanite' : null)
-          || (norm.includes('temple') ? 'Temple Jewellery' : null)
-          || (norm === 'kundan' || norm === 'kundan-jewels' ? 'Kundan' : null)
-          || (norm === 'american-diamond' || norm === 'american-diamond-bangles' || norm === 'ad-jewels' ? 'AD Jewels' : null)
-          || (norm.includes('antique') ? 'Antique Jewel' : null)
-          || (norm === 'polki' ? 'Polki' : null)
-          || (categories.length ? cat : null); // fallback only if categories loaded
-        if (name) newCategory = [name];
-      }
-    }
-    
     if (occ) {
-      const norm = occ.toLowerCase();
-      if (typeMap[norm]) {
-        newOccasion = [typeMap[norm]];
-      } else if (norm === 'bridal') {
-        newOccasion = ['Bridal Set'];
+      const typeName = occasionMap[occ.toLowerCase()];
+      if (typeName) {
+        setActiveFilters({ Category: [], Occasion: [typeName], Price: [], Colour: [], StoneColour: [], Stone: [] });
+        return;
       }
     }
 
