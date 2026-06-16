@@ -10,6 +10,7 @@ import SearchOverlay from '../components/SearchOverlay';
 import ProductGridSkeleton from '../components/ProductGridSkeleton';
 import { useAllProducts } from '../hooks/useProducts';
 import DesktopShop from './DesktopShop';
+import useIsDesktop from '../hooks/useIsDesktop';
 
 /* ── Sort options ── */
 const SORT_OPTIONS = [
@@ -21,6 +22,7 @@ const SORT_OPTIONS = [
 ];
 
 const JewelleryListing = () => {
+  const isDesktop = useIsDesktop();
 
   // Modal toggle states
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -314,7 +316,7 @@ const JewelleryListing = () => {
   /* ── Total active filter count ── */
   const totalFilterCount = activeFilterPills.length;
 
-  if (window.innerWidth > 768) {
+  if (isDesktop) {
     return <DesktopShop />;
   }
 

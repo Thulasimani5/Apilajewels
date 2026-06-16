@@ -118,7 +118,7 @@ const Navbar = () => {
                 <button
                   onClick={() => setIsSearchOpen(true)}
                   className={`hidden md:flex items-center gap-2.5 pl-4 focus:outline-none transition-all duration-200 hover:opacity-90 ${scrolled
-                    ? "border-gray-200 bg-gray-50 text-gray-600"
+                    ? "border-gray-200 text-gray-600"
                     : "text-white backdrop-blur-sm"
                     }`}
                   style={{
@@ -126,7 +126,7 @@ const Navbar = () => {
                     height: "37px",
                     borderRadius: "18.5px",
                     border: scrolled ? "1px solid #e5e7eb" : "1px solid rgba(255, 255, 255, 0.1)",
-                    backgroundColor: scrolled ? "#f9fafb" : "rgba(255, 255, 255, 0.1)",
+                    backgroundColor: "transparent",
                   }}
                   aria-label="Search"
                 >

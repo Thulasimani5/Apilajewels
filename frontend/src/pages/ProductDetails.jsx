@@ -12,6 +12,7 @@ import API_BASE_URL from '../config/api';
 import LazyImage from '../components/LazyImage';
 import { useProduct } from '../hooks/useProduct';
 import DesktopProduct from './DesktopProduct';
+import useIsDesktop from '../hooks/useIsDesktop';
 
 /* ── Accordion ── */
 const Accordion = ({ title, children, defaultOpen = false }) => {
@@ -35,6 +36,7 @@ const Accordion = ({ title, children, defaultOpen = false }) => {
 };
 
 const ProductDetails = () => {
+  const isDesktop = useIsDesktop();
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
@@ -147,7 +149,7 @@ const ProductDetails = () => {
   }
 
 
-  if (window.innerWidth > 768) {
+  if (isDesktop) {
     return <DesktopProduct product={product} relatedProducts={relatedProducts} />;
   }
 

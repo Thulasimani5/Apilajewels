@@ -15,6 +15,7 @@ import iconInstagram from '../assets/icons/instagram.svg';
 import iconFacebook from '../assets/icons/facebook.svg';
 import iconPinterest from '../assets/icons/pinterest.svg';
 import iconWhatsappSocial from '../assets/icons/whatsapp.svg';
+import DesktopSearchOverlay from './DesktopSearchOverlay';
 import '../styles/ApilaJewels.css';
 
 /* ── Image Lightbox Carousel ── */
@@ -188,6 +189,8 @@ export default function DesktopProduct({ product, relatedProducts }) {
   const { user } = useAuth();
 
   const [lightboxIndex, setLightboxIndex] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   const mediaList = product.media?.length ? product.media : product.images || [];
   const liked = isInWishlist(product._id);
@@ -213,6 +216,22 @@ export default function DesktopProduct({ product, relatedProducts }) {
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isMenuOpen]);
+
   return (
     <div className="apila" style={{ paddingTop: '72px' }}>
 
@@ -220,15 +239,27 @@ export default function DesktopProduct({ product, relatedProducts }) {
       <header>
         <nav className={`navbar scrolled`} style={{ height: '72px', padding: '0 48px' }}>
           <div className="nav-left">
-            <div className="nav-hamburger" role="button" tabIndex={0}>
+            <button
+              type="button"
+              className="nav-hamburger"
+              aria-label="Open menu"
+              style={{ background: 'none', border: 'none', padding: '4px' }}
+              onClick={() => setIsMenuOpen(true)}
+            >
               <span/><span/><span/>
-            </div>
-            <div className="nav-search" role="button" tabIndex={0} onClick={() => navigate('/shop')}>
+            </button>
+            <button
+              type="button"
+              className="nav-search"
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search"
+              style={{ background: 'transparent', border: '1px solid rgba(0, 0, 0, 0.12)' }}
+            >
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,.45)" strokeWidth="2">
                 <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
               </svg>
               <span>Search</span>
-            </div>
+            </button>
           </div>
           <div className="nav-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
             <img className="nav-logo-img" src={apilaLogo} alt="Apila Jewels" style={{ height: '44px', width: 'auto' }}/>
@@ -398,6 +429,80 @@ export default function DesktopProduct({ product, relatedProducts }) {
 
         </div>{/* end pdp-panel */}
       </div>{/* end pdp-main */}
+
+      <div className={`menu-overlay${isMenuOpen ? ' open' : ''}`} aria-hidden={!isMenuOpen}>
+      <div className="menu-backdrop" onClick={() => setIsMenuOpen(false)} />
+      <aside className="menu-panel" role="dialog" aria-modal="true" aria-label="Menu">
+        <div className="menu-topbar">
+          <button
+            type="button"
+            className="menu-close-btn"
+            onClick={() => setIsMenuOpen(false)}
+            aria-label="Close menu"
+          >
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M1 1l12 12M13 1L1 13" stroke="#000" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            className="menu-searchbar"
+            onClick={() => {
+              setIsMenuOpen(false);
+              navigate('/shop');
+            }}
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,.45)" strokeWidth="2">
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" />
+            </svg>
+            <span className="menu-search-placeholder">Search</span>
+          </button>
+        </div>
+
+        <div className="menu-nav-scroll">
+          <ul className="menu-section menu-section--first">
+            <li className="menu-item">
+              <Link className="menu-item-link" to="/" onClick={() => setIsMenuOpen(false)}>Home</Link>
+            </li>
+            <li className="menu-item">
+              <Link className="menu-item-link" to="/shop" onClick={() => setIsMenuOpen(false)}>All Jewellery</Link>
+            </li>
+            <li className="menu-item">
+              <Link className="menu-item-link" to="/wishlist" onClick={() => setIsMenuOpen(false)}>Wishlist</Link>
+            </li>
+            <li className="menu-item">
+              <Link className="menu-item-link" to="/cart" onClick={() => setIsMenuOpen(false)}>Shopping Cart</Link>
+            </li>
+          </ul>
+
+          <hr className="menu-rule" />
+
+          <ul className="menu-section">
+            <li className="menu-item">
+              <Link className="menu-item-link" to="/shop?category=bridal-set" onClick={() => setIsMenuOpen(false)}>Bridal Set</Link>
+            </li>
+            <li className="menu-item">
+              <Link className="menu-item-link" to="/shop?category=bridal-maid" onClick={() => setIsMenuOpen(false)}>Bridal Maid</Link>
+            </li>
+            <li className="menu-item">
+              <Link className="menu-item-link" to="/shop?category=designer" onClick={() => setIsMenuOpen(false)}>Designer Collections</Link>
+            </li>
+            <li className="menu-item">
+              <Link className="menu-item-link" to="/shop?category=reception" onClick={() => setIsMenuOpen(false)}>Reception Wear</Link>
+            </li>
+            <li className="menu-item">
+              <Link className="menu-item-link" to="/shop?category=party-wear" onClick={() => setIsMenuOpen(false)}>Party Wear</Link>
+            </li>
+            <li className="menu-item">
+              <Link className="menu-item-link" to="/shop?category=small-jewel" onClick={() => setIsMenuOpen(false)}>Small Jewels</Link>
+            </li>
+          </ul>
+        </div>
+      </aside>
+      </div>
+
+      {searchOpen && <DesktopSearchOverlay onClose={() => setSearchOpen(false)} />}
 
       {/* ── YOU MAY ALSO LIKE ── */}
       <div className="pdp-related">

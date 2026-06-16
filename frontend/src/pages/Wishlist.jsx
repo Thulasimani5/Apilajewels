@@ -7,8 +7,10 @@ import SearchOverlay from '../components/SearchOverlay';
 import ShareBottomSheet from '../components/ShareBottomSheet';
 import LazyImage from '../components/LazyImage';
 import DesktopWishlist from './DesktopWishlist';
+import useIsDesktop from '../hooks/useIsDesktop';
 
 const Wishlist = () => {
+  const isDesktop = useIsDesktop();
   const navigate = useNavigate();
   const { wishlistItems, toggleWishlist } = useWishlist();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -18,7 +20,7 @@ const Wishlist = () => {
 
   // Guest access is allowed - wishlist is stored in localStorage.
 
-  if (window.innerWidth > 768) {
+  if (isDesktop) {
     return <DesktopWishlist />;
   }
 

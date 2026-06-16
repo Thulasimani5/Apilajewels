@@ -7,8 +7,10 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import DesktopCart from './DesktopCart';
+import useIsDesktop from '../hooks/useIsDesktop';
 
 const Cart = () => {
+  const isDesktop = useIsDesktop();
   const navigate = useNavigate();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
@@ -29,7 +31,7 @@ const Cart = () => {
 
   // if (!user) return null;
 
-  if (window.innerWidth > 768) {
+  if (isDesktop) {
     return <DesktopCart />;
   }
 
