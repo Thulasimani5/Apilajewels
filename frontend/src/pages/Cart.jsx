@@ -40,20 +40,31 @@ const Cart = () => {
   };
 
   const selectedCartItems = cartItems.filter(item => selectedItems.includes(item._id));
-  const selectedTotalAmount = selectedCartItems.reduce((total, item) => total + (item.rentalPrice || item.price || 0), 0);
+  const premiumSelected = selectedCartItems.filter(item => (item.rentalPrice || item.price || 0) >= 2000);
+  const pricedSelected = selectedCartItems.filter(item => (item.rentalPrice || item.price || 0) < 2000);
+  const pricedAmount = pricedSelected.reduce((total, item) => total + (item.rentalPrice || item.price || 0), 0);
+  const allPremiumSelected = premiumSelected.length === selectedCartItems.length && selectedCartItems.length > 0;
 
   const handleBookOnWhatsapp = () => {
     if (selectedCartItems.length === 0) {
       alert("Please select at least one item to book.");
       return;
     }
-    
+
     let message = `Hi Apila Jewels, I would like to book the following items:\n\n`;
     selectedCartItems.forEach((item, index) => {
-      message += `${index + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'})\n`;
+      const price = item.rentalPrice || item.price || 0;
+      const pText = price >= 2000 ? 'Price on Request' : `₹${price}`;
+      message += `${index + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – ${pText}\n`;
     });
-    message += `\n*Total Amount: ₹${selectedTotalAmount.toFixed(2)}*\n\nPlease let me know the availability.`;
-    
+    if (allPremiumSelected) {
+      message += `\n*Total Amount: Price on Request*\n\nPlease let me know the availability.`;
+    } else if (premiumSelected.length > 0) {
+      message += `\n*Sub Total (${pricedSelected.length} ${pricedSelected.length === 1 ? 'Item' : 'Items'}): ₹${pricedAmount.toFixed(2)}*\n*Premium Jewels (${premiumSelected.length} ${premiumSelected.length === 1 ? 'Item' : 'Items'}): Price on Request*\n\nPlease let me know the availability.`;
+    } else {
+      message += `\n*Sub Total (${pricedSelected.length} ${pricedSelected.length === 1 ? 'Item' : 'Items'}): ₹${pricedAmount.toFixed(2)}*\n\nPlease let me know the availability.`;
+    }
+
     const whatsappUrl = `https://wa.me/+917397721122?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -115,7 +126,7 @@ const Cart = () => {
               </div>
               
               <div className="font-bold text-sm text-gray-900 self-center">
-                ₹{item.rentalPrice?.toFixed(2)}
+                {(item.rentalPrice || item.price || 0) >= 2000 ? 'Price on Request' : `₹${(item.rentalPrice || item.price || 0).toFixed(2)}`}
               </div>
             </div>
           ))
@@ -123,9 +134,25 @@ const Cart = () => {
 
         {/* Total Summary */}
         {cartItems.length > 0 && (
-          <div className="bg-white rounded-2xl p-5 flex justify-between items-center shadow-sm mt-6">
-            <span className="font-bold text-gray-900">Total Selected</span>
-            <span className="font-bold text-gray-900">₹{selectedTotalAmount.toFixed(2)}</span>
+          <div className="bg-white rounded-2xl p-5 shadow-sm mt-6 space-y-2">
+            {premiumSelected.length > 0 && (
+              <div className="flex justify-between items-center">
+                <span className="font-bold text-gray-900">Premium Jewels ({premiumSelected.length} {premiumSelected.length === 1 ? 'Item' : 'Items'})</span>
+                <span className="font-bold text-gray-900">Price on Request</span>
+              </div>
+            )}
+            {pricedSelected.length > 0 && (
+              <div className="flex justify-between items-center">
+                <span className="font-bold text-gray-900">Sub Total ({pricedSelected.length} {pricedSelected.length === 1 ? 'Item' : 'Items'})</span>
+                <span className="font-bold text-gray-900">₹{pricedAmount.toFixed(2)}</span>
+              </div>
+            )}
+            {selectedCartItems.length === 0 && (
+              <div className="flex justify-between items-center">
+                <span className="font-bold text-gray-900">Total Selected</span>
+                <span className="font-bold text-gray-900">₹0.00</span>
+              </div>
+            )}
           </div>
         )}
       </div>

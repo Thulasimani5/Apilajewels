@@ -91,7 +91,12 @@ export default function DesktopCart() {
   const [coupon, setCoupon] = useState('');
 
   const cartCount = cartItems.length;
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.rentalPrice || item.price || 0), 0);
+  const premiumItems = cartItems.filter(item => (item.rentalPrice || item.price || 0) >= 2000);
+  const pricedItems = cartItems.filter(item => (item.rentalPrice || item.price || 0) < 2000);
+  const pricedSubtotal = pricedItems.reduce((sum, item) => sum + (item.rentalPrice || item.price || 0), 0);
+  const allPremium = premiumItems.length === cartItems.length && cartItems.length > 0;
+  const hasPremium = premiumItems.length > 0;
+  const hasPriced = pricedItems.length > 0;
 
   const handleBookOnWhatsapp = () => {
     if (!cartItems.length) return;
@@ -101,7 +106,13 @@ export default function DesktopCart() {
       const pText = price >= 2000 ? 'Price on Request' : `₹${price}`;
       msg += `${i + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – ${pText}\n`;
     });
-    msg += `\n*Total Amount: ₹${subtotal.toFixed(2)}*\n\nPlease let me know the availability.`;
+    if (allPremium) {
+      msg += `\n*Total Amount: Price on Request*\n\nPlease let me know the availability.`;
+    } else if (hasPremium) {
+      msg += `\n*Sub Total (${pricedItems.length} ${pricedItems.length === 1 ? 'Item' : 'Items'}): ₹${pricedSubtotal.toFixed(2)}*\n*Premium Jewels (${premiumItems.length} ${premiumItems.length === 1 ? 'Item' : 'Items'}): Price on Request*\n\nPlease let me know the availability.`;
+    } else {
+      msg += `\n*Sub Total (${cartCount} ${cartCount === 1 ? 'Item' : 'Items'}): ₹${pricedSubtotal.toFixed(2)}*\n\nPlease let me know the availability.`;
+    }
     window.open(`https://wa.me/+917397721122?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
@@ -176,10 +187,18 @@ export default function DesktopCart() {
 
           {/* Summary */}
           <div className="cart-summary">
-            <div className="cart-sumrow">
-              <span className="cart-sumlabel">Sub Total ({cartCount} Items)</span>
-              <span className="cart-sumval">₹{subtotal.toFixed(2)}</span>
-            </div>
+            {hasPremium && (
+              <div className="cart-sumrow">
+                <span className="cart-sumlabel">Premium Jewels ({premiumItems.length} {premiumItems.length === 1 ? 'Item' : 'Items'})</span>
+                <span className="cart-sumval">Price on Request</span>
+              </div>
+            )}
+            {hasPriced && (
+              <div className="cart-sumrow">
+                <span className="cart-sumlabel">Sub Total ({pricedItems.length} {pricedItems.length === 1 ? 'Item' : 'Items'})</span>
+                <span className="cart-sumval">₹{pricedSubtotal.toFixed(2)}</span>
+              </div>
+            )}
             <div className="cart-sumrow">
               <span className="cart-sumlabel">Shipping</span>
               <span className="cart-sumval">Free</span>
@@ -191,7 +210,7 @@ export default function DesktopCart() {
             <div className="cart-sum-divider" />
             <div className="cart-totalrow">
               <span className="cart-totallabel">Total</span>
-              <span className="cart-totalval">₹{subtotal.toFixed(2)}</span>
+              <span className="cart-totalval">{allPremium ? 'Price on Request' : `₹${pricedSubtotal.toFixed(2)}`}</span>
             </div>
           </div>
 
