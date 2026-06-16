@@ -986,9 +986,6 @@
   color: inherit;
   cursor: pointer;
 }
-.footer-contact-row:hover .footer-contact-text {
-  color: #ab6281;
-}
 
 .footer-contact-icon {
   flex-shrink: 0;
