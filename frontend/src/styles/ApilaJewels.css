@@ -99,7 +99,7 @@
 }
 
 .navbar.nav-hidden {
-  /* kept static — no transform */
+  transform: translateY(-100%);
 }
 
 .nav-left {

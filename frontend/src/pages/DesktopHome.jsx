@@ -152,6 +152,7 @@ export default function Home() {
 
   /* ---- navbar scroll state ---- */
   const [scrolled, setScrolled] = useState(false);
+  const [navHidden, setNavHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
@@ -166,9 +167,41 @@ export default function Home() {
   }, [menuOpen]);
 
   useEffect(() => {
+    // Track accumulated delta to avoid flicker from tiny jitters
+    let lastY = window.scrollY;
+    let accDelta = 0;
+    const DELTA_THRESHOLD = 6; // px before we commit to a direction
+    const HERO_H = window.innerHeight; // hero is 100vh
+
     const onScroll = () => {
-      setScrolled(window.scrollY > 60);
+      const y = window.scrollY;
+      const delta = y - lastY;
+      lastY = y;
+
+      // White background only once we've left the hero viewport
+      setScrolled(y > HERO_H * 0.85);
+
+      // Back at very top — always show transparent nav
+      if (y < 80) {
+        setNavHidden(false);
+        accDelta = 0;
+        return;
+      }
+
+      // Accumulate delta to prevent jitter-toggling
+      accDelta += delta;
+
+      if (accDelta > DELTA_THRESHOLD) {
+        // Sustained scroll DOWN → hide
+        setNavHidden(true);
+        accDelta = 0;
+      } else if (accDelta < -DELTA_THRESHOLD) {
+        // Sustained scroll UP → show
+        setNavHidden(false);
+        accDelta = 0;
+      }
     };
+
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -351,7 +384,7 @@ export default function Home() {
     <div className="apila">
       {/* NAVBAR */}
       <header>
-        <nav className={`navbar${scrolled ? " scrolled" : ""}`}>
+        <nav className={`navbar${scrolled ? " scrolled" : ""}${navHidden ? " nav-hidden" : ""}`}>
           <div className="nav-left">
             <div className="nav-hamburger" role="button" aria-label="Menu" tabIndex={0} onClick={() => setMenuOpen(true)}>
               <span /><span /><span />

@@ -9,6 +9,7 @@ import LazyImage from '../components/LazyImage';
 import DesktopWishlist from './DesktopWishlist';
 
 const Wishlist = () => {
+  const navigate = useNavigate();
   const { wishlistItems, toggleWishlist } = useWishlist();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
