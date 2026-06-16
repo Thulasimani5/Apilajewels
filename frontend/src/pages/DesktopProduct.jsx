@@ -8,6 +8,13 @@ import apilaLogo from '../assets/Apila Logo01.svg';
 import iconSecureDelivery from '../assets/icons/icon-secure-delivery.svg';
 import iconEasyReturn from '../assets/icons/icon-easy-return.svg';
 import iconWhatsapp from '../assets/icons/icon-whatsapp-support.svg';
+import iconCall from '../assets/icons/call.svg';
+import iconMail from '../assets/icons/mail.svg';
+import iconLocation from '../assets/icons/location.svg';
+import iconInstagram from '../assets/icons/instagram.svg';
+import iconFacebook from '../assets/icons/facebook.svg';
+import iconPinterest from '../assets/icons/pinterest.svg';
+import iconWhatsappSocial from '../assets/icons/whatsapp.svg';
 import '../styles/ApilaJewels.css';
 
 /* ── Image Lightbox Carousel ── */
@@ -427,7 +434,7 @@ export default function DesktopProduct({ product, relatedProducts }) {
             <span className="footer-col-head">Collections</span>
             <Link className="footer-link-sm" to="/shop?category=moissinate-jewels">Moissanite Jewels</Link>
             <Link className="footer-link-sm" to="/shop?category=ad-jewels">AD Jewels</Link>
-            <Link className="footer-link-sm" to="/shop?category=gold-antique-jewels">Gold Antique Jewels</Link>
+            <Link className="footer-link-sm" to="/shop?category=gold-antique-jewels">Gold Antique</Link>
             <Link className="footer-link-sm" to="/shop?category=kundan-jewels">Kundan Jewels</Link>
             <Link className="footer-link-sm" to="/shop?category=gold-bangles">Bangles</Link>
           </div>
@@ -437,50 +444,28 @@ export default function DesktopProduct({ product, relatedProducts }) {
             <Link className="footer-link-lg" to="/terms">Rental Terms</Link>
             <Link className="footer-link-lg" to="/faqs">FAQ</Link>
             <Link className="footer-link-lg" to="/care">Care Instructions</Link>
-            <Link className="footer-link-lg" to="/" state={{ scrollTo: 'footer-contact' }}>Contact Us</Link>
+            <Link className="footer-link-lg" to="/contact">Contact Us</Link>
           </div>
           <div>
             <span className="footer-col-head">Contact</span>
-            <a href="tel:+917397721122" className="footer-contact-row">
-              <svg className="footer-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.38 2 2 0 0 1 3.58 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
-              </svg>
-              <span className="footer-contact-text">+91 73977 21122</span>
-            </a>
-            <a href="mailto:apila.jewels@gmail.com" className="footer-contact-row">
-              <svg className="footer-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                <polyline points="22,6 12,13 2,6"/>
-              </svg>
-              <span className="footer-contact-text">apila.jewels@gmail.com</span>
-            </a>
-            <a href="https://maps.google.com/?q=SIS+Marakesh,Karanai+Puducherry+Rd,Urapakkam,Chennai,Tamil+Nadu+603202" target="_blank" rel="noreferrer" className="footer-contact-row">
-              <svg className="footer-contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                <circle cx="12" cy="10" r="3"/>
-              </svg>
-              <span className="footer-contact-text">SIS Marakesh, Karanai Puducherry Rd,<br/>Urapakkam, Chennai, Tamil Nadu 603202</span>
-            </a>
+            <div className="footer-contact-row"><img src={iconCall} alt="Phone" className="footer-contact-icon" /><span className="footer-contact-text">+91 73977 21122</span></div>
+            <div className="footer-contact-row"><img src={iconMail} alt="Mail" className="footer-contact-icon" /><span className="footer-contact-text">apila.jewels@gmail.com</span></div>
+            <div className="footer-contact-row"><img src={iconLocation} alt="Location" className="footer-contact-icon" /><span className="footer-contact-text">SIS Marakesh, Karanai Puducherry Rd, Urapakkam, Chennai, Tamil Nadu 603202</span></div>
           </div>
           <div>
             <span className="footer-follow-label">Follow Us</span>
             <div className="social-row">
               <a className="social-btn" href="https://www.instagram.com/apila_jewels/" target="_blank" rel="noreferrer" aria-label="Instagram">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <rect x="2" y="2" width="20" height="20" rx="5"/>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-                </svg>
+                <img src={iconInstagram} alt="Instagram" width="22" height="22" style={{ objectFit: 'contain' }} />
               </a>
               <a className="social-btn" href="https://www.facebook.com/profile.php?id=61590540475572" target="_blank" rel="noreferrer" aria-label="Facebook">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
-                </svg>
+                <img src={iconFacebook} alt="Facebook" width="22" height="22" style={{ objectFit: 'contain' }} />
               </a>
-              <a className="social-btn" href="https://wa.me/+917397721122" target="_blank" rel="noreferrer" aria-label="WhatsApp">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
-                </svg>
+              <a className="social-btn" href="https://in.pinterest.com/apilajewels/" target="_blank" rel="noreferrer" aria-label="Pinterest">
+                <img src={iconPinterest} alt="Pinterest" width="22" height="22" style={{ objectFit: 'contain' }} />
+              </a>
+              <a className="social-btn" href="http://whatsapp.com/catalog/917397721122" target="_blank" rel="noreferrer" aria-label="WhatsApp">
+                <img src={iconWhatsappSocial} alt="WhatsApp" width="22" height="22" style={{ objectFit: 'contain' }} />
               </a>
             </div>
           </div>
