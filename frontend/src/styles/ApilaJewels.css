@@ -1405,7 +1405,7 @@
 /* 3-col grid — minmax(0,1fr) forces equal column widths regardless of content min-size */
 .shop-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   column-gap: 17px;
   row-gap: clamp(24px, 3vw, 40px);
 }
