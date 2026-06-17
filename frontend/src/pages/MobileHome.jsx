@@ -16,7 +16,7 @@ import CategoryContext from '../context/CategoryContext';
 
 import API_BASE_URL from '../config/api';
 
-import HeroBannerImage from '../assets/hero-banner.jpg';
+import HeroBannerImage from '../assets/images/Header-image01.jpg';
 
 
 
@@ -281,13 +281,10 @@ const Home = () => {
         <section className="relative w-full h-screen bg-black overflow-hidden">
 
           <img
-
             src={HeroBannerImage}
-
             alt="Apila Hero Banner"
-
-            className="absolute inset-0 w-full h-full object-cover object-center"
-
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ objectPosition: '65% center' }}
           />
 
           <div
@@ -298,7 +295,7 @@ const Home = () => {
 
               background:
 
-                'linear-gradient(to right, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.05) 100%)',
+                'linear-gradient(to right, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.75) 25%, rgba(0,0,0,0.30) 50%, rgba(0,0,0,0.0) 75%)',
 
             }}
 
@@ -310,13 +307,13 @@ const Home = () => {
 
             <h1 className="font-serif font-normal leading-[1.1] tracking-wide mb-4 text-[2.4rem] sm:text-[2.8rem]">
 
-              Elevate Every Moment
+              Premium Bridal Jewellery Rental in Chennai
 
             </h1>
 
             <p className="text-[13px] sm:text-[14px] text-white/75 font-light tracking-wide leading-relaxed mb-7 max-w-[300px] sm:max-w-sm">
 
-              Inspired By An Archival Bow Crafted Embodies Meaningful Connection.
+              Premium Rental Collections Crafted For Weddings, Receptions And Celebrations.
 
             </p>
 

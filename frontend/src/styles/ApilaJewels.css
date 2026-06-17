@@ -263,26 +263,26 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  padding: clamp(140px, 30vh, 340px) 0 0 clamp(48px, 10.5vw, 200px);
+  justify-content: center;
+  padding: 0 0 0 max(8vw, 80px);
 }
 
 .hero-title {
   font-family: var(--f-belgan);
-  font-size: clamp(38px, 3.75vw, 64px);
+  font-size: clamp(36px, 4vw, 54px);
   font-style: normal;
   font-weight: normal;
   color: #ffffff;
   line-height: 1.2;
   letter-spacing: -0.03em;
   white-space: pre-wrap;
-  max-width: 850px;
-  margin-bottom: clamp(12px, 2vh, 24px);
+  max-width: 600px;
+  margin-bottom: max(2vh, 16px);
 }
 
 .hero-sub {
   font-family: var(--f-puvi);
-  font-size: clamp(15px, 1.25vw, 20px);
+  font-size: clamp(14px, 1.5vw, 18px);
   font-weight: 300;
   font-style: normal;
   color: #ffffff;
@@ -290,8 +290,8 @@
   line-height: 1.5;
   letter-spacing: 0;
   text-transform: capitalize;
-  margin-bottom: clamp(32px, 8vh, 84px);
-  max-width: 650px;
+  margin-bottom: max(5vh, 40px);
+  max-width: 450px;
 }
 
 .btn-primary {
@@ -452,21 +452,22 @@
 /* OCCASION */
 .occasion-section {
   background: var(--cream);
-  padding: 52px 0 64px;
+  padding: 52px 0px 64px;
 }
 
 .occasion-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-  max-width: 1134px;
+  gap: 24px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 0;
 }
 
 .occasion-card {
   position: relative;
-  height: 418px;
+  aspect-ratio: 365 / 418;
+  height: auto;
   overflow: hidden;
   border-radius: 2px;
   cursor: pointer;
@@ -719,7 +720,7 @@
 /* DELIVERY */
 .delivery-section {
   background: rgba(251, 241, 230, 0.45);
-  padding: 111px 48px 88px;
+  padding: 111px 0px 88px;
   text-align: center;
 }
 
@@ -741,31 +742,35 @@
   font-style: normal;
   font-weight: 400;
   line-height: 100%;
-  letter-spacing: 0;
+  letter-spacing: 0.03em;
   color: #000;
   margin-bottom: 50px;
 }
 
 .delivery-grid {
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
-  max-width: 100%;
+  max-width: 1700px;
+  width: 100%;
+  padding: 0 40px;
   margin: 0 auto 40px;
   gap: 0;
 }
 
 .delivery-item {
   display: flex;
+  flex: 1;
+  justify-content: flex-start;
   align-items: center;
   gap: 29px;
-  padding: 26px 37px 26px 56px;
+  padding: 26px 50px 26px 50px;
   text-align: left;
   position: relative;
 }
 
 .delivery-item:first-child {
-  padding-left: 0;
+  padding-left: 40px;
 }
 
 .delivery-item:last-child {
@@ -778,7 +783,7 @@
   left: 0;
   top: 50%;
   transform: translateY(-50%);
-  height: 55px;
+  height: 91px;
   width: 1px;
   background: rgba(0, 0, 0, .10);
 }
@@ -798,23 +803,25 @@
 
 .delivery-head {
   font-family: var(--f-gotham-m);
-  font-size: 13px;
+  font-size: 14px;
   font-style: normal;
   font-weight: 500;
   color: #1e1e1e;
-  line-height: 12px;
-  letter-spacing: 0;
-  width: 162px;
-  margin-bottom: 8px;
+  line-height: 14px;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  width: auto;
+  margin-bottom: 10px;
 }
 
 .delivery-desc {
   font-family: var(--f-gotham-b);
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 400;
   color: #000;
-  line-height: 16px;
-  max-width: 162px;
+  line-height: 18px;
+  letter-spacing: 0.02em;
+  max-width: 250px;
   white-space: normal;
 }
 
@@ -2213,7 +2220,7 @@
 
   .occasion-grid {
     grid-template-columns: repeat(2, 1fr);
-    max-width: 720px;
+    max-width: 620px;
     gap: 14px;
   }
 

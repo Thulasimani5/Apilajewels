@@ -11,7 +11,7 @@ import imgC3 from '../assets/images/c3.jpg';
 import imgC4 from '../assets/images/c4.jpg';
 import imgC5 from '../assets/images/c5.jpg';
 import imgC6 from '../assets/images/c6.jpg';
-import heroBanner from '../assets/hero-banner.jpg';
+import heroBanner from '../assets/images/Header-image01.jpg';
 import apilaLogo from '../assets/Apila Logo01.svg';
 
 // Delivery icons

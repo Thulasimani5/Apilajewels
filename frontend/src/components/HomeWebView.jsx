@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Footer from './Footer';
 import Card from './Card';
 import LazyImage from './LazyImage';
-import HeroBannerImage from '../assets/hero-banner.jpg';
+import HeroBannerImage from '../assets/images/Header-image01.jpg';
 
 import imgC1 from '../assets/images/c1.jpg';
 import imgC2 from '../assets/images/c2.jpg';
@@ -113,7 +113,7 @@ const HomeWebView = ({ categories, trending, trendingLoading, onChatNow }) => {
   };
 
   return (
-    <div className="hidden md:block bg-white">
+    <div className="hidden md:block bg-white overflow-x-hidden">
       {/* ── Hero ── */}
       <section className="relative w-full h-screen bg-black overflow-hidden">
         <img
@@ -175,9 +175,8 @@ const HomeWebView = ({ categories, trending, trendingLoading, onChatNow }) => {
             {[0, 1, 2].map((dot) => (
               <div
                 key={dot}
-                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                  activeDot === dot ? 'bg-gray-800 scale-125' : 'bg-gray-300'
-                }`}
+                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${activeDot === dot ? 'bg-gray-800 scale-125' : 'bg-gray-300'
+                  }`}
               />
             ))}
           </div>
@@ -195,16 +194,16 @@ const HomeWebView = ({ categories, trending, trendingLoading, onChatNow }) => {
       </section>
 
       {/* ── Shop by Occasion ── */}
-      <section className="bg-brand-cream-bg px-12 lg:px-20 pt-10 pb-12">
+      <section className="bg-brand-cream-bg px-4 lg:px-8 pt-10 pb-12">
         <h2 className="text-[26px] font-serif text-gray-800 mb-8 text-center">
           Shop By Occassion
         </h2>
-        <div className="grid grid-cols-3 gap-5 max-w-[1200px] mx-auto">
+        <div className="grid grid-cols-3 gap-6 w-full mx-auto">
           {occasions.map((occ) => (
             <Link
               key={occ.slug}
               to={`/shop?occasion=${occ.slug}`}
-              className="relative aspect-[364/458] overflow-hidden group"
+              className="relative aspect-[485/428] overflow-hidden group"
             >
               <LazyImage
                 src={occ.img}
@@ -260,9 +259,8 @@ const HomeWebView = ({ categories, trending, trendingLoading, onChatNow }) => {
           {deliveryFeatures.map(({ title, desc, iconSrc }, index, arr) => (
             <div
               key={title}
-              className={`flex items-center justify-center gap-6 xl:gap-8 px-4 lg:px-6 xl:px-10 ${
-                index !== arr.length - 1 ? 'border-r border-[#EAEAEA]' : ''
-              }`}
+              className={`flex items-center justify-center gap-6 xl:gap-8 px-4 lg:px-6 xl:px-10 ${index !== arr.length - 1 ? 'border-r border-[#EAEAEA]' : ''
+                }`}
             >
               <div className="w-[72px] h-[72px] lg:w-[84px] lg:h-[84px] xl:w-[104px] xl:h-[104px] rounded-[1.25rem] bg-[#F9EFE5] flex items-center justify-center flex-shrink-0">
                 <img src={iconSrc} alt={title} className="w-4 h-4 lg:w-5 lg:h-5 xl:w-7 xl:h-7 object-contain opacity-80" />
