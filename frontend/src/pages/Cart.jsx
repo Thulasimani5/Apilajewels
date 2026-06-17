@@ -3,11 +3,12 @@ import SearchOverlay from '../components/SearchOverlay';
 import ShareBottomSheet from '../components/ShareBottomSheet';
 import LazyImage from '../components/LazyImage';
 import { ArrowLeft, Search, Heart, Share2, X } from 'lucide-react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import DesktopCart from './DesktopCart';
 import useIsDesktop from '../hooks/useIsDesktop';
+import '../styles/ApilaJewels.css';
 
 const Cart = () => {
   const isDesktop = useIsDesktop();
@@ -19,17 +20,9 @@ const Cart = () => {
   const { cartItems, removeFromCart } = useCart();
   const [selectedItems, setSelectedItems] = useState([]);
 
-//   useEffect(() => {
-//     if (!user) {
-//       navigate('/login', { state: { from: location.pathname } });
-//     }
-//   }, [user, navigate, location]);
-
   useEffect(() => {
     setSelectedItems(cartItems.map(item => item._id));
   }, [cartItems]);
-
-  // if (!user) return null;
 
   if (isDesktop) {
     return <DesktopCart />;
@@ -121,13 +114,13 @@ const Cart = () => {
               </div>
               
               <div className="flex-1 pt-1">
-                <p className="text-[10px] text-gray-400 mb-0.5">{item.type}</p>
-                <h3 className="text-[13px] font-bold text-gray-900 leading-tight pr-4">
+                <p className="text-[10px] text-gray-400 mb-0.5" style={{ fontFamily: "'Gotham Book', sans-serif" }}>{item.type}</p>
+                <h3 className="text-[13px] font-bold text-gray-900 leading-tight pr-4" style={{ fontFamily: "'Gotham Book', sans-serif" }}>
                   {item.name}
                 </h3>
               </div>
               
-              <div className="font-bold text-sm text-gray-900 self-center">
+              <div className="font-bold text-sm text-gray-900 self-center" style={{ fontFamily: "'Gotham Book', sans-serif" }}>
                 {(item.rentalPrice || item.price || 0) >= 2000 ? 'Price on Request' : `₹${(item.rentalPrice || item.price || 0).toFixed(2)}`}
               </div>
             </div>

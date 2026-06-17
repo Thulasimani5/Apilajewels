@@ -264,12 +264,12 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 339px 0 0 151px;
+  padding: clamp(220px, 31.3vh, 380px) 0 0 clamp(48px, 10.5vw, 200px);
 }
 
 .hero-title {
   font-family: var(--f-belgan);
-  font-size: 54px;
+  font-size: clamp(38px, 3.75vw, 64px);
   font-style: normal;
   font-weight: normal;
   color: #ffffff;
@@ -277,20 +277,20 @@
   letter-spacing: -0.03em;
   white-space: pre-wrap;
   max-width: 600px;
-  margin-bottom: 20px;
+  margin-bottom: clamp(12px, 1.4vw, 24px);
 }
 
 .hero-sub {
   font-family: var(--f-puvi);
-  font-size: 18px;
+  font-size: clamp(15px, 1.25vw, 20px);
   font-weight: 300;
   font-style: normal;
   color: #ffffff;
   opacity: .75;
-  line-height: 27px;
+  line-height: 1.5;
   letter-spacing: 0;
   text-transform: capitalize;
-  margin-bottom: 84px;
+  margin-bottom: clamp(40px, 5.8vw, 96px);
   max-width: 450px;
 }
 

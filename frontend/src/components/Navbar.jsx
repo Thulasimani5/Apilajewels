@@ -87,7 +87,7 @@ const Navbar = () => {
         >
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Left Section: Hamburger Menu · Search */}
-            <div className="flex items-center gap-2.5">
+            <div className="flex items-center gap-1.5 md:gap-2.5">
               <button
                 onClick={() => setIsDrawerOpen(true)}
                 className={`p-1 -ml-1 transition-colors duration-200 focus:outline-none hover:opacity-85 ${textColorClass}`}
@@ -104,13 +104,10 @@ const Navbar = () => {
               {/* Mobile search */}
               <button
                 onClick={() => setIsSearchOpen(true)}
-                className={`flex md:hidden items-center gap-1.5 bg-transparent focus:outline-none transition-opacity duration-200 hover:opacity-70 ${textColorClass}`}
+                className={`flex md:hidden items-center bg-transparent focus:outline-none transition-opacity duration-200 hover:opacity-70 ${textColorClass}`}
                 aria-label="Search"
               >
-                <Search size={15} strokeWidth={2} />
-                <span className="text-[13px] font-light select-none tracking-wide hidden sm:inline">
-                  Search
-                </span>
+                <Search size={18} strokeWidth={2} />
               </button>
 
               {/* Desktop homepage — Figma pill search */}
@@ -130,10 +127,10 @@ const Navbar = () => {
                   }}
                   aria-label="Search"
                 >
-                  <Search 
-                    color={scrolled ? "currentColor" : "white"} 
-                    strokeWidth={2} 
-                    style={{ width: "17.943px", height: "18px", flexShrink: 0 }} 
+                  <Search
+                    color={scrolled ? "currentColor" : "white"}
+                    strokeWidth={2}
+                    style={{ width: "17.943px", height: "18px", flexShrink: 0 }}
                   />
                   <span className="text-[13px] font-light select-none tracking-wide">
                     Search
@@ -162,10 +159,9 @@ const Navbar = () => {
                 <img
                   src={logoImage}
                   alt="Apila Jewels"
-                  className="object-contain"
+                  className="object-contain h-[31px] md:h-[45px]"
                   style={{
                     width: "auto",
-                    height: "140px",
                     filter: logoFilterClass,
                     transition: "filter 0.3s ease",
                   }}
@@ -209,7 +205,7 @@ const Navbar = () => {
               </Link>
 
               {user ? (
-                <div className="flex items-center relative" ref={dropdownRef}>
+                <div className="hidden md:flex items-center relative" ref={dropdownRef}>
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                     className="hover:opacity-70 transition-opacity focus:outline-none"
@@ -259,7 +255,7 @@ const Navbar = () => {
                 <Link
                   to="/login"
                   aria-label="Account"
-                  className="hover:opacity-70 transition-opacity"
+                  className="hidden md:block hover:opacity-70 transition-opacity"
                 >
                   <img
                     src={iconPerson}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Search, Heart, ShoppingCart, Share2, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Heart, Share2, ChevronDown } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
@@ -11,6 +11,7 @@ import FullScreenMediaViewer from '../components/FullScreenMediaViewer';
 import API_BASE_URL from '../config/api';
 import LazyImage from '../components/LazyImage';
 import { useProduct } from '../hooks/useProduct';
+import Navbar from '../components/Navbar';
 import DesktopProduct from './DesktopProduct';
 import useIsDesktop from '../hooks/useIsDesktop';
 
@@ -259,23 +260,18 @@ const ProductDetails = () => {
 
   return (
     <div className="bg-[#FFF8F3] min-h-screen pb-24 overflow-x-hidden">
-      {/* Mobile Header */}
-      <div className="md:hidden fixed top-0 w-full bg-white z-40 px-4 py-[11px] flex items-center justify-between shadow-sm">
-        <div className="flex items-center gap-3">
-          <button onClick={() => navigate('/shop')} className="text-black">
-            <ArrowLeft size={24} />
-          </button>
-          <h1 className="font-semibold text-lg truncate max-w-[200px]">{product.name}</h1>
-        </div>
-        <div className="flex items-center gap-4 text-gray-700">
-          <button onClick={() => setIsSearchOpen(true)} className="text-gray-700"><Search size={22} /></button>
-          <Link to="/wishlist"><Heart size={22} /></Link>
-          <Link to="/cart"><ShoppingCart size={22} /></Link>
-        </div>
-      </div>
+      {/* Shared Navbar (includes hamburger menu + drawer, same as home page) */}
+      <Navbar />
 
-      {/* ===== MOBILE VIEW (unchanged original) ===== */}
+      {/* ===== MOBILE VIEW ===== */}
       <div className="md:hidden pt-16">
+        {/* Back button row */}
+        <div className="flex items-center gap-3 px-4 py-2 bg-white border-b border-gray-100">
+          <button onClick={() => navigate(-1)} className="text-black">
+            <ArrowLeft size={22} />
+          </button>
+          <span className="font-semibold text-sm truncate text-gray-800">{product.name}</span>
+        </div>
         {/* Image Gallery (AJIO Style Horizontal Scroll) */}
         <div className="relative select-none">
           <div 
