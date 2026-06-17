@@ -858,7 +858,7 @@
 
 /* STYLING HELP */
 .style-section {
-  padding: 108px 48px;
+  padding: clamp(40px, 7vh, 108px) 48px;
   background: #fff;
   text-align: center;
 }
@@ -931,7 +931,7 @@
   grid-template-columns: 388fr 341fr 506fr 233fr;
   gap: 0;
   margin: 0 6.71%;
-  padding: 97px 0 69px 1.68%;
+  padding: clamp(40px, 6vh, 97px) 0 clamp(32px, 4.5vh, 69px) 1.68%;
   border-bottom: 1px solid rgba(0, 0, 0, .08);
 }
 
@@ -942,7 +942,7 @@
   letter-spacing: 2.24px;
   color: #1e1e1e;
   text-transform: uppercase;
-  margin-bottom: 41px;
+  margin-bottom: clamp(18px, 2.5vh, 41px);
   display: block;
 }
 
@@ -956,7 +956,7 @@
   letter-spacing: 1.05px;
   color: #000;
   text-transform: uppercase;
-  margin-bottom: 24px;
+  margin-bottom: clamp(12px, 1.5vh, 24px);
   cursor: pointer;
   transition: color .15s;
 }
@@ -975,7 +975,7 @@
   letter-spacing: 1.12px;
   color: #000;
   text-transform: uppercase;
-  margin-bottom: 24px;
+  margin-bottom: clamp(12px, 1.5vh, 24px);
   cursor: pointer;
   transition: color .15s;
 }
@@ -988,7 +988,7 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  margin-bottom: 24px;
+  margin-bottom: clamp(12px, 1.5vh, 24px);
   text-decoration: none;
   color: inherit;
   cursor: pointer;
@@ -1057,7 +1057,7 @@
   display: flex;
   align-items: center;
   margin: 0 6.71%;
-  padding: 56px 0 56px 1.68%;
+  padding: clamp(20px, 3.5vh, 56px) 0 clamp(20px, 3.5vh, 56px) 1.68%;
 }
 
 .footer-copy {
