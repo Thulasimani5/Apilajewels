@@ -7,7 +7,7 @@ import { getOptimizedCloudinaryUrl } from '../utils/imageUtils';
 import { useQueryClient } from '@tanstack/react-query';
 import { fetchProduct } from '../hooks/useProduct';
 
-const Card = ({ jewellery, priority = false }) => {
+const Card = ({ jewellery, priority = false, imageAspect, imageClassName = 'rounded-[10px]' }) => {
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -30,8 +30,7 @@ const Card = ({ jewellery, priority = false }) => {
       className="block group"
       onMouseEnter={() => prefetchProduct(jewellery._id || jewellery.code)}
     >
-      {/* Image container — square aspect to fit more items on screen, 10px radius */}
-      <div className="relative aspect-square rounded-[10px] overflow-hidden bg-[#F0EDED]">
+      <div className={`relative overflow-hidden bg-[#F0EDED] ${imageClassName}`} style={{ aspectRatio: imageAspect ?? '1 / 1' }}>
         {jewellery.images?.[0]?.type === 'video' ? (
           <video
             src={jewellery.images[0].url}
@@ -84,20 +83,16 @@ const Card = ({ jewellery, priority = false }) => {
         </button>
       </div>
 
-      {/* Text info — tightened spacing to reduce height */}
-      <div className="pt-[5px] pb-[2px]">
-        {/* Brand name — italic, small, muted grey */}
-        <p className="text-[9px] text-[#888] leading-[1.2] italic tracking-[0.2px]">
+      <div className="pt-[9px] pb-[2px]">
+        <p className="text-[10px] font-medium text-black leading-[normal] tracking-[-0.1px]">
           {Array.isArray(jewellery.category) ? jewellery.category.join(', ') : jewellery.category}
         </p>
-        {/* Product name — medium weight, truncated, dark */}
-        <h3 className="text-[11.5px] font-medium text-[#1A1A1A] truncate leading-[1.3] mt-[1px]">
+        <h3 className="text-[11px] text-black/60 truncate leading-[normal] mt-[5px] tracking-[-0.11px]">
           {jewellery.name}
         </h3>
-        {/* Price — regular weight, gray color */}
-        <p className="text-[11.5px] text-[#666666] leading-[1.2] mt-[1px] tracking-[-0.1px]">
-          {jewellery.rentalPrice >= 2000 
-            ? 'Premium Collection' 
+        <p className="text-[9px] font-medium text-black leading-[normal] mt-[9px]">
+          {jewellery.rentalPrice >= 2000
+            ? 'Premium Collection'
             : `₹${jewellery.rentalPrice?.toFixed(2)}`}
         </p>
       </div>

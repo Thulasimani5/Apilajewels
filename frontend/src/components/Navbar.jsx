@@ -93,7 +93,7 @@ const Navbar = () => {
                 className={`p-1 -ml-1 transition-colors duration-200 focus:outline-none hover:opacity-85 ${textColorClass}`}
                 aria-label="Open menu"
               >
-                <Menu size={22} strokeWidth={2.2} />
+                <Menu size={22} strokeWidth={2} />
               </button>
 
               {/* Dot separator — mobile only */}
@@ -107,7 +107,10 @@ const Navbar = () => {
                 className={`flex md:hidden items-center bg-transparent focus:outline-none transition-opacity duration-200 hover:opacity-70 ${textColorClass}`}
                 aria-label="Search"
               >
-                <Search size={18} strokeWidth={2} />
+                <Search size={20} strokeWidth={2} />
+                <span className="text-[13px] font-light select-none tracking-wide hidden sm:inline">
+                  Search
+                </span>
               </button>
 
               {/* Desktop homepage — Figma pill search */}
@@ -162,6 +165,7 @@ const Navbar = () => {
                   className="object-contain h-[31px] md:h-[45px]"
                   style={{
                     width: "auto",
+                    height: "clamp(26px, 6.5vw, 40px)",
                     filter: logoFilterClass,
                     transition: "filter 0.3s ease",
                   }}
@@ -170,7 +174,7 @@ const Navbar = () => {
             </div>
 
             {/* Right Section: Custom Icon Images */}
-            <div className="flex items-center gap-4 md:gap-6">
+            <div className="flex items-center gap-5 md:gap-6">
               <Link
                 to="/wishlist"
                 aria-label="Wishlist"
@@ -180,8 +184,8 @@ const Navbar = () => {
                   src={iconHeart}
                   alt="Wishlist"
                   style={{
-                    width: "18px",
-                    height: "16px",
+                    width: "20px",
+                    height: "20px",
                     filter: iconFilterClass,
                     transition: "filter 0.3s ease",
                   }}
@@ -196,8 +200,8 @@ const Navbar = () => {
                   src={iconCart}
                   alt="Cart"
                   style={{
-                    width: "15px",
-                    height: "17px",
+                    width: "20px",
+                    height: "20px",
                     filter: iconFilterClass,
                     transition: "filter 0.3s ease",
                   }}
@@ -205,7 +209,7 @@ const Navbar = () => {
               </Link>
 
               {user ? (
-                <div className="hidden md:flex items-center relative" ref={dropdownRef}>
+                <div className={`flex items-center relative ${isHomePage ? 'hidden md:flex' : ''}`} ref={dropdownRef}>
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                     className="hover:opacity-70 transition-opacity focus:outline-none"
@@ -215,8 +219,8 @@ const Navbar = () => {
                       src={iconPerson}
                       alt="Account"
                       style={{
-                        width: "13px",
-                        height: "15px",
+                        width: "18px",
+                        height: "18px",
                         filter: iconFilterClass,
                         transition: "filter 0.3s ease",
                       }}
@@ -252,22 +256,24 @@ const Navbar = () => {
                   )}
                 </div>
               ) : (
-                <Link
-                  to="/login"
-                  aria-label="Account"
-                  className="hidden md:block hover:opacity-70 transition-opacity"
-                >
-                  <img
-                    src={iconPerson}
-                    alt="Account"
-                    style={{
-                      width: "13px",
-                      height: "15px",
-                      filter: iconFilterClass,
-                      transition: "filter 0.3s ease",
-                    }}
-                  />
-                </Link>
+                !isHomePage && (
+                  <Link
+                    to="/login"
+                    aria-label="Account"
+                    className="hover:opacity-70 transition-opacity hidden md:block"
+                  >
+                    <img
+                      src={iconPerson}
+                      alt="Account"
+                      style={{
+                        width: "18px",
+                        height: "18px",
+                        filter: iconFilterClass,
+                        transition: "filter 0.3s ease",
+                      }}
+                    />
+                  </Link>
+                )
               )}
             </div>
           </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 
 import { Link } from 'react-router-dom';
 
@@ -16,7 +16,7 @@ import CategoryContext from '../context/CategoryContext';
 
 import API_BASE_URL from '../config/api';
 
-import HeroBannerImage from '../assets/images/Header-image01.jpg';
+import MobileHeroBanner from '../assets/mobile-hero-banner.jpg';
 
 
 
@@ -44,69 +44,39 @@ import iconTimelyReturn from '../assets/icons/TimelyReturn.svg';
 
 
 
-const ArrowIcon = () => (
-
-  <div className="w-7 h-7 rounded-full bg-white/25 backdrop-blur-md flex items-center justify-center border border-white/20 flex-shrink-0">
-
-    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-
-      <polyline points="9 18 15 12 9 6" />
-
-    </svg>
-
-  </div>
-
-);
+const OCCASIONS = [
+  { title: 'Bridal Set',   href: '/shop?occasion=bridal',      img: imgC1, sub: 'Collections' },
+  { title: 'Bridal Maid',  href: '/shop?occasion=bridesmaid',  img: imgC2, sub: 'Collections' },
+  { title: 'Designer',     href: '/shop?occasion=designer',    img: imgC3, sub: 'Collections' },
+  { title: 'Reception',    href: '/shop?occasion=reception',   img: imgC4, sub: 'Collections' },
+  { title: 'Party wear',   href: '/shop?occasion=party',       img: imgC5, sub: 'Collections' },
+  { title: 'Small Jewel',  href: '/shop?occasion=small',       img: imgC6, sub: 'Collections' },
+];
 
 
 
-const CategoryCard = ({ cat, index, className }) => (
+const ArrowCircle = ({ size = 46 }) => {
 
-  <Link
+  const iconSize = Math.round(size * 0.54);
 
-    to={`/shop?category=${cat.slug}`}
+  return (
 
-    className={`relative rounded-[1.5rem] overflow-hidden group shadow-sm ${className}`}
+    <div
+      style={{ width: `${size}px`, height: `${size}px` }}
+      className="rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 flex-shrink-0"
+    >
 
-  >
+      <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
 
-    <LazyImage
+        <polyline points="9 18 15 12 9 6" />
 
-      src={cat.img}
-
-      alt={cat.title}
-
-      priority={index === 0}
-
-      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-
-    />
-
-    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60" />
-
-    <div className="absolute top-6 left-5 right-5 text-white">
-
-      <h2 className="text-lg sm:text-xl font-serif font-semibold leading-snug tracking-wide">
-
-        {cat.title}
-
-      </h2>
-
-      <p className="text-xs sm:text-sm text-white/75 mt-1 font-light">{cat.sub}</p>
+      </svg>
 
     </div>
 
-    <div className="absolute bottom-6 left-5 right-5 flex items-center justify-between text-white">
+  );
 
-      <span className="text-xs sm:text-sm font-light tracking-wide">Explore Now</span>
-
-      <ArrowIcon />
-
-    </div>
-
-  </Link>
-
-);
+};
 
 
 
@@ -117,58 +87,6 @@ const Home = () => {
   const [trendingLoading, setTrendingLoading] = useState(true);
 
   const { categories } = useContext(CategoryContext);
-
-
-
-  const mobileCarouselRef = useRef(null);
-
-  const [activeMobileDot, setActiveMobileDot] = useState(0);
-
-
-
-  const scrollMobile = (direction) => {
-
-    if (mobileCarouselRef.current) {
-
-      const scrollAmount = mobileCarouselRef.current.clientWidth * 0.8;
-
-      mobileCarouselRef.current.scrollBy({
-
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-
-        behavior: 'smooth',
-
-      });
-
-    }
-
-  };
-
-
-
-  const handleMobileScroll = () => {
-
-    if (mobileCarouselRef.current) {
-
-      const { scrollLeft, scrollWidth, clientWidth } = mobileCarouselRef.current;
-
-      const maxScroll = scrollWidth - clientWidth;
-
-      if (maxScroll <= 0) {
-
-        setActiveMobileDot(0);
-
-        return;
-
-      }
-
-      const progress = scrollLeft / maxScroll;
-
-      setActiveMobileDot(Math.round(progress * 2));
-
-    }
-
-  };
 
 
 
@@ -256,7 +174,7 @@ const Home = () => {
 
 
 
-      {/* ── Desktop / tablet webview (Figma frame 179:56) ── */}
+      {/* ── Desktop / tablet webview ── */}
 
       <HomeWebView
 
@@ -276,15 +194,22 @@ const Home = () => {
 
       <div className="md:hidden">
 
-        {/* Hero */}
 
-        <section className="relative w-full h-screen bg-black overflow-hidden">
+
+        {/* ── 1. Hero ── */}
+
+        <section className="relative w-full overflow-hidden" style={{ height: '100svh', minHeight: '580px' }}>
 
           <img
-            src={HeroBannerImage}
+
+            src={MobileHeroBanner}
+
             alt="Apila Hero Banner"
+
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ objectPosition: '65% center' }}
+
+            style={{ objectPosition: 'center 10%' }}
+
           />
 
           <div
@@ -295,25 +220,56 @@ const Home = () => {
 
               background:
 
-                'linear-gradient(to right, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.75) 25%, rgba(0,0,0,0.30) 50%, rgba(0,0,0,0.0) 75%)',
+                'linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.05) 35%, rgba(0,0,0,0.45) 62%, rgba(0,0,0,0.65) 100%)',
 
             }}
 
           />
 
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/15" />
+          <div
 
-          <div className="absolute bottom-[12%] left-0 z-10 flex flex-col px-8 sm:px-12 max-w-lg text-white">
+            className="absolute left-0 right-0 flex flex-col items-center text-center text-white px-5"
 
-            <h1 className="font-serif font-normal leading-[1.1] tracking-wide mb-4 text-[2.4rem] sm:text-[2.8rem]">
+            style={{ bottom: '5%' }}
 
-              Premium Bridal Jewellery Rental in Chennai
+          >
+
+            <h1
+
+              className="font-normal"
+
+              style={{
+                fontFamily: "'Belgant Aesthetic', Georgia, serif",
+                fontSize: '32px',
+                lineHeight: '38px',
+                letterSpacing: '-0.96px',
+                maxWidth: '375px',
+                width: '100%',
+                textAlign: 'center',
+              }}
+
+            >
+
+              <span style={{ display: 'block', whiteSpace: 'nowrap' }}>Premium Bridal Jewellery</span>
+              <span style={{ display: 'block' }}>Rental in Chennai</span>
 
             </h1>
 
-            <p className="text-[13px] sm:text-[14px] text-white/75 font-light tracking-wide leading-relaxed mb-7 max-w-[300px] sm:max-w-sm">
+            <p
 
-              Premium Rental Collections Crafted For Weddings, Receptions And Celebrations.
+              className="capitalize text-white/80 mt-3 text-center"
+
+              style={{
+                fontFamily: "'Gotham Light', 'Gotham Book', sans-serif",
+                fontSize: '13px',
+                lineHeight: '19px',
+                maxWidth: '342px',
+                width: '100%',
+              }}
+
+            >
+
+              Premium rental collections crafted for weddings, receptions and celebrations.
 
             </p>
 
@@ -321,7 +277,15 @@ const Home = () => {
 
               to="/shop"
 
-              className="inline-block bg-brand-rose hover:bg-brand-rose-hover text-white px-7 py-3 text-[11px] font-semibold uppercase tracking-widest transition-colors duration-300 shadow-lg"
+              className="mt-[28px] bg-[#ab6281] text-white hover:bg-[#935b67] transition-colors flex items-center justify-center"
+
+              style={{
+                fontFamily: "'Gotham', sans-serif",
+                fontSize: '13px',
+                letterSpacing: '-0.13px',
+                width: '183px',
+                height: '48px',
+              }}
 
             >
 
@@ -335,99 +299,211 @@ const Home = () => {
 
 
 
-        {/* Categories carousel */}
+        {/* ── 2. Featured Collections – horizontal-scroll panels ── */}
 
-        <section className="mt-4 mb-4">
+        {displayCategories.length >= 1 && (
 
-          <div
+          <section className="mt-3 pb-1">
 
-            ref={mobileCarouselRef}
+            <div className="flex gap-[4px] overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-2" style={{ scrollPaddingInlineStart: '4px' }}>
 
-            onScroll={handleMobileScroll}
+              {displayCategories.map((cat, idx) => (
 
-            className="flex space-x-3 overflow-x-auto snap-x snap-mandatory hide-scrollbar ml-4 pr-4 pb-2"
+                <Link
 
-          >
+                  key={cat.slug}
 
-            {displayCategories.map((cat, index) => (
+                  to={`/shop?category=${cat.slug}`}
 
-              <CategoryCard
+                  className="relative flex-none snap-start overflow-hidden"
 
-                key={cat.slug}
+                  style={{
 
-                cat={cat}
+                    width: 'clamp(200px, 62.5vw, 280px)',
 
-                index={index}
+                    height: 'clamp(320px, 97vw, 430px)',
 
-                className="w-[75vw] sm:w-[300px] shrink-0 snap-start h-[40vh]"
+                    marginLeft: idx === 0 ? '4px' : undefined,
 
-              />
+                    marginRight: idx === displayCategories.length - 1 ? '4px' : undefined,
 
-            ))}
+                  }}
 
-          </div>
+                >
 
-          <div className="flex items-center justify-center space-x-3 mt-3">
+                  <LazyImage
 
-            <button
+                    src={cat.img}
 
-              type="button"
+                    alt={cat.title}
 
-              onClick={() => scrollMobile('left')}
+                    className="absolute inset-0 w-full h-full object-cover"
 
-              className="p-1 focus:outline-none hover:opacity-70 transition-opacity"
+                  />
 
-              aria-label="Previous categories"
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/60" />
 
-            >
+                  <div className="absolute top-[25px] text-white" style={{ left: '28px' }}>
 
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <h3
 
-                <polyline points="15 18 9 12 15 6" />
+                      className="font-normal"
 
-              </svg>
+                      style={{
+                        fontFamily: "'Belgant Aesthetic', Georgia, serif",
+                        fontSize: '24px',
+                        letterSpacing: '-0.72px',
+                        lineHeight: '30px',
+                      }}
 
-            </button>
+                    >
 
-            <div className="flex space-x-1.5">
+                      {cat.title}
 
-              {[0, 1, 2].map((dot) => (
+                    </h3>
 
-                <div
+                    <p
 
-                  key={dot}
+                      className="text-white/70 mt-[10px]"
 
-                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                      style={{
+                        fontFamily: "'Gotham Light', 'Gotham Book', sans-serif",
+                        fontSize: '13px',
+                        letterSpacing: '-0.26px',
+                      }}
 
-                    activeMobileDot === dot ? 'bg-gray-800 scale-125' : 'bg-gray-300'
+                    >
 
-                  }`}
+                      {cat.sub}
 
-                />
+                    </p>
+
+                  </div>
+
+                  <div
+
+                    className="absolute bottom-[27px] text-white"
+
+                    style={{
+                      left: '28px',
+                      fontFamily: "'Gotham Book', sans-serif",
+                      fontSize: '14px',
+                    }}
+
+                  >
+
+                    Explore Now
+
+                  </div>
+
+                  <div className="absolute bottom-3 right-6">
+
+                    <ArrowCircle size={53} />
+
+                  </div>
+
+                </Link>
 
               ))}
 
             </div>
 
-            <button
+          </section>
 
-              type="button"
+        )}
 
-              onClick={() => scrollMobile('right')}
 
-              className="p-1 focus:outline-none hover:opacity-70 transition-opacity"
 
-              aria-label="Next categories"
+        {/* ── 3. Shop by Occasion – single-column stacked ── */}
 
-            >
+        <section className="bg-[#fdf9f4] pt-[25px] pb-8 mt-3">
 
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <h2
 
-                <polyline points="9 18 15 12 9 6" />
+            className="capitalize text-black text-center mb-5 px-5"
 
-              </svg>
+            style={{
+              fontFamily: "'Bacasime Antique', Georgia, serif",
+              fontSize: '22px',
+              letterSpacing: '-0.44px',
+            }}
 
-            </button>
+          >
+
+            Shop by Occassion
+
+          </h2>
+
+          <div className="flex flex-col gap-3 px-[67px]">
+
+            {OCCASIONS.map((occ) => (
+
+              <Link
+
+                key={occ.title}
+
+                to={occ.href}
+
+                className="relative w-full aspect-square overflow-hidden group"
+
+              >
+
+                <LazyImage
+
+                  src={occ.img}
+
+                  alt={occ.title}
+
+                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+
+                />
+
+                <div className="absolute bottom-0 left-0 right-0 h-[112px] bg-gradient-to-b from-transparent to-black/50" />
+
+                <div className="absolute bottom-5 left-5 text-white">
+
+                  <h3
+
+                    className="font-normal leading-snug"
+
+                    style={{
+                      fontFamily: "'Belgant Aesthetic', Georgia, serif",
+                      fontSize: '25px',
+                    }}
+
+                  >
+
+                    {occ.title}
+
+                  </h3>
+
+                  <p
+
+                    className="text-white/80 mt-0.5"
+
+                    style={{
+                      fontFamily: "'Gotham Light', 'Gotham Book', sans-serif",
+                      fontSize: '13px',
+                      letterSpacing: '-0.13px',
+                    }}
+
+                  >
+
+                    {occ.sub}
+
+                  </p>
+
+                </div>
+
+                <div className="absolute bottom-5 right-5">
+
+                  <ArrowCircle />
+
+                </div>
+
+              </Link>
+
+            ))}
 
           </div>
 
@@ -435,175 +511,32 @@ const Home = () => {
 
 
 
-        {/* Shop by Occasion */}
+        {/* ── 4. Trending Collections ── */}
 
-        <section className="bg-brand-cream-bg px-5 pt-4 pb-8 mt-6">
+        <section className="bg-white px-[10px] pt-6 pb-4">
 
-          <h2 className="text-[18px] font-serif text-gray-800 mb-4 px-1">Shop By Occassion</h2>
+          <h2
 
-          <div className="grid grid-cols-2 gap-3">
+            className="text-black mb-4"
 
-            <div className="flex flex-col gap-2">
+            style={{
+              fontFamily: "'Bacasime Antique', Georgia, serif",
+              fontSize: '22px',
+              letterSpacing: '-0.44px',
+              textTransform: 'capitalize',
+            }}
 
-              <Link to="/shop?occasion=bridal" className="relative h-44 rounded-[2rem] overflow-hidden group">
+          >
 
-                <LazyImage src={imgC1} alt="Bridal Set" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            Trending Collections
 
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-
-                <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
-
-                  <div>
-
-                    <h3 className="font-serif text-[15px] leading-tight">Bridal Set</h3>
-
-                    <p className="text-[10px] text-white/65 mt-1 font-light">Collections</p>
-
-                  </div>
-
-                  <ArrowIcon />
-
-                </div>
-
-              </Link>
-
-              <Link to="/shop?occasion=designer" className="relative h-36 rounded-[2rem] overflow-hidden group">
-
-                <LazyImage src={imgC3} alt="Designer" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-
-                <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
-
-                  <div>
-
-                    <h3 className="font-serif text-[15px] leading-tight">Designer</h3>
-
-                    <p className="text-[10px] text-white/65 mt-1 font-light">Collections</p>
-
-                  </div>
-
-                  <ArrowIcon />
-
-                </div>
-
-              </Link>
-
-              <Link to="/shop?occasion=party" className="relative h-44 rounded-[2rem] overflow-hidden group">
-
-                <LazyImage src={imgC5} alt="Party Wear" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-
-                <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
-
-                  <div>
-
-                    <h3 className="font-serif text-[15px] leading-tight">Party Wear</h3>
-
-                    <p className="text-[10px] text-white/65 mt-1 font-light">Collections</p>
-
-                  </div>
-
-                  <ArrowIcon />
-
-                </div>
-
-              </Link>
-
-            </div>
-
-            <div className="flex flex-col gap-2">
-
-              <Link to="/shop?occasion=bridesmaid" className="relative h-36 rounded-[2rem] overflow-hidden group">
-
-                <LazyImage src={imgC2} alt="Bridemaid" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-
-                <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
-
-                  <div>
-
-                    <h3 className="font-serif text-[15px] leading-tight">Bridemaid</h3>
-
-                    <p className="text-[10px] text-white/65 mt-1 font-light">Collections</p>
-
-                  </div>
-
-                  <ArrowIcon />
-
-                </div>
-
-              </Link>
-
-              <Link to="/shop?occasion=reception" className="relative h-52 rounded-[2rem] overflow-hidden group">
-
-                <LazyImage src={imgC4} alt="Reception" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-
-                <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
-
-                  <div>
-
-                    <h3 className="font-serif text-[15px] leading-tight">Reception</h3>
-
-                    <p className="text-[10px] text-white/65 mt-1 font-light">Collections</p>
-
-                  </div>
-
-                  <ArrowIcon />
-
-                </div>
-
-              </Link>
-
-              <Link to="/shop?occasion=small" className="relative h-36 rounded-[2rem] overflow-hidden group">
-
-                <LazyImage src={imgC6} alt="Small Jewel" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
-
-                <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between text-white">
-
-                  <div>
-
-                    <h3 className="font-serif text-[15px] leading-tight">Small Jewel</h3>
-
-                    <p className="text-[10px] text-white/65 mt-1 font-light">Collections</p>
-
-                  </div>
-
-                  <ArrowIcon />
-
-                </div>
-
-              </Link>
-
-            </div>
-
-          </div>
-
-        </section>
-
-
-
-        {/* Trending */}
-
-        <section className="bg-white px-5 pt-6 pb-4">
-
-          <div className="mb-4">
-
-            <h2 className="text-[18px] font-serif text-gray-800">Trending Collections</h2>
-
-          </div>
+          </h2>
 
           {trendingLoading ? (
 
             <div className="flex justify-center items-center h-40">
 
-              <div className="w-7 h-7 border-[3px] border-brand-rose border-t-transparent rounded-full animate-spin" />
+              <div className="w-7 h-7 border-[3px] border-[#ab6281] border-t-transparent rounded-full animate-spin" />
 
             </div>
 
@@ -613,7 +546,7 @@ const Home = () => {
 
               {trending.map((item, index) => (
 
-                <Card key={item._id} jewellery={item} priority={index < 4} />
+                <Card key={item._id} jewellery={item} priority={index < 4} imageAspect="190 / 236" imageClassName="" />
 
               ))}
 
@@ -631,11 +564,19 @@ const Home = () => {
 
               to="/shop?explore=true"
 
-              className="px-8 py-2.5 border border-[#A56D7A] text-[#A56D7A] rounded-lg text-[13px] font-medium tracking-wide hover:bg-[#A56D7A] hover:text-white transition-all shadow-sm flex items-center gap-2"
+              className="flex items-center justify-center border border-[#ab6281] text-[#ab6281] hover:bg-[#ab6281] hover:text-white transition-all"
+
+              style={{
+                fontFamily: "'Gotham', sans-serif",
+                fontSize: '13px',
+                letterSpacing: '-0.13px',
+                width: '183px',
+                height: '48px',
+              }}
 
             >
 
-              Explore More <span className="text-sm leading-none">›</span>
+              Explore More&nbsp;&nbsp;›
 
             </Link>
 
@@ -645,25 +586,53 @@ const Home = () => {
 
 
 
-        {/* Delivery */}
+        {/* ── 5. Delivery & Pickup ── */}
 
-        <section className="bg-brand-cream-bg mt-10 pt-5 pb-4 text-center border-b border-[#EAEAEA]">
+        <section className="bg-[#fdf9f4] mt-10 pt-[45px] pb-[45px] text-center">
 
-          <p className="text-[9px] font-bold uppercase tracking-[0.25em] text-[#555] mb-1">Safe &amp; Reliable</p>
+          <p
 
-          <h3 className="font-serif text-[28px] text-[#222] mb-3">Delivery &amp; Pickup</h3>
+            className="uppercase mb-1"
 
-          <div className="flex justify-center items-stretch mb-4 px-2 max-w-md mx-auto">
+            style={{
+              fontFamily: "'Gotham', sans-serif",
+              fontSize: '11px',
+              letterSpacing: '1.54px',
+              color: '#1e1e1e',
+            }}
+
+          >
+
+            Safe &amp; Reliable
+
+          </p>
+
+          <h3
+
+            className="text-black mb-[49px]"
+
+            style={{
+              fontFamily: "'Belgant Aesthetic', Georgia, serif",
+              fontSize: '30px',
+            }}
+
+          >
+
+            Delivery &amp; Pickup
+
+          </h3>
+
+          <div className="flex justify-center items-stretch mb-[53px] px-2 max-w-md mx-auto">
 
             {[
 
-              { label: 'Secure\nPackaging', iconSrc: iconSecure },
+              { label: 'Secure\nPackaging',       iconSrc: iconSecure },
 
-              { label: 'Doorstep\nDelivery', iconSrc: iconDoorstepDelivery },
+              { label: 'Doorstep\nDelivery',       iconSrc: iconDoorstepDelivery },
 
-              { label: 'Timely\nReturn Pickup', iconSrc: iconTimelyReturn },
+              { label: 'Timely\nReturn Pickup',    iconSrc: iconTimelyReturn },
 
-              { label: 'Hassle-Free\nExperience', iconSrc: iconHassleFree },
+              { label: 'Hassle-Free\nExperience',  iconSrc: iconHassleFree },
 
             ].map(({ label, iconSrc }, index, arr) => (
 
@@ -675,13 +644,26 @@ const Home = () => {
 
               >
 
-                <div className="w-11 h-11 mb-1 rounded-full bg-[#FAF3ED] flex items-center justify-center text-[#555]">
+                <div className="w-12 h-12 mb-[15px] rounded-full bg-[#FAF3ED] flex items-center justify-center">
 
                   <img src={iconSrc} alt={label.replace('\n', ' ')} className="w-5 h-5 object-contain" />
 
                 </div>
 
-                <p className="text-[8px] text-[#555] text-center leading-[1.2] whitespace-pre-line px-4">{label}</p>
+                <p
+
+                  className="text-[#1e1e1e] text-center leading-[1.6] whitespace-pre-line px-1"
+
+                  style={{
+                    fontFamily: "'Gotham Book', sans-serif",
+                    fontSize: '10px',
+                  }}
+
+                >
+
+                  {label}
+
+                </p>
 
               </div>
 
@@ -695,11 +677,19 @@ const Home = () => {
 
             onClick={() => window.open('/Rental_Delivery_Guide.pdf', '_blank')}
 
-            className="bg-[#A56D7A] text-white px-3 py-2 rounded-md text-[8px] font-semibold uppercase tracking-[0.15em] hover:bg-[#935b67] transition-colors"
+            className="bg-[#ab6281] text-white hover:bg-[#935b67] transition-colors flex items-center justify-center mx-auto"
+
+            style={{
+              fontFamily: "'Gotham', sans-serif",
+              fontSize: '11px',
+              letterSpacing: '1.54px',
+              width: '159px',
+              height: '44px',
+            }}
 
           >
 
-            Know More
+            KNOW MORE
 
           </button>
 
@@ -707,55 +697,62 @@ const Home = () => {
 
 
 
-        {/* WhatsApp CTA */}
+        {/* ── 6. Need Styling Help? / WhatsApp CTA ── */}
 
-        <section className="bg-white py-10">
+        <section className="bg-white py-12 text-center px-6">
 
-          <div className="mx-4 bg-brand-cream-bg px-5 py-6 rounded-[1.5rem] flex items-center justify-between gap-4">
+          <h2
 
-            <div className="flex gap-4 items-center">
+            className="text-black mb-4"
 
-              <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-sm text-[#D3B49E] flex-shrink-0">
+            style={{
+              fontFamily: "'Belgant Aesthetic', Georgia, serif",
+              fontSize: '30px',
+            }}
 
-                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+          >
 
-                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+            Need Styling Help?
 
-                </svg>
+          </h2>
 
-              </div>
+          <p
 
-              <div>
+            className="text-black text-center max-w-[342px] mx-auto mb-8"
 
-                <p className="text-[10px] text-[#555] mb-1">Have Questions?</p>
+            style={{
+              fontFamily: "'Gotham Book', sans-serif",
+              fontSize: '12px',
+              lineHeight: '22px',
+            }}
 
-                <h4 className="text-[17.5px] sm:text-[20px] font-serif text-[#222] leading-tight mb-1 whitespace-nowrap tracking-tight">
+          >
 
-                  Book on Whatsapp
+            Tell us your outfit colour, event date, and budget. We&apos;ll suggest matching pieces instantly on WhatsApp.
 
-                </h4>
+          </p>
 
-                <p className="text-[10px] text-[#555]">Our team is happy to help you!</p>
+          <button
 
-              </div>
+            type="button"
 
-            </div>
+            onClick={handleChatNow}
 
-            <button
+            className="bg-[#ab6281] text-white hover:bg-[#935b67] transition-colors flex items-center justify-center mx-auto"
 
-              type="button"
+            style={{
+              fontFamily: "'Gotham', sans-serif",
+              fontSize: '11px',
+              letterSpacing: '1.54px',
+              width: '159px',
+              height: '44px',
+            }}
 
-              onClick={handleChatNow}
+          >
 
-              className="bg-[#A56D7A] text-white px-3 py-2 rounded-md text-[8px] uppercase font-semibold tracking-[0.15em] hover:bg-[#935b67] transition-colors whitespace-nowrap flex-shrink-0 flex items-center gap-1"
+            CHAT NOW
 
-            >
-
-              CHAT NOW <span className="text-[10px] leading-none ml-1">›</span>
-
-            </button>
-
-          </div>
+          </button>
 
         </section>
 
@@ -774,4 +771,3 @@ const Home = () => {
 
 
 export default Home;
-
