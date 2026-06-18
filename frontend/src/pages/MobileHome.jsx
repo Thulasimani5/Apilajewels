@@ -198,7 +198,7 @@ const Home = () => {
 
         {/* ── 1. Hero ── */}
 
-        <section className="relative w-full overflow-hidden" style={{ height: '100svh', minHeight: '580px' }}>
+        <section className="relative w-full overflow-hidden" style={{ aspectRatio: '412 / 683' }}>
 
           <img
 
@@ -208,7 +208,7 @@ const Home = () => {
 
             className="absolute inset-0 w-full h-full object-cover"
 
-            style={{ objectPosition: 'center 10%' }}
+            style={{ objectPosition: 'center top' }}
 
           />
 
@@ -220,7 +220,7 @@ const Home = () => {
 
               background:
 
-                'linear-gradient(to bottom, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.05) 35%, rgba(0,0,0,0.45) 62%, rgba(0,0,0,0.65) 100%)',
+                'linear-gradient(to bottom, rgba(0,0,0,0.0) 45%, rgba(0,0,0,0.55) 100%)',
 
             }}
 
@@ -230,7 +230,7 @@ const Home = () => {
 
             className="absolute left-0 right-0 flex flex-col items-center text-center text-white px-5"
 
-            style={{ bottom: '5%' }}
+            style={{ top: '67.5%' }}
 
           >
 
@@ -257,7 +257,7 @@ const Home = () => {
 
             <p
 
-              className="capitalize text-white/80 mt-3 text-center"
+              className="capitalize text-white/80 mt-[13px] text-center"
 
               style={{
                 fontFamily: "'Gotham Light', 'Gotham Book', sans-serif",
@@ -277,7 +277,7 @@ const Home = () => {
 
               to="/shop"
 
-              className="mt-[28px] bg-[#ab6281] text-white hover:bg-[#935b67] transition-colors flex items-center justify-center"
+              className="mt-[27px] bg-[#ab6281] text-white hover:bg-[#935b67] transition-colors flex items-center justify-center"
 
               style={{
                 fontFamily: "'Gotham', sans-serif",
