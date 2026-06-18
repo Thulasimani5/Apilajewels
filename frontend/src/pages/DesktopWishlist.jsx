@@ -72,7 +72,13 @@ export default function DesktopWishlist() {
   };
 
   return (
-    <div className="apila">
+    <div className="apila" style={{ 
+      minHeight: '100vh', 
+      height: wishlistItems.length === 0 ? '100vh' : 'auto',
+      overflow: wishlistItems.length === 0 ? 'hidden' : 'auto',
+      display: 'flex', 
+      flexDirection: 'column' 
+    }}>
 
       {/* ── NAVBAR ── */}
       <header>
@@ -107,7 +113,7 @@ export default function DesktopWishlist() {
       </header>
 
       {/* ── MAIN CONTENT ── */}
-      <div className="wl-page">
+      <div className="wl-page" style={wishlistItems.length === 0 ? { minHeight: 0 } : {}}>
         {wishlistItems.length === 0 ? (
           <div className="wl-empty">
             <h1 className="wl-empty-title">YOUR WISHLIST IS EMPTY</h1>

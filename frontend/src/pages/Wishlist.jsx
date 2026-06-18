@@ -25,7 +25,7 @@ const Wishlist = () => {
   }
 
   return (
-    <div className="bg-[#FFF8F3] min-h-screen pb-28">
+    <div className={`bg-[#FFF8F3] flex flex-col ${wishlistItems.length === 0 ? 'h-[100dvh] overflow-hidden pb-0' : 'min-h-screen pb-28'}`}>
       {/* Custom Header - Matching Cart styling exactly */}
       <div className="sticky top-0 bg-[#FFF8F3] z-40 px-4 py-4 flex items-center justify-between shadow-sm">
         <div className="flex items-center gap-3">
@@ -41,9 +41,9 @@ const Wishlist = () => {
         </div>
       </div>
 
-      <div className="px-4 py-6 space-y-4">
+      <div className={wishlistItems.length === 0 ? "flex-1 flex flex-col items-center justify-center px-4" : "px-4 py-6 space-y-4"}>
         {wishlistItems.length === 0 ? (
-          <div className="flex flex-col items-center justify-center pt-24 px-6 text-center">
+          <div className="flex flex-col items-center justify-center text-center">
             <div className="w-16 h-16 bg-white shadow-sm rounded-full flex items-center justify-center mb-5">
                <Heart size={28} className="text-gray-300" strokeWidth={1.5} />
             </div>

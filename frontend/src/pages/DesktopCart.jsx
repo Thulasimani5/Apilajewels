@@ -171,7 +171,7 @@ export default function DesktopCart() {
         </div>
 
         {/* ── RIGHT: Your Order ── */}
-        <div className="cart-right">
+        <div className="cart-right" style={{ display: 'flex', flexDirection: 'column', height: '100%', paddingBottom: 'clamp(28px, 5.5vh, 64px)', overflowY: 'auto' }}>
           <h2 className="cart-order-title">Your Order ({cartCount})</h2>
 
           {/* Coupon */}
@@ -220,20 +220,23 @@ export default function DesktopCart() {
             <span className="cart-delivery-text">Estimated Delivery: 3 - 4 days</span>
           </div>
 
-          {/* Help Text */}
-          <p className="cart-help-text">
-            Need Live Video or Help? Get Instant Assistance From Our Jewellery Expert
-          </p>
+          {/* Actions Container anchored to bottom */}
+          <div style={{ marginTop: 'auto' }}>
+            {/* Help Text */}
+            <p className="cart-help-text">
+              Need Live Video or Help? Get Instant Assistance From Our Jewellery Expert
+            </p>
 
-          {/* Book on WhatsApp */}
-          <button className="cart-book-btn" onClick={handleBookOnWhatsapp}>
-            BOOK ON WHATSAPP
-          </button>
+            {/* Book on WhatsApp */}
+            <button className="cart-book-btn" onClick={handleBookOnWhatsapp}>
+              BOOK ON WHATSAPP
+            </button>
 
-          {/* Secure Payments */}
-          <div className="cart-secure">
-            <img src={iconSecurePayments} width="19" height="20" alt="" />
-            <span className="cart-secure-text">100% Secure Payments</span>
+            {/* Secure Payments */}
+            <div className="cart-secure">
+              <img src={iconSecurePayments} width="19" height="20" alt="" />
+              <span className="cart-secure-text">100% Secure Payments</span>
+            </div>
           </div>
         </div>
       </div>

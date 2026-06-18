@@ -2371,18 +2371,16 @@
 
 /* Page split */
 .apila-cart {
-  min-height: 100vh;
-  height: auto;
-  overflow-x: clip;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .cart-page {
   display: flex;
-  min-height: calc(100vh - 65px);
-  height: auto;
+  height: calc(100vh - 65px);
   margin-top: 65px;
   width: 100%;
-  overflow: visible;
+  overflow: hidden;
   background: linear-gradient(to right, #fdf9f4 63.83%, #fff 63.83%);
 }
 
@@ -2392,8 +2390,8 @@
   background: #fdf9f4;
   padding: 51px 0;
   min-width: 0;
-  overflow: visible;
-  height: auto;
+  overflow-y: auto;
+  height: 100%;
   scrollbar-width: none;
   /* Firefox */
   -ms-overflow-style: none;
@@ -2445,7 +2443,7 @@
   display: flex;
   flex-direction: column;
   gap: 9px;
-  padding: 0 11.7%;
+  padding: 0 8% 0 11.7%;
 }
 
 /* ── Cart item card ── */
@@ -2453,7 +2451,7 @@
   background: #fff;
   height: 249px;
   width: 100%;
-  max-width: 900px;
+  max-width: 100%;
   display: flex;
   position: relative;
   overflow: hidden;
@@ -2463,8 +2461,8 @@
   width: 229px;
   height: 249px;
   flex-shrink: 0;
-  margin-left: 9px;
-  padding: 12px 5px;
+  /* margin-left: 9px; */
+  padding: 10px 10px;
   overflow: hidden;
 }
 
@@ -2819,6 +2817,9 @@
   max-width: 1728px;
   margin-left: auto;
   margin-right: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .wl-title {
@@ -2970,8 +2971,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* gap: 20px; */
-  padding: 100px 0;
+  flex: 1;
+  min-height: 0;
+  gap: clamp(12px, 2vh, 24px);
+  padding: clamp(40px, 8vh, 100px) 0;
 }
 
 .wl-empty-text {
@@ -3052,6 +3055,7 @@
   }
 
   .wl-empty {
+    flex: 1;
     padding: 0;
   }
 }
@@ -3070,7 +3074,8 @@
   }
 
   .wl-empty {
-    padding: 100px 48px;
+    flex: 1;
+    padding: clamp(40px, 6vh, 100px) 48px;
   }
 }
 
@@ -3140,7 +3145,8 @@
   }
 
   .wl-empty {
-    padding: 60px 24px;
+    flex: 1;
+    padding: clamp(32px, 5vh, 80px) 24px;
   }
 }
 
