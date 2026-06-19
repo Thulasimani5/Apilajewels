@@ -300,9 +300,9 @@ const ProductDetails = () => {
           {/* Related Jewels Section */}
           <div className="pt-8 pb-10 mt-2 border-t border-gray-200/60 relative z-20">
             <h2 className="text-lg font-bold text-gray-900 mb-4 px-1">Related Jewels</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[10px]">
+            <div className="grid grid-cols-2 gap-x-[4px] gap-y-[20px]">
               {relatedProducts.map(prod => (
-                <Card key={prod._id} jewellery={prod} />
+                <Card key={prod._id} jewellery={prod} variant="shop" imageAspect="195 / 244" imageClassName="" />
               ))}
             </div>
           </div>

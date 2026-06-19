@@ -145,7 +145,7 @@ const Footer = () => {
           <div className="border-t border-[#F2F2F2] mt-[36px]" />
 
           {/* Logo + Copyright */}
-          <div className="flex flex-col items-center pt-8 pb-6 gap-6">
+          <div className="flex flex-col items-center pt-[25px] pb-[18px] gap-[21px]">
             <img src={logoImage} alt="Apila Jewels" style={{ height: '32px' }} className="opacity-90" />
             <p style={{
               fontFamily: "'Gotham Book', sans-serif",

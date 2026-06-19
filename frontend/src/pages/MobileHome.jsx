@@ -20,6 +20,10 @@ import MobileHeroBanner from '../assets/mobile-hero-banner.jpg';
 
 
 
+import imgSemiBridal from '../assets/images/semi-bridal-combo.jpg';
+
+import imgFullBridal from '../assets/images/full-bridal-set.jpg';
+
 import imgC1 from '../assets/images/c1.jpg';
 
 import imgC2 from '../assets/images/c2.jpg';
@@ -66,7 +70,7 @@ const ArrowCircle = ({ size = 46 }) => {
       className="rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 flex-shrink-0"
     >
 
-      <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
 
         <polyline points="9 18 15 12 9 6" />
 
@@ -168,7 +172,7 @@ const Home = () => {
 
   return (
 
-    <div className="pb-28 md:pb-0 bg-white min-h-screen relative">
+    <div className="pb-0 md:pb-0 bg-white min-h-screen relative">
 
       <Navbar />
 
@@ -198,7 +202,7 @@ const Home = () => {
 
         {/* ── 1. Hero ── */}
 
-        <section className="relative w-full overflow-hidden" style={{ aspectRatio: '412 / 683' }}>
+        <section className="relative w-full overflow-hidden" style={{ height: '100dvh', minHeight: '580px' }}>
 
           <img
 
@@ -228,9 +232,9 @@ const Home = () => {
 
           <div
 
-            className="absolute left-0 right-0 flex flex-col items-center text-center text-white px-5"
+            className="absolute inset-0 flex flex-col items-center justify-end text-center text-white px-5"
 
-            style={{ top: '67.5%' }}
+            style={{ paddingBottom: 'clamp(28px, 5dvh, 60px)' }}
 
           >
 
@@ -299,15 +303,15 @@ const Home = () => {
 
 
 
-        {/* ── 2. Featured Collections – horizontal-scroll panels ── */}
+        {/* ── 2. Shop by Jewellery Type – vertical stacked landscape cards ── */}
 
         {displayCategories.length >= 1 && (
 
-          <section className="mt-3 pb-1">
+          <section className="bg-[#fdf9f4] pt-[53px] pb-[55px]">
 
-            <div className="flex gap-[4px] overflow-x-auto snap-x snap-mandatory hide-scrollbar pb-2" style={{ scrollPaddingInlineStart: '4px' }}>
+            <div className="flex flex-col gap-[6px] px-[44px]">
 
-              {displayCategories.map((cat, idx) => (
+              {displayCategories.slice(0, 4).map((cat) => (
 
                 <Link
 
@@ -315,19 +319,9 @@ const Home = () => {
 
                   to={`/shop?category=${cat.slug}`}
 
-                  className="relative flex-none snap-start overflow-hidden"
+                  className="relative block overflow-hidden"
 
-                  style={{
-
-                    width: 'clamp(200px, 62.5vw, 280px)',
-
-                    height: 'clamp(320px, 97vw, 430px)',
-
-                    marginLeft: idx === 0 ? '4px' : undefined,
-
-                    marginRight: idx === displayCategories.length - 1 ? '4px' : undefined,
-
-                  }}
+                  style={{ aspectRatio: '324 / 186' }}
 
                 >
 
@@ -341,19 +335,24 @@ const Home = () => {
 
                   />
 
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-transparent to-black/60" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/55" />
 
-                  <div className="absolute top-[25px] text-white" style={{ left: '28px' }}>
+                  <div className="absolute bottom-[14px] left-[14px]">
 
                     <h3
 
-                      className="font-normal"
+                      className="text-white font-normal"
 
                       style={{
+
                         fontFamily: "'Belgant Aesthetic', Georgia, serif",
-                        fontSize: '24px',
-                        letterSpacing: '-0.72px',
-                        lineHeight: '30px',
+
+                        fontSize: 'clamp(16px, 4.85vw, 20px)',
+
+                        letterSpacing: '-0.6px',
+
+                        lineHeight: 'normal',
+
                       }}
 
                     >
@@ -364,12 +363,16 @@ const Home = () => {
 
                     <p
 
-                      className="text-white/70 mt-[10px]"
+                      className="text-white capitalize"
 
                       style={{
+
                         fontFamily: "'Gotham Light', 'Gotham Book', sans-serif",
-                        fontSize: '13px',
-                        letterSpacing: '-0.26px',
+
+                        fontSize: 'clamp(8px, 2.43vw, 10px)',
+
+                        lineHeight: '27px',
+
                       }}
 
                     >
@@ -377,28 +380,6 @@ const Home = () => {
                       {cat.sub}
 
                     </p>
-
-                  </div>
-
-                  <div
-
-                    className="absolute bottom-[27px] text-white"
-
-                    style={{
-                      left: '28px',
-                      fontFamily: "'Gotham Book', sans-serif",
-                      fontSize: '14px',
-                    }}
-
-                  >
-
-                    Explore Now
-
-                  </div>
-
-                  <div className="absolute bottom-3 right-6">
-
-                    <ArrowCircle size={53} />
 
                   </div>
 
@@ -411,6 +392,138 @@ const Home = () => {
           </section>
 
         )}
+
+
+
+
+        {/* ── 2b. Shop by Jewellery Type – horizontal scroll portrait cards ── */}
+
+        <section className="bg-white pt-[26px] pb-[58px]">
+
+          <h2
+
+            className="text-center text-black capitalize px-4"
+
+            style={{
+
+              fontFamily: "'Bacasime Antique', Georgia, serif",
+
+              fontSize: '22px',
+
+              letterSpacing: '-0.44px',
+
+            }}
+
+          >
+
+            Shop by Jewellery type
+
+          </h2>
+
+          <div
+
+            className="flex gap-[7px] overflow-x-auto snap-x snap-mandatory hide-scrollbar mt-[42px]"
+
+            style={{ paddingLeft: '11px', paddingRight: '11px' }}
+
+          >
+
+            {[
+
+              { img: imgSemiBridal, title: 'Semi Bridal & Combo Sets', href: '/shop?category=semi-bridal' },
+
+              { img: imgFullBridal, title: 'Full Bridal Set', href: '/shop?category=full-bridal' },
+
+            ].map((card) => (
+
+              <Link
+
+                key={card.title}
+
+                to={card.href}
+
+                className="relative flex-none snap-start overflow-hidden"
+
+                style={{ width: '62.6vw', aspectRatio: '258 / 401' }}
+
+              >
+
+                <img
+
+                  src={card.img}
+
+                  alt={card.title}
+
+                  className="absolute inset-0 w-full h-full object-cover"
+
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60" />
+
+                <div className="absolute top-[20px] left-[21px]">
+
+                  <h3
+
+                    className="text-white font-normal"
+
+                    style={{
+
+                      fontFamily: "'Belgant Aesthetic', Georgia, serif",
+
+                      fontSize: 'clamp(18px, 5.83vw, 24px)',
+
+                      letterSpacing: '-0.72px',
+
+                      lineHeight: '30px',
+
+                      maxWidth: '176px',
+
+                    }}
+
+                  >
+
+                    {card.title}
+
+                  </h3>
+
+                </div>
+
+                <div className="absolute left-[21px]" style={{ bottom: '6.7%' }}>
+
+                  <p
+
+                    className="text-white"
+
+                    style={{
+
+                      fontFamily: "'Gotham Book', sans-serif",
+
+                      fontSize: '14px',
+
+                    }}
+
+                  >
+
+                    Explore Now
+
+                  </p>
+
+                </div>
+
+                <div className="absolute" style={{ bottom: '3%', right: '17px' }}>
+
+                  <ArrowCircle size={53} />
+
+                </div>
+
+              </Link>
+
+            ))}
+
+          </div>
+
+        </section>
+
 
 
 
@@ -517,7 +630,7 @@ const Home = () => {
 
           <h2
 
-            className="text-black mb-4"
+            className="text-black mb-4 text-center"
 
             style={{
               fontFamily: "'Bacasime Antique', Georgia, serif",
