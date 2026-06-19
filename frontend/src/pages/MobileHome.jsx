@@ -20,9 +20,8 @@ import MobileHeroBanner from '../assets/hero-banner.jpg';
 
 
 
-import imgSemiBridal from '../assets/images/semi-bridal-combo.jpg';
-
-import imgFullBridal from '../assets/images/full-bridal-set.jpg';
+import imgSemiBridal from '../assets/images/c5.jpg';
+import imgFullBridal from '../assets/images/c6.jpg';
 
 import imgC1 from '../assets/images/c1.jpg';
 
