@@ -1,18 +1,19 @@
 import React, { useState, useMemo, useEffect, useRef, useContext } from 'react';
-import { ArrowLeft, Search, Heart, ShoppingCart, ChevronDown, X, SlidersHorizontal } from 'lucide-react';
+import { ChevronDown, X, SlidersHorizontal } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import Card from '../components/Card';
 import FilterBottomSheet from '../components/FilterBottomSheet';
 import FilterSidebar from '../components/FilterSidebar';
 import CategoryContext from '../context/CategoryContext';
 import SortBottomSheet from '../components/SortBottomSheet';
-import SearchOverlay from '../components/SearchOverlay';
 import ProductGridSkeleton from '../components/ProductGridSkeleton';
 import { useAllProducts } from '../hooks/useProducts';
 import DesktopShop from './DesktopShop';
 import useIsDesktop from '../hooks/useIsDesktop';
-import { useWishlist } from '../context/WishlistContext';
-import { getOptimizedCloudinaryUrl } from '../utils/imageUtils';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+
+const ITEMS_PER_PAGE = 16;
 
 /* ── Sort options ── */
 const SORT_OPTIONS = [
@@ -25,17 +26,13 @@ const SORT_OPTIONS = [
 
 const JewelleryListing = () => {
   const isDesktop = useIsDesktop();
-  const { toggleWishlist, isInWishlist } = useWishlist();
 
   // Modal toggle states
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
 
-  // Infinite scroll state
-  const [visibleCount, setVisibleCount] = useState(20); // start with 20 items
-  const loadMoreRef = useRef(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const sortDropdownRef = useRef(null);
 
   // Read URL search params
@@ -140,7 +137,7 @@ const JewelleryListing = () => {
 
   const handleApplyFilters = (newFilters) => {
     setActiveFilters(newFilters);
-    setVisibleCount(20); // Reset scroll on filter change
+    setCurrentPage(1);
   };
 
   const getSortLabel = (sortId) => {
@@ -247,19 +244,26 @@ const JewelleryListing = () => {
     }
   }, [filteredProducts, activeSort]);
 
-  // Infinite scroll effect
+  // Reset to page 1 when sort changes
   useEffect(() => {
-    if (!loadMoreRef.current) return;
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          setVisibleCount(prev => Math.min(prev + 20, sortedProducts.length));
-        }
-      });
-    }, { rootMargin: '200px' });
-    observer.observe(loadMoreRef.current);
-    return () => observer.disconnect();
-  }, [sortedProducts]);
+    setCurrentPage(1);
+  }, [activeSort]);
+
+  const totalPages = Math.max(1, Math.ceil(sortedProducts.length / ITEMS_PER_PAGE));
+  const paginatedProducts = sortedProducts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
+  const getPageNumbers = () => {
+    if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
+    const pages = [];
+    pages.push(1);
+    if (currentPage > 3) pages.push('...');
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+      pages.push(i);
+    }
+    if (currentPage < totalPages - 2) pages.push('...');
+    pages.push(totalPages);
+    return pages;
+  };
 
   // Close sort dropdown on outside click
   useEffect(() => {
@@ -324,48 +328,31 @@ const JewelleryListing = () => {
   }
 
   return (
-    <div className="bg-white min-h-screen md:h-screen md:overflow-hidden flex flex-col">
+    <div className="bg-white min-h-screen md:h-screen md:overflow-hidden flex flex-col pt-16">
 
-      {/* ── Header ── sticky white bar with back arrow, title, and action icons */}
-      <header className="sticky top-0 bg-white z-50 px-4 h-[60px] flex items-center justify-between border-b border-[#F0EDED]">
-        <div className="flex items-center gap-[10px]">
-          <Link to="/" className="text-[#1A1A1A] flex items-center justify-center">
-            <ArrowLeft size={22} strokeWidth={2.2} />
-          </Link>
-          <h1 className="font-semibold text-[15px] text-[#1A1A1A] tracking-[-0.2px] leading-[1.2]">
-            {getHeaderTitle()}
-          </h1>
-        </div>
-        <div className="flex items-center gap-[18px] text-[#1A1A1A]">
-          <button onClick={() => setIsSearchOpen(true)} className="flex items-center justify-center" aria-label="Search">
-            <Search size={20} strokeWidth={2} />
-          </button>
-          <Link to="/wishlist" className="flex items-center justify-center" aria-label="Wishlist">
-            <Heart size={20} strokeWidth={2} />
-          </Link>
-          <Link to="/cart" className="flex items-center justify-center" aria-label="Cart">
-            <ShoppingCart size={20} strokeWidth={2} />
-          </Link>
-        </div>
-      </header>
+      {/* ── Navbar (hamburger + logo + wishlist + cart) ── */}
+      <Navbar />
 
-      {/* ── Mobile-only Filter & Sort bar ── (hidden on md+) */}
-      <div className="md:hidden flex justify-between items-center px-4 py-3 border-b border-gray-100 sticky top-[60px] z-20 bg-white">
+      {/* ── Mobile-only Filter & Sort bar ── */}
+      <div className="md:hidden flex justify-between items-center px-4 py-[10px] border-b border-[#F0EDED] bg-white">
         <button
           onClick={() => setIsFilterOpen(true)}
-          className="flex items-center gap-2 text-[10.5px] font-bold tracking-[0.1em] text-[#111] uppercase"
-          style={{ fontFamily: "'Gotham', sans-serif" }}
+          className="flex items-center gap-[9px] text-[#1A1A1A]"
         >
-          <SlidersHorizontal size={14} strokeWidth={2} /> FILTER
+          <svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true">
+            <line x1="0" y1="1" x2="16" y2="1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <line x1="2" y1="5" x2="14" y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            <line x1="5" y1="9" x2="11" y2="9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+          </svg>
+          <span style={{ fontFamily: "'Gotham', sans-serif", fontSize: '12px', letterSpacing: '0.84px' }} className="uppercase">FILTER</span>
         </button>
         <div
           onClick={() => setIsSortOpen(true)}
-          className="flex items-center gap-1.5 text-[10.5px] cursor-pointer"
-          style={{ fontFamily: "'Gotham', sans-serif" }}
+          className="flex items-center gap-[4px] cursor-pointer"
         >
-          <span className="text-[#666]">Sort by :</span>
-          <span className="text-[#111] font-bold">{getSortLabel(activeSort)}</span>
-          <ChevronDown size={14} strokeWidth={2} className="text-[#111]" />
+          <span style={{ fontFamily: "'Gotham Light', 'Gotham Book', sans-serif", fontSize: '13px', letterSpacing: '-0.13px' }} className="text-black">Sort by :</span>
+          <span style={{ fontFamily: "'Gotham', sans-serif", fontSize: '13px', letterSpacing: '-0.13px' }} className="text-black">{getSortLabel(activeSort)}</span>
+          <ChevronDown size={12} strokeWidth={2.2} className="text-[#1A1A1A]" />
         </div>
       </div>
 
@@ -458,7 +445,7 @@ const JewelleryListing = () => {
           </div>
 
           {/* ── Product Grid ── */}
-          <div className="px-[4px] pt-[4px] pb-8">
+          <div className="px-[8px] md:px-5 pt-[8px] md:pt-4 pb-8">
             {isLoading ? (
               /* Phase 7: Skeleton loader — no more blocking spinner */
               <ProductGridSkeleton count={12} />
@@ -482,81 +469,61 @@ const JewelleryListing = () => {
                 </button>
               </div>
             ) : (
-              <>
-                {/* ── Responsive Product Grid with infinite scroll ── */}
-                <div className="grid grid-cols-2 gap-[4px]">
-                  {sortedProducts.slice(0, visibleCount).map((product, index) => {
-                    const liked = isInWishlist(product._id || product.code);
-                    const imageUrl = product.images?.[0]?.url || 'https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=800&q=80';
-                    return (
-                      <Link
-                        key={product._id}
-                        to={`/shop/${product._id || product.code}`}
-                        className="block group bg-white"
-                      >
-                        <div className="relative overflow-hidden bg-[#F0EDED]" style={{ aspectRatio: '3/4' }}>
-                          {product.images?.[0]?.type === 'video' ? (
-                            <video
-                              src={product.images[0].url}
-                              className="w-full h-full object-cover"
-                              muted
-                              loop
-                              playsInline
-                              autoPlay
-                            />
-                          ) : (
-                            <img
-                              src={getOptimizedCloudinaryUrl(imageUrl, { width: 400, height: 533 })}
-                              alt={product.name}
-                              className="w-full h-full object-cover"
-                              loading={index < 6 ? "eager" : "lazy"}
-                              fetchPriority={index < 6 ? "high" : "auto"}
-                            />
-                          )}
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              toggleWishlist(product);
-                            }}
-                            className={`absolute top-2 right-2 w-[24px] h-[24px] flex items-center justify-center transition-all ${liked ? '' : 'opacity-80'}`}
-                          >
-                            <Heart
-                              size={16}
-                              className={liked ? 'fill-[#A65A6F] text-[#A65A6F]' : 'text-white'}
-                              strokeWidth={1.5}
-                            />
-                          </button>
-                        </div>
-                        <div className="pt-2 pb-4 px-1">
-                          <p className="text-[10px] font-bold text-[#111] mb-[2px]" style={{ fontFamily: "'Gotham', sans-serif" }}>
-                            {Array.isArray(product.category) ? product.category.join(', ') : product.category}
-                          </p>
-                          <h3 className="text-[9.5px] text-[#666] line-clamp-2 leading-[1.3] mb-1.5" style={{ fontFamily: "'Gotham', sans-serif" }}>
-                            {product.name}
-                          </h3>
-                          <p className="text-[11px] font-bold text-[#111]" style={{ fontFamily: "'Gotham', sans-serif" }}>
-                            {product.rentalPrice >= 2000
-                              ? 'Premium Collection'
-                              : `₹${product.rentalPrice?.toFixed(2)}`}
-                          </p>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </div>
-                {/* sentinel element for infinite scroll */}
-                <div ref={loadMoreRef} className="h-1"></div>
-                {/* Loading more indicator */}
-                {visibleCount < sortedProducts.length && (
-                  <div className="flex justify-center py-6">
-                    <div className="w-6 h-6 border-[3px] border-[#A56D7A] border-t-transparent rounded-full animate-spin"></div>
-                  </div>
-                )}
-              </>
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-[4px] gap-y-[20px] md:gap-4">
+                {paginatedProducts.map((product, index) => (
+                  <Card key={product._id} jewellery={product} priority={index < 6} variant="shop" imageAspect="195 / 244" imageClassName="" />
+                ))}
+              </div>
             )}
           </div>
         </div>
+      </div>
+
+      {/* ── Mobile Pagination ── */}
+      {totalPages > 1 && (
+        <div className="md:hidden flex items-center justify-center gap-[6px] py-6 px-4">
+          <button
+            onClick={() => { setCurrentPage(p => p - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            disabled={currentPage === 1}
+            className="flex items-center justify-center w-7 h-7 disabled:opacity-25"
+          >
+            <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 1L1 6L6 11" stroke="#1A1A1A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+          {getPageNumbers().map((page, idx) =>
+            page === '...' ? (
+              <span key={`ellipsis-${idx}`} className="w-7 h-7 flex items-center justify-center text-[12px] text-black/30">…</span>
+            ) : (
+              <button
+                key={page}
+                onClick={() => { setCurrentPage(page); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+                style={{ fontFamily: "'Gotham', sans-serif" }}
+                className={`w-7 h-7 flex items-center justify-center text-[12px] transition-colors pb-[1px] ${
+                  currentPage === page
+                    ? 'text-black font-medium border-b border-black'
+                    : 'text-black/40'
+                }`}
+              >
+                {page}
+              </button>
+            )
+          )}
+          <button
+            onClick={() => { setCurrentPage(p => p + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            disabled={currentPage === totalPages}
+            className="flex items-center justify-center w-7 h-7 disabled:opacity-25"
+          >
+            <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1L6 6L1 11" stroke="#1A1A1A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      )}
+
+      {/* ── Footer (mobile only) ── */}
+      <div className="md:hidden">
+        <Footer />
       </div>
 
       {/* ── Mobile Filter Bottom Sheet Modal ── */}
@@ -575,13 +542,6 @@ const JewelleryListing = () => {
         onSelect={setActiveSort}
       />
 
-      {/* ── Search Overlay ── */}
-      <SearchOverlay
-        isOpen={isSearchOpen}
-        onClose={() => setIsSearchOpen(false)}
-        category={activeFilters.Category.length > 0 ? activeFilters.Category[0] : null}
-        type={activeFilters.Type.length > 0 ? activeFilters.Type[0] : null}
-      />
     </div>
   );
 };
