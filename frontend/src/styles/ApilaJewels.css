@@ -30,14 +30,6 @@
 }
 
 @font-face {
-  font-family: 'Gotham Light';
-  src: url('../assets/fonts/Gotham Light.otf') format('opentype');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: 'Gotham';
   src: url('../assets/fonts/gotham_medium.otf') format('opentype');
   font-weight: 500;
@@ -86,7 +78,7 @@
   --f-belgan: 'Belgant Aesthetic', Georgia, serif;
   --f-bacasime: 'Bacasime Antique', Georgia, serif;
   --f-gotham-b: 'Gotham Book', sans-serif;
-  --f-gotham-l: 'Gotham Light', 'Gotham Book', sans-serif;
+  --f-gotham-l: 'Gotham', sans-serif;
   --f-gotham-m: 'Gotham', sans-serif;
   --f-puvi: 'Jost', sans-serif;
 }

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import useIsDesktop from '../hooks/useIsDesktop';
+import whatsappIcon from '../assets/icons/whatsapp.svg';
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
 
@@ -15,6 +17,7 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from || '/';
+  const isDesktop = useIsDesktop();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,6 +44,79 @@ const Login = () => {
       setLoading(false);
     }
   };
+
+  if (!isDesktop) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col">
+        {/* Header */}
+        <div className="flex items-center px-6 py-5 border-b border-gray-100">
+          <button onClick={() => navigate(from)} className="text-[#111] focus:outline-none">
+            <X size={20} strokeWidth={1} />
+          </button>
+        </div>
+        
+        {/* Body */}
+        <div className="pt-10 px-8 flex-1 flex flex-col">
+          <h1 className="text-[28px] text-[#111] mb-2" style={{ fontFamily: "'Belgant Aesthetic', serif" }}>Login</h1>
+          <p className="text-[11.5px] text-[#333] mb-8" style={{ fontFamily: "'Gotham', sans-serif" }}>Welcome to Apila Jewels</p>
+          
+          <form className="flex flex-col" onSubmit={handleSubmit}>
+             {error && <div className="text-red-500 text-[11px] mb-4 text-center" style={{ fontFamily: "'Gotham', sans-serif" }}>{error}</div>}
+
+             {/* Mobile Number Input */}
+             <div className="mb-4">
+               <input 
+                 type="text"
+                 required
+                 value={mobile}
+                 onChange={(e) => setMobile(e.target.value)}
+                 placeholder="Mobile Number *"
+                 className="w-full bg-[#FAFAFA] border border-gray-100 text-[11.5px] px-4 py-4 text-[#111] placeholder-[#888] focus:outline-none focus:border-[#B07A85]"
+                 style={{ fontFamily: "'Gotham', sans-serif" }}
+               />
+             </div>
+
+             {/* Password Input */}
+             <div className="mb-6">
+               <input 
+                 type="password"
+                 required
+                 value={password}
+                 onChange={(e) => setPassword(e.target.value)}
+                 placeholder="Password *"
+                 className="w-full bg-[#FAFAFA] border border-gray-100 text-[11.5px] px-4 py-4 text-[#111] placeholder-[#888] focus:outline-none focus:border-[#B07A85]"
+                 style={{ fontFamily: "'Gotham', sans-serif" }}
+               />
+             </div>
+
+             {/* Forgot Password */}
+             <div className="mb-14">
+               <a href="#" className="text-[11.5px] font-bold text-[#111] border-b border-gray-300 pb-[1px] tracking-wide" style={{ fontFamily: "'Gotham', sans-serif" }}>Forgot Your Password?</a>
+             </div>
+
+             {/* Login Button */}
+             <button 
+               type="submit"
+               disabled={loading}
+               className="w-full bg-[#ab6281] text-white py-4 text-[11px] font-bold tracking-[0.1em] uppercase transition-opacity hover:opacity-90 flex justify-center"
+               style={{ fontFamily: "'Gotham', sans-serif" }}
+             >
+               {loading ? 'LOGGING IN...' : 'LOGIN'}
+             </button>
+          </form>
+          
+          {/* Footer */}
+          <div className="mt-8 flex justify-center items-center gap-2">
+            <span className="text-[11.5px] text-[#333]" style={{ fontFamily: "'Gotham', sans-serif" }}>Need help?</span>
+            <div className="flex items-center gap-1.5 cursor-pointer">
+               <img src={whatsappIcon} alt="WhatsApp" className="w-[18px] h-[18px]" style={{ filter: 'brightness(0)' }} />
+               <span className="text-[11.5px] font-bold text-[#111]" style={{ fontFamily: "'Gotham', sans-serif" }}>Whatsapp Us</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#FFF8F3] flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative">

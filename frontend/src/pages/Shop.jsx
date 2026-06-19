@@ -11,6 +11,8 @@ import ProductGridSkeleton from '../components/ProductGridSkeleton';
 import { useAllProducts } from '../hooks/useProducts';
 import DesktopShop from './DesktopShop';
 import useIsDesktop from '../hooks/useIsDesktop';
+import { useWishlist } from '../context/WishlistContext';
+import { getOptimizedCloudinaryUrl } from '../utils/imageUtils';
 
 /* ── Sort options ── */
 const SORT_OPTIONS = [
@@ -23,6 +25,7 @@ const SORT_OPTIONS = [
 
 const JewelleryListing = () => {
   const isDesktop = useIsDesktop();
+  const { toggleWishlist, isInWishlist } = useWishlist();
 
   // Modal toggle states
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -347,20 +350,22 @@ const JewelleryListing = () => {
       </header>
 
       {/* ── Mobile-only Filter & Sort bar ── (hidden on md+) */}
-      <div className="md:hidden flex justify-between items-center px-4 py-[8px] border-b border-[#F0EDED] sticky top-[60px] z-20 bg-white">
+      <div className="md:hidden flex justify-between items-center px-4 py-3 border-b border-gray-100 sticky top-[60px] z-20 bg-white">
         <button
           onClick={() => setIsFilterOpen(true)}
-          className="flex items-center gap-[3px] text-[13px] font-medium text-[#1A1A1A]"
+          className="flex items-center gap-2 text-[10.5px] font-bold tracking-[0.1em] text-[#111] uppercase"
+          style={{ fontFamily: "'Gotham', sans-serif" }}
         >
-          Filter <ChevronDown size={14} strokeWidth={2.2} />
+          <SlidersHorizontal size={14} strokeWidth={2} /> FILTER
         </button>
         <div
           onClick={() => setIsSortOpen(true)}
-          className="flex items-center gap-[5px] text-[12px] cursor-pointer"
+          className="flex items-center gap-1.5 text-[10.5px] cursor-pointer"
+          style={{ fontFamily: "'Gotham', sans-serif" }}
         >
-          <span className="text-[#999] font-normal">Sort by :</span>
-          <span className="text-[#1A1A1A] font-semibold">{getSortLabel(activeSort)}</span>
-          <ChevronDown size={12} strokeWidth={2.2} className="text-[#1A1A1A]" />
+          <span className="text-[#666]">Sort by :</span>
+          <span className="text-[#111] font-bold">{getSortLabel(activeSort)}</span>
+          <ChevronDown size={14} strokeWidth={2} className="text-[#111]" />
         </div>
       </div>
 
@@ -453,7 +458,7 @@ const JewelleryListing = () => {
           </div>
 
           {/* ── Product Grid ── */}
-          <div className="px-[14px] md:px-5 pt-[4px] md:pt-4 pb-8">
+          <div className="px-[4px] pt-[4px] pb-8">
             {isLoading ? (
               /* Phase 7: Skeleton loader — no more blocking spinner */
               <ProductGridSkeleton count={12} />
@@ -479,10 +484,66 @@ const JewelleryListing = () => {
             ) : (
               <>
                 {/* ── Responsive Product Grid with infinite scroll ── */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[10px] md:gap-4">
-                  {sortedProducts.slice(0, visibleCount).map((product, index) => (
-                    <Card key={product._id} jewellery={product} priority={index < 6} />
-                  ))}
+                <div className="grid grid-cols-2 gap-[4px]">
+                  {sortedProducts.slice(0, visibleCount).map((product, index) => {
+                    const liked = isInWishlist(product._id || product.code);
+                    const imageUrl = product.images?.[0]?.url || 'https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=800&q=80';
+                    return (
+                      <Link
+                        key={product._id}
+                        to={`/shop/${product._id || product.code}`}
+                        className="block group bg-white"
+                      >
+                        <div className="relative overflow-hidden bg-[#F0EDED]" style={{ aspectRatio: '3/4' }}>
+                          {product.images?.[0]?.type === 'video' ? (
+                            <video
+                              src={product.images[0].url}
+                              className="w-full h-full object-cover"
+                              muted
+                              loop
+                              playsInline
+                              autoPlay
+                            />
+                          ) : (
+                            <img
+                              src={getOptimizedCloudinaryUrl(imageUrl, { width: 400, height: 533 })}
+                              alt={product.name}
+                              className="w-full h-full object-cover"
+                              loading={index < 6 ? "eager" : "lazy"}
+                              fetchPriority={index < 6 ? "high" : "auto"}
+                            />
+                          )}
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              toggleWishlist(product);
+                            }}
+                            className={`absolute top-2 right-2 w-[24px] h-[24px] flex items-center justify-center transition-all ${liked ? '' : 'opacity-80'}`}
+                          >
+                            <Heart
+                              size={16}
+                              className={liked ? 'fill-[#A65A6F] text-[#A65A6F]' : 'text-white'}
+                              strokeWidth={1.5}
+                            />
+                          </button>
+                        </div>
+                        <div className="pt-2 pb-4 px-1">
+                          <p className="text-[10px] font-bold text-[#111] mb-[2px]" style={{ fontFamily: "'Gotham', sans-serif" }}>
+                            {Array.isArray(product.category) ? product.category.join(', ') : product.category}
+                          </p>
+                          <h3 className="text-[9.5px] text-[#666] line-clamp-2 leading-[1.3] mb-1.5" style={{ fontFamily: "'Gotham', sans-serif" }}>
+                            {product.name}
+                          </h3>
+                          <p className="text-[11px] font-bold text-[#111]" style={{ fontFamily: "'Gotham', sans-serif" }}>
+                            {product.rentalPrice >= 2000
+                              ? 'Premium Collection'
+                              : `₹${product.rentalPrice?.toFixed(2)}`}
+                          </p>
+                        </div>
+                      </Link>
+                    );
+                  })}
                 </div>
                 {/* sentinel element for infinite scroll */}
                 <div ref={loadMoreRef} className="h-1"></div>

@@ -16,7 +16,7 @@ import CategoryContext from '../context/CategoryContext';
 
 import API_BASE_URL from '../config/api';
 
-import MobileHeroBanner from '../assets/mobile-hero-banner.jpg';
+import MobileHeroBanner from '../assets/hero-banner.jpg';
 
 
 

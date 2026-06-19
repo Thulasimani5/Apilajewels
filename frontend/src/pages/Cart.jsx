@@ -8,6 +8,7 @@ import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import DesktopCart from './DesktopCart';
 import useIsDesktop from '../hooks/useIsDesktop';
+import Navbar from '../components/Navbar';
 import '../styles/ApilaJewels.css';
 
 const Cart = () => {
@@ -65,106 +66,153 @@ const Cart = () => {
   };
 
   return (
-    <div className="bg-[#FFF8F3] min-h-screen pb-28">
-      {/* Custom Header */}
-      <div className="sticky top-0 bg-[#FFF8F3] z-40 px-4 py-4 flex items-center justify-between shadow-sm">
-        <div className="flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="text-black">
-            <ArrowLeft size={24} />
-          </button>
-          <h1 className="font-semibold text-lg">My Cart</h1>
-        </div>
-        <div className="flex items-center gap-4 text-gray-700">
-          <button onClick={() => setIsSearchOpen(true)}><Search size={22} /></button>
-          <button onClick={() => navigate('/wishlist')}><Heart size={22} /></button>
-          <button onClick={() => setIsShareOpen(true)}><Share2 size={22} /></button>
-        </div>
-      </div>
+    <div className="bg-[#FFF8F3] min-h-[100dvh] flex flex-col pb-28">
+      <Navbar />
+      <div className="flex-1 mt-[64px] md:mt-[80px] px-4 pt-6 pb-6">
+        <h2 className="text-[#111] mb-6" style={{ fontFamily: "'Belgant Aesthetic', Georgia, serif", fontSize: '20px', fontWeight: 'normal' }}>
+          Your Order ({cartItems.length})
+        </h2>
 
-      <div className="px-4 py-6 space-y-4">
         {cartItems.length === 0 ? (
           <div className="text-center py-10 text-gray-500">
             Your cart is empty
           </div>
         ) : (
-          cartItems.map((item) => (
-            <div key={item._id} className="bg-white rounded-2xl p-3 flex gap-3 relative shadow-sm items-center">
-              <button 
-                onClick={() => removeFromCart(item._id)}
-                className="absolute top-3 right-3 text-gray-300 hover:text-red-500 transition-colors"
-              >
-                <X size={16} />
-              </button>
-              
-              <div 
-                className="w-[80px] h-[80px] rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 relative cursor-pointer group"
-                onClick={() => toggleSelection(item._id)}
-              >
-                {item.images?.[0]?.type === 'video' ? (
-                  <video src={item.images[0].url} className="w-full h-full object-cover" />
-                ) : (
-              <LazyImage src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" width={80} height={80} />
-                )}
+          <div className="space-y-4">
+            {cartItems.map((item) => (
+              <div key={item._id} className="bg-white p-3 flex gap-4 relative shadow-[0_2px_8px_rgba(0,0,0,0.04)] items-start">
+                <button 
+                  onClick={() => removeFromCart(item._id)}
+                  className="absolute top-3 right-3 text-[#D9D9D9] hover:text-red-500 transition-colors z-10"
+                >
+                  <X size={14} strokeWidth={2} />
+                </button>
                 
-                <div className={`absolute inset-0 bg-black/10 transition-opacity ${selectedItems.includes(item._id) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`} />
+                <div 
+                  className="w-[90px] h-[100px] overflow-hidden bg-gray-100 flex-shrink-0 relative cursor-pointer group border border-[#EAEAEA]"
+                  onClick={() => toggleSelection(item._id)}
+                >
+                  {item.images?.[0]?.type === 'video' ? (
+                    <video src={item.images[0].url} className="w-full h-full object-cover" />
+                  ) : (
+                    <LazyImage src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" />
+                  )}
+                  
+                  {/* Selection Checkmark */}
+                  <div className={`absolute top-1.5 left-1.5 w-4 h-4 rounded-full flex items-center justify-center transition-colors border ${selectedItems.includes(item._id) ? 'bg-white border-white' : 'bg-transparent border-white text-transparent'}`}>
+                    {selectedItems.includes(item._id) && (
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#B07A85" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    )}
+                  </div>
+                </div>
                 
-                <div className={`absolute top-1 left-1 w-5 h-5 rounded-full flex items-center justify-center transition-colors border-2 ${selectedItems.includes(item._id) ? 'bg-[#8B1A10] border-[#8B1A10] text-white' : 'bg-white/50 border-white text-transparent'}`}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <div className="flex-1 pt-0.5 pb-1 flex flex-col justify-between" style={{ minHeight: '96px' }}>
+                  <div className="pr-5">
+                    <p className="text-[10px] text-[#666] mb-1 font-bold tracking-[0.08em] uppercase" style={{ fontFamily: "'Gotham', sans-serif" }}>
+                      {item.type || 'Moissinate Jewels'}
+                    </p>
+                    <h3 className="text-[11px] text-[#888] leading-[1.3] pr-2 line-clamp-2" style={{ fontFamily: "'Gotham', sans-serif" }}>
+                      {item.name}
+                    </h3>
+                  </div>
+                  
+                  <div className="flex justify-between items-end mt-2">
+                    <p className="text-[9px] text-[#A0A0A0]" style={{ fontFamily: "'Gotham', sans-serif" }}>
+                      Ref : {item.code || 'MP000'}
+                    </p>
+                    <div className="font-bold text-[11px] text-[#111]" style={{ fontFamily: "'Gotham', sans-serif" }}>
+                      {(item.rentalPrice || item.price || 0) >= 2000 ? 'Price on Request' : `₹${(item.rentalPrice || item.price || 0).toFixed(2)}`}
+                    </div>
+                  </div>
                 </div>
               </div>
-              
-              <div className="flex-1 pt-1">
-                <p className="text-[10px] text-gray-400 mb-0.5" style={{ fontFamily: "'Gotham Book', sans-serif" }}>{item.type}</p>
-                <h3 className="text-[13px] font-bold text-gray-900 leading-tight pr-4" style={{ fontFamily: "'Gotham Book', sans-serif" }}>
-                  {item.name}
-                </h3>
-              </div>
-              
-              <div className="font-bold text-sm text-gray-900 self-center" style={{ fontFamily: "'Gotham Book', sans-serif" }}>
-                {(item.rentalPrice || item.price || 0) >= 2000 ? 'Price on Request' : `₹${(item.rentalPrice || item.price || 0).toFixed(2)}`}
-              </div>
-            </div>
-          ))
+            ))}
+          </div>
         )}
 
         {/* Total Summary */}
         {cartItems.length > 0 && (
-          <div className="bg-white rounded-2xl p-5 shadow-sm mt-6 space-y-2">
-            {premiumSelected.length > 0 && (
+          <div className="mt-8 space-y-6">
+            <div className="flex border border-[#EAEAEA] bg-white h-[44px]">
+              <input 
+                type="text" 
+                placeholder="Enter Coupen Code" 
+                className="flex-1 px-4 text-[11px] text-[#666] outline-none placeholder-[#A0A0A0] bg-transparent"
+                style={{ fontFamily: "'Gotham', sans-serif" }}
+              />
+              <button 
+                className="px-6 font-bold text-[11px] text-[#111] border-l border-[#EAEAEA] bg-transparent hover:bg-gray-50 transition-colors"
+                style={{ fontFamily: "'Gotham', sans-serif" }}
+              >
+                Apply
+              </button>
+            </div>
+
+            <div className="pt-6 border-t border-[#EAEAEA] space-y-4">
               <div className="flex justify-between items-center">
-                <span className="font-bold text-gray-900">Premium Jewels ({premiumSelected.length} {premiumSelected.length === 1 ? 'Item' : 'Items'})</span>
-                <span className="font-bold text-gray-900">Price on Request</span>
+                <span className="uppercase text-[10px] font-bold text-[#666] tracking-wide" style={{ fontFamily: "'Gotham', sans-serif" }}>Sub Total ( {pricedSelected.length} Items )</span>
+                <span className="font-bold text-[11px] text-[#111]" style={{ fontFamily: "'Gotham', sans-serif" }}>₹{pricedAmount.toFixed(2)}</span>
               </div>
-            )}
-            {pricedSelected.length > 0 && (
+              
+              {premiumSelected.length > 0 && (
+                <div className="flex justify-between items-center">
+                  <span className="uppercase text-[10px] font-bold text-[#666] tracking-wide" style={{ fontFamily: "'Gotham', sans-serif" }}>Premium Jewels ( {premiumSelected.length} Items )</span>
+                  <span className="font-bold text-[11px] text-[#111]" style={{ fontFamily: "'Gotham', sans-serif" }}>Price on Request</span>
+                </div>
+              )}
+
               <div className="flex justify-between items-center">
-                <span className="font-bold text-gray-900">Sub Total ({pricedSelected.length} {pricedSelected.length === 1 ? 'Item' : 'Items'})</span>
-                <span className="font-bold text-gray-900">₹{pricedAmount.toFixed(2)}</span>
+                <span className="uppercase text-[10px] font-bold text-[#666] tracking-wide" style={{ fontFamily: "'Gotham', sans-serif" }}>Shipping</span>
+                <span className="font-bold text-[11px] text-[#111]" style={{ fontFamily: "'Gotham', sans-serif" }}>Free</span>
               </div>
-            )}
-            {selectedCartItems.length === 0 && (
-              <div className="flex justify-between items-center">
-                <span className="font-bold text-gray-900">Total Selected</span>
-                <span className="font-bold text-gray-900">₹0.00</span>
+
+              <div className="flex justify-between items-center pb-4 border-b border-[#EAEAEA]">
+                <span className="uppercase text-[10px] font-bold text-[#666] tracking-wide" style={{ fontFamily: "'Gotham', sans-serif" }}>Discount</span>
+                <span className="font-bold text-[11px] text-[#111]" style={{ fontFamily: "'Gotham', sans-serif" }}>₹0</span>
               </div>
-            )}
+
+              <div className="flex justify-between items-center pt-2">
+                <span className="uppercase text-[12px] font-bold text-[#111] tracking-wide" style={{ fontFamily: "'Gotham', sans-serif" }}>Total</span>
+                <span className="font-bold text-[12px] text-[#111]" style={{ fontFamily: "'Gotham', sans-serif" }}>₹{pricedAmount.toFixed(2)}</span>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center gap-2 bg-white border border-[#EAEAEA] py-3.5 mt-6">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="1" y="3" width="15" height="13"></rect>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+              </svg>
+              <span className="text-[10px] font-bold text-[#111]" style={{ fontFamily: "'Gotham', sans-serif" }}>Estimated Delivery: 3 - 4 days</span>
+            </div>
+
+            <p className="text-center text-[10px] text-[#A0A0A0] mt-6 leading-relaxed" style={{ fontFamily: "'Gotham', sans-serif" }}>
+              Need Live Video or Help? Get Instant Assistance<br />
+              From Our Jewellery Expert
+            </p>
           </div>
         )}
       </div>
 
       {/* Fixed Bottom Button */}
       {cartItems.length > 0 && (
-        <div className="fixed bottom-0 left-0 w-full bg-white px-4 py-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)]">
+        <div className="fixed bottom-0 left-0 w-full bg-white px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] flex justify-between items-center z-40 border-t border-[#EAEAEA]">
+          <div className="flex flex-col">
+            <span className="font-bold text-[13px] text-[#111]" style={{ fontFamily: "'Gotham', sans-serif" }}>₹{pricedAmount.toFixed(2)}</span>
+            <span className="text-[9px] text-[#888] underline mt-0.5 cursor-pointer" style={{ fontFamily: "'Gotham', sans-serif" }}>View Price Details</span>
+          </div>
           <button 
             onClick={handleBookOnWhatsapp}
-            className={`w-full py-4 font-semibold rounded-xl text-sm transition-colors ${selectedItems.length > 0 ? 'bg-[#B07A85] text-white hover:bg-[#9E6A75]' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
+            className={`px-8 py-3.5 font-bold tracking-[0.1em] text-[9px] uppercase transition-colors ${selectedItems.length > 0 ? 'bg-[#B07A85] text-white hover:bg-[#9E6A75]' : 'bg-gray-200 text-gray-500 cursor-not-allowed'}`}
+            style={{ fontFamily: "'Gotham', sans-serif" }}
           >
-            Book Selected ({selectedItems.length})
+            BOOK ON WHATSAPP
           </button>
         </div>
       )}
-    <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-    <ShareBottomSheet isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} customTitle="Check out my cart at Apila Jewels!" />
+      <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      <ShareBottomSheet isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} customTitle="Check out my cart at Apila Jewels!" />
     </div>
   );
 };

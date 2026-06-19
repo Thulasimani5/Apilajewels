@@ -7,6 +7,8 @@ import ProductDetails from './pages/ProductDetails';
 import Cart from './pages/Cart';
 import Wishlist from './pages/Wishlist';
 import AdminDashboard from './pages/AdminDashboard';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import CookieBanner from './components/CookieBanner';
 
 function App() {
@@ -24,6 +26,8 @@ function App() {
           <Route path="/shop/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/admin" element={<AdminDashboard />} />
         </Routes>
         </div>

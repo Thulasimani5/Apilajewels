@@ -8,11 +8,14 @@ import ShareBottomSheet from '../components/ShareBottomSheet';
 import LazyImage from '../components/LazyImage';
 import DesktopWishlist from './DesktopWishlist';
 import useIsDesktop from '../hooks/useIsDesktop';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 const Wishlist = () => {
   const isDesktop = useIsDesktop();
   const navigate = useNavigate();
   const { wishlistItems, toggleWishlist } = useWishlist();
+  const { user } = useAuth();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
 
@@ -24,46 +27,50 @@ const Wishlist = () => {
     return <DesktopWishlist />;
   }
 
-  return (
-    <div className={`bg-[#FFF8F3] flex flex-col ${wishlistItems.length === 0 ? 'h-[100dvh] overflow-hidden pb-0' : 'min-h-screen pb-28'}`}>
-      {/* Custom Header - Matching Cart styling exactly */}
-      <div className="sticky top-0 bg-[#FFF8F3] z-40 px-4 py-4 flex items-center justify-between shadow-sm">
-        <div className="flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="text-black">
-            <ArrowLeft size={24} />
-          </button>
-          <h1 className="font-semibold text-lg">My Wishlist</h1>
+  if (wishlistItems.length === 0) {
+    return (
+      <div className="bg-white flex flex-col min-h-[100dvh]">
+        <Navbar />
+        <div className="flex-1 flex flex-col items-center justify-center bg-white border-b border-[#EAEAEA] mt-[64px] md:mt-[80px] py-20">
+          <h2 className="uppercase mb-4 text-[#111] text-center" style={{ fontFamily: "'Belgant Aesthetic', Georgia, serif", fontSize: '26px', letterSpacing: '0.02em', fontWeight: 'normal' }}>
+            YOUR WISHLIST IS EMPTY
+          </h2>
+          <p className="text-[#666] text-center" style={{ fontFamily: "'Gotham', sans-serif", fontSize: '13px' }}>
+            Your saved jewellery will appear here.
+          </p>
         </div>
-        <div className="flex items-center gap-4 text-gray-700">
-          <button onClick={() => setIsSearchOpen(true)} className="text-gray-700"><Search size={22} /></button>
-          <Link to="/cart"><ShoppingCart size={22} /></Link>
-          <button onClick={() => setIsShareOpen(true)}><Share2 size={22} /></button>
-        </div>
+        <Footer />
+        <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+        <ShareBottomSheet isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} customTitle="Check out my wishlist at Apila Jewels!" />
       </div>
+    );
+  }
 
-      <div className={wishlistItems.length === 0 ? "flex-1 flex flex-col items-center justify-center px-4" : "px-4 py-6 space-y-4"}>
-        {wishlistItems.length === 0 ? (
-          <div className="flex flex-col items-center justify-center text-center">
-            <div className="w-16 h-16 bg-white shadow-sm rounded-full flex items-center justify-center mb-5">
-               <Heart size={28} className="text-gray-300" strokeWidth={1.5} />
-            </div>
-            <h2 className="text-lg font-medium text-gray-900 mb-2">Your wishlist is empty</h2>
-            <p className="text-sm text-gray-500 mb-8 max-w-[260px]">
-              Explore our collection and add your favorite jewellery here to save them for later.
+  return (
+    <div className="bg-white flex flex-col min-h-[100dvh]">
+      <Navbar />
+      <div className="flex-1 flex flex-col mt-[64px] md:mt-[80px] bg-white border-b border-[#EAEAEA] pb-14">
+        <div className="px-4 pt-6 pb-6">
+          <h2 className="text-[#111]" style={{ fontFamily: "'Belgant Aesthetic', Georgia, serif", fontSize: '24px', fontWeight: 'normal' }}>
+            My Wishlist
+          </h2>
+          {!user && (
+            <p className="text-[#666] mt-2 leading-[1.6]" style={{ fontFamily: "'Gotham', sans-serif", fontSize: '11px' }}>
+              Wishlist is not saved permanently yet.<br />
+              Please <Link to="/login" className="font-bold border-b border-[#111] pb-[1px] text-[#111]">Create Account</Link> to save it.
             </p>
-            <Link to="/shop" className="px-8 py-3 bg-[#B07A85] text-white rounded-lg text-sm font-semibold transition-colors hover:bg-[#9E6A75]">
-              Explore Collection
-            </Link>
-          </div>
-        ) : (
-          wishlistItems.map((item) => (
-            <div key={item._id} className="bg-white rounded-2xl p-3 flex gap-3 relative shadow-sm items-center">
+          )}
+        </div>
+
+        <div className="px-4 py-2 space-y-4">
+          {wishlistItems.map((item) => (
+            <div key={item._id} className="bg-white rounded-2xl p-3 flex gap-3 relative shadow-[0_2px_10px_rgba(0,0,0,0.05)] border border-gray-100 items-center">
               <button 
                 onClick={(e) => {
                   e.preventDefault();
                   toggleWishlist(item);
                 }}
-                className="absolute top-3 right-3 text-gray-300 hover:text-red-500 transition-colors"
+                className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition-colors z-10"
               >
                 <X size={16} />
               </button>
@@ -74,15 +81,15 @@ const Wishlist = () => {
                 ) : (
                   <LazyImage src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" width={80} height={80} />
                 )}
-                <div className="absolute top-1 left-1 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
+                <div className="absolute top-1 left-1 bg-[#A65A6F] text-white rounded-full w-4 h-4 flex items-center justify-center">
                   <Heart size={8} fill="white" strokeWidth={0} />
                 </div>
               </Link>
               
-              <div className="flex-1 pt-1">
+              <div className="flex-1 pt-1 pr-6">
                 <Link to={`/shop/${item._id || item.code}`} className="block">
-                  <p className="text-[10px] text-gray-400 mb-0.5">{item.type}</p>
-                  <h3 className="text-[13px] font-bold text-gray-900 leading-tight pr-4">
+                  <p className="text-[10px] text-gray-400 mb-0.5">{item.type || 'Apila Jewels'}</p>
+                  <h3 className="text-[13px] font-bold text-gray-900 leading-tight line-clamp-2">
                     {item.name}
                   </h3>
                 </Link>
@@ -92,11 +99,12 @@ const Wishlist = () => {
                 ₹{item.rentalPrice?.toFixed(2)}
               </div>
             </div>
-          ))
-        )}
+          ))}
+        </div>
       </div>
-    <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-    <ShareBottomSheet isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} customTitle="Check out my wishlist at Apila Jewels!" />
+      <Footer />
+      <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      <ShareBottomSheet isOpen={isShareOpen} onClose={() => setIsShareOpen(false)} customTitle="Check out my wishlist at Apila Jewels!" />
     </div>
   );
 };

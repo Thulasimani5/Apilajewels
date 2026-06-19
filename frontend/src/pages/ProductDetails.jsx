@@ -35,6 +35,25 @@ const Accordion = ({ title, children, defaultOpen = false }) => {
     </div>
   );
 };
+const MobileAccordion = ({ title, children, defaultOpen = false }) => {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="border-t border-gray-100">
+      <button 
+        className="w-full flex justify-between items-center py-4 text-left focus:outline-none" 
+        onClick={() => setOpen(!open)}
+      >
+        <span className="text-[11px] text-[#111]" style={{ fontFamily: "'Gotham', sans-serif" }}>{title}</span>
+        <ChevronDown size={14} className={`text-gray-500 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <div className="pb-4 text-[11px] text-[#666] leading-[1.6]" style={{ fontFamily: "'Gotham', sans-serif" }}>
+          {children}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const ProductDetails = () => {
   const isDesktop = useIsDesktop();
@@ -259,7 +278,7 @@ const ProductDetails = () => {
   );
 
   return (
-    <div className="bg-[#FFF8F3] min-h-screen pb-24 overflow-x-hidden">
+    <div className="bg-white min-h-screen pb-24 overflow-x-hidden">
       {/* Shared Navbar (includes hamburger menu + drawer, same as home page) */}
       <Navbar />
 
@@ -294,13 +313,97 @@ const ProductDetails = () => {
         </div>
 
         {/* Details Container */}
-        <div className="bg-[#FFF8F3] relative pt-4 px-2">
-          <ProductInfo />
+        <div className="bg-white relative px-4 pt-4 pb-6">
+          <div className="flex justify-between items-start mb-1">
+            <span className="uppercase text-[10px] font-bold tracking-[0.1em] text-[#666]" style={{ fontFamily: "'Gotham', sans-serif" }}>
+              {product.type || 'Moissinate Jewels'}
+            </span>
+            <div className="flex gap-4">
+              <button 
+                onClick={() => toggleWishlist(product)}
+                className="text-gray-500 transition-colors"
+              >
+                <Heart size={16} className={isInWishlist(product._id) ? "fill-red-500 text-red-500" : "text-[#111]"} />
+              </button>
+              <button 
+                onClick={handleShare}
+                className="text-gray-500 transition-colors"
+              >
+                <Share2 size={16} className="text-[#111]" />
+              </button>
+            </div>
+          </div>
+
+          <h1 className="text-[#111] text-lg leading-[1.3] mb-3 pr-8" style={{ fontFamily: "'Belgant Aesthetic', Georgia, serif", fontSize: '20px' }}>
+            {product.name}
+          </h1>
+          
+          <div className="font-bold text-[14px] text-[#111] mb-6" style={{ fontFamily: "'Gotham', sans-serif" }}>
+            {(product.rentalPrice || product.price || 0) >= 2000 
+              ? 'Price on Request' 
+              : `₹${(product.rentalPrice || product.price || 0).toFixed(2)}`}
+          </div>
+
+          <div className="space-y-2 mb-6">
+            <button
+              onClick={handleAddToCart}
+              className="w-full py-3.5 border border-[#111] text-[#111] font-bold tracking-[0.1em] text-[10px] uppercase transition-colors"
+              style={{ fontFamily: "'Gotham', sans-serif" }}
+            >
+              ADD TO BAG
+            </button>
+            <button
+              onClick={handleBookOnWhatsapp}
+              className="w-full py-3.5 bg-[#B07A85] text-white font-bold tracking-[0.1em] text-[10px] uppercase transition-colors shadow-[0_4px_14px_rgba(176,122,133,0.2)]"
+              style={{ fontFamily: "'Gotham', sans-serif" }}
+            >
+              BOOK ON WHATSAPP
+            </button>
+          </div>
+
+          {/* Features list */}
+          <div className="flex justify-between items-center py-4 border-t border-b border-gray-100 mb-6 px-2">
+            <div className="flex flex-col items-center gap-2 w-1/3 border-r border-gray-100">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
+              <span className="text-[9px] text-center text-[#666] leading-tight" style={{ fontFamily: "'Gotham', sans-serif" }}>Secure<br/>Delivery</span>
+            </div>
+            <div className="flex flex-col items-center gap-2 w-1/3 border-r border-gray-100">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="1.5"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
+              <span className="text-[9px] text-center text-[#666] leading-tight" style={{ fontFamily: "'Gotham', sans-serif" }}>Easy Return /<br/>Pickup</span>
+            </div>
+            <div className="flex flex-col items-center gap-2 w-1/3">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="1.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+              <span className="text-[9px] text-center text-[#666] leading-tight" style={{ fontFamily: "'Gotham', sans-serif" }}>Whatsapp<br/>Support</span>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div className="mb-6">
+            <h3 className="text-[#111] mb-2 text-[11px]" style={{ fontFamily: "'Gotham', sans-serif" }}>Description</h3>
+            <p className="text-[11px] leading-[1.6] text-[#666]" style={{ fontFamily: "'Gotham', sans-serif" }}>
+              {product.description || 'No description available.'}
+            </p>
+          </div>
+
+          {/* Accordions */}
+          <div className="border-b border-gray-200/80 mb-8">
+            <MobileAccordion title="Specifications">
+              <p><span className="font-bold text-black">Material : </span>{product.material || 'Premium Alloy'}</p>
+              <p className="mt-1"><span className="font-bold text-black">Size : </span>{product.size || 'Adjustable'}</p>
+              <p className="mt-1"><span className="font-bold text-black">Finish : </span>{product.finish || 'Antique'}</p>
+            </MobileAccordion>
+            <MobileAccordion title="Delivery & Return Policy">
+              <p>Standard delivery within 3–5 business days. Easy returns within 7 days of receipt.</p>
+            </MobileAccordion>
+            <MobileAccordion title="Care Instructions">
+              <p>Store in a dry place. Avoid contact with water, perfume, and harsh chemicals. Clean gently with a soft cloth.</p>
+            </MobileAccordion>
+          </div>
 
           {/* Related Jewels Section */}
-          <div className="pt-8 pb-10 mt-2 border-t border-gray-200/60 relative z-20">
-            <h2 className="text-lg font-bold text-gray-900 mb-4 px-1">Related Jewels</h2>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-[10px]">
+          <div className="pt-2 pb-10">
+            <h2 className="text-[20px] text-center mb-6 text-[#111]" style={{ fontFamily: "'Belgant Aesthetic', Georgia, serif", fontWeight: 'normal' }}>You May Also Like</h2>
+            <div className="grid grid-cols-2 gap-x-2 gap-y-6">
               {relatedProducts.map(prod => (
                 <Card key={prod._id} jewellery={prod} />
               ))}
