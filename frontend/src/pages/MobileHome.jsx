@@ -20,8 +20,13 @@ import MobileHeroBanner from '../assets/images/Header-image11-1.jpg';
 
 
 
-import imgSemiBridal from '../assets/images/c5.jpg';
-import imgFullBridal from '../assets/images/c6.jpg';
+import imgChokerNecklace from '../assets/images/jtype-choker-necklace.jpg';
+import imgLongHaram from '../assets/images/jtype-long-haram.jpg';
+import imgBanglesBracelets from '../assets/images/jtype-bangles-bracelets.jpg';
+import imgAccessories from '../assets/images/jtype-accessories.jpg';
+
+import imgSemiBridal from '../assets/images/jtype-semi-bridal.jpg';
+import imgFullBridal from '../assets/images/jtype-full-bridal.jpg';
 
 import imgC1 from '../assets/images/c1.jpg';
 
@@ -428,11 +433,12 @@ const Home = () => {
           >
 
             {[
-
               { img: imgSemiBridal, title: 'Semi Bridal & Combo Sets', href: '/shop?category=semi-bridal' },
-
               { img: imgFullBridal, title: 'Full Bridal Set', href: '/shop?category=full-bridal' },
-
+              { img: imgChokerNecklace, title: 'Choker & Necklace', href: '/shop?category=choker-necklace' },
+              { img: imgLongHaram, title: 'Long Haram', href: '/shop?category=long-haram' },
+              { img: imgBanglesBracelets, title: 'Bangles & Bracelets', href: '/shop?category=bangles-bracelets' },
+              { img: imgAccessories, title: 'Accessories', href: '/shop?category=accessories' },
             ].map((card) => (
 
               <Link
@@ -467,7 +473,7 @@ const Home = () => {
 
                     style={{
 
-                      fontFamily: "'Belgant Aesthetic', Georgia, serif",
+                      fontFamily: "'Belgan Aesthetic', Georgia, serif",
 
                       fontSize: 'clamp(18px, 5.83vw, 24px)',
 
@@ -484,6 +490,32 @@ const Home = () => {
                     {card.title}
 
                   </h3>
+
+                  {card.subtitle && (
+
+                    <p
+
+                      className="text-white mt-[4px]"
+
+                      style={{
+
+                        fontFamily: "'Gotham Light', sans-serif",
+
+                        fontSize: '13px',
+
+                        letterSpacing: '-0.13px',
+
+                        opacity: 0.9,
+
+                      }}
+
+                    >
+
+                      {card.subtitle}
+
+                    </p>
+
+                  )}
 
                 </div>
 
