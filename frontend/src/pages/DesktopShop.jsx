@@ -6,6 +6,7 @@ import { useWishlist } from '../context/WishlistContext';
 import { useAuth } from '../context/AuthContext';
 import { getOptimizedCloudinaryUrl } from '../utils/imageUtils';
 import DesktopSearchOverlay from './DesktopSearchOverlay';
+import DesktopLoginOverlay from './DesktopLoginOverlay';
 import apilaLogo from '../assets/Apila Logo01.svg';
 import iconCall from '../assets/icons/call.svg';
 import iconMail from '../assets/icons/mail.svg';
@@ -149,6 +150,7 @@ export default function DesktopShop() {
   /* ── Navbar hide on scroll-down ── */
   const [navHidden, setNavHidden] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   useEffect(() => {
     let lastY = window.scrollY;
@@ -327,7 +329,7 @@ export default function DesktopShop() {
           <div className="nav-right">
             <button className="nav-icon-btn" aria-label="Wishlist" onClick={() => navigate('/wishlist')}>{navIcons.heart}</button>
             <button className="nav-icon-btn" aria-label="Cart" onClick={() => navigate('/cart')}>{navIcons.cart}</button>
-            <button className="nav-icon-btn" aria-label="Account" onClick={() => navigate('/login')}>{navIcons.acct}</button>
+            <button className="nav-icon-btn" aria-label="Account" onClick={() => setIsLoginOpen(prev => !prev)}>{navIcons.acct}</button>
           </div>
         </nav>
       </header>
@@ -520,8 +522,9 @@ export default function DesktopShop() {
         </div>
       </div>
 
-      {/* ── Search Overlay ── */}
-      {isSearchOpen && <DesktopSearchOverlay onClose={() => setIsSearchOpen(false)} />}
+      {/* ── Overlays ── */}
+      {isSearchOpen && <DesktopSearchOverlay onClose={() => setIsSearchOpen(false)} onLoginOpen={() => { setIsSearchOpen(false); setIsLoginOpen(true); }} />}
+      {isLoginOpen && <DesktopLoginOverlay onClose={() => setIsLoginOpen(false)} />}
 
       {/* ── MENU DRAWER (Figma 491:2) ── */}
       <div className={`menu-overlay${isDrawerOpen ? ' open' : ''}`} aria-hidden={!isDrawerOpen}>

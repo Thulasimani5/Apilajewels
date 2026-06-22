@@ -38,6 +38,18 @@ import carouselImg5 from '../assets/images/carousel5.jpg';
 import carouselImg6 from '../assets/images/carousel6.jpg';
 import carouselImg7 from '../assets/images/carousel7.jpg';
 
+import imgVictorianMoissinate from '../assets/images/jtype-victorian-moissinate.jpg';
+import imgAmericanDiamond from '../assets/images/jtype-american-diamond.jpg';
+import imgGoldAntique from '../assets/images/jtype-gold-antique.jpg';
+import imgKundan from '../assets/images/jtype-kundan.jpg';
+
+import imgAccessories from '../assets/images/jtype-accessories.jpg';
+import imgBanglesBracelets from '../assets/images/jtype-bangles-bracelets.jpg';
+import imgLongHaram from '../assets/images/jtype-long-haram.jpg';
+import imgChokerNecklace from '../assets/images/jtype-choker-necklace.jpg';
+import imgSemiBridal from '../assets/images/jtype-semi-bridal.jpg';
+import imgFullBridal from '../assets/images/jtype-full-bridal.jpg';
+
 /* Module-level cache for Trending grid — persists across re-renders & overlay toggles */
 let trendingGridMemCache = null;
 const TRENDING_GRID_CACHE_KEY = 'apila_trending_grid_v2';
@@ -154,7 +166,7 @@ export default function Home() {
   const [scrolled, setScrolled] = useState(false);
   const [navHidden, setNavHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   /* lock body scroll while menu is open */
   useEffect(() => {
@@ -293,15 +305,22 @@ export default function Home() {
     setWishlisted(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  /* Carousel — 7 static cards matching Figma design */
+  /* Grid — 4 static cards matching Figma design */
+  const MAIN_JEWELLERY_TYPES = [
+    { title: "Victorian & Moissinate", sub: "Premium Luxury Design", img: imgVictorianMoissinate, slug: "victorian-moissinate" },
+    { title: "American Diamond", sub: "Modern Sparkle Collections", img: imgAmericanDiamond, slug: "american-diamond" },
+    { title: "Gold Antique Jewels", sub: "Timeless Heritage Designs", img: imgGoldAntique, slug: "gold-antique-jewels" },
+    { title: "Kundan Jewels", sub: "Traditional Collections", img: imgKundan, slug: "kundan-jewels" },
+  ];
+
+  /* Carousel — 6 static cards matching Figma design */
   const CAROUSEL = [
-    { title: "Moissinate Jewels", sub: "Premium Necklace", img: carouselImg1, slug: "moissinate-jewels" },
-    { title: "American Diamond", sub: "Necklace Sets", img: carouselImg2, slug: "american-diamond" },
-    { title: "Gold Antique Jewels", sub: "Premium Necklace", img: carouselImg3, slug: "gold-antique-jewels" },
-    { title: "Kundan Jewels", sub: "Necklace Sets", img: carouselImg4, slug: "kundan-jewels" },
-    { title: "Gold Bangles", sub: "Bangle Sets", img: carouselImg5, slug: "gold-bangles" },
-    { title: "American Diamond Bangles", sub: "Bangle Sets", img: carouselImg6, slug: "american-diamond-bangles" },
-    { title: "Accessories", sub: "Others", img: carouselImg7, slug: "accessories" },
+    { title: "Semi Bridal & Combo Sets", sub: "Explore Now", img: imgSemiBridal, slug: "semi-bridal" },
+    { title: "Full Bridal Set", sub: "Explore Now", img: imgFullBridal, slug: "full-bridal" },
+    { title: "Choker & Necklace Set", sub: "Explore Now", img: imgChokerNecklace, slug: "choker-necklace" },
+    { title: "Long Haram", sub: "Explore Now", img: imgLongHaram, slug: "long-haram" },
+    { title: "Bangles & Bracelets", sub: "Explore Now", img: carouselImg6, slug: "bangles-bracelets" },
+    { title: "Accessories", sub: "Explore Now", img: imgAccessories, slug: "accessories" },
   ];
 
   /* ---- carousel logic ---- */
@@ -389,8 +408,8 @@ export default function Home() {
             <div className="nav-hamburger" role="button" aria-label="Menu" tabIndex={0} onClick={() => setMenuOpen(true)}>
               <span /><span /><span />
             </div>
-            {!searchOpen && (
-              <div className="nav-search" role="button" tabIndex={0} onClick={() => setSearchOpen(true)}>
+            {!isSearchOpen && (
+              <div className="nav-search" role="button" tabIndex={0} onClick={() => setIsSearchOpen(true)}>
                 {Icon.search}<span>Search</span>
               </div>
             )}
@@ -407,7 +426,7 @@ export default function Home() {
       </header>
 
       {/* ── SEARCH OVERLAY (Figma 524:1413) ── */}
-      {searchOpen && <DesktopSearchOverlay onClose={() => setSearchOpen(false)} />}
+      {isSearchOpen && <DesktopSearchOverlay onClose={() => setIsSearchOpen(false)} />}
 
       {/* ── MENU DRAWER (Figma 491:2) ── */}
       <div className={`menu-overlay${menuOpen ? ' open' : ''}`} aria-hidden={!menuOpen}>
@@ -504,8 +523,22 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CAROUSEL STRIP */}
-      <section>
+      {/* JEWELLERY TYPE GRID & CAROUSEL */}
+      <section className="jewellery-type-section">
+        <div className="jewellery-grid">
+          {MAIN_JEWELLERY_TYPES.map((c, i) => (
+            <Link to={`/shop?category=${c.slug}`} className="jewellery-grid-card" key={i}>
+              <img src={c.img} alt={c.title} />
+              <div className="jewellery-grid-overlay">
+                <p className="jewellery-grid-title">{c.title}</p>
+                <p className="jewellery-grid-sub">{c.sub}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        <h2 className="section-title">Shop By Jewellery Type</h2>
+
         <div
           className="carousel-wrapper"
           onMouseEnter={() => (pausedRef.current = true)}
@@ -518,7 +551,7 @@ export default function Home() {
                 <img src={c.img} alt={c.title} loading={i === 0 ? "eager" : "lazy"} />
                 <div className="carousel-card-overlay">
                   <p className="carousel-card-title">{c.title}</p>
-                  <p className="carousel-card-sub">{c.sub}</p>
+                  <p className="carousel-card-sub" style={{ textTransform: 'uppercase', fontSize: '11px', letterSpacing: '1px', textDecoration: 'underline', textUnderlineOffset: '4px', textDecorationThickness: '1px' }}>{c.sub}</p>
                 </div>
               </Link>
             ))}
