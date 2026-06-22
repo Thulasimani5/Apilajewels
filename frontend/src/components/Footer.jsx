@@ -39,13 +39,13 @@ const Footer = () => {
       <div className="max-w-[1400px] mx-auto">
 
         {/* ── Mobile accordion ── */}
-        <div className="md:hidden px-5 pt-[42px]">
+        <div className="md:hidden px-5 pt-[25px]">
 
           {/* Collections */}
           <div>
             <button
               onClick={() => toggle('collections')}
-              className="w-full flex items-center justify-between py-[20px]"
+              className="w-full flex items-center justify-between py-[15px]"
             >
               <span style={HEADING_STYLE}>COLLECTIONS</span>
               <PlusIcon open={open.collections} />
@@ -66,13 +66,13 @@ const Footer = () => {
             )}
           </div>
 
-          <div className="border-t border-[#F2F2F2]" />
+
 
           {/* Support */}
           <div>
             <button
               onClick={() => toggle('support')}
-              className="w-full flex items-center justify-between py-[20px]"
+              className="w-full flex items-center justify-between py-[15px]"
             >
               <span style={HEADING_STYLE}>SUPPORT</span>
               <PlusIcon open={open.support} />
@@ -90,13 +90,13 @@ const Footer = () => {
             )}
           </div>
 
-          <div className="border-t border-[#F2F2F2]" />
+
 
           {/* Contact */}
           <div>
             <button
               onClick={() => toggle('contact')}
-              className="w-full flex items-center justify-between py-[20px]"
+              className="w-full flex items-center justify-between py-[15px]"
             >
               <span style={HEADING_STYLE}>CONTACT</span>
               <PlusIcon open={open.contact} />
@@ -121,10 +121,10 @@ const Footer = () => {
             )}
           </div>
 
-          <div className="border-t border-[#F2F2F2]" />
+
 
           {/* Follow Us */}
-          <div className="pt-[61px] text-center">
+          <div className="pt-[51px] text-center">
             <p style={{
               fontFamily: "'Gotham Book', sans-serif",
               fontSize: '12px',
@@ -145,7 +145,7 @@ const Footer = () => {
           <div className="border-t border-[#F2F2F2] mt-[36px]" />
 
           {/* Logo + Copyright */}
-          <div className="flex flex-col items-center pt-8 pb-6 gap-6">
+          <div className="flex flex-col items-center pt-6 pb-5 gap-5">
             <img src={logoImage} alt="Apila Jewels" style={{ height: '32px' }} className="opacity-90" />
             <p style={{
               fontFamily: "'Gotham Book', sans-serif",

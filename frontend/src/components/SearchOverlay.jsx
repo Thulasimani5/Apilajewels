@@ -4,6 +4,12 @@ import { ArrowLeft, Search as SearchIcon, X, Loader2, Heart, ShoppingBag, Menu }
 import { useNavigate } from 'react-router-dom';
 import API_BASE_URL from '../config/api';
 import logoImage from "../assets/Apila Logo01.svg";
+import imgC1 from '../assets/images/c1.jpg';
+import { getOptimizedCloudinaryUrl } from '../utils/imageUtils';
+
+let jewelsMemCache = null;
+const CACHE_KEY = 'apila_srch_jewels';
+
 
 const SearchOverlay = ({ isOpen, onClose, category, type }) => {
   const [query, setQuery] = useState('');
@@ -11,25 +17,46 @@ const SearchOverlay = ({ isOpen, onClose, category, type }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [premiumJewels, setPremiumJewels] = useState([]);
-  
+
   const navigate = useNavigate();
   const inputRef = useRef(null);
 
   useEffect(() => {
-    if (isOpen) {
-      const fetchPremium = async () => {
-        try {
-          const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=4`);
-          const data = await res.json();
-          if (data.success) {
-            setPremiumJewels(data.data);
-          }
-        } catch (e) {
-          console.error(e);
+    if (!isOpen) return;
+
+    if (jewelsMemCache) {
+      setPremiumJewels(jewelsMemCache);
+    } else {
+      try {
+        const stored = localStorage.getItem(CACHE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          jewelsMemCache = parsed;
+          setPremiumJewels(parsed);
         }
-      };
-      fetchPremium();
+      } catch { }
     }
+
+    async function refresh() {
+      try {
+        const page = Math.floor(Math.random() * 4) + 1;
+        const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=4&page=${page}`);
+        const data = await res.json();
+        let list = Array.isArray(data) ? data : (data.products || data.data || []);
+        if (list.length === 0) {
+          const fb = await fetch(`${API_BASE_URL}/api/jewellery?limit=4`);
+          const fbData = await fb.json();
+          list = Array.isArray(fbData) ? fbData : (fbData.products || fbData.data || []);
+        }
+        if (list.length > 0) {
+          const slicedList = list.slice(0, 4);
+          jewelsMemCache = slicedList;
+          try { localStorage.setItem(CACHE_KEY, JSON.stringify(slicedList)); } catch { }
+          setPremiumJewels(slicedList);
+        }
+      } catch { }
+    }
+    refresh();
   }, [isOpen]);
 
   // Focus input when overlay opens
@@ -95,9 +122,9 @@ const SearchOverlay = ({ isOpen, onClose, category, type }) => {
           <button><Menu size={20} strokeWidth={1.5} /></button>
           <button onClick={onClose}><X size={20} strokeWidth={1.5} /></button>
         </div>
-        
+
         <div className="flex-1 flex justify-center">
-           <img src={logoImage} alt="Apila Jewels" className="h-6 object-contain" />
+          <img src={logoImage} alt="Apila Jewels" className="h-6 object-contain" />
         </div>
 
         <div className="flex items-center gap-4 text-black">
@@ -114,8 +141,8 @@ const SearchOverlay = ({ isOpen, onClose, category, type }) => {
           placeholder="Search..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full bg-transparent text-[13px] text-[#111] placeholder-[#A0A0A0] focus:outline-none"
-          style={{ fontFamily: "'Gotham', sans-serif" }}
+          className="w-full bg-transparent placeholder-[#A0A0A0] focus:outline-none"
+          style={{ fontFamily: "var(--f-gotham-b)", fontSize: "16px", color: "#000", letterSpacing: "-0.18px", lineHeight: 1 }}
         />
         {query ? (
           <button onClick={() => setQuery('')} className="absolute right-4 text-[#111]">
@@ -130,48 +157,48 @@ const SearchOverlay = ({ isOpen, onClose, category, type }) => {
       <div className="flex-1 overflow-y-auto bg-white px-4">
         {!query.trim() ? (
           <div className="py-6">
-            <h3 className="text-[10px] text-[#A0A0A0] mb-4" style={{ fontFamily: "'Gotham', sans-serif" }}>Suggestions</h3>
-            <div className="flex flex-col space-y-4 mb-8">
+            <h3 className="mb-4" style={{ fontFamily: "var(--f-gotham-b)", fontSize: "13px", color: "rgba(0, 0, 0, 0.50)", letterSpacing: "-0.13px" }}>Suggestions</h3>
+            <div className="flex flex-col space-y-4  mb-4">
               {['MOISSINATE JEWELS', 'AD JEWELS', 'GOLD ANTIQUE JEWELS', 'KUNDAN JEWELS'].map((term) => (
-                <button 
+                <button
                   key={term}
                   onClick={() => setQuery(term)}
-                  className="text-left text-[10px] font-bold tracking-[0.1em] text-[#666] uppercase hover:text-[#111] transition-colors"
-                  style={{ fontFamily: "'Gotham', sans-serif" }}
+                  className="text-left uppercase hover:text-[#ab6281] transition-colors"
+                  style={{ fontFamily: "var(--f-gotham-b)", fontSize: "12px", fontWeight: "normal", color: "#000", letterSpacing: "0.91px" }}
                 >
                   {term}
                 </button>
               ))}
             </div>
 
-            <h3 className="text-[10px] text-[#A0A0A0] mb-4 pt-4 border-t border-[#EAEAEA]" style={{ fontFamily: "'Gotham', sans-serif" }}>Premium Jewels</h3>
+            <h3 className="mb-4 pt-4 border-t border-[#EAEAEA]" style={{ fontFamily: "var(--f-gotham-b)", fontSize: "13px", color: "rgba(0, 0, 0, 0.50)", letterSpacing: "-0.13px" }}>Premium Jewels</h3>
             <div className="flex flex-col space-y-4">
               {premiumJewels.map((item) => (
-                <div 
-                  key={item._id} 
+                <div
+                  key={item._id}
                   className="flex gap-4 cursor-pointer"
                   onClick={() => {
                     onClose();
                     navigate(`/shop/${item._id || item.code}`);
                   }}
                 >
-                  <div className="w-[100px] h-[100px] bg-gray-100 flex-shrink-0">
+                  <div className="w-[132px] h-[132px] bg-[#f5f0ea] flex-shrink-0">
                     {item.images?.[0]?.type === 'video' ? (
-                       <video src={item.images[0].url} className="w-full h-full object-cover" />
+                      <video src={item.images[0].url} className="w-full h-full object-cover" />
                     ) : (
-                       <LazyImage src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" />
+                      <LazyImage src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" />
                     )}
                   </div>
-                  <div className="flex flex-col justify-center">
-                    <h4 className="text-[10px] font-bold text-[#111] mb-1 tracking-[0.05em] uppercase" style={{ fontFamily: "'Gotham', sans-serif" }}>{item.type || 'Moissinate Jewels'}</h4>
-                    <p className="text-[10px] text-[#666] leading-[1.3] mb-2 pr-4 line-clamp-2" style={{ fontFamily: "'Gotham', sans-serif" }}>{item.name}</p>
-                    <span className="text-[10px] font-bold text-[#111] underline text-left" style={{ fontFamily: "'Gotham', sans-serif" }}>Details</span>
+                  <div className="flex flex-col ">
+                    <h4 className="mb-2 mt-4 truncate" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "10px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "0.7px", textTransform: "uppercase" }}>{Array.isArray(item.category) ? item.category[0] : item.category || item.type || 'Moissinate Jewels'}</h4>
+                    <p className=" pr-4 line-clamp-2 w-[165px] whitespace-normal" style={{ fontFamily: "var(--f-gotham-b)", fontSize: "12px", color: "rgba(0, 0, 0, 0.60)", letterSpacing: "-0.13px" }}>{item.name}</p>
+                    <span className="text-left inline-block self-start transition-colors mt-6" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "13px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "-0.14px", borderBottom: "1px solid rgba(0, 0, 0, 0.55)" }}>Details</span>
                   </div>
                 </div>
               ))}
             </div>
 
-            <h3 className="text-[10px] font-bold tracking-[0.1em] text-[#666] uppercase mt-8 pt-4 border-t border-[#EAEAEA] pb-4" style={{ fontFamily: "'Gotham', sans-serif" }}>CONNECT US</h3>
+            <h3 className="uppercase mt-8 pt-4 border-t border-[#EAEAEA] pb-4" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "13px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}>CONNECT US</h3>
           </div>
         ) : loading ? (
           <div className="flex justify-center items-center py-20">
@@ -182,7 +209,7 @@ const SearchOverlay = ({ isOpen, onClose, category, type }) => {
         ) : results.length > 0 ? (
           <div className="py-4">
             {results.map((item) => (
-              <div 
+              <div
                 key={item._id}
                 onClick={() => {
                   onClose();
@@ -190,17 +217,17 @@ const SearchOverlay = ({ isOpen, onClose, category, type }) => {
                 }}
                 className="flex gap-4 mb-4 cursor-pointer"
               >
-                <div className="w-[100px] h-[100px] bg-gray-100 flex-shrink-0">
+                <div className="w-[100px] h-[100px] bg-[#f5f0ea] flex-shrink-0">
                   {item.images?.[0]?.type === 'video' ? (
-                     <video src={item.images[0].url} className="w-full h-full object-cover" />
+                    <video src={item.images[0].url} className="w-full h-full object-cover" />
                   ) : (
-                     <LazyImage src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" />
+                    <LazyImage src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" />
                   )}
                 </div>
                 <div className="flex flex-col justify-center">
-                  <h4 className="text-[10px] font-bold text-[#111] mb-1 tracking-[0.05em] uppercase" style={{ fontFamily: "'Gotham', sans-serif" }}>{item.type || item.category || 'Moissinate Jewels'}</h4>
-                  <p className="text-[10px] text-[#666] leading-[1.3] mb-2 pr-4 line-clamp-2" style={{ fontFamily: "'Gotham', sans-serif" }}>{item.name}</p>
-                  <span className="text-[10px] font-bold text-[#111] underline text-left" style={{ fontFamily: "'Gotham', sans-serif" }}>Details</span>
+                  <h4 className="mb-1 truncate" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "10px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "0.7px", textTransform: "uppercase" }}>{Array.isArray(item.category) ? item.category[0] : item.category || item.type || 'Moissinate Jewels'}</h4>
+                  <p className="mb-2 pr-4 line-clamp-2 w-[165px] whitespace-normal" style={{ fontFamily: "var(--f-gotham-b)", fontSize: "13px", color: "rgba(0, 0, 0, 0.60)", letterSpacing: "-0.13px" }}>{item.name}</p>
+                  <span className="text-left inline-block self-start transition-colors" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "14px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "-0.14px", borderBottom: "1px solid rgba(0, 0, 0, 0.55)" }}>Details</span>
                 </div>
               </div>
             ))}

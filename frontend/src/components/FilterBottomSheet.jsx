@@ -15,7 +15,7 @@ const INITIAL_FILTER_SECTIONS = {
 
 const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
   const { categories } = React.useContext(CategoryContext);
-  
+
   const FILTER_SECTIONS = React.useMemo(() => {
     return {
       ...INITIAL_FILTER_SECTIONS,
@@ -107,6 +107,35 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
     );
   };
 
+  const [expandedSections, setExpandedSections] = useState({
+    Category: true,
+    Type: true,
+    Occasion: false,
+    Price: false,
+    Colour: false,
+    StoneColour: false,
+    StoneName: false
+  });
+
+  const toggleSection = (section) => {
+    setExpandedSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
+  const sectionLabels = {
+    Category: 'CATEGORY',
+    Type: 'JEWELLERY TYPE',
+    Occasion: 'OCCASION',
+    Price: 'PRICE',
+    Colour: 'COLOR',
+    StoneColour: 'STONE COLOR',
+    StoneName: 'STONE'
+  };
+
+  const sectionOrder = ['Category', 'Type', 'Occasion', 'Price', 'Colour', 'StoneColour', 'StoneName'];
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -114,119 +143,102 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
           {/* Backdrop Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.4 }}
+            animate={{ opacity: 0.5 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black z-50 transition-opacity"
+            className="fixed inset-0 bg-[#1a1a1a] z-[40] transition-opacity"
           />
 
-          {/* Bottom Sheet AJIO Style Container */}
+          {/* Bottom Sheet Full Screen Container */}
           <motion.div
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
-            className="fixed bottom-0 left-0 right-0 h-[80vh] md:h-[70vh] bg-white rounded-t-2xl shadow-2xl z-50 flex flex-col font-sans overflow-hidden md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[600px] md:max-h-[80vh] md:rounded-xl md:transform-none"
+            className="fixed inset-0 w-full h-full bg-white z-[40] pt-[64px] md:pt-[80px] flex flex-col font-sans overflow-hidden md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[450px] md:h-[85vh] md:rounded-2xl md:transform-none"
           >
-            {/* Header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 bg-white">
-              <div className="flex items-center gap-2">
-                <h2 className="text-base font-bold text-gray-900 uppercase tracking-wide">Filters</h2>
-                {getTotalSelectedCount() > 0 && (
-                  <span className="bg-orange-500 text-white text-[11px] px-2 py-0.5 rounded-full font-bold">
-                    {getTotalSelectedCount()} Selected
-                  </span>
-                )}
-              </div>
+            {/* Header: <- FILTER */}
+            <div className="flex items-center px-6 pt-5 pb-2 bg-white sticky top-0 z-10">
               <button
-                onClick={onClose}
-                className="p-1 rounded-full text-gray-500 hover:bg-gray-100 transition-colors"
-                aria-label="Close"
+                onClick={handleApply}
+                className="flex items-center gap-4 text-[#111] focus:outline-none hover:opacity-70 transition-opacity"
+                aria-label="Back"
               >
-                <X size={20} />
+                <svg xmlns="http://www.w3.org/2000/svg" width="9" height="15" viewBox="0 0 9 15" fill="none">
+                  <path d="M8.26034 1.60917L8.80993 1.09883L7.78926 -0.000363111L7.23966 0.509975L7.75 1.05957L8.26034 1.60917ZM0.75 7.55957L0.239662 7.00997C0.0868364 7.15188 0 7.35102 0 7.55957C0 7.76812 0.0868364 7.96726 0.239662 8.10917L0.75 7.55957ZM7.75 1.05957L7.23966 0.509975L0.239662 7.00997L0.75 7.55957L1.26034 8.10917L8.26034 1.60917L7.75 1.05957ZM0.75 7.55957L0.239662 8.10917L7.23966 14.6092L7.75 14.0596L8.26034 13.51L1.26034 7.00997L0.75 7.55957Z" fill="black" />
+                </svg>
+                <span style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "11px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "0.84px", textTransform: "uppercase" }}>
+                  FILTER
+                </span>
               </button>
             </div>
 
-            {/* Split Screen Layout (AJIO Style) */}
-            <div className="flex-1 flex overflow-hidden">
-              {/* Left Column: Categories Selection List */}
-              <div className="w-[38%] bg-gray-50 overflow-y-auto border-r border-gray-200">
-                {Object.keys(FILTER_SECTIONS).map((category) => {
-                  const isActive = activeCategory === category;
-                  const count = getSelectedCount(category);
+            {/* Accordion Content Area */}
+            <div className="flex-1 overflow-y-auto px-6 pb-4 pt-0">
+              <div className="flex flex-col gap-2">
+                {sectionOrder.map((section) => {
+                  const isExpanded = expandedSections[section];
+                  const options = FILTER_SECTIONS[section] || [];
+                  if (options.length === 0) return null;
 
                   return (
-                    <button
-                      key={category}
-                      onClick={() => setActiveCategory(category)}
-                      className={`w-full text-left px-4 py-4 text-xs font-semibold uppercase tracking-wider relative transition-all border-b border-gray-100 flex items-center justify-between ${
-                        isActive
-                          ? 'bg-white text-gray-900 font-bold border-l-4 border-orange-500'
-                          : 'text-gray-500 hover:bg-gray-100 border-l-4 border-transparent'
-                      }`}
-                    >
-                      <span>{category}</span>
-                      {count > 0 && (
-                        <span className="w-5 h-5 flex items-center justify-center bg-gray-200 text-gray-800 text-[10px] rounded-full font-bold">
-                          {count}
+                    <div key={section} className="flex flex-col border-b border-transparent">
+                      {/* Accordion Header */}
+                      <button
+                        onClick={() => toggleSection(section)}
+                        className="w-full flex items-center justify-between py-4 text-left focus:outline-none hover:opacity-80 transition-opacity"
+                      >
+                        <span style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "1.05px", textTransform: "uppercase" }}>
+                          {sectionLabels[section]}
                         </span>
-                      )}
-                    </button>
+                        {!isExpanded && (
+                          <svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-black">
+                            <path d="M1 1L6 6L11 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        )}
+                      </button>
+
+                      {/* Accordion Body (Checkboxes) */}
+                      <AnimatePresence>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: 'auto', opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            className="overflow-hidden flex flex-col gap-4 mb-4 mt-2"
+                          >
+                            {options.map((option) => {
+                              const isChecked = localFilters[section]?.includes(option);
+                              return (
+                                <button
+                                  key={option}
+                                  onClick={() => handleCheckboxChange(section, option)}
+                                  className="flex items-center gap-4 text-left focus:outline-none group"
+                                >
+                                  {/* Custom Checkbox */}
+                                  <div
+                                    className={`w-[12px] h-[12px] rounded-[2px] flex items-center justify-center transition-all ${isChecked
+                                      ? 'bg-black border-black'
+                                      : 'border border-gray-400 bg-white group-hover:border-black'
+                                      }`}
+                                  >
+                                    {isChecked && <Check size={8} strokeWidth={4} className="text-white" />}
+                                  </div>
+                                  <span style={{ color: "#333", fontFamily: "Gotham Book, sans-serif", fontSize: "11px", fontStyle: "normal", fontWeight: 400, letterSpacing: "0.8px", textTransform: "uppercase" }}>
+                                    {option}
+                                  </span>
+                                </button>
+                              );
+                            })}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
                   );
                 })}
               </div>
-
-              {/* Right Column: Values Multi-Select Options */}
-              <div className="w-[62%] bg-white overflow-y-auto p-4">
-                <div className="space-y-1">
-                  {FILTER_SECTIONS[activeCategory].map((option) => {
-                    const isChecked = localFilters[activeCategory]?.includes(option);
-                    return (
-                      <button
-                        key={option}
-                        onClick={() => handleCheckboxChange(activeCategory, option)}
-                        className={`w-full flex items-center justify-between py-3 px-3 rounded-lg text-left transition-colors ${
-                          isChecked ? 'bg-orange-50/60' : 'hover:bg-gray-50'
-                        }`}
-                      >
-                        <span
-                          className={`text-sm ${
-                            isChecked ? 'text-orange-600 font-medium' : 'text-gray-700'
-                          }`}
-                        >
-                          {option}
-                        </span>
-                        <div
-                          className={`w-5 h-5 rounded border flex items-center justify-center transition-all ${
-                            isChecked
-                              ? 'bg-orange-500 border-orange-500 text-white'
-                              : 'border-gray-350 bg-white'
-                          }`}
-                        >
-                          {isChecked && <Check size={13} strokeWidth={3} />}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
             </div>
 
-            {/* Bottom Actions Sticky Bar */}
-            <div className="bg-white border-t border-gray-200 px-5 py-3.5 flex gap-4 items-center">
-              <button
-                onClick={handleReset}
-                className="flex-1 py-3 text-xs font-bold text-gray-700 uppercase tracking-wider text-center border border-gray-300 rounded-md hover:bg-gray-50 active:scale-95 transition-all"
-              >
-                Clear All
-              </button>
-              <button
-                onClick={handleApply}
-                className="flex-1 py-3 text-xs font-bold text-white bg-[#1A1A1A] hover:bg-black uppercase tracking-wider text-center rounded-md active:scale-95 transition-all shadow-sm"
-              >
-                Apply Filters
-              </button>
-            </div>
           </motion.div>
         </>
       )}

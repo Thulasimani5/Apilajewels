@@ -20,8 +20,8 @@ const Accordion = ({ title, children, defaultOpen = false }) => {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="border-t border-gray-200/80">
-      <button 
-        className="w-full flex justify-between items-center py-4 text-left font-semibold text-gray-900 focus:outline-none" 
+      <button
+        className="w-full flex justify-between items-center py-4 text-left font-semibold text-gray-900 focus:outline-none"
         onClick={() => setOpen(!open)}
       >
         <span className="text-sm font-bold text-black">{title}</span>
@@ -39,20 +39,38 @@ const MobileAccordion = ({ title, children, defaultOpen = false }) => {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div className="border-t border-gray-100">
-      <button 
-        className="w-full flex justify-between items-center py-4 text-left focus:outline-none" 
+      <button
+        className="w-full flex justify-between items-center py-4 text-left focus:outline-none"
         onClick={() => setOpen(!open)}
       >
-        <span className="text-[11px] text-[#111]" style={{ fontFamily: "'Gotham', sans-serif" }}>{title}</span>
+        <span style={{ fontFamily: "Gotham Book, sans-serif", fontSize: "14px", color: "#000", letterSpacing: "-0.14px" }}>{title}</span>
         <ChevronDown size={14} className={`text-gray-500 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && (
-        <div className="pb-4 text-[11px] text-[#666] leading-[1.6]" style={{ fontFamily: "'Gotham', sans-serif" }}>
+        <div className="pb-4" style={{ fontFamily: "Gotham Book, sans-serif", fontSize: "13px", lineHeight: "20px", letterSpacing: "-0.13px", color: "#000" }}>
           {children}
         </div>
       )}
     </div>
   );
+};
+
+const renderMobileDescription = (text) => {
+  if (!text) return <p style={{ fontFamily: "Gotham Book, sans-serif", fontSize: "13px", lineHeight: "20px", letterSpacing: "-0.13px", color: "#000", marginBottom: "12px" }}>No description available.</p>;
+  const LABELS = ['Set Includes:', 'Styling Tip:'];
+  const regex = new RegExp(`(${LABELS.map(l => l.replace(':', '\\:')).join('|')})`);
+  const segments = text.split(regex);
+  const lines = [];
+  if (segments[0] && segments[0].trim()) lines.push({ label: null, content: segments[0].trim() });
+  for (let i = 1; i < segments.length; i += 2) {
+    lines.push({ label: segments[i], content: (segments[i + 1] || '').trim() });
+  }
+  return lines.map((item, idx) => (
+    <p key={idx} style={{ fontFamily: "Gotham Book, sans-serif", fontSize: "13px", lineHeight: "15px", letterSpacing: "-0.13px", color: "#000", marginBottom: "12px" }}>
+      {item.label && <strong style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "13px", fontStyle: "normal", fontWeight: 500, lineHeight: "24px", letterSpacing: "-0.16px" }}>{item.label}</strong>}
+      {item.content ? (item.label ? ` ${item.content}` : item.content) : ''}
+    </p>
+  ));
 };
 
 const ProductDetails = () => {
@@ -62,10 +80,10 @@ const ProductDetails = () => {
   const { addToCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { user } = useAuth();
-  
+
   const { data: product, isLoading: loading, error: queryError } = useProduct(id);
   const error = queryError?.message;
-  
+
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMediaViewerOpen, setIsMediaViewerOpen] = useState(false);
@@ -178,8 +196,8 @@ const ProductDetails = () => {
     const url = item.url || item;
     const isVideo = item.type === 'video' || (typeof url === 'string' && (url.endsWith('.mp4') || url.endsWith('.mov') || url.endsWith('.webm')));
     return (
-      <div 
-        key={idx} 
+      <div
+        key={idx}
         className={className}
         onClick={() => {
           setClickedMediaIndex(idx);
@@ -189,7 +207,7 @@ const ProductDetails = () => {
         {isVideo ? (
           <video src={url} className="w-full h-full object-cover pointer-events-none" autoPlay muted loop playsInline />
         ) : (
-              <LazyImage src={url} alt={`${product.name} - ${idx}`} className="w-full h-full object-cover pointer-events-none" />
+          <LazyImage src={url} alt={`${product.name} - ${idx}`} className="w-full h-full object-cover pointer-events-none" />
         )}
       </div>
     );
@@ -204,28 +222,28 @@ const ProductDetails = () => {
             {product.name}
           </h1>
           <p className="text-xl font-semibold mt-2">
-            {(product.rentalPrice || product.price || 0) >= 2000 
-              ? 'Premium Collection' 
+            {(product.rentalPrice || product.price || 0) >= 2000
+              ? 'Premium Collection'
               : `₹${(product.rentalPrice || product.price || 0).toFixed(2)}`}
           </p>
         </div>
         <div className="flex gap-2">
-          <button 
+          <button
             onClick={() => {
               // if (!user) {
               //   navigate('/login', { state: { from: window.location.pathname } });
               // } else {
-                toggleWishlist(product);
+              toggleWishlist(product);
               // }
             }}
             className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center bg-white shadow-sm transition-colors"
           >
-            <Heart 
-              size={20} 
-              className={isInWishlist(product._id) ? "fill-red-500 text-red-500" : "text-gray-500"} 
+            <Heart
+              size={20}
+              className={isInWishlist(product._id) ? "fill-red-500 text-red-500" : "text-gray-500"}
             />
           </button>
-          <button 
+          <button
             onClick={handleShare}
             className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 bg-white shadow-sm transition-colors hover:bg-gray-50"
           >
@@ -283,24 +301,17 @@ const ProductDetails = () => {
       <Navbar />
 
       {/* ===== MOBILE VIEW ===== */}
-      <div className="md:hidden pt-16">
-        {/* Back button row */}
-        <div className="flex items-center gap-3 px-4 py-2 bg-white border-b border-gray-100">
-          <button onClick={() => navigate(-1)} className="text-black">
-            <ArrowLeft size={22} />
-          </button>
-          <span className="font-semibold text-sm truncate text-gray-800">{product.name}</span>
-        </div>
+      <div className="md:hidden pt-12">
         {/* Image Gallery (AJIO Style Horizontal Scroll) */}
         <div className="relative select-none">
-          <div 
+          <div
             onScroll={handleScroll}
             className="w-full flex overflow-x-auto snap-x snap-mandatory scroll-smooth gap-1 pr-4"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
             {mediaList.length > 0 ? (
-              mediaList.map((item, idx) => 
-                renderMediaItem(item, idx, "w-[90vw] sm:w-[90%] aspect-[4/5] flex-shrink-0 snap-start bg-gray-50 flex items-center justify-center cursor-pointer")
+              mediaList.map((item, idx) =>
+                renderMediaItem(item, idx, "w-[335px] h-[418px] aspect-[109/136] flex-shrink-0 snap-center bg-gray-50 flex items-center justify-center cursor-pointer")
               )
             ) : (
               <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400">
@@ -313,84 +324,90 @@ const ProductDetails = () => {
         </div>
 
         {/* Details Container */}
-        <div className="bg-white relative px-4 pt-4 pb-6">
+        <div className="bg-white relative px-2 pt-4 pb-6">
           <div className="flex justify-between items-start mb-1">
-            <span className="uppercase text-[10px] font-bold tracking-[0.1em] text-[#666]" style={{ fontFamily: "'Gotham', sans-serif" }}>
-              {product.type || 'Moissinate Jewels'}
+            <span style={{ color: "#000", fontFamily: "var(--f-gotham-b), 'Gotham Book', sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}>
+              {product.category || 'Moissinate Jewels'}
             </span>
             <div className="flex gap-4">
-              <button 
+              <button
                 onClick={() => toggleWishlist(product)}
                 className="text-gray-500 transition-colors"
               >
-                <Heart size={16} className={isInWishlist(product._id) ? "fill-red-500 text-red-500" : "text-[#111]"} />
+                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="17" viewBox="0 0 19 17" fill="none">
+                  <path d="M9.47952 16.9989C9.37987 16.9989 9.28022 16.9761 9.20272 16.9191C4.50808 14.0572 -0.706957 9.00624 0.079173 4.1833C0.422413 2.07398 1.99467 0.454933 4.08733 0.0786755C5.7371 -0.21777 7.94048 0.272505 9.47952 2.42743C10.775 0.637361 12.7237 -0.251975 14.7278 0.0672737C16.8315 0.409326 18.4702 2.01697 18.8909 4.1605C19.821 8.89222 14.7942 13.852 9.7674 16.9076C9.67882 16.9647 9.57917 16.9875 9.49059 16.9875L9.47952 16.9989ZM4.98418 1.13904C4.74059 1.13904 4.50808 1.16184 4.28663 1.19605C2.67008 1.49249 1.44106 2.73528 1.17533 4.37713C0.544208 8.27653 4.85132 12.86 9.49059 15.7561C13.8863 13.0083 18.6031 8.45896 17.8059 4.38853C17.4737 2.71248 16.2004 1.45829 14.5617 1.18464C12.7348 0.888199 11.0186 1.84595 9.97777 3.73864C9.87812 3.92106 9.68989 4.02368 9.49059 4.02368C9.29129 4.02368 9.10307 3.90966 9.00342 3.73864C7.94048 1.80034 6.335 1.12764 4.98418 1.12764V1.13904Z" fill={isInWishlist(product._id) ? "#ef4444" : "black"} />
+                </svg>
               </button>
-              <button 
+              <button
                 onClick={handleShare}
                 className="text-gray-500 transition-colors"
               >
-                <Share2 size={16} className="text-[#111]" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M10.7698 4.13965L7.00977 6.21965" stroke="black" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M13.5 17.5C15.7091 17.5 17.5 15.7091 17.5 13.5C17.5 11.2909 15.7091 9.5 13.5 9.5C11.2909 9.5 9.5 11.2909 9.5 13.5C9.5 15.7091 11.2909 17.5 13.5 17.5Z" stroke="black" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M13 5.5C14.3807 5.5 15.5 4.38071 15.5 3C15.5 1.61929 14.3807 0.5 13 0.5C11.6193 0.5 10.5 1.61929 10.5 3C10.5 4.38071 11.6193 5.5 13 5.5Z" stroke="black" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M4 11.5C5.933 11.5 7.5 9.933 7.5 8C7.5 6.067 5.933 4.5 4 4.5C2.067 4.5 0.5 6.067 0.5 8C0.5 9.933 2.067 11.5 4 11.5Z" stroke="black" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M10.0102 11.5604L6.9502 9.86035" stroke="black" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </button>
             </div>
           </div>
 
-          <h1 className="text-[#111] text-lg leading-[1.3] mb-3 pr-8" style={{ fontFamily: "'Belgant Aesthetic', Georgia, serif", fontSize: '20px' }}>
+          <h1 className="mb-3 pr-8" style={{ width: "276px", color: "#000", fontFamily: "'Bacasime Antique', serif", fontSize: "25px", fontStyle: "normal", fontWeight: 400, lineHeight: "28px", letterSpacing: "-0.84px" }}>
             {product.name}
           </h1>
-          
-          <div className="font-bold text-[14px] text-[#111] mb-6" style={{ fontFamily: "'Gotham', sans-serif" }}>
-            {(product.rentalPrice || product.price || 0) >= 2000 
-              ? 'Price on Request' 
+
+          <div className="mb-5" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "14px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal" }}>
+            {(product.rentalPrice || product.price || 0) >= 2000
+              ? 'Price on Request'
               : `₹${(product.rentalPrice || product.price || 0).toFixed(2)}`}
           </div>
 
           <div className="space-y-2 mb-6">
             <button
               onClick={handleAddToCart}
-              className="w-full py-3.5 border border-[#111] text-[#111] font-bold tracking-[0.1em] text-[10px] uppercase transition-colors"
-              style={{ fontFamily: "'Gotham', sans-serif" }}
+              className="w-full py-3.5"
+              style={{ border: "1px solid #AB6281", color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "12px", fontWeight: 500, lineHeight: "normal", letterSpacing: "1.96px", textTransform: "uppercase" }}
             >
               ADD TO BAG
             </button>
             <button
               onClick={handleBookOnWhatsapp}
-              className="w-full py-3.5 bg-[#B07A85] text-white font-bold tracking-[0.1em] text-[10px] uppercase transition-colors shadow-[0_4px_14px_rgba(176,122,133,0.2)]"
-              style={{ fontFamily: "'Gotham', sans-serif" }}
+              className="w-full py-3.5"
+              style={{ background: "#AB6281", color: "#FFF", fontFamily: "Gotham Book, sans-serif", fontSize: "12px", fontWeight: 500, lineHeight: "normal", letterSpacing: "1.96px", textTransform: "uppercase" }}
             >
               BOOK ON WHATSAPP
             </button>
           </div>
 
           {/* Features list */}
-          <div className="flex justify-between items-center py-4 border-t border-b border-gray-100 mb-6 px-2">
-            <div className="flex flex-col items-center gap-2 w-1/3 border-r border-gray-100">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg>
-              <span className="text-[9px] text-center text-[#666] leading-tight" style={{ fontFamily: "'Gotham', sans-serif" }}>Secure<br/>Delivery</span>
+          <div className="flex justify-between items-center py-4 border-b border-gray-100 mb-6 px-2">
+            <div className="flex flex-col items-center gap-3 w-1/3 border-r border-gray-100">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18 " viewBox="0 0 21 21" fill="none"><path d="M19.4521 6.81113C19.4521 12.9409 15.5621 18.1557 10.1068 20.1685C4.64005 18.1557 0.75 12.9409 0.75 6.81113C0.75 5.14146 1.03773 3.52897 1.56714 2.04228C2.48786 2.32818 3.47764 2.47685 4.49043 2.47685C6.57356 2.47685 8.50707 1.84786 10.1068 0.75C11.7066 1.83643 13.6401 2.47685 15.7232 2.47685C16.736 2.47685 17.7143 2.32818 18.6465 2.04228C19.1874 3.52897 19.4637 5.14146 19.4637 6.81113H19.4521Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /><path d="M7.13135 10.4482L8.90374 12.2208L13.3232 7.84082" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <span style={{ color: "#000", textAlign: "center", fontFamily: "Gotham Book, sans-serif", fontSize: "11px", fontWeight: 400, lineHeight: "14px", letterSpacing: "-0.14px" }}>Secure<br />Delivery</span>
             </div>
-            <div className="flex flex-col items-center gap-2 w-1/3 border-r border-gray-100">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="1.5"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>
-              <span className="text-[9px] text-center text-[#666] leading-tight" style={{ fontFamily: "'Gotham', sans-serif" }}>Easy Return /<br/>Pickup</span>
+            <div className="flex flex-col items-center gap-3 w-1/3 border-r border-gray-100">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 22 21" fill="none"><path d="M5.41584 14.062L1.86701 12.9434L0.750244 16.5106" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /><path d="M16.2483 6.07025L19.7971 7.20134L20.9263 3.64648" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /><path d="M20.1444 10.0723C20.1444 15.2181 15.9752 19.3944 10.838 19.3944C6.87974 19.3944 3.49222 16.9209 2.1521 13.4282" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /><path d="M1.53149 10.0722C1.53149 4.92633 5.68834 0.75 10.8379 0.75C14.7962 0.75 18.1837 3.22348 19.5238 6.71618" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <span style={{ color: "#000", textAlign: "center", fontFamily: "Gotham Book, sans-serif", fontSize: "11px", fontWeight: 400, lineHeight: "14px", letterSpacing: "-0.14px" }}>Easy Return /<br />Pickup</span>
             </div>
-            <div className="flex flex-col items-center gap-2 w-1/3">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" strokeWidth="1.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
-              <span className="text-[9px] text-center text-[#666] leading-tight" style={{ fontFamily: "'Gotham', sans-serif" }}>Whatsapp<br/>Support</span>
+            <div className="flex flex-col items-center gap-3 w-1/3">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 19 20" fill="none"><path d="M6.39493 17.1647C7.27456 17.4706 8.21538 17.6389 9.19445 17.6389C13.8603 17.6389 17.6389 13.8603 17.6389 9.19445C17.6389 4.52858 13.8603 0.75 9.19445 0.75C4.52858 0.75 0.75 4.52858 0.75 9.19445C0.75 11.1526 1.41546 12.9577 2.53221 14.3881" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /><path d="M6.3949 17.1643L2.11914 18.3346L2.53218 14.3877" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /><path d="M11.7492 10.9002L12.8812 12.0322C11.7492 13.1643 9.92109 13.1643 8.7967 12.0322L6.34903 9.58454C5.21699 8.4525 5.21699 6.6244 6.34903 5.5L7.58816 6.73913" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              <span style={{ color: "#000", textAlign: "center", fontFamily: "Gotham Book, sans-serif", fontSize: "11px", fontWeight: 400, lineHeight: "14px", letterSpacing: "-0.14px" }}>Whatsapp<br />Support</span>
             </div>
           </div>
 
           {/* Description */}
           <div className="mb-6">
-            <h3 className="text-[#111] mb-2 text-[11px]" style={{ fontFamily: "'Gotham', sans-serif" }}>Description</h3>
-            <p className="text-[11px] leading-[1.6] text-[#666]" style={{ fontFamily: "'Gotham', sans-serif" }}>
-              {product.description || 'No description available.'}
-            </p>
+            <h3 style={{ fontFamily: "Gotham Book, sans-serif", fontSize: "14px", color: "#000", letterSpacing: "-0.14px", marginBottom: "12px" }}>Description</h3>
+            {renderMobileDescription(product.description)}
           </div>
 
           {/* Accordions */}
           <div className="border-b border-gray-200/80 mb-8">
             <MobileAccordion title="Specifications">
-              <p><span className="font-bold text-black">Material : </span>{product.material || 'Premium Alloy'}</p>
-              <p className="mt-1"><span className="font-bold text-black">Size : </span>{product.size || 'Adjustable'}</p>
-              <p className="mt-1"><span className="font-bold text-black">Finish : </span>{product.finish || 'Antique'}</p>
+              <p><span style={{ fontFamily: "Gotham Medium, sans-serif", fontWeight: 500 }}>Material : </span>{product.material || 'Premium Alloy'}</p>
+              <p className="mt-1"><span style={{ fontFamily: "Gotham Medium, sans-serif", fontWeight: 500 }}>Size : </span>{product.size || 'Adjustable'}</p>
+              <p className="mt-1"><span style={{ fontFamily: "Gotham Medium, sans-serif", fontWeight: 500 }}>Finish : </span>{product.finish || 'Antique'}</p>
             </MobileAccordion>
             <MobileAccordion title="Delivery & Return Policy">
               <p>Standard delivery within 3–5 business days. Easy returns within 7 days of receipt.</p>
@@ -401,11 +418,11 @@ const ProductDetails = () => {
           </div>
 
           {/* Related Jewels Section */}
-          <div className="pt-2 pb-10">
-            <h2 className="text-[20px] text-center mb-6 text-[#111]" style={{ fontFamily: "'Belgant Aesthetic', Georgia, serif", fontWeight: 'normal' }}>You May Also Like</h2>
-            <div className="grid grid-cols-2 gap-x-2 gap-y-6">
+          <div className="pt-1 pb-6">
+            <h2 className="text-center mb-4" style={{ color: "#000", fontFamily: "'Bacasime Antique', serif", fontSize: "24px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "-0.52px", textTransform: "capitalize" }}>You may Also Like</h2>
+            <div className="grid grid-cols-2 gap-x-2 gap-y-4">
               {relatedProducts.map(prod => (
-                <Card key={prod._id} jewellery={prod} />
+                <Card key={prod._id} jewellery={prod} variant="shop" imageAspect="195 / 244" imageClassName="" />
               ))}
             </div>
           </div>
@@ -427,8 +444,8 @@ const ProductDetails = () => {
                 const url = item.url || item;
                 const isVideo = item.type === 'video' || (typeof url === 'string' && (url.endsWith('.mp4') || url.endsWith('.mov') || url.endsWith('.webm')));
                 return (
-                  <div 
-                    key={idx} 
+                  <div
+                    key={idx}
                     className="w-full cursor-pointer overflow-hidden relative group"
                     onClick={() => {
                       setClickedMediaIndex(idx);
@@ -469,15 +486,15 @@ const ProductDetails = () => {
         onClose={() => setIsShareOpen(false)}
         product={product}
       />
-    <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-    
-    <FullScreenMediaViewer 
-      mediaList={mediaList} 
-      initialIndex={clickedMediaIndex} 
-      isOpen={isMediaViewerOpen} 
-      onClose={() => setIsMediaViewerOpen(false)} 
-      productName={product?.name} 
-    />
+      <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+
+      <FullScreenMediaViewer
+        mediaList={mediaList}
+        initialIndex={clickedMediaIndex}
+        isOpen={isMediaViewerOpen}
+        onClose={() => setIsMediaViewerOpen(false)}
+        productName={product?.name}
+      />
     </div>
   );
 };
