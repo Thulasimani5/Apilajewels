@@ -253,16 +253,14 @@ const JewelleryListing = () => {
   const paginatedProducts = sortedProducts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
 
   const getPageNumbers = () => {
-    if (totalPages <= 7) return Array.from({ length: totalPages }, (_, i) => i + 1);
-    const pages = [];
-    pages.push(1);
-    if (currentPage > 3) pages.push('...');
-    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
-      pages.push(i);
+    const window = 3;
+    let start = Math.max(1, currentPage - 1);
+    let end = start + window - 1;
+    if (end > totalPages) {
+      end = totalPages;
+      start = Math.max(1, end - window + 1);
     }
-    if (currentPage < totalPages - 2) pages.push('...');
-    pages.push(totalPages);
-    return pages;
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   };
 
   // Close sort dropdown on outside click
@@ -334,12 +332,12 @@ const JewelleryListing = () => {
       <Navbar />
 
       {/* ── Mobile-only Filter & Sort bar ── */}
-      <div className="md:hidden flex justify-between items-center px-4 py-[10px] border-b border-[#F0EDED] bg-white">
+      <div className="md:hidden flex justify-between items-center px-4 pt-[1px] pb-[4px] bg-white">
         <button
           onClick={() => setIsFilterOpen(true)}
           className="flex items-center gap-[9px] text-[#1A1A1A]"
         >
-          <svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true">
+          <svg width="14" height="18" viewBox="0 0 16 10" fill="none" aria-hidden="true">
             <line x1="0" y1="1" x2="16" y2="1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             <line x1="2" y1="5" x2="14" y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             <line x1="5" y1="9" x2="11" y2="9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -430,11 +428,10 @@ const JewelleryListing = () => {
                         setActiveSort(option.id);
                         setIsSortDropdownOpen(false);
                       }}
-                      className={`w-full text-left px-4 py-2.5 text-[13px] transition-colors ${
-                        activeSort === option.id
-                          ? 'text-[#A56D7A] font-semibold bg-[#FFF8F3]'
-                          : 'text-[#333] hover:bg-[#FDFBFA] font-normal'
-                      }`}
+                      className={`w-full text-left px-4 py-2.5 text-[13px] transition-colors ${activeSort === option.id
+                        ? 'text-[#A56D7A] font-semibold bg-[#FFF8F3]'
+                        : 'text-[#333] hover:bg-[#FDFBFA] font-normal'
+                        }`}
                     >
                       {option.label}
                     </button>
@@ -481,41 +478,31 @@ const JewelleryListing = () => {
 
       {/* ── Mobile Pagination ── */}
       {totalPages > 1 && (
-        <div className="md:hidden flex items-center justify-center gap-[6px] py-6 px-4">
-          <button
-            onClick={() => { setCurrentPage(p => p - 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-            disabled={currentPage === 1}
-            className="flex items-center justify-center w-7 h-7 disabled:opacity-25"
-          >
-            <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M6 1L1 6L6 11" stroke="#1A1A1A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
+        <div className="md:hidden flex items-center justify-center gap-[24px] py-6 pb-8 px-6">
           {getPageNumbers().map((page, idx) =>
             page === '...' ? (
-              <span key={`ellipsis-${idx}`} className="w-7 h-7 flex items-center justify-center text-[12px] text-black/30">…</span>
+              <span key={`ellipsis-${idx}`} className="flex items-center justify-center text-[12px] text-black/30">…</span>
             ) : (
               <button
                 key={page}
                 onClick={() => { setCurrentPage(page); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
                 style={{ fontFamily: "'Gotham', sans-serif" }}
-                className={`w-7 h-7 flex items-center justify-center text-[12px] transition-colors pb-[1px] ${
-                  currentPage === page
-                    ? 'text-black font-medium border-b border-black'
-                    : 'text-black/40'
-                }`}
+                className={`flex items-center justify-center text-[12px] transition-colors pb-[2px] min-w-[20px] ${currentPage === page
+                  ? 'text-black font-medium border-b border-black'
+                  : 'text-black/40 font-normal'
+                  }`}
               >
                 {page}
               </button>
             )
           )}
           <button
-            onClick={() => { setCurrentPage(p => p + 1); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            onClick={() => { setCurrentPage(p => Math.min(p + 1, totalPages)); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
             disabled={currentPage === totalPages}
-            className="flex items-center justify-center w-7 h-7 disabled:opacity-25"
+            className="flex items-center justify-center disabled:opacity-25"
           >
             <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M1 1L6 6L1 11" stroke="#1A1A1A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M1 1L6 6L1 11" stroke="#1A1A1A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
         </div>

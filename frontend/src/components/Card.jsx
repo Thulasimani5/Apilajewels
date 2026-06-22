@@ -13,7 +13,7 @@ const Card = ({ jewellery, priority = false, imageAspect, imageClassName = 'roun
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const liked = isInWishlist(jewellery._id || jewellery.code);
-  
+
   const imageUrl = jewellery.images?.[0]?.url || 'https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=800&q=80';
 
   const prefetchProduct = (id) => {
@@ -69,28 +69,32 @@ const Card = ({ jewellery, priority = false, imageAspect, imageClassName = 'roun
             e.stopPropagation();
             toggleWishlist(jewellery);
           }}
-          className={`absolute top-2.5 right-2.5 w-[20px] h-[20px] rounded-full backdrop-blur-sm flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 ${liked ? 'bg-white' : 'bg-white/5 hover:bg-white/20'}`}
+          className={`absolute top-[14px] right-[14px] w-[34px] h-[34px] rounded-full flex items-center justify-center transition-all duration-200 z-[2] border-none ${liked ? 'bg-black/40' : 'bg-black/25 hover:bg-black/40'}`}
+          style={{ backdropFilter: 'blur(2px)' }}
           aria-label={liked ? 'Remove from wishlist' : 'Add to wishlist'}
         >
-          <Heart
-            size={14}
-            className={`transition-colors duration-200 ${liked
-                ? 'fill-red-500 text-transparent'
-                : 'text-white drop-shadow-sm'
-              }`}
-            strokeWidth={2}
-          />
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="16" viewBox="0 0 24 24" fill={liked ? '#fff' : 'none'} stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
         </button>
       </div>
 
       <div className="pt-[9px] pb-[2px]">
-        <p className="text-[10px] font-medium text-black leading-[normal] tracking-[-0.1px]">
+        <p style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "9px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "0.7px", textTransform: "uppercase" }}>
           {Array.isArray(jewellery.category) ? jewellery.category.join(', ') : jewellery.category}
         </p>
-        <h3 className="text-[11px] text-black/60 truncate leading-[normal] mt-[5px] tracking-[-0.11px]">
-          {jewellery.name}
+        <h3 className="line-clamp-2 mt-[5px] w-[160px] whitespace-normal break-words" style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "11.5px", fontStyle: "normal", fontWeight: 400, lineHeight: "16px", minHeight: "36px", opacity: 0.6, letterSpacing: "-0.13px", textWrap: "balance" }}>
+          {jewellery.name && jewellery.name.length < 24 && jewellery.name.includes(' ') ? (
+            <>
+              {jewellery.name.split(' ').slice(0, Math.ceil(jewellery.name.split(' ').length / 2)).join(' ')}
+              <br />
+              {jewellery.name.split(' ').slice(Math.ceil(jewellery.name.split(' ').length / 2)).join(' ')}
+            </>
+          ) : (
+            jewellery.name
+          )}
         </h3>
-        <p className="text-[9px] font-medium text-black leading-[normal] mt-[9px]">
+        <p className="mt-[4px]" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal" }}>
           {jewellery.rentalPrice >= 2000
             ? 'Premium Collection'
             : `₹${jewellery.rentalPrice?.toFixed(2)}`}

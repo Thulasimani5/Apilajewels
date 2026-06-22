@@ -63,9 +63,9 @@ const Navbar = () => {
   // Dynamic styling classes
   const navBgClass = isHomePage
     ? scrolled
-      ? "bg-white/95 backdrop-blur-md shadow-luxury border-b border-gray-100"
+      ? "bg-white/95 backdrop-blur-md md:shadow-luxury border-b border-gray-100"
       : "bg-transparent border-none"
-    : "bg-white/95 backdrop-blur-md shadow-luxury border-b border-gray-100";
+    : "bg-white/95 backdrop-blur-md md:shadow-luxury border-b border-gray-100";
 
   const textColorClass = isHomePage
     ? scrolled
@@ -88,7 +88,7 @@ const Navbar = () => {
           className={`mx-auto px-4 sm:px-6 lg:px-8 ${isHomePage ? "md:max-w-none md:px-12 lg:px-20" : "max-w-7xl"
             }`}
         >
-          <div className="flex items-center justify-between h-16 md:h-20">
+          <div className="flex items-center justify-between h-14 md:h-20">
             {/* Left Section: Hamburger Menu · Search */}
             <div className="flex items-center gap-1.5 md:gap-2.5">
               <button
@@ -199,16 +199,18 @@ const Navbar = () => {
                 aria-label="Cart"
                 className="hover:opacity-70 transition-opacity"
               >
-                <img
-                  src={iconCart}
-                  alt="Cart"
-                  style={{
-                    width: "20px",
-                    height: "20px",
-                    filter: iconFilterClass,
-                    transition: "filter 0.3s ease",
-                  }}
-                />
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 15 17"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{ filter: iconFilterClass, transition: "filter 0.3s ease" }}
+                >
+                  <path d="M13.282 13.5346C13.4101 14.7175 12.4834 15.75 11.2936 15.75H2.75034C1.56051 15.75 0.633827 14.7175 0.761975 13.5346L1.62864 5.53459C1.73863 4.51934 2.59581 3.75 3.61701 3.75H10.4269C11.4481 3.75 12.3053 4.51934 12.4153 5.53459L13.282 13.5346Z" stroke="white" strokeWidth={isDesktop ? 2 : 1.5} strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M7.02516 0.75C8.40732 0.75 9.52197 1.69624 9.52197 2.85753V3.75H4.52197V2.85753C4.52197 1.69086 5.64299 0.75 7.01879 0.75H7.02516Z" stroke="white" strokeWidth={isDesktop ? 2 : 1.5} strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M5.52197 6.75H8.52197" stroke="white" strokeWidth={isDesktop ? 2 : 1.5} strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </Link>
 
               {user ? (
@@ -281,12 +283,13 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-
-        {isDesktop
-          ? isSearchOpen && <DesktopSearchOverlay onClose={() => setIsSearchOpen(false)} />
-          : <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
-        }
       </nav>
+
+      {/* Render search overlays outside nav to avoid transform containing block issues */}
+      {isDesktop
+        ? isSearchOpen && <DesktopSearchOverlay onClose={() => setIsSearchOpen(false)} />
+        : <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      }
 
       {/* ── Slide-out Menu Drawer ── */}
       <div
@@ -311,71 +314,107 @@ const Navbar = () => {
             </button>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-6 py-2">
-            <div className="flex flex-col">
-              {[
-                { label: 'MOISSINATE JEWELS', url: '/shop?category=moissinate' },
-                { label: 'AD JEWELS', url: '/shop?category=ad-jewels' },
-                { label: 'GOLD ANTIQUE JEWELS', url: '/shop?category=gold-antique' },
-                { label: 'KUNDAN JEWELS', url: '/shop?category=kundan' },
-                { label: 'AD BANGLES', url: '/shop?category=ad-bangles' },
-                { label: 'GOLD BANGLES', url: '/shop?category=gold-bangles' },
-                { label: 'ACCESSORIES', url: '/shop?category=accessories' },
-              ].map((item) => (
-                <Link
-                  key={item.label}
-                  to={item.url}
-                  onClick={() => setIsDrawerOpen(false)}
-                  className="flex items-center justify-between py-4 text-[10px] font-bold tracking-[0.1em] text-[#333] uppercase hover:text-[#111] transition-colors"
-                  style={{ fontFamily: "'Gotham', sans-serif" }}
-                >
-                  <span>{item.label}</span>
-                  <ChevronRight size={14} className="text-gray-400" strokeWidth={1.5} />
-                </Link>
-              ))}
+          <div className="flex-1 overflow-y-auto px-6 py-2 pb-[40px]">
+            {/* CATEGORY */}
+            <div className="mt-[20px]">
+              <p className="mb-[10px]" style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "10px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.77px", textTransform: "uppercase", opacity: 0.5 }}>
+                CATEGORY
+              </p>
+              <div className="flex flex-col">
+                {[
+                  { label: 'VICTORIAN & MOISSINATE', url: '/shop?category=moissinate' },
+                  { label: 'AD JEWELS', url: '/shop?category=ad-jewels' },
+                  { label: 'GOLD ANTIQUE JEWELS', url: '/shop?category=gold-antique' },
+                  { label: 'KUNDAN JEWELS', url: '/shop?category=kundan' },
+                ].map((item) => (
+                  <Link
+                    key={item.label}
+                    to={item.url}
+                    onClick={() => setIsDrawerOpen(false)}
+                    className="flex items-center justify-between py-[12px] hover:opacity-70 transition-opacity"
+                    style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}
+                  >
+                    <span>{item.label}</span>
+                    <ChevronRight size={14} className="text-black" strokeWidth={1.5} />
+                  </Link>
+                ))}
+              </div>
             </div>
 
-            <div className="border-t border-[#EAEAEA] my-2"></div>
+            {/* JEWELLERY TYPE */}
+            <div className="mt-[20px]">
+              <p className="mb-[10px]" style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "10px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.77px", textTransform: "uppercase", opacity: 0.5 }}>
+                JEWELLERY TYPE
+              </p>
+              <div className="flex flex-col">
+                {[
+                  { label: 'CHOKER & NECKLACE', url: '/shop?type=choker' },
+                  { label: 'LONG HARAM', url: '/shop?type=haram' },
+                  { label: 'SEMI BRIDAL SET', url: '/shop?type=semi-bridal' },
+                  { label: 'FULL BRIDAL SET', url: '/shop?type=full-bridal' },
+                  { label: 'BANGLES & BRACELETS', url: '/shop?type=bangles' },
+                  { label: 'ACCESSORIES', url: '/shop?category=accessories' },
+                ].map((item) => (
+                  <Link
+                    key={item.label}
+                    to={item.url}
+                    onClick={() => setIsDrawerOpen(false)}
+                    className="flex items-center justify-between py-[12px] hover:opacity-70 transition-opacity"
+                    style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}
+                  >
+                    <span>{item.label}</span>
+                    <ChevronRight size={14} className="text-black" strokeWidth={1.5} />
+                  </Link>
+                ))}
+              </div>
+            </div>
 
-            <div className="flex flex-col">
-              {[
-                { label: 'BRIDAL SET', url: '/shop?occasion=bridal' },
-                { label: 'BRIDEMAID', url: '/shop?occasion=bridesmaid' },
-                { label: 'DESIGNER COLLECTION', url: '/shop?occasion=designer' },
-                { label: 'RECEPTION JEWELS', url: '/shop?occasion=reception' },
-                { label: 'PARTY WEAR', url: '/shop?occasion=party' },
-                { label: 'SMALL JEWELS', url: '/shop?occasion=small' },
-              ].map((item) => (
-                <Link
-                  key={item.label}
-                  to={item.url}
-                  onClick={() => setIsDrawerOpen(false)}
-                  className="flex items-center justify-between py-4 text-[10px] font-bold tracking-[0.1em] text-[#333] uppercase hover:text-[#111] transition-colors"
-                  style={{ fontFamily: "'Gotham', sans-serif" }}
-                >
-                  <span>{item.label}</span>
-                  <ChevronRight size={14} className="text-gray-400" strokeWidth={1.5} />
-                </Link>
-              ))}
+            {/* OCCASION */}
+            <div className="mt-[20px]">
+              <p className="mb-[10px]" style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "10px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.77px", textTransform: "uppercase", opacity: 0.5 }}>
+                OCCASION
+              </p>
+              <div className="flex flex-col">
+                {[
+                  { label: 'BRIDAL SET', url: '/shop?occasion=bridal' },
+                  { label: 'BRIDEMAID', url: '/shop?occasion=bridesmaid' },
+                  { label: 'DESIGNER COLLECTION', url: '/shop?occasion=designer' },
+                  { label: 'RECEPTION JEWELS', url: '/shop?occasion=reception' },
+                  { label: 'PARTY WEAR', url: '/shop?occasion=party' },
+                  { label: 'SMALL JEWELS', url: '/shop?occasion=small' },
+                ].map((item) => (
+                  <Link
+                    key={item.label}
+                    to={item.url}
+                    onClick={() => setIsDrawerOpen(false)}
+                    className="flex items-center justify-between py-[12px] hover:opacity-70 transition-opacity"
+                    style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}
+                  >
+                    <span>{item.label}</span>
+                    <ChevronRight size={14} className="text-black" strokeWidth={1.5} />
+                  </Link>
+                ))}
+              </div>
             </div>
           </div>
 
-          <div className="px-6 py-6 mt-auto flex flex-col gap-6">
+          {/* Bottom Section (Sticky at bottom) */}
+          <div className="px-6 py-6 mt-auto flex flex-col gap-6 bg-white">
             {user ? (
               <div className="flex items-center gap-4 text-[#333] cursor-pointer hover:text-[#111] transition-colors" onClick={() => { logout(); setIsDrawerOpen(false); }}>
                 <User size={16} strokeWidth={1.5} />
-                <span className="text-[10px] font-bold tracking-[0.1em] uppercase" style={{ fontFamily: "'Gotham', sans-serif" }}>LOGOUT</span>
+                <span style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "13px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}>LOGOUT</span>
               </div>
             ) : (
               <Link to="/login" onClick={() => setIsDrawerOpen(false)} className="flex items-center gap-4 text-[#333] hover:text-[#111] transition-colors">
                 <User size={16} strokeWidth={1.5} />
-                <span className="text-[10px] font-bold tracking-[0.1em] uppercase" style={{ fontFamily: "'Gotham', sans-serif" }}>LOGIN</span>
+                <span style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "13px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}>LOGIN</span>
               </Link>
             )}
-            
+
             <div className="border-t border-[#EAEAEA] pt-6 flex items-center gap-4 text-[#333]">
               <Phone size={16} strokeWidth={1.5} />
-              <span className="text-[10px] font-bold tracking-[0.1em]" style={{ fontFamily: "'Gotham', sans-serif" }}>+91 73977 21101</span>
+              <span style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "13px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}>+91 73977 21101</span>
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,16 +23,16 @@ const Login = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
-    
+
     try {
       const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
         mobile,
         password
       });
-      
+
       const { token: jwtToken, user: userData } = response.data;
       login(userData, jwtToken);
-      
+
       if (userData.role === 'admin') {
         navigate('/admin');
       } else {
@@ -54,63 +54,70 @@ const Login = () => {
             <X size={20} strokeWidth={1} />
           </button>
         </div>
-        
+
         {/* Body */}
         <div className="pt-10 px-8 flex-1 flex flex-col">
-          <h1 className="text-[28px] text-[#111] mb-2" style={{ fontFamily: "'Belgant Aesthetic', serif" }}>Login</h1>
-          <p className="text-[11.5px] text-[#333] mb-8" style={{ fontFamily: "'Gotham', sans-serif" }}>Welcome to Apila Jewels</p>
-          
+          <h1 className="mb-2" style={{ color: "#000", fontFamily: "'Bacasime Antique', serif", fontSize: "30px", fontStyle: "normal", fontWeight: 400, lineHeight: "39px", letterSpacing: "-0.96px" }}>Login</h1>
+          <p className="text-[11.5px] text-[#333] mb-6" style={{ fontFamily: "'Gotham Book', sans-serif" }}>Welcome to Apila Jewels</p>
+
           <form className="flex flex-col" onSubmit={handleSubmit}>
-             {error && <div className="text-red-500 text-[11px] mb-4 text-center" style={{ fontFamily: "'Gotham', sans-serif" }}>{error}</div>}
+            {error && <div className="text-red-500 text-[11px] mb-4 text-center" style={{ fontFamily: "'Gotham Book', sans-serif" }}>{error}</div>}
 
-             {/* Mobile Number Input */}
-             <div className="mb-4">
-               <input 
-                 type="text"
-                 required
-                 value={mobile}
-                 onChange={(e) => setMobile(e.target.value)}
-                 placeholder="Mobile Number *"
-                 className="w-full bg-[#FAFAFA] border border-gray-100 text-[11.5px] px-4 py-4 text-[#111] placeholder-[#888] focus:outline-none focus:border-[#B07A85]"
-                 style={{ fontFamily: "'Gotham', sans-serif" }}
-               />
-             </div>
+            {/* Mobile Number Input */}
+            <div className="mb-4">
+              <input
+                type="text"
+                required
+                value={mobile}
+                onChange={(e) => setMobile(e.target.value)}
+                placeholder="Mobile Number *"
+                className="w-full bg-[#FAFAFA] border border-gray-100 text-[11.5px] px-4 py-4 text-[#111] placeholder-[#888] focus:outline-none focus:border-[#B07A85]"
+                style={{ fontFamily: "'Gotham Book', sans-serif" }}
+              />
+            </div>
 
-             {/* Password Input */}
-             <div className="mb-6">
-               <input 
-                 type="password"
-                 required
-                 value={password}
-                 onChange={(e) => setPassword(e.target.value)}
-                 placeholder="Password *"
-                 className="w-full bg-[#FAFAFA] border border-gray-100 text-[11.5px] px-4 py-4 text-[#111] placeholder-[#888] focus:outline-none focus:border-[#B07A85]"
-                 style={{ fontFamily: "'Gotham', sans-serif" }}
-               />
-             </div>
+            {/* Password Input */}
+            <div className="mb-6">
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password *"
+                className="w-full bg-[#FAFAFA] border border-gray-100 text-[11.5px] px-4 py-4 text-[#111] placeholder-[#888] focus:outline-none focus:border-[#B07A85]"
+                style={{ fontFamily: "'Gotham Book', sans-serif" }}
+              />
+            </div>
 
-             {/* Forgot Password */}
-             <div className="mb-14">
-               <a href="#" className="text-[11.5px] font-bold text-[#111] border-b border-gray-300 pb-[1px] tracking-wide" style={{ fontFamily: "'Gotham', sans-serif" }}>Forgot Your Password?</a>
-             </div>
+            {/* Forgot Password */}
+            <div className="mb-14">
+              <a href="#" className="text-[11.5px]  text-[#111] border-b border-gray-300 pb-[1px] tracking-wide" style={{ fontFamily: "'Gotham Book', sans-serif" }}>Forgot Your Password?</a>
+            </div>
 
-             {/* Login Button */}
-             <button 
-               type="submit"
-               disabled={loading}
-               className="w-full bg-[#ab6281] text-white py-4 text-[11px] font-bold tracking-[0.1em] uppercase transition-opacity hover:opacity-90 flex justify-center"
-               style={{ fontFamily: "'Gotham', sans-serif" }}
-             >
-               {loading ? 'LOGGING IN...' : 'LOGIN'}
-             </button>
+            {/* Login Button */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#ab6281] text-white py-4 text-[12px]  tracking-[0.1em] uppercase transition-opacity hover:opacity-90 flex justify-center"
+              style={{ fontFamily: "'Gotham Book', sans-serif" }}
+            >
+              {loading ? 'LOGGING IN...' : 'LOGIN'}
+            </button>
           </form>
-          
+
+          {/* Or Sign In With */}
+          <div className="mt-4 flex justify-center items-center">
+            <span className="text-[11px] text-[#333]" style={{ fontFamily: "'Gotham Book', sans-serif" }}>
+              or <Link to="/register" className="text-[#ab6281] border-b border-[#ab6281] pb-[1px]">Sign in</Link> with
+            </span>
+          </div>
+
           {/* Footer */}
-          <div className="mt-8 flex justify-center items-center gap-2">
-            <span className="text-[11.5px] text-[#333]" style={{ fontFamily: "'Gotham', sans-serif" }}>Need help?</span>
+          <div className="mt-auto pb-8 flex justify-center items-center gap-2">
+            <span className="text-[11.5px] text-[#333]" style={{ fontFamily: "'Gotham Book', sans-serif" }}>Need help?</span>
             <div className="flex items-center gap-1.5 cursor-pointer">
-               <img src={whatsappIcon} alt="WhatsApp" className="w-[18px] h-[18px]" style={{ filter: 'brightness(0)' }} />
-               <span className="text-[11.5px] font-bold text-[#111]" style={{ fontFamily: "'Gotham', sans-serif" }}>Whatsapp Us</span>
+              <img src={whatsappIcon} alt="WhatsApp" className="w-[18px] h-[18px]" style={{ filter: 'brightness(0)' }} />
+              <span className="text-[11.5px] font-bold text-[#111]" style={{ fontFamily: "'Gotham Book', sans-serif" }}>Whatsapp Us</span>
             </div>
           </div>
         </div>
