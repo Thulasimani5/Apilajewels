@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { getOptimizedCloudinaryUrl } from '../utils/imageUtils';
 import { X } from 'lucide-react';
 import apilaLogo from '../assets/Apila Logo01.svg';
