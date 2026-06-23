@@ -370,7 +370,7 @@
   justify-content: flex-end;
   align-items: center;
   text-align: center;
-  padding: 0 20px 48px 20px;
+  padding: 0 20px 24px 20px;
 }
 
 .carousel-card-title {
@@ -3685,50 +3685,60 @@
   color: #ab6281;
   border-bottom-color: #ab6281;
 }
+
 /* JEWELLERY TYPE GRID */
 .jewellery-type-section {
   padding: 52px 0;
 }
+
 .jewellery-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
-  max-width: 1300px;
+  gap: 16px;
+  max-width: 1700px;
   margin: 0 auto 64px auto;
+  padding: 0 20px;
 }
+
 .jewellery-grid-card {
   position: relative;
-  aspect-ratio: 16 / 9; /* Or adjust to match image aspect */
+  width: 100%;
+  aspect-ratio: 754 / 410;
   overflow: hidden;
   border-radius: 2px;
   display: block;
 }
+
 .jewellery-grid-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 0.6s ease;
 }
+
 .jewellery-grid-card:hover img {
   transform: scale(1.05);
 }
+
 .jewellery-grid-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
   padding: 30px;
-  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
   color: #fff;
 }
+
 .jewellery-grid-title {
-  font-family: var(--f-bacasime);
-  font-size: 24px;
+  font-family: 'Belgant Aesthetic', serif;
+  font-size: 38px;
   margin: 0;
 }
+
 .jewellery-grid-sub {
-  font-family: var(--f-gotham-book);
-  font-size: 13px;
+  font-family: var(--f-gotham-b);
+  font-size: 18px;
   margin-top: 4px;
   opacity: 0.9;
 }
@@ -3767,8 +3777,13 @@
 }
 
 @keyframes dloSlideIn {
-  from { transform: translateX(100%); }
-  to   { transform: translateX(0); }
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
 }
 
 .dlo-header {
@@ -3901,8 +3916,14 @@
   justify-content: center;
 }
 
-.dlo-submit-btn:hover:not(:disabled) { opacity: 0.88; }
-.dlo-submit-btn:disabled { opacity: 0.65; cursor: not-allowed; }
+.dlo-submit-btn:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.dlo-submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
 
 .dlo-switch {
   text-align: center;
@@ -3928,7 +3949,9 @@
   transition: color 0.18s ease;
 }
 
-.dlo-switch-btn:hover { color: #9e5571; }
+.dlo-switch-btn:hover {
+  color: #9e5571;
+}
 
 .dlo-footer {
   margin-top: auto;
@@ -3953,7 +3976,9 @@
   transition: opacity 0.18s ease;
 }
 
-.dlo-whatsapp:hover { opacity: 0.75; }
+.dlo-whatsapp:hover {
+  opacity: 0.75;
+}
 
 .dlo-wa-icon {
   width: 20px;
@@ -3967,5 +3992,3 @@
   font-weight: 700;
   color: #111;
 }
-
-
