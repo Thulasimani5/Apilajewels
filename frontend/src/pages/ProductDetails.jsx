@@ -286,7 +286,7 @@ const ProductDetails = () => {
           </button>
           <button
             onClick={handleBookOnWhatsapp}
-            className="flex-1 py-3 bg-[#B07A85] text-white font-semibold rounded-lg text-sm hover:bg-[#9E6A75] transition-colors shadow-[0_4px_14px_rgba(176,122,133,0.3)]"
+            className="flex-1 py-3 border-2 border-transparent bg-[#B07A85] text-white font-semibold rounded-lg text-sm hover:bg-[#9E6A75] transition-colors shadow-[0_4px_14px_rgba(176,122,133,0.3)]"
           >
             Book On Whatsapp
           </button>
@@ -332,11 +332,13 @@ const ProductDetails = () => {
             <div className="flex gap-4">
               <button
                 onClick={() => toggleWishlist(product)}
-                className="text-gray-500 transition-colors"
+                className="transition-colors"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="19" height="17" viewBox="0 0 19 17" fill="none">
-                  <path d="M9.47952 16.9989C9.37987 16.9989 9.28022 16.9761 9.20272 16.9191C4.50808 14.0572 -0.706957 9.00624 0.079173 4.1833C0.422413 2.07398 1.99467 0.454933 4.08733 0.0786755C5.7371 -0.21777 7.94048 0.272505 9.47952 2.42743C10.775 0.637361 12.7237 -0.251975 14.7278 0.0672737C16.8315 0.409326 18.4702 2.01697 18.8909 4.1605C19.821 8.89222 14.7942 13.852 9.7674 16.9076C9.67882 16.9647 9.57917 16.9875 9.49059 16.9875L9.47952 16.9989ZM4.98418 1.13904C4.74059 1.13904 4.50808 1.16184 4.28663 1.19605C2.67008 1.49249 1.44106 2.73528 1.17533 4.37713C0.544208 8.27653 4.85132 12.86 9.49059 15.7561C13.8863 13.0083 18.6031 8.45896 17.8059 4.38853C17.4737 2.71248 16.2004 1.45829 14.5617 1.18464C12.7348 0.888199 11.0186 1.84595 9.97777 3.73864C9.87812 3.92106 9.68989 4.02368 9.49059 4.02368C9.29129 4.02368 9.10307 3.90966 9.00342 3.73864C7.94048 1.80034 6.335 1.12764 4.98418 1.12764V1.13904Z" fill={isInWishlist(product._id) ? "#ef4444" : "black"} />
-                </svg>
+                <Heart
+                  size={20}
+                  className={isInWishlist(product._id) ? "fill-red-500 text-red-500" : "text-black"}
+                  strokeWidth={isInWishlist(product._id) ? 2 : 1.5}
+                />
               </button>
               <button
                 onClick={handleShare}
@@ -374,7 +376,7 @@ const ProductDetails = () => {
             <button
               onClick={handleBookOnWhatsapp}
               className="w-full py-3.5"
-              style={{ background: "#AB6281", color: "#FFF", fontFamily: "Gotham Book, sans-serif", fontSize: "12px", fontWeight: 500, lineHeight: "normal", letterSpacing: "1.96px", textTransform: "uppercase" }}
+              style={{ border: "1px solid #AB6281", background: "#AB6281", color: "#FFF", fontFamily: "Gotham Book, sans-serif", fontSize: "12px", fontWeight: 500, lineHeight: "normal", letterSpacing: "1.96px", textTransform: "uppercase" }}
             >
               BOOK ON WHATSAPP
             </button>

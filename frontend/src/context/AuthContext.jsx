@@ -54,8 +54,12 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const openLogin = () => setIsLoginOpen(true);
+  const closeLogin = () => setIsLoginOpen(false);
+
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, login, logout, isLoginOpen, openLogin, closeLogin }}>
       {children}
     </AuthContext.Provider>
   );

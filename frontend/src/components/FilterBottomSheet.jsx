@@ -209,6 +209,7 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
                           >
                             {options.map((option) => {
                               const isChecked = localFilters[section]?.includes(option);
+                              const displayOption = option === 'Moissinate Jewels' ? 'Victorian & Mossianate' : option;
                               return (
                                 <button
                                   key={option}
@@ -225,7 +226,7 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
                                     {isChecked && <Check size={8} strokeWidth={4} className="text-white" />}
                                   </div>
                                   <span style={{ color: "#333", fontFamily: "Gotham Book, sans-serif", fontSize: "11px", fontStyle: "normal", fontWeight: 400, letterSpacing: "0.8px", textTransform: "uppercase" }}>
-                                    {option}
+                                    {displayOption}
                                   </span>
                                 </button>
                               );

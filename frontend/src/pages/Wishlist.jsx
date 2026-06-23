@@ -16,7 +16,7 @@ const Wishlist = () => {
   const isDesktop = useIsDesktop();
   const navigate = useNavigate();
   const { wishlistItems, toggleWishlist } = useWishlist();
-  const { user } = useAuth();
+  const { user, openLogin } = useAuth();
   const { addToCart } = useCart();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);

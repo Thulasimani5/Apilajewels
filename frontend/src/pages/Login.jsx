@@ -39,7 +39,16 @@ const Login = () => {
         navigate(from);
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'Invalid credentials');
+      const raw = err.response?.data?.error || '';
+      if (raw.includes('Invalid credentials') || raw.includes('not found')) {
+        setError('Incorrect mobile number or password. Please try again.');
+      } else if (raw.includes('mobile') || raw.includes('phone')) {
+        setError('Please enter a valid mobile number.');
+      } else if (raw.includes('password')) {
+        setError('Password must be at least 6 characters.');
+      } else {
+        setError(raw || 'Something went wrong. Please try again.');
+      }
     } finally {
       setLoading(false);
     }
@@ -61,7 +70,19 @@ const Login = () => {
           <p className="text-[11.5px] text-[#333] mb-6" style={{ fontFamily: "'Gotham Book', sans-serif" }}>Welcome to Apila Jewels</p>
 
           <form className="flex flex-col" onSubmit={handleSubmit}>
-            {error && <div className="text-red-500 text-[11px] mb-4 text-center" style={{ fontFamily: "'Gotham Book', sans-serif" }}>{error}</div>}
+            {error && (
+              <div style={{
+                display: 'flex', alignItems: 'flex-start', gap: '8px',
+                background: '#FFF0F2', border: '1px solid #F5C2CB',
+                borderRadius: '6px', padding: '10px 14px', marginBottom: '16px'
+              }}>
+                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0, marginTop: '1px' }}>
+                  <circle cx="10" cy="10" r="9" stroke="#C0392B" strokeWidth="1.5"/>
+                  <path d="M10 6v4M10 14h.01" stroke="#C0392B" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
+                <span style={{ fontFamily: "'Gotham Book', sans-serif", fontSize: '11.5px', color: '#C0392B', lineHeight: '1.5' }}>{error}</span>
+              </div>
+            )}
 
             {/* Mobile Number Input */}
             <div className="mb-4">
@@ -105,10 +126,10 @@ const Login = () => {
             </button>
           </form>
 
-          {/* Or Sign In With */}
+          {/* Or Sign Up With */}
           <div className="mt-4 flex justify-center items-center">
             <span className="text-[11px] text-[#333]" style={{ fontFamily: "'Gotham Book', sans-serif" }}>
-              or <Link to="/register" className="text-[#ab6281] border-b border-[#ab6281] pb-[1px]">Sign in</Link> with
+              or <Link to="/register" className="text-[#ab6281] border-b border-[#ab6281] pb-[1px]">Sign up</Link> with
             </span>
           </div>
 
