@@ -553,7 +553,7 @@ export default function Home() {
                 <img src={c.img} alt={c.title} loading={i === 0 ? "eager" : "lazy"} />
                 <div className="carousel-card-overlay">
                   <p className="carousel-card-title">{c.title}</p>
-                  <p className="carousel-card-sub" style={{ marginBottom: '10px', textTransform: 'uppercase', fontSize: '13px', letterSpacing: '1px', textDecoration: 'underline', textUnderlineOffset: '4px', textDecorationThickness: '1px' }}>{c.sub}</p>
+                  <p className="carousel-card-sub" style={{ textTransform: 'uppercase', fontSize: '13px', letterSpacing: '1px', textDecoration: 'underline', textUnderlineOffset: '4px', textDecorationThickness: '1px' }}>{c.sub}</p>
                 </div>
               </Link>
             ))}
