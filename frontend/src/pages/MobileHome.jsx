@@ -53,12 +53,12 @@ import iconTimelyReturn from '../assets/icons/TimelyReturn.svg';
 
 
 const OCCASIONS = [
-  { title: 'Bridal Set',   href: '/shop?occasion=bridal',      img: imgC1, sub: 'Collections' },
-  { title: 'Bridal Maid',  href: '/shop?occasion=bridesmaid',  img: imgC2, sub: 'Collections' },
-  { title: 'Designer',     href: '/shop?occasion=designer',    img: imgC3, sub: 'Collections' },
-  { title: 'Reception',    href: '/shop?occasion=reception',   img: imgC4, sub: 'Collections' },
-  { title: 'Party wear',   href: '/shop?occasion=party',       img: imgC5, sub: 'Collections' },
-  { title: 'Small Jewel',  href: '/shop?occasion=small',       img: imgC6, sub: 'Collections' },
+  { title: 'Bridal Set', href: '/shop?occasion=bridal', img: imgC1, sub: 'Collections' },
+  { title: 'Bridal Maid', href: '/shop?occasion=bridesmaid', img: imgC2, sub: 'Collections' },
+  { title: 'Designer', href: '/shop?occasion=designer', img: imgC3, sub: 'Collections' },
+  { title: 'Reception', href: '/shop?occasion=reception', img: imgC4, sub: 'Collections' },
+  { title: 'Party wear', href: '/shop?occasion=party', img: imgC5, sub: 'Collections' },
+  { title: 'Small Jewel', href: '/shop?occasion=small', img: imgC6, sub: 'Collections' },
 ];
 
 
@@ -351,9 +351,9 @@ const Home = () => {
 
                         fontFamily: "'Belgant Aesthetic', Georgia, serif",
 
-                        fontSize: 'clamp(16px, 4.85vw, 20px)',
+                        fontSize: 'clamp(16px, 4.85vw, 16px)',
 
-                        letterSpacing: '-0.6px',
+                        letterSpacing: '1px',
 
                         lineHeight: 'normal',
 
@@ -371,7 +371,7 @@ const Home = () => {
 
                       style={{
 
-                        fontFamily: "'Gotham Light', 'Gotham Book', sans-serif",
+                        fontFamily: "'Gotham Light', sans-serif",
 
                         fontSize: 'clamp(8px, 2.43vw, 10px)',
 
@@ -473,7 +473,7 @@ const Home = () => {
 
                     style={{
 
-                      fontFamily: "'Belgan Aesthetic', Georgia, serif",
+                      fontFamily: "'Belgant Aesthetic', Georgia, serif",
 
                       fontSize: 'clamp(18px, 5.83vw, 24px)',
 
@@ -770,13 +770,13 @@ const Home = () => {
 
             {[
 
-              { label: 'Secure\nPackaging',       iconSrc: iconSecure },
+              { label: 'Secure\nPackaging', iconSrc: iconSecure },
 
-              { label: 'Doorstep\nDelivery',       iconSrc: iconDoorstepDelivery },
+              { label: 'Doorstep\nDelivery', iconSrc: iconDoorstepDelivery },
 
-              { label: 'Timely\nReturn Pickup',    iconSrc: iconTimelyReturn },
+              { label: 'Timely\nReturn Pickup', iconSrc: iconTimelyReturn },
 
-              { label: 'Hassle-Free\nExperience',  iconSrc: iconHassleFree },
+              { label: 'Hassle-Free\nExperience', iconSrc: iconHassleFree },
 
             ].map(({ label, iconSrc }, index, arr) => (
 
