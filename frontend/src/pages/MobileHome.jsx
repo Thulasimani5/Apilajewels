@@ -206,7 +206,7 @@ const Home = () => {
 
         {/* ── 1. Hero ── */}
 
-        <section className="relative w-full overflow-hidden" style={{ height: '100dvh', minHeight: '580px' }}>
+        <section className="relative w-full overflow-hidden" style={{ height: '100vh', minHeight: '580px' }}>
 
           <img
 
@@ -330,20 +330,16 @@ const Home = () => {
                 >
 
                   <LazyImage
-
                     src={cat.img}
-
                     alt={cat.title}
-
-                    className="absolute inset-0 w-full h-full object-cover"
-
+                    className="absolute inset-0 w-full h-full object-contain bg-white/50"
                   />
 
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/55" />
 
-                  <div className="absolute bottom-[14px] left-[14px]">
+                  <div className="absolute bottom-[10px] left-[14px]">
 
-                    <h3
+                    <h4
 
                       className="text-white font-normal"
 
@@ -354,6 +350,7 @@ const Home = () => {
                         fontSize: 'clamp(16px, 4.85vw, 16px)',
 
                         letterSpacing: '1px',
+                        fontWeight: '100',
 
                         lineHeight: 'normal',
 
@@ -363,7 +360,7 @@ const Home = () => {
 
                       {cat.title}
 
-                    </h3>
+                    </h4>
 
                     <p
 
@@ -374,8 +371,8 @@ const Home = () => {
                         fontFamily: "'Gotham Light', sans-serif",
 
                         fontSize: 'clamp(8px, 2.43vw, 10px)',
-
-                        lineHeight: '27px',
+                        letterSpacing: '0.8px',
+                        lineHeight: '18px',
 
                       }}
 
@@ -402,7 +399,7 @@ const Home = () => {
 
         {/* ── 2b. Shop by Jewellery Type – horizontal scroll portrait cards ── */}
 
-        <section className="bg-white pt-[26px] pb-[58px]">
+        <section className="bg-white pt-[24px] pb-[24px]">
 
           <h2
 
@@ -426,7 +423,7 @@ const Home = () => {
 
           <div
 
-            className="flex gap-[7px] overflow-x-auto snap-x snap-mandatory hide-scrollbar mt-[42px]"
+            className="flex gap-[7px] overflow-x-auto snap-x snap-mandatory hide-scrollbar mt-[20px]"
 
             style={{ paddingLeft: '11px', paddingRight: '11px' }}
 
@@ -477,7 +474,7 @@ const Home = () => {
 
                       fontSize: 'clamp(18px, 5.83vw, 24px)',
 
-                      letterSpacing: '-0.72px',
+                      letterSpacing: '0.8px',
 
                       lineHeight: '30px',
 

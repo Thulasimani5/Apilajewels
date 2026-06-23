@@ -205,8 +205,8 @@ const Navbar = () => {
                   src={iconCart}
                   alt="Cart"
                   style={{
-                    width: "20px",
-                    height: "20px",
+                    width: "18px",
+                    height: "18px",
                     filter: iconFilterClass,
                     transition: "filter 0.3s ease",
                   }}

@@ -12,6 +12,7 @@ import API_BASE_URL from '../config/api';
 import LazyImage from '../components/LazyImage';
 import { useProduct } from '../hooks/useProduct';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import DesktopProduct from './DesktopProduct';
 import useIsDesktop from '../hooks/useIsDesktop';
 
@@ -296,7 +297,7 @@ const ProductDetails = () => {
   );
 
   return (
-    <div className="bg-white min-h-screen pb-24 overflow-x-hidden">
+    <div className="bg-white min-h-screen  overflow-x-hidden">
       {/* Shared Navbar (includes hamburger menu + drawer, same as home page) */}
       <Navbar />
 
@@ -324,7 +325,7 @@ const ProductDetails = () => {
         </div>
 
         {/* Details Container */}
-        <div className="bg-white relative px-2 pt-4 pb-6">
+        <div className="bg-white relative px-2 pt-4 ">
           <div className="flex justify-between items-start mb-1">
             <span style={{ color: "#000", fontFamily: "var(--f-gotham-b), 'Gotham Book', sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}>
               {product.category || 'Moissinate Jewels'}
@@ -365,7 +366,7 @@ const ProductDetails = () => {
               : `₹${(product.rentalPrice || product.price || 0).toFixed(2)}`}
           </div>
 
-          <div className="space-y-2 mb-6">
+          <div className="space-y-2 mb-2">
             <button
               onClick={handleAddToCart}
               className="w-full py-3.5"
@@ -427,7 +428,27 @@ const ProductDetails = () => {
                 <Card key={prod._id} jewellery={prod} variant="shop" imageAspect="195 / 244" imageClassName="" />
               ))}
             </div>
+
+            {/* Explore More Button */}
+            <div className="mt-8 flex justify-center">
+              <Link
+                to="/shop?explore=true"
+                className="flex items-center justify-center border border-[#ab6281] text-[#ab6281] hover:bg-[#ab6281] hover:text-white transition-all"
+                style={{
+                  fontFamily: "'Gotham', sans-serif",
+                  fontSize: '13px',
+                  letterSpacing: '-0.13px',
+                  width: '183px',
+                  height: '48px',
+                }}
+              >
+                Explore More&nbsp;&nbsp;›
+              </Link>
+            </div>
           </div>
+
+          {/* Mobile Footer */}
+          <Footer />
         </div>
       </div>
 

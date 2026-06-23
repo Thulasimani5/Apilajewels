@@ -83,16 +83,8 @@ const Card = ({ jewellery, priority = false, imageAspect, imageClassName = 'roun
         <p style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "9px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "0.7px", textTransform: "uppercase" }}>
           {Array.isArray(jewellery.category) ? jewellery.category.join(', ') : jewellery.category}
         </p>
-        <h3 className="line-clamp-2 mt-[5px] w-[160px] whitespace-normal break-words" style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "11.5px", fontStyle: "normal", fontWeight: 400, lineHeight: "16px", minHeight: "36px", opacity: 0.6, letterSpacing: "-0.13px", textWrap: "balance" }}>
-          {jewellery.name && jewellery.name.length < 24 && jewellery.name.includes(' ') ? (
-            <>
-              {jewellery.name.split(' ').slice(0, Math.ceil(jewellery.name.split(' ').length / 2)).join(' ')}
-              <br />
-              {jewellery.name.split(' ').slice(Math.ceil(jewellery.name.split(' ').length / 2)).join(' ')}
-            </>
-          ) : (
-            jewellery.name
-          )}
+        <h3 className="line-clamp-2 mt-[5px] w-full whitespace-normal break-words" style={{ maxWidth: "130px", color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "11.5px", fontStyle: "normal", fontWeight: 400, lineHeight: "16px", height: "32px", opacity: 0.6, letterSpacing: "-0.13px" }}>
+          {jewellery.name}
         </h3>
         <p className="mt-[4px]" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal" }}>
           {jewellery.rentalPrice >= 2000
