@@ -3685,3 +3685,287 @@
   color: #ab6281;
   border-bottom-color: #ab6281;
 }
+/* JEWELLERY TYPE GRID */
+.jewellery-type-section {
+  padding: 52px 0;
+}
+.jewellery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  max-width: 1300px;
+  margin: 0 auto 64px auto;
+}
+.jewellery-grid-card {
+  position: relative;
+  aspect-ratio: 16 / 9; /* Or adjust to match image aspect */
+  overflow: hidden;
+  border-radius: 2px;
+  display: block;
+}
+.jewellery-grid-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.jewellery-grid-card:hover img {
+  transform: scale(1.05);
+}
+.jewellery-grid-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 30px;
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  color: #fff;
+}
+.jewellery-grid-title {
+  font-family: var(--f-bacasime);
+  font-size: 24px;
+  margin: 0;
+}
+.jewellery-grid-sub {
+  font-family: var(--f-gotham-book);
+  font-size: 13px;
+  margin-top: 4px;
+  opacity: 0.9;
+}
+
+/* ═══════════════════════════════════════════════════
+   DESKTOP LOGIN OVERLAY  (dlo-*)
+   Right-slide panel — mirrors search overlay structure
+═══════════════════════════════════════════════════ */
+
+.dlo-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.dlo-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.50);
+  cursor: pointer;
+}
+
+.dlo-panel {
+  position: relative;
+  width: 420px;
+  max-width: 100vw;
+  height: 100%;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.08);
+  animation: dloSlideIn 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes dloSlideIn {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+.dlo-header {
+  position: relative;
+  height: 92px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 clamp(20px, 3vw, 48px);
+}
+
+.dlo-logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.dlo-nav-icons {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 1.8vw, 24px);
+}
+
+.dlo-divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+}
+
+.dlo-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 40px clamp(24px, 3vw, 48px) 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.dlo-title {
+  font-family: 'Belgant Aesthetic', serif;
+  font-size: 32px;
+  font-weight: 400;
+  color: #111;
+  margin: 0 0 6px;
+  line-height: 1.2;
+}
+
+.dlo-subtitle {
+  font-family: var(--f-gotham-book);
+  font-size: 13px;
+  color: #333;
+  margin: 0 0 32px;
+}
+
+.dlo-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.dlo-error {
+  font-family: var(--f-gotham-book);
+  font-size: 12px;
+  color: #e53e3e;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.dlo-field {
+  margin-bottom: 16px;
+}
+
+.dlo-input {
+  width: 100%;
+  height: 50px;
+  background: #FAFAFA;
+  border: 1px solid #e2e2e2;
+  font-family: var(--f-gotham-book);
+  font-size: 13px;
+  color: #111;
+  padding: 0 20px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.dlo-input::placeholder {
+  color: #888;
+}
+
+.dlo-input:focus {
+  border-color: #ab6281;
+}
+
+.dlo-forgot {
+  margin-bottom: 28px;
+}
+
+.dlo-forgot-link {
+  font-family: var(--f-gotham-book);
+  font-size: 13px;
+  color: #333;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: color 0.18s ease;
+}
+
+.dlo-forgot-link:hover {
+  color: #ab6281;
+}
+
+.dlo-submit-btn {
+  width: 100%;
+  height: 50px;
+  background: #ab6281;
+  color: #fff;
+  font-family: var(--f-gotham-book);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.18s ease;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dlo-submit-btn:hover:not(:disabled) { opacity: 0.88; }
+.dlo-submit-btn:disabled { opacity: 0.65; cursor: not-allowed; }
+
+.dlo-switch {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.dlo-switch-text {
+  font-family: var(--f-gotham-book);
+  font-size: 13px;
+  color: #333;
+}
+
+.dlo-switch-btn {
+  background: none;
+  border: none;
+  font-family: var(--f-gotham-book);
+  font-size: 13px;
+  color: #ab6281;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  padding: 0;
+  transition: color 0.18s ease;
+}
+
+.dlo-switch-btn:hover { color: #9e5571; }
+
+.dlo-footer {
+  margin-top: auto;
+  padding-top: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.dlo-footer-text {
+  font-family: var(--f-gotham-book);
+  font-size: 14px;
+  color: #333;
+}
+
+.dlo-whatsapp {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: opacity 0.18s ease;
+}
+
+.dlo-whatsapp:hover { opacity: 0.75; }
+
+.dlo-wa-icon {
+  width: 20px;
+  height: 20px;
+  filter: brightness(0);
+}
+
+.dlo-wa-label {
+  font-family: var(--f-gotham-book);
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+}
+
+
