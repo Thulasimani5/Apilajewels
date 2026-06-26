@@ -564,14 +564,16 @@ export default function DesktopShop() {
           {/* ── scrollable nav area ── */}
           <div className="menu-nav-scroll">
 
-            {/* Section 1 — CATEGORY */}
-            <span className="menu-section-heading">Category</span>
+            {/* Section 1 — jewel collections */}
             <ul className="menu-section menu-section--first">
               {[
-                { label: 'Victorian & Moissinate', slug: 'victorian-moissinate' },
-                { label: 'AD Jewels',              slug: 'ad-jewels' },
-                { label: 'Gold Antique Jewels',    slug: 'gold-antique-jewels' },
-                { label: 'Kundan Jewels',          slug: 'kundan-jewels' },
+                { label: 'Moissinate Jewels', slug: 'moissinate-jewels' },
+                { label: 'AD Jewels',          slug: 'ad-jewels' },
+                { label: 'Gold Antique Jewels',slug: 'gold-antique-jewels' },
+                { label: 'Kundan Jewels',      slug: 'kundan-jewels' },
+                { label: 'AD Bangles',         slug: 'ad-bangles' },
+                { label: 'Gold Bangles',       slug: 'gold-bangles' },
+                { label: 'Accessories',        slug: 'accessories' },
               ].map(item => (
                 <li key={item.slug} className="menu-item">
                   <Link to={`/shop?category=${item.slug}`} className="menu-item-link" onClick={() => setIsDrawerOpen(false)}>
@@ -586,32 +588,7 @@ export default function DesktopShop() {
 
             <hr className="menu-rule" />
 
-            {/* Section 2 — JEWELLERY TYPE */}
-            <span className="menu-section-heading">Jewellery Type</span>
-            <ul className="menu-section">
-              {[
-                { label: 'Choker & Necklace', slug: 'choker-necklace' },
-                { label: 'Long Haram',        slug: 'long-haram' },
-                { label: 'Semi Bridal Set',   slug: 'semi-bridal' },
-                { label: 'Full Bridal Set',   slug: 'full-bridal' },
-                { label: 'Bangles',           slug: 'bangles-bracelets' },
-                { label: 'Accessories',       slug: 'accessories' },
-              ].map(item => (
-                <li key={item.slug} className="menu-item">
-                  <Link to={`/shop?category=${item.slug}`} className="menu-item-link" onClick={() => setIsDrawerOpen(false)}>
-                    {item.label}
-                  </Link>
-                  <svg className="menu-chevron" width="5" height="9" viewBox="0 0 5 9" fill="none">
-                    <path d="M1 1l3 3.5L1 8" stroke="#000" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </li>
-              ))}
-            </ul>
-
-            <hr className="menu-rule" />
-
-            {/* Section 3 — OCCASION */}
-            <span className="menu-section-heading">Occasion</span>
+            {/* Section 2 — occasion collections */}
             <ul className="menu-section">
               {[
                 { label: 'Bridal Set',          slug: 'bridal' },
