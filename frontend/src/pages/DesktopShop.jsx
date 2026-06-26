@@ -19,7 +19,8 @@ import backArrowIcon from '../assets/icons/BackArrow.svg';
 import '../styles/ApilaJewels.css';
 
 /* ── Filter data ── */
-const OCCASION_OPTIONS = ['Bridal Set', 'Bridal Maid', 'Designer', 'Reception', 'Party Wear', 'Small Jewel'];
+const JEWELLERY_TYPE_OPTIONS = ['Choker & Necklace', 'Long Haram', 'Semi Bridal Set', 'Full Bridal Set', 'Bangles & Bracelets', 'Accessories'];
+const OCCASION_OPTIONS = ['Bridal', 'Festive', 'Party Wear', 'Engagement', 'Daily Wear'];
 const PRICE_OPTIONS = ['Under ₹1000', '₹1000 - ₹2000', '₹2000 - ₹3000', 'Above ₹3000'];
 const COLOR_OPTIONS = ['Gold', 'Silver', 'Rose Gold', 'Emerald Green', 'Ruby Red', 'Mehndi Polish'];
 const STONE_COLOR_OPT = ['Clear', 'Blue', 'Pink', 'Red', 'Green', 'Yellow', 'White', 'Gold', 'Various', 'Orange', 'Black', 'Purple'];
@@ -131,12 +132,12 @@ export default function DesktopShop() {
   const { user, openLogin } = useAuth();
 
   /* ── Active filter state ── */
-  const EMPTY_FILTERS = { Category: [], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] };
+  const EMPTY_FILTERS = { Category: [], Type: [], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] };
   const [activeFilters, setActiveFilters] = useState(EMPTY_FILTERS);
 
   /* ── Section open/closed state ── */
   const [open, setOpen] = useState({
-    Category: true, Occasion: true,
+    Category: true, Type: true, Occasion: false,
     Price: false, Colour: false, StoneColour: false, Stone: false,
   });
 
@@ -190,7 +191,7 @@ export default function DesktopShop() {
     if (occ) {
       const typeName = occasionMap[occ.toLowerCase()];
       if (typeName) {
-        setActiveFilters({ Category: [], Occasion: [typeName], Price: [], Colour: [], StoneColour: [], Stone: [] });
+        setActiveFilters({ Category: [], Type: [typeName], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
         return;
       }
     }
@@ -206,7 +207,7 @@ export default function DesktopShop() {
       || (norm.includes('antique') ? 'Antique Jewel' : null)
       || (norm === 'polki' ? 'Polki' : null)
       || cat;
-    setActiveFilters({ Category: [name], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
+    setActiveFilters({ Category: [name], Type: [], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
   }, [searchParams, categories]);
 
   /* ── Data ── */
@@ -232,8 +233,12 @@ export default function DesktopShop() {
       !activeFilters.Category.some(c => cats.some(pc => pc?.toLowerCase() === c.toLowerCase()))) return false;
 
     const types = Array.isArray(p.type) ? p.type : [p.type];
-    if (activeFilters.Occasion.length > 0 &&
-      !activeFilters.Occasion.some(o => types.some(pt => pt?.toLowerCase() === o.toLowerCase()))) return false;
+    if (activeFilters.Type?.length > 0 &&
+      !activeFilters.Type.some(t => types.some(pt => pt?.toLowerCase() === t.toLowerCase()))) return false;
+
+    const occs = Array.isArray(p.occasion) ? p.occasion : [p.occasion];
+    if (activeFilters.Occasion?.length > 0 &&
+      !activeFilters.Occasion.some(o => occs.some(po => po?.toLowerCase() === o.toLowerCase()))) return false;
 
     const cols = Array.isArray(p.colour) ? p.colour : [p.colour];
     if (activeFilters.Colour.length > 0 &&
@@ -282,6 +287,7 @@ export default function DesktopShop() {
   /* ── Breadcrumb header label ── */
   const headerTitle = useMemo(() => {
     if (activeFilters.Category.length) return activeFilters.Category.join(', ');
+    if (activeFilters.Type?.length) return activeFilters.Type.join(', ');
     if (activeFilters.Occasion.length) return activeFilters.Occasion.join(', ');
     return 'All Jewels';
   }, [activeFilters]);
@@ -392,6 +398,18 @@ export default function DesktopShop() {
                 label={opt}
                 checked={activeFilters.Category.includes(opt)}
                 onToggle={() => toggle('Category', opt)}
+              />
+            ))}
+          </FilterSection>
+
+          {/* JEWELLERY TYPE */}
+          <FilterSection title="Jewellery Type" open={open.Type} onToggle={() => setOpen(o => ({ ...o, Type: !o.Type }))}>
+            {JEWELLERY_TYPE_OPTIONS.map(opt => (
+              <FilterItem
+                key={opt}
+                label={opt}
+                checked={activeFilters.Type.includes(opt)}
+                onToggle={() => toggle('Type', opt)}
               />
             ))}
           </FilterSection>

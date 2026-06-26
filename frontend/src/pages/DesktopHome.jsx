@@ -46,10 +46,10 @@ import imgKundan from '../assets/images/jtype-kundan.jpg';
 
 import imgAccessories from '../assets/images/jtype-accessories.jpg';
 import imgBanglesBracelets from '../assets/images/jtype-bangles-bracelets.jpg';
-import imgLongHaram from '../assets/images/jtype-long-haram.jpg';
-import imgChokerNecklace from '../assets/images/jtype-choker-necklace.jpg';
-import imgSemiBridal from '../assets/images/jtype-semi-bridal.jpg';
-import imgFullBridal from '../assets/images/jtype-full-bridal.jpg';
+import imgLongHaram from '../assets/images/E10.jpg';
+import imgChokerNecklace from '../assets/images/E9.jpg';
+import imgSemiBridal from '../assets/images/E5.jpg';
+import imgFullBridal from '../assets/images/E8.jpg';
 
 /* Module-level cache for Trending grid — persists across re-renders & overlay toggles */
 let trendingGridMemCache = null;
@@ -318,10 +318,10 @@ export default function Home() {
   /* Carousel — 6 static cards matching Figma design */
   const CAROUSEL = [
     { title: "Semi Bridal & Combo Sets", sub: "Explore Now", img: imgSemiBridal, slug: "semi-bridal" },
-    { title: "Full Bridal Set", sub: "Explore Now", img: imgFullBridal, slug: "full-bridal" },
+    { title: "Full Bridal Set", sub: "Explore Now", img: imgLongHaram, slug: "full-bridal" },
     { title: "Choker & Necklace Set", sub: "Explore Now", img: imgChokerNecklace, slug: "choker-necklace" },
-    { title: "Long Haram", sub: "Explore Now", img: imgLongHaram, slug: "long-haram" },
-    { title: "Bangles & Bracelets", sub: "Explore Now", img: carouselImg6, slug: "bangles-bracelets" },
+    { title: "Long Haram", sub: "Explore Now", img: imgFullBridal, slug: "long-haram" },
+    { title: "Bangles & Bracelets", sub: "Explore Now", img: imgBanglesBracelets, slug: "bangles-bracelets" },
     { title: "Accessories", sub: "Explore Now", img: imgAccessories, slug: "accessories" },
   ];
 
@@ -453,15 +453,37 @@ export default function Home() {
           {/* ── scrollable nav area ── */}
           <div className="menu-nav-scroll">
 
-            {/* Section 1 — jewel collections */}
+            {/* Section 1 — CATEGORY */}
+            <span className="menu-section-heading">Category</span>
             <ul className="menu-section menu-section--first">
               {[
-                { label: 'Moissinate Jewels', slug: 'moissinate-jewels' },
+                { label: 'Victorian & Moissinate', slug: 'victorian-moissinate' },
                 { label: 'AD Jewels', slug: 'ad-jewels' },
                 { label: 'Gold Antique Jewels', slug: 'gold-antique-jewels' },
                 { label: 'Kundan Jewels', slug: 'kundan-jewels' },
-                { label: 'AD Bangles', slug: 'ad-bangles' },
-                { label: 'Gold Bangles', slug: 'gold-bangles' },
+              ].map(item => (
+                <li key={item.slug} className="menu-item">
+                  <Link to={`/shop?category=${item.slug}`} className="menu-item-link" onClick={() => setMenuOpen(false)}>
+                    {item.label}
+                  </Link>
+                  <svg className="menu-chevron" width="5" height="9" viewBox="0 0 5 9" fill="none">
+                    <path d="M1 1l3 3.5L1 8" stroke="#000" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </li>
+              ))}
+            </ul>
+
+            <hr className="menu-rule" />
+
+            {/* Section 2 — JEWELLERY TYPE */}
+            <span className="menu-section-heading">Jewellery Type</span>
+            <ul className="menu-section">
+              {[
+                { label: 'Choker & Necklace', slug: 'choker-necklace' },
+                { label: 'Long Haram', slug: 'long-haram' },
+                { label: 'Semi Bridal Set', slug: 'semi-bridal' },
+                { label: 'Full Bridal Set', slug: 'full-bridal' },
+                { label: 'Bangles', slug: 'bangles-bracelets' },
                 { label: 'Accessories', slug: 'accessories' },
               ].map(item => (
                 <li key={item.slug} className="menu-item">
@@ -477,7 +499,8 @@ export default function Home() {
 
             <hr className="menu-rule" />
 
-            {/* Section 2 — occasion collections */}
+            {/* Section 3 — OCCASION */}
+            <span className="menu-section-heading">Occasion</span>
             <ul className="menu-section">
               {[
                 { label: 'Bridal Set', slug: 'bridal' },
