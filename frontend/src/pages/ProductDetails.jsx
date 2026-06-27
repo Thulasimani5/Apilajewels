@@ -98,28 +98,53 @@ const ProductDetails = () => {
     setActiveMediaIndex(0);
   }, [id]);
 
-  // Fetch related products (same category first, fallback to general)
+  // Fetch related products — same type first, then same category, then general
   useEffect(() => {
     if (!product) return;
     const fetchRelated = async () => {
       try {
-        // Try same-category items first
-        const catRes = await fetch(
-          `${API_BASE_URL}/api/jewellery?limit=20`
-        );
-        const catData = await catRes.json();
-        if (catData.success) {
-          const sameCategory = catData.data.filter(
-            item => item._id !== product._id && item.category === product.category
+        const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=50`);
+        const data = await res.json();
+        if (!data.success) return;
+
+        const allItems = data.data;
+
+        // Helper: get type(s) of a product as a lowercase array
+        const getTypes = (p) => {
+          const t = p.type;
+          return Array.isArray(t) ? t.map(x => x?.toLowerCase()) : [t?.toLowerCase()].filter(Boolean);
+        };
+
+        const currentTypes = getTypes(product);
+
+        // 1. Same type (excludes current product)
+        if (currentTypes.length > 0) {
+          const sameType = allItems.filter(item =>
+            item._id !== product._id &&
+            getTypes(item).some(t => currentTypes.some(ct => {
+              // fuzzy match for "semi bridal" variants
+              if (ct.includes('semi bridal') && t.includes('semi bridal')) return true;
+              return t === ct;
+            }))
           );
-          if (sameCategory.length >= 4) {
-            setRelatedProducts(sameCategory.slice(0, 10));
+          if (sameType.length >= 4) {
+            setRelatedProducts(sameType.slice(0, 10));
             return;
           }
-          // Fallback: use any other items excluding current
-          const others = catData.data.filter(item => item._id !== product._id);
-          setRelatedProducts(others.slice(0, 10));
         }
+
+        // 2. Same category fallback
+        const sameCategory = allItems.filter(
+          item => item._id !== product._id && item.category === product.category
+        );
+        if (sameCategory.length >= 4) {
+          setRelatedProducts(sameCategory.slice(0, 10));
+          return;
+        }
+
+        // 3. General fallback
+        const others = allItems.filter(item => item._id !== product._id);
+        setRelatedProducts(others.slice(0, 10));
       } catch (err) {
         console.error('Failed to fetch related products:', err);
       }
