@@ -3301,11 +3301,13 @@
   overflow-x: hidden;
   overscroll-behavior: contain;
   -webkit-overflow-scrolling: touch;
-  scrollbar-width: none; /* Firefox */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 .menu-nav-scroll::-webkit-scrollbar {
-  display: none; /* Chrome / Safari / Edge */
+  display: none;
+  /* Chrome / Safari / Edge */
 }
 
 .menu-close-btn {
@@ -3707,7 +3709,7 @@
 
 /* JEWELLERY TYPE GRID */
 .jewellery-type-section {
-  margin-bottom: 62px;
+  margin-bottom: 72px;
 }
 
 .jewellery-grid {
