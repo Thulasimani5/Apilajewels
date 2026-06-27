@@ -352,21 +352,21 @@ export default function DesktopProduct({ product, relatedProducts }) {
             </span>
             <div className="pdp-icons-row">
               <button
-                className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center bg-white shadow-sm transition-colors"
+                className="pdp-icon-btn"
                 aria-label={liked ? 'Remove from wishlist' : 'Add to wishlist'}
                 onClick={() => { toggleWishlist(product); }}
               >
                 <Heart
                   size={20}
-                  className={liked ? 'fill-red-500 text-red-500' : 'text-gray-500'}
+                  className={liked ? 'fill-red-500 text-red-500' : 'text-black'}
                 />
               </button>
               <button
-                className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 bg-white shadow-sm transition-colors hover:bg-gray-50"
+                className="pdp-icon-btn"
                 aria-label="Share"
                 onClick={handleShare}
               >
-                <Share2 size={20} />
+                <Share2 size={20} className="text-black" />
               </button>
             </div>
           </div>
