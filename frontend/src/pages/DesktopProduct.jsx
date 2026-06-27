@@ -234,7 +234,7 @@ export default function DesktopProduct({ product, relatedProducts }) {
   }, [isMenuOpen]);
 
   return (
-    <div className="apila" style={{ paddingTop: '40px' }}>
+    <div className="apila" style={{ paddingTop: '86px' }}>
 
       {/* ── NAVBAR (always white on PDP) ── */}
       <header>
