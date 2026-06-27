@@ -1673,7 +1673,7 @@
 
 .pdp-bc-link {
   font-family: var(--f-gotham-b);
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(0, 0, 0, .50);
   text-transform: capitalize;
   text-decoration: none;
@@ -1693,7 +1693,7 @@
 
 .pdp-bc-current {
   font-family: var(--f-gotham-b);
-  font-size: 12px;
+  font-size: 14px;
   color: #000;
   text-transform: capitalize;
   white-space: nowrap;
