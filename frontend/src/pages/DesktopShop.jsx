@@ -261,7 +261,12 @@ export default function DesktopShop() {
 
     const types = Array.isArray(p.type) ? p.type : [p.type];
     if (activeFilters.Type?.length > 0 &&
-      !activeFilters.Type.some(t => types.some(pt => pt?.toLowerCase() === t.toLowerCase()))) return false;
+      !activeFilters.Type.some(t => types.some(pt => {
+        const normT = t.toLowerCase();
+        const normPt = pt?.toLowerCase() || '';
+        if (normT.includes('semi bridal') && normPt.includes('semi bridal')) return true;
+        return normPt === normT;
+      }))) return false;
 
     const occs = Array.isArray(p.occasion) ? p.occasion : [p.occasion];
     if (activeFilters.Occasion?.length > 0 &&

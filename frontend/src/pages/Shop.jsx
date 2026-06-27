@@ -199,10 +199,16 @@ const JewelleryListing = () => {
       // Filter by Type
       if (activeFilters.Type.length > 0) {
         const matchesType = activeFilters.Type.some((type) => {
+          const normType = type.toLowerCase();
+          const checkMatch = (t) => {
+            const normT = t?.toLowerCase() || '';
+            if (normType.includes('semi bridal') && normT.includes('semi bridal')) return true;
+            return normT === normType;
+          };
           if (Array.isArray(product.type)) {
-            return product.type.some(t => t?.toLowerCase() === type.toLowerCase());
+            return product.type.some(checkMatch);
           }
-          return product.type?.toLowerCase() === type.toLowerCase();
+          return checkMatch(product.type);
         });
         if (!matchesType) return false;
       }
