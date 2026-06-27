@@ -464,43 +464,75 @@ export default function DesktopProduct({ product, relatedProducts }) {
         </div>
 
         <div className="menu-nav-scroll">
+
+          {/* Section 1 — CATEGORY */}
+          <span className="menu-section-heading">Category</span>
           <ul className="menu-section menu-section--first">
-            <li className="menu-item">
-              <Link className="menu-item-link" to="/" onClick={() => setIsMenuOpen(false)}>Home</Link>
-            </li>
-            <li className="menu-item">
-              <Link className="menu-item-link" to="/shop" onClick={() => setIsMenuOpen(false)}>All Jewellery</Link>
-            </li>
-            <li className="menu-item">
-              <Link className="menu-item-link" to="/wishlist" onClick={() => setIsMenuOpen(false)}>Wishlist</Link>
-            </li>
-            <li className="menu-item">
-              <Link className="menu-item-link" to="/cart" onClick={() => setIsMenuOpen(false)}>Shopping Cart</Link>
-            </li>
+            {[
+              { label: 'Victorian & Moissinate', slug: 'victorian-moissinate' },
+              { label: 'AD Jewels', slug: 'ad-jewels' },
+              { label: 'Gold Antique Jewels', slug: 'gold-antique-jewels' },
+              { label: 'Kundan Jewels', slug: 'kundan-jewels' },
+            ].map(item => (
+              <li key={item.slug} className="menu-item">
+                <Link className="menu-item-link" to={`/shop?category=${item.slug}`} onClick={() => setIsMenuOpen(false)}>
+                  {item.label}
+                </Link>
+                <svg className="menu-chevron" width="5" height="9" viewBox="0 0 5 9" fill="none">
+                  <path d="M1 1l3 3.5L1 8" stroke="#000" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </li>
+            ))}
           </ul>
 
           <hr className="menu-rule" />
 
+          {/* Section 2 — JEWELLERY TYPE */}
+          <span className="menu-section-heading">Jewellery Type</span>
           <ul className="menu-section">
-            <li className="menu-item">
-              <Link className="menu-item-link" to="/shop?category=bridal-set" onClick={() => setIsMenuOpen(false)}>Bridal Set</Link>
-            </li>
-            <li className="menu-item">
-              <Link className="menu-item-link" to="/shop?category=bridal-maid" onClick={() => setIsMenuOpen(false)}>Bridal Maid</Link>
-            </li>
-            <li className="menu-item">
-              <Link className="menu-item-link" to="/shop?category=designer" onClick={() => setIsMenuOpen(false)}>Designer Collections</Link>
-            </li>
-            <li className="menu-item">
-              <Link className="menu-item-link" to="/shop?category=reception" onClick={() => setIsMenuOpen(false)}>Reception Wear</Link>
-            </li>
-            <li className="menu-item">
-              <Link className="menu-item-link" to="/shop?category=party-wear" onClick={() => setIsMenuOpen(false)}>Party Wear</Link>
-            </li>
-            <li className="menu-item">
-              <Link className="menu-item-link" to="/shop?category=small-jewel" onClick={() => setIsMenuOpen(false)}>Small Jewels</Link>
-            </li>
+            {[
+              { label: 'Choker & Necklace', slug: 'choker-necklace' },
+              { label: 'Long Haram', slug: 'long-haram' },
+              { label: 'Semi Bridal & Combo Sets', slug: 'semi-bridal' },
+              { label: 'Full Bridal Set', slug: 'full-bridal' },
+              { label: 'Bangles', slug: 'bangles-bracelets' },
+              { label: 'Accessories', slug: 'accessories' },
+            ].map(item => (
+              <li key={item.slug} className="menu-item">
+                <Link className="menu-item-link" to={`/shop?category=${item.slug}`} onClick={() => setIsMenuOpen(false)}>
+                  {item.label}
+                </Link>
+                <svg className="menu-chevron" width="5" height="9" viewBox="0 0 5 9" fill="none">
+                  <path d="M1 1l3 3.5L1 8" stroke="#000" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </li>
+            ))}
           </ul>
+
+          <hr className="menu-rule" />
+
+          {/* Section 3 — OCCASION */}
+          <span className="menu-section-heading">Occasion</span>
+          <ul className="menu-section">
+            {[
+              { label: 'Bridal Set', slug: 'bridal' },
+              { label: 'Bridesmaid', slug: 'bridesmaid' },
+              { label: 'Designer Collection', slug: 'designer' },
+              { label: 'Reception Jewels', slug: 'reception' },
+              { label: 'Party Wear', slug: 'party' },
+              { label: 'Small Jewels', slug: 'small' },
+            ].map(item => (
+              <li key={item.slug} className="menu-item">
+                <Link className="menu-item-link" to={`/shop?occasion=${item.slug}`} onClick={() => setIsMenuOpen(false)}>
+                  {item.label}
+                </Link>
+                <svg className="menu-chevron" width="5" height="9" viewBox="0 0 5 9" fill="none">
+                  <path d="M1 1l3 3.5L1 8" stroke="#000" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </li>
+            ))}
+          </ul>
+
         </div>
       </aside>
       </div>
