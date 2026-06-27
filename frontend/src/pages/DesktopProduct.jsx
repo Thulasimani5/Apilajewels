@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Heart, Share2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
@@ -351,26 +352,21 @@ export default function DesktopProduct({ product, relatedProducts }) {
             </span>
             <div className="pdp-icons-row">
               <button
-                className="pdp-icon-btn"
+                className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center bg-white shadow-sm transition-colors"
                 aria-label={liked ? 'Remove from wishlist' : 'Add to wishlist'}
-                onClick={() => {
-                  toggleWishlist(product);
-                }}
+                onClick={() => { toggleWishlist(product); }}
               >
-                <svg width="17" height="17" viewBox="0 0 24 24"
-                  fill={liked ? '#ef4444' : 'none'}
-                  stroke={liked ? '#ef4444' : '#000'} strokeWidth="1.5">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                </svg>
+                <Heart
+                  size={20}
+                  className={liked ? 'fill-red-500 text-red-500' : 'text-gray-500'}
+                />
               </button>
-              <button className="pdp-icon-btn" aria-label="Share" onClick={handleShare}>
-                <svg width="16" height="17" viewBox="0 0 24 24" fill="none" stroke="#000" strokeWidth="1.5">
-                  <circle cx="18" cy="5" r="3"/>
-                  <circle cx="6" cy="12" r="3"/>
-                  <circle cx="18" cy="19" r="3"/>
-                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
-                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
-                </svg>
+              <button
+                className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 bg-white shadow-sm transition-colors hover:bg-gray-50"
+                aria-label="Share"
+                onClick={handleShare}
+              >
+                <Share2 size={20} />
               </button>
             </div>
           </div>
