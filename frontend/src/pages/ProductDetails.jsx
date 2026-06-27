@@ -118,18 +118,21 @@ const ProductDetails = () => {
         const currentCats = getCats(product);
 
         // 1. Same category (e.g. "AD Jewels", "Kundan", etc.)
-        const sameCategory = allItems.filter(item =>
+        let related = allItems.filter(item =>
           item._id !== product._id &&
           getCats(item).some(c => currentCats.includes(c))
         );
-        if (sameCategory.length >= 4) {
-          setRelatedProducts(sameCategory.slice(0, 10));
-          return;
+
+        // 2. If we don't have enough to fill 10 slots, pad with other products
+        if (related.length < 10) {
+          const others = allItems.filter(item =>
+            item._id !== product._id &&
+            !getCats(item).some(c => currentCats.includes(c))
+          );
+          related = [...related, ...others];
         }
 
-        // 2. General fallback — exclude current product
-        const others = allItems.filter(item => item._id !== product._id);
-        setRelatedProducts(others.slice(0, 10));
+        setRelatedProducts(related.slice(0, 10));
       } catch (err) {
         console.error('Failed to fetch related products:', err);
       }
