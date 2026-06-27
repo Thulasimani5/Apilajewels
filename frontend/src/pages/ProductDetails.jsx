@@ -98,51 +98,36 @@ const ProductDetails = () => {
     setActiveMediaIndex(0);
   }, [id]);
 
-  // Fetch related products — same type first, then same category, then general
+  // Fetch related products — same category first, then general fallback
   useEffect(() => {
     if (!product) return;
     const fetchRelated = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=50`);
+        const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=100`);
         const data = await res.json();
         if (!data.success) return;
 
         const allItems = data.data;
 
-        // Helper: get type(s) of a product as a lowercase array
-        const getTypes = (p) => {
-          const t = p.type;
-          return Array.isArray(t) ? t.map(x => x?.toLowerCase()) : [t?.toLowerCase()].filter(Boolean);
+        // Helper: get category(s) of a product as lowercase array
+        const getCats = (p) => {
+          const c = p.category;
+          return Array.isArray(c) ? c.map(x => x?.toLowerCase()) : [c?.toLowerCase()].filter(Boolean);
         };
 
-        const currentTypes = getTypes(product);
+        const currentCats = getCats(product);
 
-        // 1. Same type (excludes current product)
-        if (currentTypes.length > 0) {
-          const sameType = allItems.filter(item =>
-            item._id !== product._id &&
-            getTypes(item).some(t => currentTypes.some(ct => {
-              // fuzzy match for "semi bridal" variants
-              if (ct.includes('semi bridal') && t.includes('semi bridal')) return true;
-              return t === ct;
-            }))
-          );
-          if (sameType.length >= 4) {
-            setRelatedProducts(sameType.slice(0, 10));
-            return;
-          }
-        }
-
-        // 2. Same category fallback
-        const sameCategory = allItems.filter(
-          item => item._id !== product._id && item.category === product.category
+        // 1. Same category (e.g. "AD Jewels", "Kundan", etc.)
+        const sameCategory = allItems.filter(item =>
+          item._id !== product._id &&
+          getCats(item).some(c => currentCats.includes(c))
         );
         if (sameCategory.length >= 4) {
           setRelatedProducts(sameCategory.slice(0, 10));
           return;
         }
 
-        // 3. General fallback
+        // 2. General fallback — exclude current product
         const others = allItems.filter(item => item._id !== product._id);
         setRelatedProducts(others.slice(0, 10));
       } catch (err) {
@@ -151,6 +136,7 @@ const ProductDetails = () => {
     };
     fetchRelated();
   }, [product]);
+
 
   const [activeMediaIndex, setActiveMediaIndex] = useState(0);
 
