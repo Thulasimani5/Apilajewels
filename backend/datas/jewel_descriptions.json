@@ -1,0 +1,754 @@
+[
+  {
+    "id": "AG001",
+    "description": "Set Includes: necklace & matching earrings. Styling Tip: Perfect for bold looks.pairs well with deep-neck gowns or traditional silk sarees."
+  },
+  {
+    "id": "AG002",
+    "description": "Set Includes: Necklace & matching earrings. Styling Tip: Versatile for all colours.pairs perfectly with gowns or minimalist ethnic wear."
+  },
+  {
+    "id": "AG003",
+    "description": "Set Includes: Necklace & matching earrings. Styling Tip: Ideal for contrast styling with white gowns or sophisticated evening ethnic wear."
+  },
+  {
+    "id": "AG004",
+    "description": "Set Includes: Necklace & matching earrings. Styling Tip: Versatile for all colors; ideal for gowns or minimalist ethnic wear."
+  },
+  {
+    "id": "AM001",
+    "description": "Set Includes: necklace & matching earrings. Styling Tip: A versatile statement set ideal for off-shoulder gowns or monochrome looks."
+  },
+  {
+    "id": "AM002",
+    "description": "Set Includes: necklace & matching earrings. Styling Tip: Ideal for deep-neck gowns or sarees in solid colors like black, white, red, or deep"
+  },
+  {
+    "id": "AM003",
+    "description": "Set Includes: necklace & matching earrings. Styling Tip: Best with V-neck gowns or silk sarees in dark colors like emerald green, maroon, or black."
+  },
+  {
+    "id": "AM004",
+    "description": "Set Includes: Necklace & matching earrings. Styling Tip: Best with off-shoulder or V-neck gowns in elegant colors like navy blue, emerald, or wine red."
+  },
+  {
+    "id": "AM005",
+    "description": "Set Includes: Necklace & matching earrings. Styling Tip: Pair with deep-neck gowns or traditional silk sarees in solid colors like black, emerald green, or deep red."
+  },
+  {
+    "id": "AM006",
+    "description": "Set Includes: Necklace & matching earrings. Styling Tip: Ideal for V-neck or off-shoulder dresses in elegant colors like navy blue, white, or wine red."
+  },
+  {
+    "id": "AM007",
+    "description": "Set Includes: Double-layer necklace & matching earrings. Styling Tip: Best paired with high-neck or boat-neck outfits in rich, dark colors like maroon, royal blue, or black."
+  },
+  {
+    "id": "AM008",
+    "description": "Set Includes: Necklace & matching earrings. Styling Tip: Best for high-neck or boat-neck outfits in maroon, emerald green, or navy blue."
+  },
+  {
+    "id": "AM009",
+    "description": "Set Includes: Necklace & matching earrings. Styling Tip: Pairs with deep V-neck or off-shoulder dresses in black, white, or silver."
+  },
+  {
+    "id": "AM010",
+    "description": "Set Includes: Necklace & matching earrings. Styling Tip: Perfect for traditional sarees or broad necklines in cream, gold, or burgundy."
+  },
+  {
+    "id": "AM011",
+    "description": "Set Includes: Necklace & matching earrings. Styling Tip: Best for lehengas or heavy sarees in off-white, pastel green, or ruby red."
+  },
+  {
+    "id": "AM012",
+    "description": "Set Includes: Necklace & matching earrings. Styling Tip: Best for lehengas or heavy sarees in off-white, pastel green, or ruby red."
+  },
+  {
+    "id": "AM013",
+    "description": "Set Includes: Necklace & matching earrings. Styling Tip: Great for cocktail dresses or modern sarees in beige, peach, or soft grey."
+  },
+  {
+    "id": "AM014",
+    "description": "Set Includes: Necklace & matching earrings. Styling Tip: Great for cocktail dresses or modern sarees in beige, peach, or soft grey."
+  },
+  {
+    "id": "AM015",
+    "description": "Set Includes: Double-layer necklace & matching earrings. Styling Tip: Ideal for square or sweetheart necklines in deep purple, forest green, or mustard yellow."
+  },
+  {
+    "id": "AM016",
+    "description": "Set Includes: Teardrop necklace & earrings. Styling Tip: Best with off-shoulder gowns in royal blue, silver, or crisp white."
+  },
+  {
+    "id": "AM017",
+    "description": "Set Includes: Geometric pendant necklace & matching earrings. Styling Tip: Complements V-neck cocktail dresses in navy, grey, or black."
+  },
+  {
+    "id": "AM018",
+    "description": "Set Includes: V-shaped drop necklace & earrings. Styling Tip: Ideal for deep-neck festive wear in emerald green, burgundy, or gold."
+  },
+  {
+    "id": "AM019",
+    "description": "Set Includes: Wide floral necklace & matching earrings. Styling Tip: Best with sweetheart necklines in mauve, forest green, or silver."
+  },
+  {
+    "id": "AM020",
+    "description": "Set Includes: Statement choker with large pendant & heavy earrings. Styling Tip: Perfect for grand silk sarees in peacock blue, teal, or deep violet."
+  },
+  {
+    "id": "AM021",
+    "description": "Set Includes: Floral drop necklace & matching studs. Styling Tip: Pairs beautifully with white bridal gowns or lavender silk sarees."
+  },
+  {
+    "id": "AM022",
+    "description": "Set Includes: Heavy choker necklace & long drop earrings. Styling Tip: Ideal for lehengas in peach, mint green, or cream."
+  },
+  {
+    "id": "AM023",
+    "description": "Set Includes: Oval stone necklace & matching earrings. Styling Tip: Great for boat-neck blouses in pastel pink, lemon yellow, or beige."
+  },
+  {
+    "id": "AM024",
+    "description": "Set Includes: Double-layer chain with pendant & earrings. Styling Tip: Best for square-neck ethnic wear in olive green, gold, or tan."
+  },
+  {
+    "id": "AM025",
+    "description": "Set Includes: Sleek collar necklace & linear earrings. Styling Tip: Suits modern sarees or high-neck tops in seafoam, white, or light grey."
+  },
+  {
+    "id": "AM026",
+    "description": "Set Includes: two-layered emerald-green stone necklace & matching earrings. Styling Tip: Ideal for receptions; pairs beautifully with cream, gold, or beige silk sarees and lehengas."
+  },
+  {
+    "id": "AM027",
+    "description": "Set Includes: small emerald-stone necklace & matching studs. Styling Tip: Great for daytime functions; complements pastel and white ethnic wear or light gowns."
+  },
+  {
+    "id": "AM028",
+    "description": "Set Includes: designer emerald-green stone necklace & matching earrings. Styling Tip: Best for engagements; suits deep-toned sarees in maroon, navy, or black."
+  },
+  {
+    "id": "AM029",
+    "description": "Set Includes: pink morganite-stone necklace & matching earrings. Styling Tip: Perfect for sangeet or cocktail evenings; flatters blush, ivory, and grey outfits."
+  },
+  {
+    "id": "AM030",
+    "description": "Set Includes: pink morganite-stone necklace & matching earrings. Styling Tip: Ideal for reception parties; pairs well with pastel pink, peach, or white gowns."
+  },
+  {
+    "id": "AM031",
+    "description": "Set Includes: four-tier pink morganite layered necklace & matching earrings. Styling Tip: A grand statement for receptions; best with solid-color gowns in nude, grey, or wine."
+  },
+  {
+    "id": "AM032",
+    "description": "Set Includes: designer crystal necklace & matching earrings. Styling Tip: Versatile for all occasions; complements white, silver, or black evening wear."
+  },
+  {
+    "id": "AM033",
+    "description": "Set Includes: designer pink morganite necklace & matching earrings. Styling Tip: Statement piece for cocktail evenings; suits blush, mauve, and ivory dresses."
+  },
+  {
+    "id": "AM034",
+    "description": "Set Includes: orange natural-stone designer necklace & matching earrings. Styling Tip: Festive and bold; pairs with mustard, rust, cream, or off-white ethnic wear."
+  },
+  {
+    "id": "AS001",
+    "description": "Set Includes: necklace & matching earrings. Styling Tip: Versatile for all colors, ideal for gowns or minimalist ethnic wear."
+  },
+  {
+    "id": "AS002",
+    "description": "Set Includes: choker and long drop earrings. Styling Tip: Pairs best with bold jewel tones like emerald green or royal blue."
+  },
+  {
+    "id": "AS003",
+    "description": "Set Includes: choker with heavy earring. Styling Tip: Best for pastel silk sarees or ivory lehengas for a regal look."
+  },
+  {
+    "id": "AS004",
+    "description": "Set Includes: necklace with matching drop earrings. Styling Tip: Pairs perfectly with both vibrant jewel tones and soft pastel outfits."
+  },
+  {
+    "id": "AS005",
+    "description": "Set Includes: haram with pearl-drop earrings. Styling Tip: Complements white, cream, and deep-toned silk sarees or evening gowns for a royal look."
+  },
+  {
+    "id": "AS006",
+    "description": "Set Includes: necklace & matching earrings. Styling Tip: Best paired with navy blue, silver, or white attire for a sophisticated contrast."
+  },
+  {
+    "id": "AS007",
+    "description": "Set Includes: choker and drop earrings. Styling Tip: Ideal for silver, white, or navy blue silk sarees and evening gowns to create a bold, regal look."
+  },
+  {
+    "id": "AS008",
+    "description": "Set Includes: necklace & long drop earrings. Styling Tip: Pairs beautifully with white, silver, or navy blue attire for a modern, royal aesthetic."
+  },
+  {
+    "id": "AS009",
+    "description": "Set Includes: haram & heavy drop earrings. Styling Tip: Perfect for royal blue, silver, or cream-colored sarees and lehengas to create a regal bridal look."
+  },
+  {
+    "id": "AS010",
+    "description": "Set Includes: necklace with matching earrings, and a maang tikka. Styling Tip: Enhances mint green, white, or floral outfits for a soft, elegant feminine look."
+  },
+  {
+    "id": "AS011",
+    "description": "Set Includes: necklace with chandelier earrings. Styling Tip: Complements soft pink, lavender, or ivory outfits for a graceful, sophisticated look."
+  },
+  {
+    "id": "AS012",
+    "description": "Set Includes: necklace with matching earrings. Styling Tip: Best paired with ivory, soft grey, or peach outfits for a contemporary, elegant look."
+  },
+  {
+    "id": "AS013",
+    "description": "Set Includes: haram with matching earrings. Styling Tip: Enhances ivory or soft pink silk sarees for a sophisticated, classic look."
+  },
+  {
+    "id": "AS014",
+    "description": "Set Includes: necklace with matching studs. Styling Tip: Perfect for white or black contemporary dresses to add a minimal, striking touch."
+  },
+  {
+    "id": "AS015",
+    "description": "Set Includes: necklace with grand drop earrings. Styling Tip: Pairs beautifully with deep red or gold bridal lehengas for a royal statement."
+  },
+  {
+    "id": "AS016",
+    "description": "Set Includes: diamond necklace with earring Styling Tip: Ideal for maroon or silver ethnic wear to highlight the rich gemstone contrast."
+  },
+  {
+    "id": "AS017",
+    "description": "Set Includes: ruby haram with long statement earrings. Styling Tip: Best suited for traditional silk sarees in gold or forest green for a queenly aesthetic."
+  },
+  {
+    "id": "AS018",
+    "description": "Set Includes: A necklace with matching earring. Styling Tip: Complements emerald green or mustard yellow outfits for a vibrant, traditional look."
+  },
+  {
+    "id": "AS019",
+    "description": "Set Includes: A haram and earring. Styling Tip: Perfectly matches mint or off-white ensembles for a refreshing, elegant style."
+  },
+  {
+    "id": "BA001",
+    "description": "Set Includes: antique-gold Nakshi temple necklace, long haram & matching earrings. Styling Tip: A bridal classic for muhurtham; best with Kanjivaram silk sarees in red, maroon, or mustard."
+  },
+  {
+    "id": "BA002",
+    "description": "Set Includes: Guttapusalu-style Nakshi necklace with pearl drops & matching jhumkas. Styling Tip: Ideal for wedding rituals; pairs with traditional silk sarees in deep red, green, or gold."
+  },
+  {
+    "id": "BA003",
+    "description": "Set Includes: multicolor Meenakari Nakshi temple necklace & matching earrings. Styling Tip: Vibrant for sangeet or pooja; complements yellow, green, or pink silk sarees."
+  },
+  {
+    "id": "BA004",
+    "description": "Set Includes: Kempu emerald Nakshi temple necklace & matching earrings. Styling Tip: Regal for muhurtham; best with green, gold, or cream Kanjivaram silks."
+  },
+  {
+    "id": "BA005",
+    "description": "Set Includes: antique matte Nakshi peacock necklace, haram & earrings. Styling Tip: Bridal-grade for weddings; suits maroon, rust, or gold silk sarees."
+  },
+  {
+    "id": "BA006",
+    "description": "Set Includes: Guttapusalu-style Nakshi necklace, long haram & earrings. Styling Tip: For muhurtham and receptions; pairs with red, mustard, or green silk drapes."
+  },
+  {
+    "id": "BA007",
+    "description": "Set Includes: antique Nakshi moti-cluster necklace, haram & earrings. Styling Tip: Heritage bridal look; best with traditional silk sarees in maroon, green, or gold."
+  },
+  {
+    "id": "BA008",
+    "description": "Set Includes: Nakshi Lakshmi-peacock drop necklace, haram & earrings. Styling Tip: Grand bridal set for muhurtham; suits red, orange, or gold Kanjivaram silks."
+  },
+  {
+    "id": "BA009",
+    "description": "Set Includes: Nakshi Lakshmi gungroo-drop necklace, haram & earrings. Styling Tip: For wedding ceremonies; pairs with deep red, maroon, or mustard silk sarees."
+  },
+  {
+    "id": "BA010",
+    "description": "Set Includes: full Nakshi Lakshmi bridal trousseau \u2014 choker, long haram & earrings. Styling Tip: Complete bridal ensemble for muhurtham; best with rich red or gold silk sarees."
+  },
+  {
+    "id": "BA011",
+    "description": "Set Includes: Nakshi lotus-Lakshmi necklace, haram & earrings. Styling Tip: Traditional bridal piece; complements green, red, or gold Kanjivaram silks."
+  },
+  {
+    "id": "BA012",
+    "description": "Set Includes: Meenakari Nakshi dholki-link long haram & matching earrings. Styling Tip: For wedding receptions; pairs with vibrant silk sarees in green, pink, or gold."
+  },
+  {
+    "id": "BA013",
+    "description": "Set Includes: Meenakari Nakshi peacock choker & matching earrings. Styling Tip: Ideal for pooja and sangeet; suits yellow, green, or red silk and half-sarees."
+  },
+  {
+    "id": "BF001",
+    "description": "Set Includes: gold bangles (6) with fancy bangles (24). Styling Tip: Festive bridal bangle stack; complements all traditional silk sarees and lehengas."
+  },
+  {
+    "id": "BF002",
+    "description": "Set Includes: gold bangles (6) with fancy bangles (24). Styling Tip: For weddings and pooja; pairs with red, green, or gold ethnic wear."
+  },
+  {
+    "id": "BF003",
+    "description": "Set Includes: gold bangles (6) with fancy bangles (24). Styling Tip: Bridal hand-stack for muhurtham; suits maroon, mustard, and gold silks."
+  },
+  {
+    "id": "BF004",
+    "description": "Set Includes: gold bangles (6) with fancy bangles (24). Styling Tip: Festive look for functions; complements bright silk sarees and lehengas."
+  },
+  {
+    "id": "BF005",
+    "description": "Set Includes: gold bangles (4) with fancy bangles (24). Styling Tip: For ceremonies and receptions; pairs with red, green, or cream traditional wear."
+  },
+  {
+    "id": "BF006",
+    "description": "Set Includes: gold bangles (4) with fancy bangles (24). Styling Tip: Elegant bridal stack; suits silk sarees in gold, maroon, or green."
+  },
+  {
+    "id": "BF007",
+    "description": "Set Includes: gold bangles (6) with fancy bangles (24). Styling Tip: Festive wedding bangles; complements all rich traditional outfits."
+  },
+  {
+    "id": "BF008",
+    "description": "Set Includes: gold bangles (6) with fancy bangles (24). Styling Tip: For muhurtham and pooja; pairs with bright silk sarees and lehengas."
+  },
+  {
+    "id": "BF009",
+    "description": "Set Includes: gold bangles (8) with fancy bangles (24). Styling Tip: Full bridal hand-set; best with grand silk sarees in red, gold, or green."
+  },
+  {
+    "id": "BM001",
+    "description": "Set Includes: crystal-studded mehandi-polish bangles (4). Styling Tip: For sangeet and mehndi; pairs with pastel, peach, or yellow festive wear."
+  },
+  {
+    "id": "BM002",
+    "description": "Set Includes: crystal-studded mehandi-polish bangles (2). Styling Tip: Light festive accent; complements lehengas and gowns in soft pastel tones."
+  },
+  {
+    "id": "BM003",
+    "description": "Set Includes: crystal-studded mehandi-polish bangles (2). Styling Tip: Dainty pair for parties; suits pastel and ivory ethnic or indo-western wear."
+  },
+  {
+    "id": "BM004",
+    "description": "Set Includes: crystal-studded mehandi-polish bangles (4+2). Styling Tip: For receptions; pairs with blush, mint, or champagne lehengas and gowns."
+  },
+  {
+    "id": "BM005",
+    "description": "Set Includes: crystal-studded mehandi-polish bangles (4+2). Styling Tip: Festive stack for functions; complements pastel and light-toned outfits."
+  },
+  {
+    "id": "BM006",
+    "description": "Set Includes: crystal-studded mehandi-polish bracelet. Styling Tip: Elegant for cocktail evenings; suits gowns and indo-western wear in soft hues."
+  },
+  {
+    "id": "BM007",
+    "description": "Set Includes: crystal-studded mehandi-polish bracelet. Styling Tip: Subtle sparkle for parties; pairs with pastel or monochrome modern outfits."
+  },
+  {
+    "id": "BS001",
+    "description": "Set Includes: crystal AD silver bangles (4). Styling Tip: For receptions and parties; pairs with white, silver, or pastel gowns and sarees."
+  },
+  {
+    "id": "BS002",
+    "description": "Set Includes: crystal AD silver bangles (2). Styling Tip: Light sparkle for evenings; complements white, grey, or icy-blue outfits."
+  },
+  {
+    "id": "BS003",
+    "description": "Set Includes: crystal AD silver bangles (2). Styling Tip: Minimalist pair for cocktails; suits monochrome and pastel modern wear."
+  },
+  {
+    "id": "BS004",
+    "description": "Set Includes: crystal AD silver bangles (8). Styling Tip: Full sparkling stack for receptions; pairs with white, silver, or jewel-tone gowns."
+  },
+  {
+    "id": "BS005",
+    "description": "Set Includes: crystal AD silver bangles (12+4). Styling Tip: Grand bridal-style stack; best with white, ivory, or pastel reception wear."
+  },
+  {
+    "id": "BS006",
+    "description": "Set Includes: crystal AD silver bangles (12+4+2). Styling Tip: Statement stack for weddings; complements white, silver, and cool-toned outfits."
+  },
+  {
+    "id": "BS007",
+    "description": "Set Includes: crystal AD silver bangles (12+4+2). Styling Tip: Full bridal hand-set; pairs with ivory, silver, or pastel lehengas and gowns."
+  },
+  {
+    "id": "BS008",
+    "description": "Set Includes: crystal AD silver bracelet. Styling Tip: Sleek for cocktail evenings; suits white, grey, or black modern outfits."
+  },
+  {
+    "id": "BS009",
+    "description": "Set Includes: crystal AD silver bracelet. Styling Tip: Elegant minimal piece; complements monochrome gowns and indo-western wear."
+  },
+  {
+    "id": "BS010",
+    "description": "Set Includes: crystal AD silver bangles (4). Styling Tip: For parties and receptions; pairs with white, silver, or pastel ensembles."
+  },
+  {
+    "id": "BS011",
+    "description": "Set Includes: ruby-red AD silver bangles (2). Styling Tip: Pop of color for functions; complements red, maroon, or white outfits."
+  },
+  {
+    "id": "GB001",
+    "description": "Set Includes: premium gold-finish bangles (2). Styling Tip: Everyday-elegant for functions; pairs with all traditional silk sarees and lehengas."
+  },
+  {
+    "id": "GB002",
+    "description": "Set Includes: premium gold-finish bangles (2). Styling Tip: Classic festive pair; complements red, green, or gold ethnic wear."
+  },
+  {
+    "id": "GB003",
+    "description": "Set Includes: premium gold-finish bangles (2). Styling Tip: Simple bridal accent; suits silk sarees in maroon, mustard, or cream."
+  },
+  {
+    "id": "GB004",
+    "description": "Set Includes: premium gold-finish bangles (2). Styling Tip: For pooja and functions; pairs with traditional silks in warm tones."
+  },
+  {
+    "id": "GB005",
+    "description": "Set Includes: premium gold-finish bangles (6). Styling Tip: Festive stack for weddings; complements bright silk sarees and lehengas."
+  },
+  {
+    "id": "GB006",
+    "description": "Set Includes: premium gold-finish bangles (4). Styling Tip: Elegant hand-set for ceremonies; suits red, green, or gold traditional wear."
+  },
+  {
+    "id": "GB007",
+    "description": "Set Includes: premium gold-finish bangles (4). Styling Tip: For receptions and pooja; pairs with rich silk sarees in warm hues."
+  },
+  {
+    "id": "GB008",
+    "description": "Set Includes: premium gold-finish bangles (2). Styling Tip: Classic pair for functions; complements all traditional outfits."
+  },
+  {
+    "id": "GB009",
+    "description": "Set Includes: premium gold-finish bangles (2). Styling Tip: Simple festive accent; suits silk sarees in red, green, or gold."
+  },
+  {
+    "id": "GB010",
+    "description": "Set Includes: premium gold-finish bangles (4). Styling Tip: For weddings and pooja; pairs with bright traditional ethnic wear."
+  },
+  {
+    "id": "GB011",
+    "description": "Set Includes: premium gold-finish bangles (2). Styling Tip: Everyday bridal pair; complements warm-toned silk sarees and lehengas."
+  },
+  {
+    "id": "HJ001",
+    "description": "Set Includes: heritage emerald & pearl Nakshi necklace & matching earrings. Styling Tip: For receptions; pairs with green, cream, or gold silk sarees."
+  },
+  {
+    "id": "HJ002",
+    "description": "Set Includes: heritage royal mayur (peacock) Nakshi long haram & earrings. Styling Tip: Grand bridal piece for muhurtham; best with red, green, or gold silks."
+  },
+  {
+    "id": "HJ003",
+    "description": "Set Includes: imperial Nakshi bridal combo \u2014 choker, long haram & earrings. Styling Tip: Complete bridal look for weddings; suits maroon, red, or gold Kanjivaram silks."
+  },
+  {
+    "id": "HJ004",
+    "description": "Set Includes: vintage Kundan & pearl Nakshi necklace & matching earrings. Styling Tip: For engagements and receptions; pairs with pastel, cream, or ivory silks."
+  },
+  {
+    "id": "HJ005",
+    "description": "Set Includes: royal Nakshi bridal combo \u2014 necklace, long haram & earrings. Styling Tip: Bridal ensemble for muhurtham; best with rich red or gold silk sarees."
+  },
+  {
+    "id": "HJ006",
+    "description": "Set Includes: emerald & Kundan Guttapusalu necklace with pearl drops & earrings. Styling Tip: For weddings; complements green, gold, or cream silk drapes."
+  },
+  {
+    "id": "HJ007",
+    "description": "Set Includes: royal antique Nakshi bridal combo \u2014 choker, haram & earrings. Styling Tip: Premium bridal set for muhurtham; suits maroon, red, or mustard silks."
+  },
+  {
+    "id": "HJ008",
+    "description": "Set Includes: emerald & Kundan geometric Nakshi necklace & matching earrings. Styling Tip: For receptions; pairs with green, black, or cream evening sarees."
+  },
+  {
+    "id": "HJ009",
+    "description": "Set Includes: royal peacock & ruby multi-strand long haram & earrings. Styling Tip: Statement bridal haram; best with red, maroon, or gold silk sarees."
+  },
+  {
+    "id": "HJ010",
+    "description": "Set Includes: emerald & ruby multi-strand bridal combo \u2014 necklace, haram & earrings. Styling Tip: Grand wedding set; complements red, green, or gold Kanjivaram silks."
+  },
+  {
+    "id": "MP001",
+    "description": "Set Includes: moissanite emerald Polki necklace & matching earrings. Styling Tip: For engagements and receptions; pairs with green, ivory, or pastel silk sarees."
+  },
+  {
+    "id": "MP002",
+    "description": "Set Includes: moissanite ruby & mint Polki necklace & matching earrings. Styling Tip: Regal for receptions; complements red, mint-green, or cream outfits."
+  },
+  {
+    "id": "MP003",
+    "description": "Set Includes: moissanite & emerald Guttapusalu necklace with pearl drops & earrings. Styling Tip: For weddings; suits green, gold, or cream silk sarees."
+  },
+  {
+    "id": "MP004",
+    "description": "Set Includes: moissanite & emerald choker & matching earrings. Styling Tip: For sangeet and cocktails; pairs with green, black, or ivory evening wear."
+  },
+  {
+    "id": "MP005",
+    "description": "Set Includes: moissanite mint-stone layered long haram & earrings. Styling Tip: Statement reception piece; best with mint, cream, or pastel silk sarees."
+  },
+  {
+    "id": "MP006",
+    "description": "Set Includes: moissanite emerald Polki necklace & matching earrings. Styling Tip: Premium for receptions; complements green, ivory, or gold drapes."
+  },
+  {
+    "id": "MP007",
+    "description": "Set Includes: moissanite emerald Kundan necklace & matching earrings. Styling Tip: For engagements; pairs with green, cream, or pastel silk sarees."
+  },
+  {
+    "id": "MP008",
+    "description": "Set Includes: moissanite emerald designer Polki necklace & matching earrings. Styling Tip: For receptions; suits green, ivory, or blush outfits."
+  },
+  {
+    "id": "MP009",
+    "description": "Set Includes: moissanite designer Polki necklace & matching earrings. Styling Tip: Versatile for engagements; complements pastel, ivory, or jewel-tone wear."
+  },
+  {
+    "id": "MP010",
+    "description": "Set Includes: moissanite AD designer necklace & matching earrings. Styling Tip: For cocktail evenings; pairs with white, silver, or pastel gowns."
+  },
+  {
+    "id": "MP011",
+    "description": "Set Includes: moissanite designer Polki choker & matching earrings. Styling Tip: For sangeet and receptions; suits ivory, pastel, or jewel-tone outfits."
+  },
+  {
+    "id": "MP013",
+    "description": "Set Includes: moissanite emerald Kundan necklace & matching earrings. Styling Tip: For weddings; complements green, cream, or gold silk sarees."
+  },
+  {
+    "id": "MP014",
+    "description": "Set Includes: moissanite Kundan necklace & matching earrings. Styling Tip: For engagements and receptions; pairs with pastel, ivory, or gold wear."
+  },
+  {
+    "id": "MP015",
+    "description": "Set Includes: moissanite emerald Kundan necklace & matching earrings. Styling Tip: For weddings; suits green, cream, or pastel silk drapes."
+  },
+  {
+    "id": "MP016",
+    "description": "Set Includes: moissanite Kundan necklace & matching earrings. Styling Tip: For receptions; complements ivory, blush, or jewel-tone outfits."
+  },
+  {
+    "id": "MP017",
+    "description": "Set Includes: moissanite ruby Kundan necklace & matching earrings. Styling Tip: For weddings; pairs with red, maroon, or cream silk sarees."
+  },
+  {
+    "id": "MP018",
+    "description": "Set Includes: moissanite gold-tone Kundan necklace & matching earrings. Styling Tip: For receptions; complements gold, cream, or pastel ensembles."
+  },
+  {
+    "id": "MP019",
+    "description": "Set Includes: moissanite gold-tone Kundan necklace & matching earrings. Styling Tip: For engagements; suits gold, ivory, or warm-toned silks."
+  },
+  {
+    "id": "MP020",
+    "description": "Set Includes: moissanite gold-tone necklace & matching earrings. Styling Tip: For receptions; pairs with gold, cream, or jewel-tone gowns and sarees."
+  },
+  {
+    "id": "MP021",
+    "description": "Set Includes: moissanite gold-tone small choker & matching earrings. Styling Tip: For cocktails; complements high-neck or solid-color evening wear."
+  },
+  {
+    "id": "MP022",
+    "description": "Set Includes: moissanite gold-tone premium necklace & matching earrings. Styling Tip: For receptions; suits gold, ivory, or pastel outfits."
+  },
+  {
+    "id": "MP023",
+    "description": "Set Includes: moissanite gold-tone necklace & matching earrings. Styling Tip: For engagements; pairs with gold, cream, or warm-toned silks."
+  },
+  {
+    "id": "MP024",
+    "description": "Set Includes: moissanite Kundan necklace & matching earrings. Styling Tip: For weddings and receptions; complements pastel, ivory, or jewel-tone wear."
+  },
+  {
+    "id": "MP025",
+    "description": "Set Includes: moissanite Kundan necklace & matching earrings. Styling Tip: For engagements; suits ivory, blush, or gold silk sarees."
+  },
+  {
+    "id": "PB001",
+    "description": "Set Includes: white-stone studded Nakshi temple necklace & matching earrings. Styling Tip: For muhurtham; pairs with red, gold, or cream Kanjivaram silks."
+  },
+  {
+    "id": "PB002",
+    "description": "Set Includes: Nakshi Lakshmi-panel long bridal haram & matching earrings. Styling Tip: Grand bridal piece for weddings; best with red, maroon, or gold silks."
+  },
+  {
+    "id": "PB003",
+    "description": "Set Includes: white-stone studded Nakshi temple necklace, haram & earrings. Styling Tip: Bridal set for muhurtham; complements red, gold, or green silk sarees."
+  },
+  {
+    "id": "PB004",
+    "description": "Set Includes: Nakshi Lakshmi-peacock necklace & matching earrings. Styling Tip: For weddings; pairs with red, mustard, or green traditional silks."
+  },
+  {
+    "id": "PB005",
+    "description": "Set Includes: Nakshi mango-malai long haram & matching earrings. Styling Tip: Classic bridal haram; suits red, gold, or maroon Kanjivaram silks."
+  },
+  {
+    "id": "PB006",
+    "description": "Set Includes: Ashta Lakshmi temple necklace, long haram & earrings. Styling Tip: Premium bridal set for muhurtham; best with red, gold, or green silks."
+  },
+  {
+    "id": "PB007",
+    "description": "Set Includes: Meenakari Nakshi stone-studded temple necklace & earrings. Styling Tip: For pooja and weddings; complements green, red, or yellow silk sarees."
+  },
+  {
+    "id": "PB008",
+    "description": "Set Includes: emerald-bead Nakshi elephant-motif long haram & earrings. Styling Tip: Grand bridal piece; pairs with green, gold, or maroon silks."
+  },
+  {
+    "id": "PB009",
+    "description": "Set Includes: multi-strand green-bead Nakshi necklace, haram & earrings. Styling Tip: For weddings; suits green, gold, or cream traditional wear."
+  },
+  {
+    "id": "PB010",
+    "description": "Set Includes: mango-Kundan (manga malai) long haram & matching earrings. Styling Tip: Fusion bridal haram; complements red, gold, or pastel silks."
+  },
+  {
+    "id": "PB011",
+    "description": "Set Includes: Kemp-floral Nakshi temple necklace, haram & earrings. Styling Tip: For muhurtham; pairs with red, green, or gold Kanjivaram silks."
+  },
+  {
+    "id": "PB012",
+    "description": "Set Includes: three-layer Kempu Guttapusalu necklace with pearl drops & earrings. Styling Tip: For weddings; best with red, gold, or green silk sarees."
+  },
+  {
+    "id": "PB013",
+    "description": "Set Includes: contemporary layered zircon step-necklace & matching earrings. Styling Tip: For receptions; complements pastel, ivory, or white gowns and sarees."
+  },
+  {
+    "id": "PB014",
+    "description": "Set Includes: Nakshi Guttapusalu necklace with pearl drops & earrings. Styling Tip: For weddings; pairs with gold, green, or cream silk drapes."
+  },
+  {
+    "id": "PB015",
+    "description": "Set Includes: Guttapusalu-inspired long haram & matching earrings. Styling Tip: Statement bridal haram; suits red, gold, or maroon Kanjivaram silks."
+  },
+  {
+    "id": "PB016",
+    "description": "Set Includes: Nakshi Guttapusalu chandbali necklace & matching chandbali earrings. Styling Tip: For receptions; complements gold, green, or cream outfits."
+  },
+  {
+    "id": "PB017",
+    "description": "Set Includes: zircon-studded Nakshi fusion necklace & matching earrings. Styling Tip: For engagements; pairs with pastel, ivory, or jewel-tone wear."
+  },
+  {
+    "id": "PB018",
+    "description": "Set Includes: antique gold-plated temple long necklace & matching earrings. Styling Tip: For muhurtham; complements red, gold, or mustard silk sarees."
+  },
+  {
+    "id": "PB019",
+    "description": "Set Includes: Swarna Lakshmi Nakshatra bridal maha-set \u2014 choker, long haram & earrings. Styling Tip: Complete bridal ensemble for weddings; best with red or gold silks."
+  },
+  {
+    "id": "PB020",
+    "description": "Set Includes: antique Mayura (peacock) sculptural temple necklace & earrings. Styling Tip: Statement bridal piece; suits green, red, or gold Kanjivaram silks."
+  },
+  {
+    "id": "PK001",
+    "description": "Set Includes: white Kundan necklace & matching earrings. Styling Tip: For engagements and receptions; pairs with pastel, ivory, or jewel-tone outfits."
+  },
+  {
+    "id": "PK002",
+    "description": "Set Includes: Polki choker & matching earrings. Styling Tip: For sangeet and cocktails; complements ivory, blush, or deep jewel-tone wear."
+  },
+  {
+    "id": "PK003",
+    "description": "Set Includes: white Kundan necklace & matching earrings. Styling Tip: For receptions; suits pastel, ivory, or gold lehengas and sarees."
+  },
+  {
+    "id": "PK004",
+    "description": "Set Includes: ruby Kundan necklace & matching earrings. Styling Tip: For weddings; pairs with red, maroon, or cream silk sarees."
+  },
+  {
+    "id": "PK005",
+    "description": "Set Includes: ruby Kundan necklace & matching earrings. Styling Tip: For receptions; complements red, maroon, or gold outfits."
+  },
+  {
+    "id": "PK006",
+    "description": "Set Includes: ruby Kundan necklace & matching earrings. Styling Tip: For engagements; suits red, maroon, or ivory silk sarees."
+  },
+  {
+    "id": "PK007",
+    "description": "Set Includes: ruby Kundan necklace & matching earrings. Styling Tip: For weddings; pairs with red, maroon, or gold traditional wear."
+  },
+  {
+    "id": "PK008",
+    "description": "Set Includes: ruby Victorian Kundan necklace & matching earrings. Styling Tip: For receptions; complements red, wine, or black evening sarees."
+  },
+  {
+    "id": "PK009",
+    "description": "Set Includes: jade-green Kundan necklace & matching earrings. Styling Tip: For engagements; pairs with green, cream, or gold silk sarees."
+  },
+  {
+    "id": "PK010",
+    "description": "Set Includes: jade-green Polki necklace & matching earrings. Styling Tip: For receptions; suits green, ivory, or pastel outfits."
+  },
+  {
+    "id": "PK011",
+    "description": "Set Includes: sapphire-blue Polki designer necklace & matching earrings. Styling Tip: For cocktails; complements blue, white, or silver evening wear."
+  },
+  {
+    "id": "PK012",
+    "description": "Set Includes: emerald Victorian necklace & matching earrings. Styling Tip: For receptions; pairs with green, black, or cream sarees and gowns."
+  },
+  {
+    "id": "PK013",
+    "description": "Set Includes: amethyst Victorian necklace & matching earrings. Styling Tip: For cocktail evenings; suits purple, grey, or black outfits."
+  },
+  {
+    "id": "PK015",
+    "description": "Set Includes: Navarathna multi-stone necklace & matching earrings. Styling Tip: Festive for pooja and weddings; complements gold, cream, or red silks."
+  },
+  {
+    "id": "PK016",
+    "description": "Set Includes: Kundan Guttapusalu choker with pearl drops & matching earrings. Styling Tip: For weddings; pairs with gold, green, or cream silk sarees."
+  },
+  {
+    "id": "PK017",
+    "description": "Set Includes: jade-green Polki necklace & matching earrings. Styling Tip: For engagements; complements green, ivory, or pastel wear."
+  },
+  {
+    "id": "PK018",
+    "description": "Set Includes: triple-layer Kundan long haram & matching earrings. Styling Tip: Statement reception piece; best with ivory, gold, or pastel silks."
+  },
+  {
+    "id": "PK019",
+    "description": "Set Includes: premium jade-green Polki necklace & matching earrings. Styling Tip: For receptions; pairs with green, cream, or gold outfits."
+  },
+  {
+    "id": "PK020",
+    "description": "Set Includes: emerald Kundan choker & matching earrings. Styling Tip: For sangeet and cocktails; complements green, black, or ivory evening wear."
+  },
+  {
+    "id": "PK021",
+    "description": "Set Includes: emerald three-layered Kundan necklace & matching earrings. Styling Tip: Grand for receptions; suits green, gold, or cream silk sarees."
+  },
+  {
+    "id": "PK022",
+    "description": "Set Includes: emerald Polki necklace & matching earrings. Styling Tip: Premium for weddings; pairs with green, ivory, or gold drapes."
+  },
+  {
+    "id": "PK023",
+    "description": "Set Includes: pink morganite necklace & matching earrings. Styling Tip: For receptions; complements blush, ivory, or grey gowns and sarees."
+  },
+  {
+    "id": "PK024",
+    "description": "Set Includes: pink morganite Kundan necklace & matching earrings. Styling Tip: For engagements; suits blush, peach, or ivory outfits."
+  },
+  {
+    "id": "PK025",
+    "description": "Set Includes: pink morganite premium necklace & matching earrings. Styling Tip: Statement for receptions; pairs with blush, mauve, or champagne gowns."
+  },
+  {
+    "id": "PK026",
+    "description": "Set Includes: jade-green Polki bridal necklace, haram & earrings. Styling Tip: Bridal set for weddings; best with green, gold, or cream Kanjivaram silks."
+  },
+  {
+    "id": "PK027",
+    "description": "Set Includes: emerald Polki full bridal set \u2014 choker, long haram & earrings. Styling Tip: Complete bridal ensemble; pairs with green, red, or gold silk sarees."
+  }
+]

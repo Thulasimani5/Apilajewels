@@ -13,13 +13,10 @@ let jewelsMemCache = null;
 const CACHE_KEY = 'apila_srch_jewels';
 
 const SUGGESTIONS = [
-  { label: 'Moissinate Jewels', slug: 'moissinate-jewels' },
+  { label: 'victorian-moissinate', slug: 'victorian-moissinate' },
   { label: 'AD Jewels',          slug: 'ad-jewels' },
   { label: 'Gold Antique Jewels',slug: 'gold-antique-jewels' },
   { label: 'Kundan Jewels',      slug: 'kundan-jewels' },
-  { label: 'AD Bangles',         slug: 'ad-bangles' },
-  { label: 'Gold Bangles',       slug: 'gold-bangles' },
-  { label: 'Accessories',        slug: 'accessories' },
 ];
 
 function ProductCard({ product, onClose }) {

@@ -122,7 +122,8 @@ const AdminDashboard = () => {
     }
   }, [activeTab, token]);
 
-  const types = ["Bridal Set", "Bridal Maid", "Designer", "Reception", "Party Wear", "Small Jewel"];
+  const occasions = ["Bridal Set", "Bridal Maid", "Designer", "Reception", "Party Wear", "Small Jewel"];
+  const types = ["Semi Bridal & Combo Sets", "Full Bridal Set", "Choker & Necklace", "Long Haram", "Bangles & Bracelets", "Accessories"];
   const colours = ["Gold", "Silver", "Rose Gold", "Emerald Green", "Ruby Red", "Mehndi Polish"];
 
   const [newCategoryName, setNewCategoryName] = useState('');
@@ -200,8 +201,9 @@ const AdminDashboard = () => {
     description: '',
     price: '',
     deposit: '',
-    category: 'Moissanite',
+    category: ['victorian-moissinate'],
     type: [],
+    occasion: [],
     colour: 'Gold',
     material: '',
     size: '',
@@ -211,7 +213,8 @@ const AdminDashboard = () => {
     salesAmount: '',
     shopName: '',
     stoneName: [],
-    stoneColour: []
+    stoneColour: [],
+    showPrice: true
   });
   const [mediaList, setMediaList] = useState([]);
   const [dragActive, setDragActive] = useState(false);
@@ -394,7 +397,7 @@ const AdminDashboard = () => {
         setEditingId(null);
         setFormData({
           jewelId: '', name: '', description: '', price: '', deposit: '',
-          category: 'Moissanite', type: [], colour: 'Gold',
+          category: ['victorian-moissinate'], type: [], occasion: [], colour: 'Gold',
           material: '', size: '', finish: '',
           purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: '',
           stoneName: [], stoneColour: []
@@ -521,7 +524,7 @@ const AdminDashboard = () => {
                         setEditingId(null);
                         setFormData({
                           jewelId: '', name: '', description: '', price: '', deposit: '',
-                          category: 'Moissanite', type: [], colour: 'Gold',
+                          category: ['victorian-moissinate'], type: [], occasion: [], colour: 'Gold',
                           material: '', size: '', finish: '',
                           purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: ''
                         });
@@ -571,7 +574,7 @@ const AdminDashboard = () => {
                         setEditingId(null);
                         setFormData({
                           jewelId: '', name: '', description: '', price: '', deposit: '',
-                          category: selectedAdminCategory || 'Moissanite', type: [], colour: 'Gold',
+                          category: selectedAdminCategory ? [selectedAdminCategory] : ['victorian-moissinate'], type: [], occasion: [], colour: 'Gold',
                           material: '', size: '', finish: '',
                           purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: ''
                         });
@@ -656,8 +659,9 @@ const AdminDashboard = () => {
                                       description: jewel.description || '',
                                       price: jewel.price || jewel.rentalPrice || '',
                                       deposit: jewel.deposit || '',
-                                      category: jewel.category || 'Moissanite',
+                                      category: Array.isArray(jewel.category) ? jewel.category : (jewel.category ? [jewel.category] : ['victorian-moissinate']),
                                       type: Array.isArray(jewel.type) ? jewel.type : (jewel.type ? [jewel.type] : []),
+                                      occasion: Array.isArray(jewel.occasion) ? jewel.occasion : (jewel.occasion ? [jewel.occasion] : []),
                                       colour: jewel.colour || 'Gold',
                                       material: jewel.material || '',
                                       size: jewel.size || '',
@@ -667,7 +671,8 @@ const AdminDashboard = () => {
                                       salesAmount: jewel.salesAmount || '',
                                       shopName: jewel.shopName || '',
                                       stoneName: jewel.stoneName || [],
-                                      stoneColour: Array.isArray(jewel.stoneColour) ? jewel.stoneColour : (jewel.stoneColour ? [jewel.stoneColour] : [])
+                                      stoneColour: Array.isArray(jewel.stoneColour) ? jewel.stoneColour : (jewel.stoneColour ? [jewel.stoneColour] : []),
+                                      showPrice: jewel.showPrice !== false
                                     });
                                     setMediaList(jewel.images ? jewel.images.map(img => ({
                                       type: img.type || 'image',
@@ -735,6 +740,21 @@ const AdminDashboard = () => {
                       <FieldUpdateBtn field="price" value={formData.price} />
                     </div>
                     <input required type="number" name="price" value={formData.price} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm" placeholder="e.g. 1500" />
+                    <div className="flex items-center gap-2 mt-2">
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.showPrice !== false}
+                          onChange={e => setFormData(prev => ({ ...prev, showPrice: e.target.checked }))}
+                          className="sr-only peer"
+                        />
+                        <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+                      </label>
+                      <div className="flex justify-between items-center flex-1">
+                        <span className="text-xs text-gray-600">Show price on detail page</span>
+                        <FieldUpdateBtn field="showPrice" value={formData.showPrice !== false} />
+                      </div>
+                    </div>
                   </div>
                   <div>
                     <div className="flex justify-between items-center mb-1">
@@ -746,15 +766,64 @@ const AdminDashboard = () => {
 
                   <div>
                     <div className="flex justify-between items-center mb-1">
-                      <label className="text-sm font-medium text-gray-700">Category*</label>
+                      <label className="text-sm font-medium text-gray-700">Category* (select multiple)</label>
                       <FieldUpdateBtn field="category" value={formData.category} />
                     </div>
-                    <select name="category" value={formData.category} onChange={handleInputChange} className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm bg-white">
-                      {(categories || []).map(c => <option key={c._id} value={c.name}>{c.name}</option>)}
-                    </select>
+                    <div className="grid grid-cols-2 gap-2">
+                      {(categories || []).map(c => (
+                        <label key={c._id} className="inline-flex items-center">
+                          <input
+                            type="checkbox"
+                            name="category"
+                            value={c.name}
+                            checked={Array.isArray(formData.category) ? formData.category.includes(c.name) : formData.category === c.name}
+                            onChange={e => {
+                              const checked = e.target.checked;
+                              setFormData(prev => ({
+                                ...prev,
+                                category: checked
+                                  ? [...(Array.isArray(prev.category) ? prev.category : prev.category ? [prev.category] : []), c.name]
+                                  : (Array.isArray(prev.category) ? prev.category : [prev.category]).filter(x => x !== c.name)
+                              }));
+                            }}
+                            className="mr-2 h-4 w-4 text-[#B07A85] border-gray-300 rounded focus:ring-[#B07A85]"
+                          />
+                          <span className="text-sm text-gray-700">{c.name}</span>
+                        </label>
+                      ))}
+                    </div>
                   </div>
                   <div>
                     <div className="flex flex-col">
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="text-sm font-medium text-gray-700">Occasion Type (select multiple)</label>
+                        <FieldUpdateBtn field="occasion" value={formData.occasion} />
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        {occasions.map(o => (
+                          <label key={o} className="inline-flex items-center">
+                            <input
+                              type="checkbox"
+                              name="occasion"
+                              value={o}
+                              checked={formData.occasion?.includes(o)}
+                              onChange={e => {
+                                const checked = e.target.checked;
+                                setFormData(prev => ({
+                                  ...prev,
+                                  occasion: checked
+                                    ? [...(prev.occasion || []), o]
+                                    : (prev.occasion || []).filter(x => x !== o)
+                                }));
+                              }}
+                              className="mr-2 h-4 w-4 text-[#B07A85] border-gray-300 rounded focus:ring-[#B07A85]"
+                            />
+                            <span className="text-sm text-gray-700">{o}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex flex-col mt-4">
                       <div className="flex justify-between items-center mb-1">
                         <label className="text-sm font-medium text-gray-700">Type* (select multiple)</label>
                         <FieldUpdateBtn field="type" value={formData.type} />
@@ -772,8 +841,8 @@ const AdminDashboard = () => {
                                 setFormData(prev => ({
                                   ...prev,
                                   type: checked
-                                    ? [...prev.type, t]
-                                    : prev.type.filter(x => x !== t)
+                                    ? [...(prev.type || []), t]
+                                    : (prev.type || []).filter(x => x !== t)
                                 }));
                               }}
                               className="mr-2 h-4 w-4 text-[#B07A85] border-gray-300 rounded focus:ring-[#B07A85]"

@@ -23,13 +23,14 @@ const JewellerySchema = new mongoose.Schema({
     required: [true, 'Please add a name']
   },
   category: {
-    type: String,
-    required: [true, 'Please add a category']
+    type: [String],
+    required: [true, 'Please add a category'],
+    default: []
   },
   type: {
     type: [String],
     required: [true, 'Please add a type'],
-    enum: ["Bridal Set", "Bridal Maid", "Designer", "Reception", "Party Wear", "Small Jewel"],
+    enum: ["Semi Bridal & Combo Sets", "Full Bridal Set", "Choker & Necklace", "Long Haram", "Bangles & Bracelets", "Accessories"],
     default: []
   },
   price: {
@@ -55,6 +56,7 @@ const JewellerySchema = new mongoose.Schema({
   },
   occasion: {
     type: [String],
+    enum: ["Bridal Set", "Bridal Maid", "Designer", "Reception", "Party Wear", "Small Jewel"],
     default: []
   },
   material: {
@@ -84,6 +86,10 @@ const JewellerySchema = new mongoose.Schema({
   popularity: {
     type: Number,
     default: 0
+  },
+  showPrice: {
+    type: Boolean,
+    default: true
   },
   purchaseAmount: {
     type: Number,

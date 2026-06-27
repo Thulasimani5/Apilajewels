@@ -222,18 +222,15 @@ export default function Home() {
 
   /* ---- Context & API logic ---- */
   const TRENDING_SAMPLES = [
-    { id: 's1', category: 'Moissanite Jewels', name: 'Moissanite Designer Polki Necklace', price: '₹1299.00', img: carouselImg1 },
+    { id: 's1', category: 'victorian-moissinate', name: 'Moissanite Designer Polki Necklace', price: '₹1299.00', img: carouselImg1 },
     { id: 's2', category: 'AD Jewels', name: 'American Diamond Necklace Set', price: '₹1299.00', img: carouselImg2 },
     { id: 's3', category: 'Antique Jewel', name: 'Gold Antique Premium Necklace', price: '₹1299.00', img: carouselImg3 },
     { id: 's4', category: 'Kundan Jewels', name: 'Kundan Bridal Necklace Set', price: '₹1299.00', img: carouselImg4 },
-    { id: 's5', category: 'Gold Bangles', name: 'Gold Plated Bangle Set', price: '₹1299.00', img: carouselImg5 },
     { id: 's6', category: 'AD Jewels', name: 'American Diamond Bangle Set', price: '₹1299.00', img: carouselImg6 },
-    { id: 's7', category: 'Accessories', name: 'Bridal Jewellery Accessories', price: '₹1299.00', img: carouselImg7 },
-    { id: 's8', category: 'Moissanite Jewels', name: 'Moissanite Designer Polki Necklace', price: '₹1299.00', img: carouselImg1 },
+    { id: 's8', category: 'victorian-moissinate', name: 'Moissanite Designer Polki Necklace', price: '₹1299.00', img: carouselImg1 },
     { id: 's9', category: 'AD Jewels', name: 'American Diamond Necklace Set', price: '₹1299.00', img: carouselImg2 },
     { id: 's10', category: 'Antique Jewel', name: 'Gold Antique Premium Necklace', price: '₹1299.00', img: carouselImg3 },
     { id: 's11', category: 'Kundan Jewels', name: 'Kundan Bridal Necklace Set', price: '₹1299.00', img: carouselImg4 },
-    { id: 's12', category: 'Gold Bangles', name: 'Gold Plated Bangle Set', price: '₹1299.00', img: carouselImg5 },
   ];
 
   const [trending, setTrending] = useState([]);
@@ -673,11 +670,10 @@ export default function Home() {
         <div className="footer-main">
           <div>
             <span className="footer-col-head">Collections</span>
-            <Link className="footer-link-sm" to="/shop?category=moissinate-jewels">Moissanite Jewels</Link>
+            <Link className="footer-link-sm" to="/shop?category=victorian-moissinate">victorian-moissinate</Link>
             <Link className="footer-link-sm" to="/shop?category=ad-jewels">AD Jewels</Link>
             <Link className="footer-link-sm" to="/shop?category=gold-antique-jewels">Gold Antique</Link>
             <Link className="footer-link-sm" to="/shop?category=kundan-jewels">Kundan Jewels</Link>
-            <Link className="footer-link-sm" to="/shop?category=gold-bangles">Bangles</Link>
           </div>
           <div>
             <span className="footer-col-head">Support</span>

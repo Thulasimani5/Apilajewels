@@ -52,7 +52,7 @@ const Footer = () => {
             </button>
             {open.collections && (
               <ul className="pb-5 space-y-3">
-                {['Moissinate Jewels', 'AD Jewels', 'Gold Antique Jewels', 'Kundan Jewels', 'Bangles'].map(item => (
+                {['victorian-moissinate', 'AD Jewels', 'Gold Antique Jewels', 'Kundan Jewels'].map(item => (
                   <li key={item}>
                     <Link
                       to={`/shop?category=${item.toLowerCase().replace(/ /g, '-')}`}
@@ -165,7 +165,7 @@ const Footer = () => {
             <div>
               <h4 className="text-[12px] font-semibold tracking-[0.15em] text-[#222] uppercase mb-6">Collections</h4>
               <ul className="space-y-4">
-                {['Moissinate Jewels', 'AD Jewels', 'Gold Antique Jewels', 'Kundan Jewels', 'Bangles'].map(item => (
+                {['victorian-moissinate', 'AD Jewels', 'Gold Antique Jewels', 'Kundan Jewels'].map(item => (
                   <li key={item}>
                     <Link to={`/shop?category=${item.toLowerCase().replace(/ /g, '-')}`} className="text-[11px] text-[#555] hover:text-[#A56D7A] transition-colors tracking-[0.08em] uppercase">
                       {item}

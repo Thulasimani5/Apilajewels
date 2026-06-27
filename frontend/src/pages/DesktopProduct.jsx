@@ -196,7 +196,7 @@ export default function DesktopProduct({ product, relatedProducts }) {
   const mediaList = product.media?.length ? product.media : product.images || [];
   const liked = isInWishlist(product._id);
   const price = product.rentalPrice || product.price || 0;
-  const priceText = price >= 2000 ? 'Price on Request' : `₹${price.toFixed(2)}`;
+  const priceText = product.showPrice === false || price >= 2000 ? 'Price on Request' : `₹${price.toFixed(2)}`;
   const category = Array.isArray(product.category) ? product.category[0] : product.category;
 
   const handleAddToCart = () => {
@@ -356,7 +356,9 @@ export default function DesktopProduct({ product, relatedProducts }) {
 
           {/* Price + wishlist / share */}
           <div className="pdp-price-row">
-            <span className="pdp-price">{priceText}</span>
+            <span className="pdp-price">
+              {product.showPrice === false || price >= 2000 ? 'Price on Request' : `₹${price.toFixed(2)}`}
+            </span>
             <div className="pdp-icons-row">
               <button
                 className="pdp-icon-btn"
@@ -538,7 +540,7 @@ export default function DesktopProduct({ product, relatedProducts }) {
         <div className="footer-main">
           <div>
             <span className="footer-col-head">Collections</span>
-            <Link className="footer-link-sm" to="/shop?category=moissinate-jewels">Moissanite Jewels</Link>
+            <Link className="footer-link-sm" to="/shop?category=victorian-moissinate">Moissanite Jewels</Link>
             <Link className="footer-link-sm" to="/shop?category=ad-jewels">AD Jewels</Link>
             <Link className="footer-link-sm" to="/shop?category=gold-antique-jewels">Gold Antique</Link>
             <Link className="footer-link-sm" to="/shop?category=kundan-jewels">Kundan Jewels</Link>

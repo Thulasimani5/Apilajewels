@@ -18,7 +18,7 @@ function CartItemCard({ item, onRemove }) {
   const isVideo = rawImg?.type === 'video';
   const price = item.rentalPrice || item.price || 0;
   const priceText = price >= 2000 ? 'Price on Request' : `₹${price.toFixed(2)}`;
-  const category = Array.isArray(item.category) ? item.category[0] : (item.category || 'Moissinate Jewels');
+  const category = Array.isArray(item.category) ? item.category[0] : (item.category || 'victorian-moissinate');
   const ref = item.code || item.jewelId || item.sku || 'N/A';
 
   return (

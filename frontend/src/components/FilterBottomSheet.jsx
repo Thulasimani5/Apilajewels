@@ -209,7 +209,7 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
                           >
                             {options.map((option) => {
                               const isChecked = localFilters[section]?.includes(option);
-                              const displayOption = option === 'Moissinate Jewels' ? 'Victorian & Mossianate' : option;
+                              const displayOption = option === 'victorian-moissinate' ? 'Victorian & Mossianate' : option;
                               return (
                                 <button
                                   key={option}

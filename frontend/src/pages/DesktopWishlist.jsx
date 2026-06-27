@@ -146,7 +146,7 @@ export default function DesktopWishlist() {
         <div className="footer-main">
           <div>
             <span className="footer-col-head">Collections</span>
-            <Link className="footer-link-sm" to="/shop?category=moissinate-jewels">Moissanite Jewels</Link>
+            <Link className="footer-link-sm" to="/shop?category=victorian-moissinate">Moissanite Jewels</Link>
             <Link className="footer-link-sm" to="/shop?category=ad-jewels">AD Jewels</Link>
             <Link className="footer-link-sm" to="/shop?category=gold-antique-jewels">Gold Antique</Link>
             <Link className="footer-link-sm" to="/shop?category=kundan-jewels">Kundan Jewels</Link>

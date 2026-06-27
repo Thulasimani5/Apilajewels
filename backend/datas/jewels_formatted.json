@@ -1,0 +1,3834 @@
+[
+  {
+    "jewelId": "MP001",
+    "name": "Emerald Victorian Choker Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 695,
+    "deposit": 1000,
+    "purchaseAmount": 1320,
+    "salesAmount": 1700,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP002",
+    "name": "Ruby Victorian Choker Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 695,
+    "deposit": 1000,
+    "purchaseAmount": 1320,
+    "salesAmount": 1700,
+    "colour": "Red",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP003",
+    "name": "White Victorian Choker Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 695,
+    "deposit": 1000,
+    "purchaseAmount": 1320,
+    "salesAmount": 1700,
+    "colour": "White",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP004",
+    "name": "Emerald Victorian Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "purchaseAmount": 1100,
+    "salesAmount": 1500,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP005",
+    "name": "Ruby Victorian Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "purchaseAmount": 1100,
+    "salesAmount": 1500,
+    "colour": "Red",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP006",
+    "name": "White Victorian Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "purchaseAmount": 1100,
+    "salesAmount": 1500,
+    "colour": "White",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP007",
+    "name": "Emerald Victorian Long Haram Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 995,
+    "deposit": 1400,
+    "purchaseAmount": 2075,
+    "salesAmount": 2500,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP008",
+    "name": "Ruby Victorian Long Haram Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 995,
+    "deposit": 1400,
+    "purchaseAmount": 2075,
+    "salesAmount": 2500,
+    "colour": "Red",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP009",
+    "name": "White Victorian Long Haram Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 995,
+    "deposit": 1400,
+    "purchaseAmount": 2075,
+    "salesAmount": 2500,
+    "colour": "White",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP010",
+    "name": "Emerald Moissanite Choker Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1195,
+    "deposit": 1600,
+    "purchaseAmount": 2570,
+    "salesAmount": 3000,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP011",
+    "name": "Ruby Moissanite Choker Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1195,
+    "deposit": 1600,
+    "purchaseAmount": 2570,
+    "salesAmount": 3000,
+    "colour": "Red",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP012",
+    "name": "White Moissanite Choker Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1195,
+    "deposit": 1600,
+    "purchaseAmount": 2570,
+    "salesAmount": 3000,
+    "colour": "White",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP013",
+    "name": "Emerald Moissanite Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1095,
+    "deposit": 1400,
+    "purchaseAmount": 1400,
+    "salesAmount": 2600,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP014",
+    "name": "Ruby Moissanite Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1095,
+    "deposit": 1400,
+    "purchaseAmount": 1400,
+    "salesAmount": 2600,
+    "colour": "Red",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP015",
+    "name": "White Moissanite Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1095,
+    "deposit": 1400,
+    "purchaseAmount": 1400,
+    "salesAmount": 2600,
+    "colour": "White",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP016",
+    "name": "Emerald Moissanite Long Haram Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 1195,
+    "deposit": 1400,
+    "purchaseAmount": 2100,
+    "salesAmount": 2600,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP017",
+    "name": "Ruby Moissanite Long Haram Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 1195,
+    "deposit": 1400,
+    "purchaseAmount": 2100,
+    "salesAmount": 2600,
+    "colour": "Red",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP018",
+    "name": "White Moissanite Long Haram Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 1195,
+    "deposit": 1400,
+    "purchaseAmount": 2100,
+    "salesAmount": 2400,
+    "colour": "White",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP019",
+    "name": "Emerald Moissanite Bridal Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 1595,
+    "deposit": 2200,
+    "purchaseAmount": 3470,
+    "salesAmount": 4000,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP020",
+    "name": "Ruby Moissanite Bridal Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 1595,
+    "deposit": 2200,
+    "purchaseAmount": 3470,
+    "salesAmount": 4000,
+    "colour": "Red",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP021",
+    "name": "White Moissanite Bridal Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 1595,
+    "deposit": 2200,
+    "purchaseAmount": 3470,
+    "salesAmount": 4000,
+    "colour": "White",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP022",
+    "name": "Emerald Premium Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1295,
+    "deposit": 1700,
+    "purchaseAmount": 2800,
+    "salesAmount": 3400,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP023",
+    "name": "Amethyst Premium Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 995,
+    "deposit": 1300,
+    "purchaseAmount": 2000,
+    "salesAmount": 2500,
+    "colour": "Purple",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP024",
+    "name": "White Premium Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1295,
+    "deposit": 1700,
+    "purchaseAmount": 2800,
+    "salesAmount": 3400,
+    "colour": "White",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "MP025",
+    "name": "Emerald Moissanite Choker Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 730,
+    "salesAmount": 1100,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AS005",
+    "name": "Silver AD Necklace Set",
+    "description": "Silver Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 350,
+    "deposit": 600,
+    "purchaseAmount": 640,
+    "salesAmount": 900,
+    "colour": "Silver",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM004",
+    "name": "Mehndi Polish AD Choker Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 350,
+    "deposit": 600,
+    "purchaseAmount": 640,
+    "salesAmount": 900,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM005",
+    "name": "Mehndi Polish AD Necklace Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 730,
+    "salesAmount": 1100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM006",
+    "name": "Mehndi Polish AD Necklace Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 770,
+    "salesAmount": 1100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM007",
+    "name": "Mehndi Polish AD Necklace Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 770,
+    "salesAmount": 1100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM008",
+    "name": "Mehndi Polish AD Necklace Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 770,
+    "salesAmount": 1100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM009",
+    "name": "Mehndi Polish AD Long Haram Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "purchaseAmount": 1100,
+    "salesAmount": 1500,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM010",
+    "name": "Mehndi Polish AD Long Haram Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "purchaseAmount": 1100,
+    "salesAmount": 1500,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM011",
+    "name": "Mehndi Polish AD Long Haram Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "purchaseAmount": 1100,
+    "salesAmount": 1500,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM012",
+    "name": "Mehndi Polish AD Bridal Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 850,
+    "deposit": 1100,
+    "purchaseAmount": 1730,
+    "salesAmount": 2100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM013",
+    "name": "Mehndi Polish AD Bridal Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 850,
+    "deposit": 1100,
+    "purchaseAmount": 1730,
+    "salesAmount": 2100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM0014",
+    "name": "Mehndi Polish AD Bridal Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 850,
+    "deposit": 1100,
+    "purchaseAmount": 1730,
+    "salesAmount": 2100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM015",
+    "name": "Mehndi Plated AD Choker Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 350,
+    "deposit": 600,
+    "purchaseAmount": 640,
+    "salesAmount": 900,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM016",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 730,
+    "salesAmount": 1100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM017",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 770,
+    "salesAmount": 1100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM018",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 770,
+    "salesAmount": 1100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM019",
+    "name": "Mehndi Plated AD Long Haram Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "purchaseAmount": 1100,
+    "salesAmount": 1500,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM020",
+    "name": "Mehndi Plated AD Long Haram Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "purchaseAmount": 1100,
+    "salesAmount": 1500,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM021",
+    "name": "Mehndi Plated AD Bridal Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 850,
+    "deposit": 1100,
+    "purchaseAmount": 1730,
+    "salesAmount": 2100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM022",
+    "name": "Mehndi Plated AD Choker Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 350,
+    "deposit": 600,
+    "purchaseAmount": 640,
+    "salesAmount": 900,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM023",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 730,
+    "salesAmount": 1100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM024",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 770,
+    "salesAmount": 1100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM025",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 770,
+    "salesAmount": 1100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM026",
+    "name": "Mehndi Plated AD Long Haram Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "purchaseAmount": 1100,
+    "salesAmount": 1500,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM027",
+    "name": "Mehndi Plated AD Long Haram Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "purchaseAmount": 1100,
+    "salesAmount": 1500,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM028",
+    "name": "Mehndi Plated AD Bridal Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 850,
+    "deposit": 1100,
+    "purchaseAmount": 1730,
+    "salesAmount": 2100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM029",
+    "name": "Mehndi Plated AD Bridal Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 850,
+    "deposit": 1100,
+    "purchaseAmount": 1730,
+    "salesAmount": 2100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM030",
+    "name": "Mehndi Plated AD Bridal Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 850,
+    "deposit": 1100,
+    "purchaseAmount": 1730,
+    "salesAmount": 2100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM031",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 770,
+    "salesAmount": 1100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM032",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 770,
+    "salesAmount": 1100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM033",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 770,
+    "salesAmount": 1100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AM034",
+    "name": "Mehndi Plated AD Long Haram Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "purchaseAmount": 1100,
+    "salesAmount": 1500,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AG001",
+    "name": "Gold Polish AD Choker Set",
+    "description": "Gold Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 350,
+    "deposit": 600,
+    "purchaseAmount": 640,
+    "salesAmount": 900,
+    "colour": "Gold",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AG002",
+    "name": "Gold Polish AD Necklace Set",
+    "description": "Gold Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 730,
+    "salesAmount": 1100,
+    "colour": "Gold",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AG003",
+    "name": "Gold Polish AD Long Haram Set",
+    "description": "Gold Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "purchaseAmount": 1100,
+    "salesAmount": 1500,
+    "colour": "Gold",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AG004",
+    "name": "Gold Polish AD Bridal Set",
+    "description": "Gold Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 850,
+    "deposit": 1100,
+    "purchaseAmount": 1730,
+    "salesAmount": 2100,
+    "colour": "Gold",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK001",
+    "name": "White Kundan Choker Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 695,
+    "deposit": 1000,
+    "purchaseAmount": 1320,
+    "salesAmount": 1700,
+    "colour": "White",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK002",
+    "name": "White Kundan Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "purchaseAmount": 1100,
+    "salesAmount": 1500,
+    "colour": "White",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK003",
+    "name": "White Kundan Long Haram Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 995,
+    "deposit": 1400,
+    "purchaseAmount": 2075,
+    "salesAmount": 2500,
+    "colour": "White",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK004",
+    "name": "Emerald Kundan Choker Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 695,
+    "deposit": 1000,
+    "purchaseAmount": 1320,
+    "salesAmount": 1700,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK005",
+    "name": "Emerald Kundan Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "purchaseAmount": 1100,
+    "salesAmount": 1500,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK006",
+    "name": "Emerald Kundan Long Haram Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 995,
+    "deposit": 1400,
+    "purchaseAmount": 2075,
+    "salesAmount": 2500,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK007",
+    "name": "Ruby Kundan Choker Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 695,
+    "deposit": 1000,
+    "purchaseAmount": 1320,
+    "salesAmount": 1700,
+    "colour": "Red",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK008",
+    "name": "Ruby Kundan Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "purchaseAmount": 1100,
+    "salesAmount": 1500,
+    "colour": "Red",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK009",
+    "name": "Jade Kundan Choker Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 795,
+    "deposit": 1100,
+    "purchaseAmount": 1550,
+    "salesAmount": 2100,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK010",
+    "name": "Jade Polgi Necklace Set",
+    "description": "Polgi Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 695,
+    "deposit": 1000,
+    "purchaseAmount": 1300,
+    "salesAmount": 1800,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK012",
+    "name": "Emerald Victorian Premium AD Necklace Set",
+    "description": "Kundan, Victorian",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1295,
+    "deposit": 1700,
+    "purchaseAmount": 2800,
+    "salesAmount": 3400,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK013",
+    "name": "Amethyst Victorian Premium Necklace Set",
+    "description": "Kundan, Victorian",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 995,
+    "deposit": 1300,
+    "purchaseAmount": 2000,
+    "salesAmount": 2500,
+    "colour": "Purple",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK015",
+    "name": "Navratna Stone Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Small Jewel"
+    ],
+    "price": 299,
+    "deposit": 500,
+    "purchaseAmount": 550,
+    "salesAmount": 800,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK016",
+    "name": "White Kundan Premium Jewel Set",
+    "description": "Kundan, Victorian",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 695,
+    "deposit": 1000,
+    "purchaseAmount": 1320,
+    "salesAmount": 1700,
+    "colour": "White",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK017",
+    "name": "Jade Polgi Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "purchaseAmount": 1100,
+    "salesAmount": 1500,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK018",
+    "name": "Jade Polgi Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 595,
+    "deposit": 800,
+    "purchaseAmount": 1000,
+    "salesAmount": 1300,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK019",
+    "name": "Jade Polgi Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 995,
+    "deposit": 1400,
+    "purchaseAmount": 2075,
+    "salesAmount": 2500,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK020",
+    "name": "Emerald Choker Set",
+    "description": "Kundan AD Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 730,
+    "salesAmount": 1100,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK021",
+    "name": "Emerald Necklace Set",
+    "description": "Kundan AD Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 350,
+    "deposit": 600,
+    "purchaseAmount": 640,
+    "salesAmount": 900,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK022",
+    "name": "Emerald Premium Necklace Set",
+    "description": "Moissanite Polgi Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1095,
+    "deposit": 1400,
+    "purchaseAmount": 1400,
+    "salesAmount": 2600,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK023",
+    "name": "Pink Morganit Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 770,
+    "salesAmount": 1100,
+    "colour": "Pink",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK024",
+    "name": "Pink Morganit Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 395,
+    "deposit": 700,
+    "purchaseAmount": 770,
+    "salesAmount": 1100,
+    "colour": "Pink",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK025",
+    "name": "Pink Morganit Premium Necklace Set",
+    "description": "Kundan, Victorian",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1195,
+    "deposit": 1600,
+    "purchaseAmount": 2570,
+    "salesAmount": 3000,
+    "colour": "Pink",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK026",
+    "name": "Jade Polgi Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 1195,
+    "deposit": 1400,
+    "purchaseAmount": 2100,
+    "salesAmount": 2600,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PK027",
+    "name": "Emerald Necklace Set",
+    "description": "Kundan AD Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 750,
+    "deposit": 1000,
+    "purchaseAmount": 1370,
+    "salesAmount": 1700,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB001",
+    "name": "Royal Premium Lakshmi Temple Necklace with Jhumkas",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1099,
+    "deposit": 1400,
+    "purchaseAmount": 2350,
+    "salesAmount": 2700,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB002",
+    "name": "Royal Premium Lakshmi Temple Haram with Jhumkas",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1399,
+    "deposit": 1600,
+    "purchaseAmount": 2900,
+    "salesAmount": 3300,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB003",
+    "name": "Bridal Premium Temple Haram Combo with Jhumkas",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 2395,
+    "deposit": 3000,
+    "purchaseAmount": 5250,
+    "salesAmount": 6000,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB004",
+    "name": "Antique Premium Lakshmi Pendant Necklace with Jhumkas",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 995,
+    "deposit": 1200,
+    "purchaseAmount": 2100,
+    "salesAmount": 2500,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB005",
+    "name": "Antique Premium Lakshmi Pendant Haram with Jhumkas",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1199,
+    "deposit": 1400,
+    "purchaseAmount": 2650,
+    "salesAmount": 3100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB006",
+    "name": "Antique Premium Lakshmi Pendant Combo with Jhumkas",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 2190,
+    "deposit": 2800,
+    "purchaseAmount": 4750,
+    "salesAmount": 5600,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB007",
+    "name": "Lakshmi Premium Temple Necklace Set",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 799,
+    "deposit": 1000,
+    "purchaseAmount": 1650,
+    "salesAmount": 2000,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB008",
+    "name": "Premium Green Bead Temple Haram with Jhumkas",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1590,
+    "deposit": 2000,
+    "purchaseAmount": 3450,
+    "salesAmount": 3800,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB009",
+    "name": "Bridal Premium Temple Haram Combo with Jhumkas",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 2390,
+    "deposit": 3000,
+    "purchaseAmount": 5100,
+    "salesAmount": 5700,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB010",
+    "name": "Real kemp jadau bridal Haram Set",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1495,
+    "deposit": 2000,
+    "purchaseAmount": 3300,
+    "salesAmount": 3800,
+    "colour": "Red/Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB011",
+    "name": "Premium Temple Bridal Combo Set",
+    "description": "Antique Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1195,
+    "deposit": 1600,
+    "purchaseAmount": 2500,
+    "salesAmount": 3000,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB012",
+    "name": "Triple Layer Kemp Haram with Jhumkas (Premium)",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 799,
+    "deposit": 1100,
+    "purchaseAmount": 1600,
+    "salesAmount": 2000,
+    "colour": "Red/Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB013",
+    "name": "Geometric Necklace Set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 799,
+    "deposit": 1100,
+    "purchaseAmount": 1650,
+    "salesAmount": 2100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB014",
+    "name": "Guttapusalu Style Pendant Necklace Set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 850,
+    "deposit": 1100,
+    "purchaseAmount": 1730,
+    "salesAmount": 2100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB015",
+    "name": "Guttapusalu Style Pendant Haram Set ((Premium))",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1195,
+    "deposit": 1900,
+    "purchaseAmount": 2610,
+    "salesAmount": 3000,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB016",
+    "name": "Guttapusalu Style Pendant bridal combo set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1995,
+    "deposit": 2500,
+    "purchaseAmount": 4340,
+    "salesAmount": 5100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB017",
+    "name": "Lakshmi Antique Pendant Necklace Set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 999,
+    "deposit": 1300,
+    "purchaseAmount": 2030,
+    "salesAmount": 2400,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB018",
+    "name": "Royal South Indian Haram with Jhumkas (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1495,
+    "deposit": 1900,
+    "purchaseAmount": 3200,
+    "salesAmount": 3600,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB019",
+    "name": "Grand Royal Bridal Haram with Jhumkas (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 2495,
+    "deposit": 3100,
+    "purchaseAmount": 5400,
+    "salesAmount": 2100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB020",
+    "name": "Royal Lakshmi 3d Temple Haram Set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1995,
+    "deposit": 2400,
+    "purchaseAmount": 4050,
+    "salesAmount": 4700,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB021",
+    "name": "Emerald Pearl Temple Choker set (Premium)",
+    "description": "Premium Gold jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Small Jewel"
+    ],
+    "price": 299,
+    "deposit": 600,
+    "purchaseAmount": 650,
+    "salesAmount": 900,
+    "colour": "Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB022",
+    "name": "Pearl Guttapusalu Small Choker Set (Premium)",
+    "description": "Premium Gold jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Small Jewel"
+    ],
+    "price": 249,
+    "deposit": 500,
+    "purchaseAmount": 450,
+    "salesAmount": 650,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB023",
+    "name": "Small Choker Set",
+    "description": "Premium Gold jewel (Premium)",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Small Jewel"
+    ],
+    "price": 249,
+    "deposit": 500,
+    "purchaseAmount": 450,
+    "salesAmount": 650,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB024",
+    "name": "Small manga Choker set (Premium)",
+    "description": "Premium Gold jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Small Jewel"
+    ],
+    "price": 249,
+    "deposit": 500,
+    "purchaseAmount": 480,
+    "salesAmount": 700,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB025",
+    "name": "Annapakshi Long Haram Set (Premium)",
+    "description": "Premium Gold jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1099,
+    "deposit": 1500,
+    "purchaseAmount": 2340,
+    "salesAmount": 2700,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB026",
+    "name": "Kemp Guttapusalu Choker Set (Premium)",
+    "description": "Premium Gold jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 599,
+    "deposit": 900,
+    "purchaseAmount": 1240,
+    "salesAmount": 1500,
+    "colour": "Red/Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB027",
+    "name": "Kemp Guttapusalu Choker set (Premium)",
+    "description": "Premium Gold jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 799,
+    "deposit": 1100,
+    "purchaseAmount": 1599,
+    "salesAmount": 1900,
+    "colour": "Red/Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB028",
+    "name": "Kasumalai set",
+    "description": "Premium Gold jewel (Premium)",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 799,
+    "deposit": 1200,
+    "purchaseAmount": 1690,
+    "salesAmount": 2100,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB029",
+    "name": "Classic Guttapusalu Bridal Set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1899,
+    "deposit": 2300,
+    "purchaseAmount": 3940,
+    "salesAmount": 4500,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB030",
+    "name": "Grand Guttapusalu Bridal Set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 2299,
+    "deposit": 2800,
+    "purchaseAmount": 4890,
+    "salesAmount": 5500,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB031",
+    "name": "Guttapusalu Bridal Set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1599,
+    "deposit": 2000,
+    "purchaseAmount": 3290,
+    "salesAmount": 3700,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "PB032",
+    "name": "Kasumalai Bridal Set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1045,
+    "deposit": 1400,
+    "purchaseAmount": 2140,
+    "salesAmount": 2500,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "BA001",
+    "name": "Royal Lakshmi Gold Beads Semi Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": 695,
+    "deposit": 1000,
+    "purchaseAmount": 1300,
+    "salesAmount": 1800,
+    "colour": "Gold",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "BA002",
+    "name": "Traditional Temple Green Beads Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": 695,
+    "deposit": 1000,
+    "purchaseAmount": 1300,
+    "salesAmount": 1800,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "BA003",
+    "name": "Grand Navaratna Green Beads Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": 1095,
+    "deposit": 1000,
+    "purchaseAmount": 1950,
+    "salesAmount": 2500,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "BA004",
+    "name": "Meenakshi Temple Inspired Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": 795,
+    "deposit": 800,
+    "purchaseAmount": 1450,
+    "salesAmount": 1800,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "BA005",
+    "name": "Antique Lakshmi Semi Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": 695,
+    "deposit": 800,
+    "purchaseAmount": 1300,
+    "salesAmount": 1800,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "BA006",
+    "name": "Majestic Peacock Temple Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": 795,
+    "deposit": 1000,
+    "purchaseAmount": 1550,
+    "salesAmount": 2200,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "BA007",
+    "name": "Elegant South Indian Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": 695,
+    "deposit": 600,
+    "purchaseAmount": 1400,
+    "salesAmount": 2000,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "BA008",
+    "name": "Traditional Temple Grandeur Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": 795,
+    "deposit": 600,
+    "purchaseAmount": 1600,
+    "salesAmount": 2000,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "BA009",
+    "name": "Traditional Kemp Stone Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": 795,
+    "deposit": 1000,
+    "purchaseAmount": 1460,
+    "salesAmount": 2200,
+    "colour": "Red/Green",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "BA010",
+    "name": "Antique Lakshmi full Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Accessories"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": 1095,
+    "deposit": 1200,
+    "purchaseAmount": 2120,
+    "salesAmount": 3000,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "BA011",
+    "name": "Peacock Lakshmi Temple jewel Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 650,
+    "deposit": 900,
+    "purchaseAmount": 1300,
+    "salesAmount": 1500,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "BA012",
+    "name": "Short Temple Necklace Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Small Jewel"
+    ],
+    "price": 250,
+    "deposit": 400,
+    "purchaseAmount": 480,
+    "salesAmount": 700,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "BA013",
+    "name": "Peacock Temple Long Haram Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Small Jewel"
+    ],
+    "price": 399,
+    "deposit": 700,
+    "purchaseAmount": 800,
+    "salesAmount": 1300,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "HJ001",
+    "name": "Gulnaar Heritage Necklace Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 399,
+    "deposit": 700,
+    "purchaseAmount": 560,
+    "salesAmount": 900,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "HJ002",
+    "name": "Maharani Heritage Layered Haar Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1095,
+    "deposit": 1400,
+    "purchaseAmount": 2100,
+    "salesAmount": 2500,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "HJ003",
+    "name": "Begum Royale Layered Haar Bridal Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 1495,
+    "deposit": 1800,
+    "purchaseAmount": 2660,
+    "salesAmount": 3000,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "HJ004",
+    "name": "Jashn-e-Noor Necklace Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 399,
+    "deposit": 700,
+    "purchaseAmount": 560,
+    "salesAmount": 900,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "HJ005",
+    "name": "Mughal Rani Layered Haar Bridal Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 1495,
+    "deposit": 1800,
+    "purchaseAmount": 2660,
+    "salesAmount": 3000,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "HJ006",
+    "name": "Rajputana Heritage Necklace Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 495,
+    "deposit": 800,
+    "purchaseAmount": 830,
+    "salesAmount": 1300,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "HJ007",
+    "name": "Royal Jharokha Layered Haar Bridal Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": 1595,
+    "deposit": 2400,
+    "purchaseAmount": 2930,
+    "salesAmount": 3700,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "HJ008",
+    "name": "Begum Heritage Necklace Set",
+    "description": "Haridage Jewel",
+    "category": [],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 495,
+    "deposit": 800,
+    "purchaseAmount": 870,
+    "salesAmount": 1300,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "HJ009",
+    "name": "Rajwada Long Haar Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 695,
+    "deposit": 1000,
+    "purchaseAmount": 1230,
+    "salesAmount": 1500,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "HJ010",
+    "name": "Rajwada Semi Bridal Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": 1095,
+    "deposit": 1400,
+    "purchaseAmount": 1800,
+    "salesAmount": 2200,
+    "colour": "Multi",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AS001",
+    "name": "Crystal Small AD Jewel Set (Silver)",
+    "description": "Silver Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Party Wear",
+      "Small Jewel"
+    ],
+    "price": 199,
+    "deposit": 400,
+    "purchaseAmount": 450,
+    "salesAmount": 600,
+    "colour": "Silver",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AS002",
+    "name": "Crystal Choker AD Jewel Set (Silver)",
+    "description": "Silver Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Reception",
+      "Bridal Maid"
+    ],
+    "price": 695,
+    "deposit": 900,
+    "purchaseAmount": 1300,
+    "salesAmount": 1600,
+    "colour": "Silver",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AS003",
+    "name": "Crystal Nacklace Ad Jewel Set (Silver)",
+    "description": "Silver Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Reception",
+      "Bridal Maid"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "purchaseAmount": 1180,
+    "salesAmount": 1600,
+    "colour": "Silver",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AS004",
+    "name": "Crystal Three-Layered AD Jewel Set (Silver)",
+    "description": "Silver Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Reception",
+      "Bridal Maid"
+    ],
+    "price": 695,
+    "deposit": 1100,
+    "purchaseAmount": 1450,
+    "salesAmount": 2000,
+    "colour": "Silver",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  },
+  {
+    "jewelId": "AS005",
+    "name": "Crystal Three-Tier AD Jewel Set (Silver)",
+    "description": "Silver Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Reception",
+      "Bridal Set"
+    ],
+    "price": 1195,
+    "deposit": 1800,
+    "purchaseAmount": 2700,
+    "salesAmount": 3500,
+    "colour": "Silver",
+    "availability": true,
+    "showPrice": true,
+    "popularity": 0,
+    "images": [],
+    "stoneName": [],
+    "stoneColour": []
+  }
+]

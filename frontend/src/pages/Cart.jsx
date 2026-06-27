@@ -114,7 +114,7 @@ const Cart = () => {
                 <div className="flex-1 py-1 flex flex-col mt-1 justify-between" style={{ height: '125px' }}>
                   <div className="pr-5">
                     <p className="mb-3 line-clamp-1" style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '11px', fontStyle: 'normal', fontWeight: 300, lineHeight: 'normal', letterSpacing: '0.84px', textTransform: 'uppercase' }}>
-                      {item.category || 'Moissinate Jewels'}
+                      {item.category || 'victorian-moissinate'}
                     </p>
                     <p className="pr-2 line-clamp-2" style={{ color: '#000', fontFamily: "'Gotham Book', sans-serif", fontSize: '12px', fontStyle: 'normal', fontWeight: 400, lineHeight: '18px', letterSpacing: '0.3px', opacity: 0.5 }}>
                       {item.name}

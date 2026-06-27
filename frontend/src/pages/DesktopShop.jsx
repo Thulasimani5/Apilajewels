@@ -89,7 +89,7 @@ function ShopCard({ product }) {
   const liked = isInWishlist(product._id);
   const imgUrl = product.images?.[0]?.url || product.media?.[0]?.url || '';
   const price = product.rentalPrice || product.price || 0;
-  const priceText = price >= 2000 ? 'Premium Collection' : `₹${price.toFixed(2)}`;
+  const priceText = product.showPrice === false || price >= 2000 ? 'Premium Collection' : `₹${price.toFixed(2)}`;
   const category = Array.isArray(product.category) ? product.category[0] : product.category;
 
   return (
@@ -200,7 +200,7 @@ export default function DesktopShop() {
     const norm = cat.toLowerCase();
     const matched = categories.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === norm);
     const name = matched?.name
-      || (norm === 'moissanite' || norm === 'moissinate-jewels' ? 'Moissanite' : null)
+      || (norm === 'moissanite' || norm === 'victorian-moissinate' ? 'Moissanite' : null)
       || (norm.includes('temple') ? 'Temple Jewellery' : null)
       || (norm === 'kundan' || norm === 'kundan-jewels' ? 'Kundan' : null)
       || (norm === 'american-diamond' || norm === 'american-diamond-bangles' || norm === 'ad-jewels' ? 'AD Jewels' : null)
@@ -629,7 +629,7 @@ export default function DesktopShop() {
         <div className="footer-main">
           <div>
             <span className="footer-col-head">Collections</span>
-            <Link className="footer-link-sm" to="/shop?category=moissinate-jewels">Moissanite Jewels</Link>
+            <Link className="footer-link-sm" to="/shop?category=victorian-moissinate">Moissanite Jewels</Link>
             <Link className="footer-link-sm" to="/shop?category=ad-jewels">AD Jewels</Link>
             <Link className="footer-link-sm" to="/shop?category=gold-antique-jewels">Gold Antique</Link>
             <Link className="footer-link-sm" to="/shop?category=kundan-jewels">Kundan Jewels</Link>

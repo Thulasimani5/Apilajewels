@@ -23,7 +23,9 @@ exports.getCategories = async (req, res) => {
     console.error(error);
     res.status(500).json({
       success: false,
-      error: 'Server Error'
+      error: 'Server Error',
+      message: error.message,
+      stack: error.stack
     });
   }
 };

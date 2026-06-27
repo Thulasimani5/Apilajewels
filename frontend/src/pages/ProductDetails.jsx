@@ -146,7 +146,7 @@ const ProductDetails = () => {
   const handleBookOnWhatsapp = () => {
     if (!product) return;
     const price = product.rentalPrice || product.price || 0;
-    const priceText = price >= 2000 ? 'Price on Request' : `₹${price}`;
+    const priceText = product.showPrice === false || price >= 2000 ? 'Price on Request' : `₹${price}`;
     const message = `Hi Apila Jewels, I would like to book:\n\n*${product.name}*\nPrice: ${priceText}\n\nPlease let me know the availability.`;
     const whatsappUrl = `https://wa.me/+917397721122?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -223,7 +223,7 @@ const ProductDetails = () => {
             {product.name}
           </h1>
           <p className="text-xl font-semibold mt-2">
-            {(product.rentalPrice || product.price || 0) >= 2000
+            {product.showPrice === false || (product.rentalPrice || product.price || 0) >= 2000
               ? 'Premium Collection'
               : `₹${(product.rentalPrice || product.price || 0).toFixed(2)}`}
           </p>
@@ -328,7 +328,7 @@ const ProductDetails = () => {
         <div className="bg-white relative px-2 pt-4 ">
           <div className="flex justify-between items-start mb-1">
             <span style={{ color: "#000", fontFamily: "var(--f-gotham-b), 'Gotham Book', sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}>
-              {product.category || 'Moissinate Jewels'}
+              {product.category || 'victorian-moissinate'}
             </span>
             <div className="flex gap-4">
               <button
@@ -361,7 +361,7 @@ const ProductDetails = () => {
           </h1>
 
           <div className="mb-5" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "14px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal" }}>
-            {(product.rentalPrice || product.price || 0) >= 2000
+            {product.showPrice === false || (product.rentalPrice || product.price || 0) >= 2000
               ? 'Price on Request'
               : `₹${(product.rentalPrice || product.price || 0).toFixed(2)}`}
           </div>
