@@ -76,6 +76,12 @@ const JewelleryListing = () => {
       'party-wear': 'Party Wear',
       'small-jewel': 'Small Jewel',
       'small-jewels': 'Small Jewel',
+      'semi-bridal': 'Semi Bridal & Combo Sets',
+      'choker-necklace': 'Choker & Necklace',
+      'long-haram': 'Long Haram',
+      'full-bridal': 'Full Bridal Set',
+      'bangles-bracelets': 'Bangles & Bracelets',
+      'accessories': 'Accessories'
     };
 
     if (categoryParam) {

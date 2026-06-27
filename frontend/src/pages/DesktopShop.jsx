@@ -19,7 +19,7 @@ import backArrowIcon from '../assets/icons/BackArrow.svg';
 import '../styles/ApilaJewels.css';
 
 /* ── Filter data ── */
-const JEWELLERY_TYPE_OPTIONS = ['Choker & Necklace', 'Long Haram', 'Semi Bridal Set', 'Full Bridal Set', 'Bangles & Bracelets', 'Accessories'];
+const JEWELLERY_TYPE_OPTIONS = ['Choker & Necklace', 'Long Haram', 'Semi Bridal & Combo', 'Full Bridal Set', 'Bangles & Bracelets', 'Accessories'];
 const OCCASION_OPTIONS = ['Bridal', 'Festive', 'Party Wear', 'Engagement', 'Daily Wear'];
 const PRICE_OPTIONS = ['Under ₹1000', '₹1000 - ₹2000', '₹2000 - ₹3000', 'Above ₹3000'];
 const COLOR_OPTIONS = ['Gold', 'Silver', 'Rose Gold', 'Emerald Green', 'Ruby Red', 'Mehndi Polish'];
@@ -198,6 +198,33 @@ export default function DesktopShop() {
 
     if (!cat || !categories.length) return;
     const norm = cat.toLowerCase();
+
+    // Map specific pseudo-categories to Types
+    if (norm === 'semi-bridal') {
+      setActiveFilters({ Category: [], Type: ['Semi Bridal & Combo Sets'], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
+      return;
+    }
+    if (norm === 'choker-necklace') {
+      setActiveFilters({ Category: [], Type: ['Choker & Necklace'], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
+      return;
+    }
+    if (norm === 'long-haram') {
+      setActiveFilters({ Category: [], Type: ['Long Haram'], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
+      return;
+    }
+    if (norm === 'full-bridal') {
+      setActiveFilters({ Category: [], Type: ['Full Bridal Set'], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
+      return;
+    }
+    if (norm === 'bangles-bracelets') {
+      setActiveFilters({ Category: [], Type: ['Bangles & Bracelets'], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
+      return;
+    }
+    if (norm === 'accessories') {
+      setActiveFilters({ Category: [], Type: ['Accessories'], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
+      return;
+    }
+
     const matched = categories.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === norm);
     const name = matched?.name
       || (norm === 'moissanite' || norm === 'victorian-moissinate' ? 'Moissanite' : null)
@@ -307,9 +334,9 @@ export default function DesktopShop() {
 
   const navIcons = {
     search: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,.45)" strokeWidth="2"><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /></svg>,
-    heart: <svg width="18" height="16" viewBox="0 0 18 16" fill="none"><path d="M8.99887 16C8.83828 16 8.67769 15.9592 8.53717 15.8777C4.1711 13.2582 -0.666706 8.59001 0.0760276 4.0849C0.417284 2.01581 1.97301 0.446155 4.03059 0.0792224C5.89746 -0.246939 7.71414 0.446155 8.98884 1.93427C10.2435 0.486925 11.9899 -0.216362 13.7965 0.0690301C15.8742 0.405385 17.4801 1.96485 17.8916 4.05432C18.7749 8.48808 14.1077 13.0747 9.4405 15.8777C9.29998 15.9592 9.13939 16 8.9788 16H8.99887ZM4.91384 1.82215C4.7131 1.82215 4.53243 1.84254 4.35177 1.87311C3.31796 2.05658 2.11353 2.81083 1.8626 4.38048C1.33064 7.62172 4.99413 11.4847 9.00891 14.0125C12.823 11.6172 16.8277 7.7746 16.1552 4.41106C15.8943 3.07584 14.8604 2.08716 13.5356 1.87311C12.0401 1.62849 10.6449 2.41332 9.79179 3.95239C9.6312 4.23779 9.33009 4.42125 9.00891 4.42125C8.68773 4.42125 8.38662 4.24798 8.22603 3.95239C7.35281 2.37255 6.03798 1.82215 4.92387 1.82215H4.91384Z" fill="currentColor"/></svg>,
-    cart: <svg width="15" height="17" viewBox="0 0 15 17" fill="none"><path d="M13.282 13.5346C13.4101 14.7175 12.4834 15.75 11.2936 15.75H2.75034C1.56051 15.75 0.633827 14.7175 0.761975 13.5346L1.62864 5.53459C1.73863 4.51934 2.59581 3.75 3.61701 3.75H10.4269C11.4481 3.75 12.3053 4.51934 12.4153 5.53459L13.282 13.5346Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M7.02516 0.75C8.40732 0.75 9.52197 1.69624 9.52197 2.85753V3.75H4.52197V2.85753C4.52197 1.69086 5.64299 0.75 7.01879 0.75H7.02516Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M5.52197 6.75H8.52197" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
-    acct: <svg width="13" height="15" viewBox="0 0 13 15" fill="none"><path d="M0.75 13.63C0.75 10.5388 3.19364 8.03 6.20455 8.03C9.21545 8.03 11.6591 10.5388 11.6591 13.63" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/><path d="M6.20432 6.35C7.71055 6.35 8.9316 5.0964 8.9316 3.55C8.9316 2.0036 7.71055 0.75 6.20432 0.75C4.69809 0.75 3.47705 2.0036 3.47705 3.55C3.47705 5.0964 4.69809 6.35 6.20432 6.35Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>,
+    heart: <svg width="18" height="16" viewBox="0 0 18 16" fill="none"><path d="M8.99887 16C8.83828 16 8.67769 15.9592 8.53717 15.8777C4.1711 13.2582 -0.666706 8.59001 0.0760276 4.0849C0.417284 2.01581 1.97301 0.446155 4.03059 0.0792224C5.89746 -0.246939 7.71414 0.446155 8.98884 1.93427C10.2435 0.486925 11.9899 -0.216362 13.7965 0.0690301C15.8742 0.405385 17.4801 1.96485 17.8916 4.05432C18.7749 8.48808 14.1077 13.0747 9.4405 15.8777C9.29998 15.9592 9.13939 16 8.9788 16H8.99887ZM4.91384 1.82215C4.7131 1.82215 4.53243 1.84254 4.35177 1.87311C3.31796 2.05658 2.11353 2.81083 1.8626 4.38048C1.33064 7.62172 4.99413 11.4847 9.00891 14.0125C12.823 11.6172 16.8277 7.7746 16.1552 4.41106C15.8943 3.07584 14.8604 2.08716 13.5356 1.87311C12.0401 1.62849 10.6449 2.41332 9.79179 3.95239C9.6312 4.23779 9.33009 4.42125 9.00891 4.42125C8.68773 4.42125 8.38662 4.24798 8.22603 3.95239C7.35281 2.37255 6.03798 1.82215 4.92387 1.82215H4.91384Z" fill="currentColor" /></svg>,
+    cart: <svg width="15" height="17" viewBox="0 0 15 17" fill="none"><path d="M13.282 13.5346C13.4101 14.7175 12.4834 15.75 11.2936 15.75H2.75034C1.56051 15.75 0.633827 14.7175 0.761975 13.5346L1.62864 5.53459C1.73863 4.51934 2.59581 3.75 3.61701 3.75H10.4269C11.4481 3.75 12.3053 4.51934 12.4153 5.53459L13.282 13.5346Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /><path d="M7.02516 0.75C8.40732 0.75 9.52197 1.69624 9.52197 2.85753V3.75H4.52197V2.85753C4.52197 1.69086 5.64299 0.75 7.01879 0.75H7.02516Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /><path d="M5.52197 6.75H8.52197" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>,
+    acct: <svg width="13" height="15" viewBox="0 0 13 15" fill="none"><path d="M0.75 13.63C0.75 10.5388 3.19364 8.03 6.20455 8.03C9.21545 8.03 11.6591 10.5388 11.6591 13.63" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /><path d="M6.20432 6.35C7.71055 6.35 8.9316 5.0964 8.9316 3.55C8.9316 2.0036 7.71055 0.75 6.20432 0.75C4.69809 0.75 3.47705 2.0036 3.47705 3.55C3.47705 5.0964 4.69809 6.35 6.20432 6.35Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>,
     menu: null,
   };
 
@@ -550,12 +577,12 @@ export default function DesktopShop() {
           <div className="menu-topbar">
             <button className="menu-close-btn" onClick={() => setIsDrawerOpen(false)} aria-label="Close menu">
               <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-                <path d="M1 1l11 11M12 1L1 12" stroke="#000" strokeWidth="1.3" strokeLinecap="round"/>
+                <path d="M1 1l11 11M12 1L1 12" stroke="#000" strokeWidth="1.3" strokeLinecap="round" />
               </svg>
             </button>
             <div className="menu-searchbar" onClick={() => { setIsDrawerOpen(false); setIsSearchOpen(true); }}>
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.45)" strokeWidth="2">
-                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+                <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" />
               </svg>
               <span className="menu-search-placeholder">Search</span>
             </div>
@@ -568,19 +595,19 @@ export default function DesktopShop() {
             <ul className="menu-section menu-section--first">
               {[
                 { label: 'Moissinate Jewels', slug: 'moissinate-jewels' },
-                { label: 'AD Jewels',          slug: 'ad-jewels' },
-                { label: 'Gold Antique Jewels',slug: 'gold-antique-jewels' },
-                { label: 'Kundan Jewels',      slug: 'kundan-jewels' },
-                { label: 'AD Bangles',         slug: 'ad-bangles' },
-                { label: 'Gold Bangles',       slug: 'gold-bangles' },
-                { label: 'Accessories',        slug: 'accessories' },
+                { label: 'AD Jewels', slug: 'ad-jewels' },
+                { label: 'Gold Antique Jewels', slug: 'gold-antique-jewels' },
+                { label: 'Kundan Jewels', slug: 'kundan-jewels' },
+                { label: 'AD Bangles', slug: 'ad-bangles' },
+                { label: 'Gold Bangles', slug: 'gold-bangles' },
+                { label: 'Accessories', slug: 'accessories' },
               ].map(item => (
                 <li key={item.slug} className="menu-item">
                   <Link to={`/shop?category=${item.slug}`} className="menu-item-link" onClick={() => setIsDrawerOpen(false)}>
                     {item.label}
                   </Link>
                   <svg className="menu-chevron" width="5" height="9" viewBox="0 0 5 9" fill="none">
-                    <path d="M1 1l3 3.5L1 8" stroke="#000" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M1 1l3 3.5L1 8" stroke="#000" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </li>
               ))}
@@ -591,19 +618,19 @@ export default function DesktopShop() {
             {/* Section 2 — occasion collections */}
             <ul className="menu-section">
               {[
-                { label: 'Bridal Set',          slug: 'bridal' },
-                { label: 'Bridesmaid',          slug: 'bridesmaid' },
+                { label: 'Bridal Set', slug: 'bridal' },
+                { label: 'Bridesmaid', slug: 'bridesmaid' },
                 { label: 'Designer Collection', slug: 'designer' },
-                { label: 'Reception Jewels',    slug: 'reception' },
-                { label: 'Party Wear',          slug: 'party' },
-                { label: 'Small Jewels',        slug: 'small' },
+                { label: 'Reception Jewels', slug: 'reception' },
+                { label: 'Party Wear', slug: 'party' },
+                { label: 'Small Jewels', slug: 'small' },
               ].map(item => (
                 <li key={item.slug} className="menu-item">
                   <Link to={`/shop?occasion=${item.slug}`} className="menu-item-link" onClick={() => setIsDrawerOpen(false)}>
                     {item.label}
                   </Link>
                   <svg className="menu-chevron" width="5" height="9" viewBox="0 0 5 9" fill="none">
-                    <path d="M1 1l3 3.5L1 8" stroke="#000" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M1 1l3 3.5L1 8" stroke="#000" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </li>
               ))}

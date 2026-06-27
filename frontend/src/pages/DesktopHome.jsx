@@ -478,7 +478,7 @@ export default function Home() {
               {[
                 { label: 'Choker & Necklace', slug: 'choker-necklace' },
                 { label: 'Long Haram', slug: 'long-haram' },
-                { label: 'Semi Bridal Set', slug: 'semi-bridal' },
+                { label: 'Semi Bridal & Combo Sets', slug: 'semi-bridal' },
                 { label: 'Full Bridal Set', slug: 'full-bridal' },
                 { label: 'Bangles', slug: 'bangles-bracelets' },
                 { label: 'Accessories', slug: 'accessories' },

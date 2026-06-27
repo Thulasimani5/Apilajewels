@@ -346,11 +346,11 @@ const Navbar = () => {
               </p>
               <div className="flex flex-col">
                 {[
-                  { label: 'CHOKER & NECKLACE', url: '/shop?type=choker' },
-                  { label: 'LONG HARAM', url: '/shop?type=haram' },
-                  { label: 'SEMI BRIDAL SET', url: '/shop?type=semi-bridal' },
-                  { label: 'FULL BRIDAL SET', url: '/shop?type=full-bridal' },
-                  { label: 'BANGLES & BRACELETS', url: '/shop?type=bangles' },
+                  { label: 'CHOKER & NECKLACE', url: '/shop?category=choker-necklace' },
+                  { label: 'LONG HARAM', url: '/shop?category=long-haram' },
+                  { label: 'SEMI BRIDAL & COMBO SETS', url: '/shop?category=semi-bridal' },
+                  { label: 'FULL BRIDAL SET', url: '/shop?category=full-bridal' },
+                  { label: 'BANGLES & BRACELETS', url: '/shop?category=bangles-bracelets' },
                   { label: 'ACCESSORIES', url: '/shop?category=accessories' },
                 ].map((item) => (
                   <Link
