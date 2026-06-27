@@ -238,32 +238,22 @@ export default function DesktopProduct({ product, relatedProducts }) {
 
       {/* ── NAVBAR (always white on PDP) ── */}
       <header>
-        <nav className={`navbar scrolled`} style={{ height: '72px', padding: '0 48px' }}>
+        <nav className="navbar scrolled">
           <div className="nav-left">
-            <button
-              type="button"
-              className="nav-hamburger"
-              aria-label="Open menu"
-              style={{ background: 'none', border: 'none', padding: '4px' }}
-              onClick={() => setIsMenuOpen(true)}
-            >
-              <span/><span/><span/>
-            </button>
-            <button
-              type="button"
-              className="nav-search"
-              onClick={() => setSearchOpen(true)}
-              aria-label="Search"
-              style={{ background: 'transparent', border: '1px solid rgba(0, 0, 0, 0.12)' }}
-            >
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,.45)" strokeWidth="2">
-                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-              </svg>
-              <span>Search</span>
-            </button>
+            <div className="nav-hamburger" role="button" aria-label="Menu" tabIndex={0} onClick={() => setIsMenuOpen(true)}>
+              <span /><span /><span />
+            </div>
+            {!searchOpen && (
+              <div className="nav-search" role="button" tabIndex={0} onClick={() => setSearchOpen(true)}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" />
+                </svg>
+                <span>Search</span>
+              </div>
+            )}
           </div>
           <div className="nav-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
-            <img className="nav-logo-img" src={apilaLogo} alt="Apila Jewels" style={{ height: '44px', width: 'auto' }}/>
+            <img className="nav-logo-img" src={apilaLogo} alt="Apila Jewels" />
           </div>
           <div className="nav-right">
             <button className="nav-icon-btn" aria-label="Wishlist" onClick={() => navigate('/wishlist')}>
