@@ -20,6 +20,11 @@ import MobileHeroBanner from '../assets/images/Header-image11-1.jpg';
 
 
 
+import imgVictorianMoissinate from '../assets/images/jtype-victorian-moissinate.jpg';
+import imgAmericanDiamond from '../assets/images/jtype-american-diamond.jpg';
+import imgGoldAntique from '../assets/images/jtype-gold-antique.jpg';
+import imgKundan from '../assets/images/jtype-kundan.jpg';
+
 import imgChokerNecklace from '../assets/images/jtype-choker-necklace.jpg';
 import imgLongHaram from '../assets/images/jtype-long-haram.jpg';
 import imgBanglesBracelets from '../assets/images/jtype-bangles-bracelets.jpg';
@@ -51,6 +56,12 @@ import iconSecure from '../assets/icons/Secure.svg';
 import iconTimelyReturn from '../assets/icons/TimelyReturn.svg';
 
 
+const MAIN_JEWELLERY_TYPES = [
+  { title: "Victorian & Moissinate", sub: "Premium Luxury Design", img: imgVictorianMoissinate, slug: "victorian-moissinate" },
+  { title: "American Diamond", sub: "Modern Sparkle Collections", img: imgAmericanDiamond, slug: "american-diamond" },
+  { title: "Gold Antique Jewels", sub: "Timeless Heritage Designs", img: imgGoldAntique, slug: "gold-antique-jewels" },
+  { title: "Kundan Jewels", sub: "Traditional Collections", img: imgKundan, slug: "kundan-jewels" },
+];
 
 const OCCASIONS = [
   { title: 'Bridal Set', href: '/shop?occasion=bridal', img: imgC1, sub: 'Collections' },
@@ -309,13 +320,13 @@ const Home = () => {
 
         {/* ── 2. Shop by Jewellery Type – vertical stacked landscape cards ── */}
 
-        {displayCategories.length >= 1 && (
+        {MAIN_JEWELLERY_TYPES.length >= 1 && (
 
           <section className="bg-[#fdf9f4] pt-[53px] pb-[55px]">
 
-            <div className="flex flex-col gap-[6px] px-[44px]">
+            <div className="flex flex-col gap-[5px] px-[40px]">
 
-              {displayCategories.slice(0, 4).map((cat) => (
+              {MAIN_JEWELLERY_TYPES.map((cat) => (
 
                 <Link
 
@@ -332,12 +343,13 @@ const Home = () => {
                   <LazyImage
                     src={cat.img}
                     alt={cat.title}
-                    className="absolute inset-0 w-full h-full object-contain bg-white/50"
+                    className="absolute inset-0 w-full h-full bg-white/50"
+                    imageClassName="object-cover"
                   />
 
                   <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/55" />
 
-                  <div className="absolute bottom-[10px] left-[14px]">
+                  <div className="absolute bottom-[10px] left-[12px]">
 
                     <h4
 
@@ -373,6 +385,7 @@ const Home = () => {
                         fontSize: 'clamp(8px, 2.43vw, 10px)',
                         letterSpacing: '0.8px',
                         lineHeight: '18px',
+                        opacity: 0.7
 
                       }}
 
