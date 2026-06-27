@@ -470,7 +470,20 @@ const ProductDetails = () => {
       <div className="hidden md:block pt-6 px-4">
         {/* Breadcrumb */}
         <div className="text-sm text-gray-500 mb-4">
-          <Link to="/" className="hover:text-gray-800">Home</Link> / <Link to={product?.category ? `/shop?category=${encodeURIComponent(product.category.toLowerCase().replace(/\s+/g, '-'))}` : '/shop'} className="hover:text-gray-800">{product?.category || 'Jewellery'}</Link> / <span className="font-semibold text-gray-800">{product.name}</span>
+          {(() => {
+            const catRaw = product?.category;
+            const catStr = Array.isArray(catRaw) ? (catRaw[0] || '') : (catRaw || '');
+            const catSlug = catStr.toLowerCase().replace(/\s+/g, '-');
+            return (
+              <>
+                <Link to="/" className="hover:text-gray-800">Home</Link>
+                {' / '}
+                <Link to={catStr ? `/shop?category=${encodeURIComponent(catSlug)}` : '/shop'} className="hover:text-gray-800">{catStr || 'Jewellery'}</Link>
+                {' / '}
+                <span className="font-semibold text-gray-800">{product.name}</span>
+              </>
+            );
+          })()}
         </div>
 
         <div className="flex gap-6 lg:gap-10">
