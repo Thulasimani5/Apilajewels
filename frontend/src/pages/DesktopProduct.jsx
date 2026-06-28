@@ -63,12 +63,15 @@ function Lightbox({ mediaList, index, onClose, onSetIndex }) {
         </button>
       )}
 
-      {/* Media */}
       <div className="pdp-lightbox-content" onClick={e => e.stopPropagation()}>
         {isVideo ? (
           <video src={url} autoPlay controls loop className="pdp-lightbox-media"/>
         ) : (
-          <img src={url} alt={`Product image ${index + 1}`} className="pdp-lightbox-media"/>
+          <img
+            src={getOptimizedCloudinaryUrl(url, { width: 1600, height: 1600, crop: 'limit', quality: 'auto' })}
+            alt={`Product image ${index + 1}`}
+            className="pdp-lightbox-media"
+          />
         )}
       </div>
 

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { getOptimizedCloudinaryUrl } from '../utils/imageUtils';
 
 const FullScreenMediaViewer = ({ mediaList, initialIndex = 0, isOpen, onClose, productName }) => {
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
@@ -216,7 +217,7 @@ const FullScreenMediaViewer = ({ mediaList, initialIndex = 0, isOpen, onClose, p
           ) : (
             <img
               key={currentIndex}
-              src={url}
+              src={getOptimizedCloudinaryUrl(url, { width: 1600, height: 1600, crop: 'limit', quality: 'auto' })}
               alt={`${productName || 'Product'} - ${currentIndex + 1}`}
               className="max-w-full max-h-full object-contain select-none"
               draggable="false"
