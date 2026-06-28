@@ -17,7 +17,7 @@ function CartItemCard({ item, onRemove }) {
     item.media?.[0]?.url || '';
   const isVideo = rawImg?.type === 'video';
   const price = item.rentalPrice || item.price || 0;
-  const priceText = price >= 2000 ? 'Price on Request' : `₹${price.toFixed(2)}`;
+  const priceText = price > 1500 ? 'Premium Jewellery' : `₹${price.toFixed(2)}`;
   const category = Array.isArray(item.category) ? item.category[0] : (item.category || 'victorian-moissinate');
   const ref = item.code || item.jewelId || item.sku || 'N/A';
 
@@ -91,8 +91,8 @@ export default function DesktopCart() {
   const [coupon, setCoupon] = useState('');
 
   const cartCount = cartItems.length;
-  const premiumItems = cartItems.filter(item => (item.rentalPrice || item.price || 0) >= 2000);
-  const pricedItems = cartItems.filter(item => (item.rentalPrice || item.price || 0) < 2000);
+  const premiumItems = cartItems.filter(item => (item.rentalPrice || item.price || 0) > 1500);
+  const pricedItems = cartItems.filter(item => (item.rentalPrice || item.price || 0) <= 1500);
   const pricedSubtotal = pricedItems.reduce((sum, item) => sum + (item.rentalPrice || item.price || 0), 0);
   const allPremium = premiumItems.length === cartItems.length && cartItems.length > 0;
   const hasPremium = premiumItems.length > 0;
@@ -103,13 +103,13 @@ export default function DesktopCart() {
     let msg = `Hi Apila Jewels, I would like to book the following items:\n\n`;
     cartItems.forEach((item, i) => {
       const price = item.rentalPrice || item.price || 0;
-      const pText = price >= 2000 ? 'Price on Request' : `₹${price}`;
+      const pText = price > 1500 ? 'Premium Jewellery' : `₹${price}`;
       msg += `${i + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – ${pText}\n`;
     });
     if (allPremium) {
-      msg += `\n*Total Amount: Price on Request*\n\nPlease let me know the availability.`;
+      msg += `\n*Total Amount: Premium Jewellery*\n\nPlease let me know the availability.`;
     } else if (hasPremium) {
-      msg += `\n*Sub Total (${pricedItems.length} ${pricedItems.length === 1 ? 'Item' : 'Items'}): ₹${pricedSubtotal.toFixed(2)}*\n*Premium Jewels (${premiumItems.length} ${premiumItems.length === 1 ? 'Item' : 'Items'}): Price on Request*\n\nPlease let me know the availability.`;
+      msg += `\n*Sub Total (${pricedItems.length} ${pricedItems.length === 1 ? 'Item' : 'Items'}): ₹${pricedSubtotal.toFixed(2)}*\n*Premium Jewels (${premiumItems.length} ${premiumItems.length === 1 ? 'Item' : 'Items'}): Premium Jewellery*\n\nPlease let me know the availability.`;
     } else {
       msg += `\n*Sub Total (${cartCount} ${cartCount === 1 ? 'Item' : 'Items'}): ₹${pricedSubtotal.toFixed(2)}*\n\nPlease let me know the availability.`;
     }
@@ -210,7 +210,7 @@ export default function DesktopCart() {
             <div className="cart-sum-divider" />
             <div className="cart-totalrow">
               <span className="cart-totallabel">Total</span>
-              <span className="cart-totalval">{allPremium ? 'Price on Request' : `₹${pricedSubtotal.toFixed(2)}`}</span>
+              <span className="cart-totalval">{allPremium ? 'Premium Jewellery' : `₹${pricedSubtotal.toFixed(2)}`}</span>
             </div>
           </div>
 
