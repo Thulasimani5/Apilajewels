@@ -74,7 +74,7 @@ const Wishlist = () => {
         <div className="px-2 py-1 grid grid-cols-2 gap-1">
           {wishlistItems.map((item) => {
             const price = item.rentalPrice || item.price || 0;
-            const priceText = price >= 2000 ? 'Price on Request' : `₹${price.toFixed(2)}`;
+            const priceText = price > 1500 ? 'Premium Jewellery' : `₹${price.toFixed(2)}`;
             const categoryText = Array.isArray(item.category) ? item.category[0] : (item.category || 'Jewellery');
 
             return (

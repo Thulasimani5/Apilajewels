@@ -160,7 +160,7 @@ const ProductDetails = () => {
   const handleBookOnWhatsapp = () => {
     if (!product) return;
     const price = product.rentalPrice || product.price || 0;
-    const priceText = product.showPrice === false || price >= 2000 ? 'Price on Request' : `₹${price}`;
+    const priceText = product.showPrice === false || price > 1500 ? 'Premium Jewellery' : `₹${price}`;
     const message = `Hi Apila Jewels, I would like to book:\n\n*${product.name}*\nPrice: ${priceText}\n\nPlease let me know the availability.`;
     const whatsappUrl = `https://wa.me/+917397721122?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
@@ -237,8 +237,8 @@ const ProductDetails = () => {
             {product.name}
           </h1>
           <p className="text-xl font-semibold mt-2">
-            {product.showPrice === false || (product.rentalPrice || product.price || 0) >= 2000
-              ? 'Premium Collection'
+            {product.showPrice === false || (product.rentalPrice || product.price || 0) > 1500
+              ? 'Premium Jewellery'
               : `₹${(product.rentalPrice || product.price || 0).toFixed(2)}`}
           </p>
         </div>
@@ -375,8 +375,8 @@ const ProductDetails = () => {
           </h1>
 
           <div className="mb-5" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "14px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal" }}>
-            {product.showPrice === false || (product.rentalPrice || product.price || 0) >= 2000
-              ? 'Price on Request'
+            {product.showPrice === false || (product.rentalPrice || product.price || 0) > 1500
+              ? 'Premium Jewellery'
               : `₹${(product.rentalPrice || product.price || 0).toFixed(2)}`}
           </div>
 

@@ -89,7 +89,7 @@ function ShopCard({ product }) {
   const liked = isInWishlist(product._id);
   const imgUrl = product.images?.[0]?.url || product.media?.[0]?.url || '';
   const price = product.rentalPrice || product.price || 0;
-  const priceText = product.showPrice === false || price >= 2000 ? 'Premium Collection' : `₹${price.toFixed(2)}`;
+  const priceText = product.showPrice === false || price > 1500 ? 'Premium Jewellery' : `₹${price.toFixed(2)}`;
   const category = Array.isArray(product.category) ? product.category[0] : product.category;
 
   return (
