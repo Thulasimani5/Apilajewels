@@ -340,7 +340,7 @@ const ProductDetails = () => {
 
         {/* Details Container */}
         <div className="bg-white relative px-2 pt-4 ">
-          <div className="flex justify-between items-start mb-1">
+          <div className="flex justify-between items-start" style={{ marginTop: '20px', marginBottom: '20px' }}>
             <span style={{ color: "#000", fontFamily: "var(--f-gotham-b), 'Gotham Book', sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}>
               {product.category || 'victorian-moissinate'}
             </span>

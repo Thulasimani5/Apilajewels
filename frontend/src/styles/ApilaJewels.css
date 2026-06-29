@@ -1665,16 +1665,16 @@
 /* Breadcrumb bar — normal flow */
 .pdp-breadcrumb-bar {
   background: #fff;
-  padding: 0 clamp(24px, 3vw, 46px);
-  height: 30px;
+  padding: 40px 20px 25px 46px;
+  height: auto;
   display: flex;
   align-items: center;
 }
 
 .pdp-bc-link {
   font-family: var(--f-gotham-b);
-  font-size: 14px;
-  color: rgba(0, 0, 0, .50);
+  font-size: 15px;
+  color: #898989 !important;
   text-transform: capitalize;
   text-decoration: none;
   transition: color .2s;
@@ -1693,7 +1693,7 @@
 
 .pdp-bc-current {
   font-family: var(--f-gotham-b);
-  font-size: 14px;
+  font-size: 15px;
   color: #000;
   text-transform: capitalize;
   white-space: nowrap;
@@ -1862,7 +1862,7 @@
 /* Panel: category label */
 .pdp-category-label {
   font-family: var(--f-gotham-b);
-  font-size: 12px;
+  font-size: 14px;
   letter-spacing: 1px;
   text-transform: uppercase;
   color: #000;
@@ -1872,7 +1872,7 @@
 /* Panel: product title */
 .pdp-title {
   font-family: var(--f-bacasime);
-  font-size: 34px;
+  font-size: 36px;
   font-weight: 400;
   line-height: 40px;
   letter-spacing: -0.6px;
@@ -1890,8 +1890,8 @@
 
 .pdp-price {
   font-family: var(--f-gotham-m);
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 200;
   color: #000;
 }
 
@@ -1922,12 +1922,13 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 59px;
+  height: 63px;
+  padding-top: 2px;
   border: 1px solid #ab6281;
   background: transparent;
   cursor: pointer;
-  margin-top: 44px;
-  margin-bottom: 8px;
+  margin-top: 48px;
+  margin-bottom: 10px;
   transition: background .2s;
 }
 
@@ -1951,7 +1952,8 @@
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 59px;
+  height: 63px;
+  padding-top: 2px;
   background: #ab6281;
   border: none;
   cursor: pointer;
@@ -1979,7 +1981,13 @@
   display: flex;
   align-items: flex-start;
   padding: 18px 0;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+}
+.pdp-trust-divider {
+  width: 1px;
+  background-color: #D9D9D9;
+  align-self: stretch;
+  margin: 0 10px;
 }
 
 .pdp-trust-item {
@@ -1994,7 +2002,7 @@
 
 .pdp-trust-label {
   font-family: var(--f-gotham-b);
-  font-size: 12px;
+  font-size: 15px;
   color: #000;
   letter-spacing: -0.12px;
   text-align: center;
@@ -2008,18 +2016,18 @@
 }
 
 .pdp-section-head {
-  font-family: var(--f-gotham-b);
-  font-size: 16px;
+  font-family: var(--f-gotham-book);
+  font-size: 22px;
   color: #000;
-  letter-spacing: -0.14px;
+  letter-spacing: 0.5px;
   margin-bottom: 12px;
 }
 
 .pdp-desc-text {
   font-family: var(--f-gotham-b);
-  font-size: 15px;
-  line-height: 22px;
-  letter-spacing: -0.13px;
+  font-size: 16px;
+  line-height: 32px;
+  letter-spacing: 0.8px;
   color: #000;
   margin-bottom: 12px;
 }
@@ -2051,7 +2059,7 @@
 
 .pdp-accordion-title {
   font-family: var(--f-gotham-b);
-  font-size: 16px;
+  font-size: 19px;
   color: #000;
   letter-spacing: -0.14px;
 }
