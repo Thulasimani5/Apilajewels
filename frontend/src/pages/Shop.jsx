@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef, useContext } from 'react';
 import { ChevronDown, X, SlidersHorizontal } from 'lucide-react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigationType } from 'react-router-dom';
 import Card from '../components/Card';
 import FilterBottomSheet from '../components/FilterBottomSheet';
 import FilterSidebar from '../components/FilterSidebar';
@@ -54,13 +54,33 @@ const JewelleryListing = () => {
   // Selected sorting criteria state
   const [activeSort, setActiveSort] = useState('recommended');
 
+  const navType = useNavigationType();
+
   // Scroll to top on mount
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    if (navType !== 'POP') {
+      window.scrollTo(0, 0);
+    }
+  }, [navType]);
 
   // Initialize active filters from URL query parameters dynamically
   useEffect(() => {
+    if (navType === 'POP') {
+      const savedFilters = sessionStorage.getItem('shopActiveFilters');
+      const savedPage = sessionStorage.getItem('shopCurrentPage');
+      const savedSort = sessionStorage.getItem('shopActiveSort');
+      if (savedFilters) {
+        try {
+          setActiveFilters(JSON.parse(savedFilters));
+          if (savedPage) setCurrentPage(parseInt(savedPage, 10));
+          if (savedSort) setActiveSort(savedSort);
+          return; // Skip URL parsing
+        } catch (e) {
+          console.error('Failed to parse saved filters', e);
+        }
+      }
+    }
+
     const categoryParam = searchParams.get('category');
     const occasionParam = searchParams.get('occasion');
 
@@ -147,6 +167,12 @@ const JewelleryListing = () => {
     setActiveFilters(newFilters);
     setCurrentPage(1);
   };
+
+  useEffect(() => {
+    sessionStorage.setItem('shopActiveFilters', JSON.stringify(activeFilters));
+    sessionStorage.setItem('shopCurrentPage', currentPage.toString());
+    sessionStorage.setItem('shopActiveSort', activeSort);
+  }, [activeFilters, currentPage, activeSort]);
 
   const getSortLabel = (sortId) => {
     const opt = SORT_OPTIONS.find(o => o.id === sortId);

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef, useContext } from 'react';
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate, useNavigationType } from 'react-router-dom';
 import CategoryContext from '../context/CategoryContext';
 import { useAllProducts } from '../hooks/useProducts';
 import { useWishlist } from '../context/WishlistContext';
@@ -162,13 +162,33 @@ export default function DesktopShop() {
     return () => window.removeEventListener('scroll', handler);
   }, []);
 
+  const navType = useNavigationType();
+
   /* ── Scroll to top on mount and path change ── */
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    if (navType !== 'POP') {
+      window.scrollTo(0, 0);
+    }
+  }, [navType]);
 
   /* ── Initialise filters from URL — full reset to prevent stale filters ── */
   useEffect(() => {
+    if (navType === 'POP') {
+      const savedFilters = sessionStorage.getItem('desktopShopActiveFilters');
+      const savedPage = sessionStorage.getItem('desktopShopPage');
+      const savedSort = sessionStorage.getItem('desktopShopActiveSort');
+      if (savedFilters) {
+        try {
+          setActiveFilters(JSON.parse(savedFilters));
+          if (savedPage) setPage(parseInt(savedPage, 10));
+          if (savedSort) setActiveSort(savedSort);
+          return; // Skip URL parsing
+        } catch (e) {
+          console.error('Failed to parse saved filters', e);
+        }
+      }
+    }
+
     const cat = searchParams.get('category');
     const occ = searchParams.get('occasion');
 
@@ -324,6 +344,12 @@ export default function DesktopShop() {
     if (activeFilters.Occasion.length) return activeFilters.Occasion.join(', ');
     return 'All Jewels';
   }, [activeFilters]);
+
+  useEffect(() => {
+    sessionStorage.setItem('desktopShopActiveFilters', JSON.stringify(activeFilters));
+    sessionStorage.setItem('desktopShopPage', page.toString());
+    sessionStorage.setItem('desktopShopActiveSort', activeSort);
+  }, [activeFilters, page, activeSort]);
 
   /* ── Current sort label ── */
   const sortLabel = SORT_OPTIONS.find(o => o.id === activeSort)?.label || 'Recommended';
