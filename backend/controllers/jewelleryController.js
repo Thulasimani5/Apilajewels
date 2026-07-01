@@ -1,5 +1,7 @@
 const Jewellery = require('../models/Jewellery');
 const { cloudinary } = require('../config/cloudinary');
+const { formatError } = require('../utils/errorHandler');
+
 
 // Auto-assign images from Cloudinary by searching for files matching the jewelId
 const getAutoImages = async (jewelId) => {
@@ -132,7 +134,7 @@ exports.getJewelleries = async (req, res) => {
       data: data
     });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, error: formatError(err) });
   }
 };
 
@@ -158,7 +160,7 @@ exports.getJewellery = async (req, res) => {
       data: data
     });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, error: formatError(err) });
   }
 };
 
@@ -202,7 +204,7 @@ exports.createJewellery = async (req, res) => {
       data: data
     });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, error: formatError(err) });
   }
 };
 
@@ -279,7 +281,7 @@ exports.updateJewellery = async (req, res) => {
       data: data
     });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, error: formatError(err) });
   }
 };
 
@@ -301,6 +303,6 @@ exports.deleteJewellery = async (req, res) => {
       data: {}
     });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, error: formatError(err) });
   }
 };

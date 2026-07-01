@@ -1,6 +1,8 @@
 const User = require('../models/User');
 const GuestCart = require('../models/GuestCart');
 const jwt = require('jsonwebtoken');
+const { formatError } = require('../utils/errorHandler');
+
 
 // Get token from model, create cookie and send response
 const sendTokenResponse = async (user, statusCode, res, req) => {
@@ -68,7 +70,7 @@ exports.register = async (req, res) => {
 
     await sendTokenResponse(user, 201, res, req);
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, error: formatError(err) });
   }
 };
 
@@ -107,7 +109,7 @@ exports.login = async (req, res) => {
 
     await sendTokenResponse(user, 200, res, req);
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, error: formatError(err) });
   }
 };
 
@@ -141,7 +143,7 @@ exports.emailLogin = async (req, res) => {
 
     await sendTokenResponse(user, 200, res, req);
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, error: formatError(err) });
   }
 };
 
@@ -156,7 +158,7 @@ exports.getMe = async (req, res) => {
       data: user
     });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, error: formatError(err) });
   }
 };
 
@@ -171,7 +173,7 @@ exports.getUsers = async (req, res) => {
       data: users
     });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, error: formatError(err) });
   }
 };
 
@@ -193,6 +195,6 @@ exports.updateCart = async (req, res) => {
       data: user.cart
     });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, error: formatError(err) });
   }
 };

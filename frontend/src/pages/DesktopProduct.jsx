@@ -156,7 +156,7 @@ function RelatedCard({ product }) {
       <p className="pdp-rel-name">{category || 'Jewels'}</p>
       <p className="pdp-rel-desc">{product.name}</p>
       <p className="pdp-rel-price">
-        {price > 1500 ? 'Premium Jewellery' : `₹${price.toFixed(2)}`}
+        {price > 1500 ? 'Price on Request' : `₹${price.toFixed(2)}`}
       </p>
     </Link>
   );
@@ -200,7 +200,7 @@ export default function DesktopProduct({ product, relatedProducts }) {
   const mediaList = product.media?.length ? product.media : product.images || [];
   const liked = isInWishlist(product._id);
   const price = product.rentalPrice || product.price || 0;
-  const priceText = product.showPrice === false || price > 1500 ? 'Premium Jewellery' : `₹${price.toFixed(2)}`;
+  const priceText = product.showPrice === false || price > 1500 ? 'Price on Request' : `₹${price.toFixed(2)}`;
   const category = Array.isArray(product.category) ? product.category[0] : product.category;
 
   const handleAddToCart = () => {
@@ -351,7 +351,7 @@ export default function DesktopProduct({ product, relatedProducts }) {
           {/* Price + wishlist / share */}
           <div className="pdp-price-row">
             <span className="pdp-price">
-              {product.showPrice === false || price > 1500 ? 'Premium Jewellery' : `₹${price.toFixed(2)}`}
+              {product.showPrice === false || price > 1500 ? 'Price on Request' : `₹${price.toFixed(2)}`}
             </span>
             <div className="pdp-icons-row">
               <button

@@ -20,7 +20,7 @@ function WishlistCard({ item, onRemove, onMoveToBag }) {
   const imgUrl = rawImg?.url || (typeof rawImg === 'string' ? rawImg : '') || item.media?.[0]?.url || '';
   const isVideo = rawImg?.type === 'video';
   const price = item.rentalPrice || item.price || 0;
-  const priceText = price > 1500 ? 'Premium Jewellery' : `₹${price.toFixed(2)}`;
+  const priceText = price > 1500 ? 'Price on Request' : `₹${price.toFixed(2)}`;
   const description = item.description || item.material || item.type || '';
 
   return (

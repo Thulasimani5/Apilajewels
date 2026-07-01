@@ -50,13 +50,13 @@ const Cart = () => {
     let message = `Hi Apila Jewels, I would like to book the following items:\n\n`;
     selectedCartItems.forEach((item, index) => {
       const price = item.rentalPrice || item.price || 0;
-      const pText = price > 1500 ? 'Premium Jewellery' : `₹${price}`;
+      const pText = price > 1500 ? 'Price on Request' : `₹${price}`;
       message += `${index + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – ${pText}\n`;
     });
     if (allPremiumSelected) {
-      message += `\n*Total Amount: Premium Jewellery*\n\nPlease let me know the availability.`;
+      message += `\n*Total Amount: Price on Request*\n\nPlease let me know the availability.`;
     } else if (premiumSelected.length > 0) {
-      message += `\n*Sub Total (${pricedSelected.length} ${pricedSelected.length === 1 ? 'Item' : 'Items'}): ₹${pricedAmount.toFixed(2)}*\n*Premium Jewels (${premiumSelected.length} ${premiumSelected.length === 1 ? 'Item' : 'Items'}): Premium Jewellery*\n\nPlease let me know the availability.`;
+      message += `\n*Sub Total (${pricedSelected.length} ${pricedSelected.length === 1 ? 'Item' : 'Items'}): ₹${pricedAmount.toFixed(2)}*\n*Premium Jewels (${premiumSelected.length} ${premiumSelected.length === 1 ? 'Item' : 'Items'}): Price on Request*\n\nPlease let me know the availability.`;
     } else {
       message += `\n*Sub Total (${pricedSelected.length} ${pricedSelected.length === 1 ? 'Item' : 'Items'}): ₹${pricedAmount.toFixed(2)}*\n\nPlease let me know the availability.`;
     }
@@ -147,7 +147,7 @@ const Cart = () => {
                       }}
                     >
                       {(item.rentalPrice || item.price || 0) > 1500
-                        ? 'Premium Jewellery'
+                        ? 'Price on Request'
                         : `₹${(item.rentalPrice || item.price || 0).toFixed(2)}`}
                     </div>
                   </div>
