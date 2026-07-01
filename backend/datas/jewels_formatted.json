@@ -3625,30 +3625,6 @@
     "stoneColour": []
   },
   {
-    "jewelId": "HJ008",
-    "name": "Begum Heritage Necklace Set",
-    "description": "Haridage Jewel",
-    "category": [],
-    "type": [
-      "Choker & Necklace"
-    ],
-    "occasion": [
-      "Bridal Maid",
-      "Reception"
-    ],
-    "price": 495,
-    "deposit": 800,
-    "purchaseAmount": 870,
-    "salesAmount": 1300,
-    "colour": "Multi",
-    "availability": true,
-    "showPrice": true,
-    "popularity": 0,
-    "images": [],
-    "stoneName": [],
-    "stoneColour": []
-  },
-  {
     "jewelId": "HJ009",
     "name": "Rajwada Long Haar Set",
     "description": "Haridage Jewel",

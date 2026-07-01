@@ -1,2814 +1,2795 @@
 [
-    {
-        "id": "MP001",
-        "name": "Emerald Victorian Choker Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "695",
-        "deposit": "1000",
-        "costPrice": "1320",
-        "sellingPrice": "1700"
-    },
-    {
-        "id": "MP002",
-        "name": "Ruby Victorian Choker Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "695",
-        "deposit": "1000",
-        "costPrice": "1320",
-        "sellingPrice": "1700"
-    },
-    {
-        "id": "MP003",
-        "name": "White Victorian Choker Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "695",
-        "deposit": "1000",
-        "costPrice": "1320",
-        "sellingPrice": "1700"
-    },
-    {
-        "id": "MP004",
-        "name": "Emerald Victorian Necklace Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "595",
-        "deposit": "900",
-        "costPrice": "1100",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "MP005",
-        "name": "Ruby Victorian Necklace Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "595",
-        "deposit": "900",
-        "costPrice": "1100",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "MP006",
-        "name": "White Victorian Necklace Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "595",
-        "deposit": "900",
-        "costPrice": "1100",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "MP007",
-        "name": "Emerald Victorian Long Haram Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "995",
-        "deposit": "1400",
-        "costPrice": "2075",
-        "sellingPrice": "2500"
-    },
-    {
-        "id": "MP008",
-        "name": "Ruby Victorian Long Haram Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "995",
-        "deposit": "1400",
-        "costPrice": "2075",
-        "sellingPrice": "2500"
-    },
-    {
-        "id": "MP009",
-        "name": "White Victorian Long Haram Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "995",
-        "deposit": "1400",
-        "costPrice": "2075",
-        "sellingPrice": "2500"
-    },
-    {
-        "id": "MP010",
-        "name": "Emerald Moissanite Choker Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1195",
-        "deposit": "1600",
-        "costPrice": "2570",
-        "sellingPrice": "3000"
-    },
-    {
-        "id": "MP011",
-        "name": "Ruby Moissanite Choker Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1195",
-        "deposit": "1600",
-        "costPrice": "2570",
-        "sellingPrice": "3000"
-    },
-    {
-        "id": "MP012",
-        "name": "White Moissanite Choker Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1195",
-        "deposit": "1600",
-        "costPrice": "2570",
-        "sellingPrice": "3000"
-    },
-    {
-        "id": "MP013",
-        "name": "Emerald Moissanite Necklace Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1095",
-        "deposit": "1400",
-        "costPrice": "1400",
-        "sellingPrice": "2600"
-    },
-    {
-        "id": "MP014",
-        "name": "Ruby Moissanite Necklace Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1095",
-        "deposit": "1400",
-        "costPrice": "1400",
-        "sellingPrice": "2600"
-    },
-    {
-        "id": "MP015",
-        "name": "White Moissanite Necklace Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1095",
-        "deposit": "1400",
-        "costPrice": "1400",
-        "sellingPrice": "2600"
-    },
-    {
-        "id": "MP016",
-        "name": "Emerald Moissanite Long Haram Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "1195",
-        "deposit": "1400",
-        "costPrice": "2100",
-        "sellingPrice": "2600"
-    },
-    {
-        "id": "MP017",
-        "name": "Ruby Moissanite Long Haram Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "1195",
-        "deposit": "1400",
-        "costPrice": "2100",
-        "sellingPrice": "2600"
-    },
-    {
-        "id": "MP018",
-        "name": "White Moissanite Long Haram Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "1195",
-        "deposit": "1400",
-        "costPrice": "2100",
-        "sellingPrice": "2400"
-    },
-    {
-        "id": "MP019",
-        "name": "Emerald Moissanite Bridal Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "1595",
-        "deposit": "2200",
-        "costPrice": "3470",
-        "sellingPrice": "4000"
-    },
-    {
-        "id": "MP020",
-        "name": "Ruby Moissanite Bridal Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "1595",
-        "deposit": "2200",
-        "costPrice": "3470",
-        "sellingPrice": "4000"
-    },
-    {
-        "id": "MP021",
-        "name": "White Moissanite Bridal Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "1595",
-        "deposit": "2200",
-        "costPrice": "3470",
-        "sellingPrice": "4000"
-    },
-    {
-        "id": "MP022",
-        "name": "Emerald Premium Necklace Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1295",
-        "deposit": "1700",
-        "costPrice": "2800",
-        "sellingPrice": "3400"
-    },
-    {
-        "id": "MP023",
-        "name": "Amethyst Premium Necklace Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "995",
-        "deposit": "1300",
-        "costPrice": "2000",
-        "sellingPrice": "2500"
-    },
-    {
-        "id": "MP024",
-        "name": "White Premium Necklace Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1295",
-        "deposit": "1700",
-        "costPrice": "2800",
-        "sellingPrice": "3400"
-    },
-    {
-        "id": "MP025",
-        "name": "Emerald Moissanite Choker Set",
-        "description": "Victorian & Moissanite Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "730",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "AS005",
-        "name": "Silver AD Necklace Set",
-        "description": "Silver Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "350",
-        "deposit": "600",
-        "costPrice": "640",
-        "sellingPrice": "900"
-    },
-    {
-        "id": "AM004",
-        "name": "Mehndi Polish AD Choker Set",
-        "description": "Mehndi Polish AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "350",
-        "deposit": "600",
-        "costPrice": "640",
-        "sellingPrice": "900"
-    },
-    {
-        "id": "AM005",
-        "name": "Mehndi Polish AD Necklace Set",
-        "description": "Mehndi Polish AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "730",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "AM006",
-        "name": "Mehndi Polish AD Necklace Set",
-        "description": "Mehndi Polish AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "770",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "AM007",
-        "name": "Mehndi Polish AD Necklace Set",
-        "description": "Mehndi Polish AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "770",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "AM008",
-        "name": "Mehndi Polish AD Necklace Set",
-        "description": "Mehndi Polish AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "770",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "AM009",
-        "name": "Mehndi Polish AD Long Haram Set",
-        "description": "Mehndi Polish AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "595",
-        "deposit": "900",
-        "costPrice": "1100",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "AM010",
-        "name": "Mehndi Polish AD Long Haram Set",
-        "description": "Mehndi Polish AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "595",
-        "deposit": "900",
-        "costPrice": "1100",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "AM011",
-        "name": "Mehndi Polish AD Long Haram Set",
-        "description": "Mehndi Polish AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "595",
-        "deposit": "900",
-        "costPrice": "1100",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "AM012",
-        "name": "Mehndi Polish AD Bridal Set",
-        "description": "Mehndi Polish AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "850",
-        "deposit": "1100",
-        "costPrice": "1730",
-        "sellingPrice": "2100"
-    },
-    {
-        "id": "AM013",
-        "name": "Mehndi Polish AD Bridal Set",
-        "description": "Mehndi Polish AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "850",
-        "deposit": "1100",
-        "costPrice": "1730",
-        "sellingPrice": "2100"
-    },
-    {
-        "id": "AM0014",
-        "name": "Mehndi Polish AD Bridal Set",
-        "description": "Mehndi Polish AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "850",
-        "deposit": "1100",
-        "costPrice": "1730",
-        "sellingPrice": "2100"
-    },
-    {
-        "id": "AM015",
-        "name": "Mehndi Plated AD Choker Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "350",
-        "deposit": "600",
-        "costPrice": "640",
-        "sellingPrice": "900"
-    },
-    {
-        "id": "AM016",
-        "name": "Mehndi Plated AD Necklace Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "730",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "AM017",
-        "name": "Mehndi Plated AD Necklace Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "770",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "AM018",
-        "name": "Mehndi Plated AD Necklace Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "770",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "AM019",
-        "name": "Mehndi Plated AD Long Haram Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "595",
-        "deposit": "900",
-        "costPrice": "1100",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "AM020",
-        "name": "Mehndi Plated AD Long Haram Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "595",
-        "deposit": "900",
-        "costPrice": "1100",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "AM021",
-        "name": "Mehndi Plated AD Bridal Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "850",
-        "deposit": "1100",
-        "costPrice": "1730",
-        "sellingPrice": "2100"
-    },
-    {
-        "id": "AM022",
-        "name": "Mehndi Plated AD Choker Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "350",
-        "deposit": "600",
-        "costPrice": "640",
-        "sellingPrice": "900"
-    },
-    {
-        "id": "AM023",
-        "name": "Mehndi Plated AD Necklace Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "730",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "AM024",
-        "name": "Mehndi Plated AD Necklace Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "770",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "AM025",
-        "name": "Mehndi Plated AD Necklace Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "770",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "AM026",
-        "name": "Mehndi Plated AD Long Haram Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "595",
-        "deposit": "900",
-        "costPrice": "1100",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "AM027",
-        "name": "Mehndi Plated AD Long Haram Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "595",
-        "deposit": "900",
-        "costPrice": "1100",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "AM028",
-        "name": "Mehndi Plated AD Bridal Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "850",
-        "deposit": "1100",
-        "costPrice": "1730",
-        "sellingPrice": "2100"
-    },
-    {
-        "id": "AM029",
-        "name": "Mehndi Plated AD Bridal Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "850",
-        "deposit": "1100",
-        "costPrice": "1730",
-        "sellingPrice": "2100"
-    },
-    {
-        "id": "AM030",
-        "name": "Mehndi Plated AD Bridal Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "850",
-        "deposit": "1100",
-        "costPrice": "1730",
-        "sellingPrice": "2100"
-    },
-    {
-        "id": "AM031",
-        "name": "Mehndi Plated AD Necklace Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "770",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "AM032",
-        "name": "Mehndi Plated AD Necklace Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "770",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "AM033",
-        "name": "Mehndi Plated AD Necklace Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "770",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "AM034",
-        "name": "Mehndi Plated AD Long Haram Set",
-        "description": "Mehndi Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "595",
-        "deposit": "900",
-        "costPrice": "1100",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "AG001",
-        "name": "Gold Polish AD Choker Set",
-        "description": "Gold Polish AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "350",
-        "deposit": "600",
-        "costPrice": "640",
-        "sellingPrice": "900"
-    },
-    {
-        "id": "AG002",
-        "name": "Gold Polish AD Necklace Set",
-        "description": "Gold Polish AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "730",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "AG003",
-        "name": "Gold Polish AD Long Haram Set",
-        "description": "Gold Polish AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "595",
-        "deposit": "900",
-        "costPrice": "1100",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "AG004",
-        "name": "Gold Polish AD Bridal Set",
-        "description": "Gold Polish AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "850",
-        "deposit": "1100",
-        "costPrice": "1730",
-        "sellingPrice": "2100"
-    },
-    {
-        "id": "PK001",
-        "name": "White Kundan Choker Set",
-        "description": "Kundan Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "695",
-        "deposit": "1000",
-        "costPrice": "1320",
-        "sellingPrice": "1700"
-    },
-    {
-        "id": "PK002",
-        "name": "White Kundan Necklace Set",
-        "description": "Kundan Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "595",
-        "deposit": "900",
-        "costPrice": "1100",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "PK003",
-        "name": "White Kundan Long Haram Set",
-        "description": "Kundan Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "995",
-        "deposit": "1400",
-        "costPrice": "2075",
-        "sellingPrice": "2500"
-    },
-    {
-        "id": "PK004",
-        "name": "Emerald Kundan Choker Set",
-        "description": "Kundan Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "695",
-        "deposit": "1000",
-        "costPrice": "1320",
-        "sellingPrice": "1700"
-    },
-    {
-        "id": "PK005",
-        "name": "Emerald Kundan Necklace Set",
-        "description": "Kundan Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "595",
-        "deposit": "900",
-        "costPrice": "1100",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "PK006",
-        "name": "Emerald Kundan Long Haram Set",
-        "description": "Kundan Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "995",
-        "deposit": "1400",
-        "costPrice": "2075",
-        "sellingPrice": "2500"
-    },
-    {
-        "id": "PK007",
-        "name": "Ruby Kundan Choker Set",
-        "description": "Kundan Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "695",
-        "deposit": "1000",
-        "costPrice": "1320",
-        "sellingPrice": "1700"
-    },
-    {
-        "id": "PK008",
-        "name": "Ruby Kundan Necklace Set",
-        "description": "Kundan Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "595",
-        "deposit": "900",
-        "costPrice": "1100",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "PK009",
-        "name": "Jade Kundan Choker Set",
-        "description": "Kundan Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "795",
-        "deposit": "1100",
-        "costPrice": "1550",
-        "sellingPrice": "2100"
-    },
-    {
-        "id": "PK010",
-        "name": "Jade Polgi Necklace Set",
-        "description": "Polgi Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "695",
-        "deposit": "1000",
-        "costPrice": "1300",
-        "sellingPrice": "1800"
-    },
-    {
-        "id": "PK012",
-        "name": "Emerald Victorian Premium AD Necklace Set",
-        "description": "Kundan, Victorian",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1295",
-        "deposit": "1700",
-        "costPrice": "2800",
-        "sellingPrice": "3400"
-    },
-    {
-        "id": "PK013",
-        "name": "Amethyst Victorian Premium Necklace Set",
-        "description": "Kundan, Victorian",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "995",
-        "deposit": "1300",
-        "costPrice": "2000",
-        "sellingPrice": "2500"
-    },
-    {
-        "id": "PK015",
-        "name": "Navratna Stone Necklace Set",
-        "description": "Kundan Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Small Jewel"
-        ],
-        "price": "299",
-        "deposit": "500",
-        "costPrice": "550",
-        "sellingPrice": "800"
-    },
-    {
-        "id": "PK016",
-        "name": "White Kundan Premium Jewel Set",
-        "description": "Kundan, Victorian",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "695",
-        "deposit": "1000",
-        "costPrice": "1320",
-        "sellingPrice": "1700"
-    },
-    {
-        "id": "PK017",
-        "name": "Jade Polgi Necklace Set",
-        "description": "Kundan Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "595",
-        "deposit": "900",
-        "costPrice": "1100",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "PK018",
-        "name": "Jade Polgi Necklace Set",
-        "description": "Kundan Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "595",
-        "deposit": "800",
-        "costPrice": "1000",
-        "sellingPrice": "1300"
-    },
-    {
-        "id": "PK019",
-        "name": "Jade Polgi Necklace Set",
-        "description": "Kundan Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "995",
-        "deposit": "1400",
-        "costPrice": "2075",
-        "sellingPrice": "2500"
-    },
-    {
-        "id": "PK020",
-        "name": "Emerald Choker Set",
-        "description": "Kundan AD Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "730",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "PK021",
-        "name": "Emerald Necklace Set",
-        "description": "Kundan AD Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "350",
-        "deposit": "600",
-        "costPrice": "640",
-        "sellingPrice": "900"
-    },
-    {
-        "id": "PK022",
-        "name": "Emerald Premium Necklace Set",
-        "description": "Moissanite Polgi Jewel",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1095",
-        "deposit": "1400",
-        "costPrice": "1400",
-        "sellingPrice": "2600"
-    },
-    {
-        "id": "PK023",
-        "name": "Pink Morganit Necklace Set",
-        "description": "Kundan Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "770",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "PK024",
-        "name": "Pink Morganit Necklace Set",
-        "description": "Kundan Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets",
-            "Long Haram",
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "395",
-        "deposit": "700",
-        "costPrice": "770",
-        "sellingPrice": "1100"
-    },
-    {
-        "id": "PK025",
-        "name": "Pink Morganit Premium Necklace Set",
-        "description": "Kundan, Victorian",
-        "category": [
-            "victorian-moissinate"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1195",
-        "deposit": "1600",
-        "costPrice": "2570",
-        "sellingPrice": "3000"
-    },
-    {
-        "id": "PK026",
-        "name": "Jade Polgi Necklace Set",
-        "description": "Kundan Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "1195",
-        "deposit": "1400",
-        "costPrice": "2100",
-        "sellingPrice": "2600"
-    },
-    {
-        "id": "PK027",
-        "name": "Emerald Necklace Set",
-        "description": "Kundan AD Jewel",
-        "category": [
-            "Kundan Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "750",
-        "deposit": "1000",
-        "costPrice": "1370",
-        "sellingPrice": "1700"
-    },
-    {
-        "id": "PB001",
-        "name": "Royal Premium Lakshmi Temple Necklace with Jhumkas",
-        "description": "Premium Bridal Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1099",
-        "deposit": "1400",
-        "costPrice": "2350",
-        "sellingPrice": "2700"
-    },
-    {
-        "id": "PB002",
-        "name": "Royal Premium Lakshmi Temple Haram with Jhumkas",
-        "description": "Premium Bridal Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1399",
-        "deposit": "1600",
-        "costPrice": "2900",
-        "sellingPrice": "3300"
-    },
-    {
-        "id": "PB003",
-        "name": "Bridal Premium Temple Haram Combo with Jhumkas",
-        "description": "Premium Bridal Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "2395",
-        "deposit": "3000",
-        "costPrice": "5250",
-        "sellingPrice": "6000"
-    },
-    {
-        "id": "PB004",
-        "name": "Antique Premium Lakshmi Pendant Necklace with Jhumkas",
-        "description": "Premium Bridal Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "995",
-        "deposit": "1200",
-        "costPrice": "2100",
-        "sellingPrice": "2500"
-    },
-    {
-        "id": "PB005",
-        "name": "Antique Premium Lakshmi Pendant Haram with Jhumkas",
-        "description": "Premium Bridal Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1199",
-        "deposit": "1400",
-        "costPrice": "2650",
-        "sellingPrice": "3100"
-    },
-    {
-        "id": "PB006",
-        "name": "Antique Premium Lakshmi Pendant Combo with Jhumkas",
-        "description": "Premium Bridal Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "2190",
-        "deposit": "2800",
-        "costPrice": "4750",
-        "sellingPrice": "5600"
-    },
-    {
-        "id": "PB007",
-        "name": "Lakshmi Premium Temple Necklace Set",
-        "description": "Premium Bridal Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "799",
-        "deposit": "1000",
-        "costPrice": "1650",
-        "sellingPrice": "2000"
-    },
-    {
-        "id": "PB008",
-        "name": "Premium Green Bead Temple Haram with Jhumkas",
-        "description": "Premium Bridal Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1590",
-        "deposit": "2000",
-        "costPrice": "3450",
-        "sellingPrice": "3800"
-    },
-    {
-        "id": "PB009",
-        "name": "Bridal Premium Temple Haram Combo with Jhumkas",
-        "description": "Premium Bridal Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "2390",
-        "deposit": "3000",
-        "costPrice": "5100",
-        "sellingPrice": "5700"
-    },
-    {
-        "id": "PB010",
-        "name": "Real kemp jadau bridal Haram Set",
-        "description": "Premium Bridal Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1495",
-        "deposit": "2000",
-        "costPrice": "3300",
-        "sellingPrice": "3800"
-    },
-    {
-        "id": "PB011",
-        "name": "Premium Temple Bridal Combo Set",
-        "description": "Antique Bridal Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1195",
-        "deposit": "1600",
-        "costPrice": "2500",
-        "sellingPrice": "3000"
-    },
-    {
-        "id": "PB012",
-        "name": "Triple Layer Kemp Haram with Jhumkas (Premium)",
-        "description": "Premium Bridal Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "799",
-        "deposit": "1100",
-        "costPrice": "1600",
-        "sellingPrice": "2000"
-    },
-    {
-        "id": "PB013",
-        "name": "Geometric Necklace Set (Premium)",
-        "description": "Premium Bridal jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "799",
-        "deposit": "1100",
-        "costPrice": "1650",
-        "sellingPrice": "2100"
-    },
-    {
-        "id": "PB014",
-        "name": "Guttapusalu Style Pendant Necklace Set (Premium)",
-        "description": "Premium Bridal jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "850",
-        "deposit": "1100",
-        "costPrice": "1730",
-        "sellingPrice": "2100"
-    },
-    {
-        "id": "PB015",
-        "name": "Guttapusalu Style Pendant Haram Set ((Premium))",
-        "description": "Premium Bridal jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1195",
-        "deposit": "1900",
-        "costPrice": "2610",
-        "sellingPrice": "3000"
-    },
-    {
-        "id": "PB016",
-        "name": "Guttapusalu Style Pendant bridal combo set (Premium)",
-        "description": "Premium Bridal jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1995",
-        "deposit": "2500",
-        "costPrice": "4340",
-        "sellingPrice": "5100"
-    },
-    {
-        "id": "PB017",
-        "name": "Lakshmi Antique Pendant Necklace Set (Premium)",
-        "description": "Premium Bridal jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "999",
-        "deposit": "1300",
-        "costPrice": "2030",
-        "sellingPrice": "2400"
-    },
-    {
-        "id": "PB018",
-        "name": "Royal South Indian Haram with Jhumkas (Premium)",
-        "description": "Premium Bridal jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1495",
-        "deposit": "1900",
-        "costPrice": "3200",
-        "sellingPrice": "3600"
-    },
-    {
-        "id": "PB019",
-        "name": "Grand Royal Bridal Haram with Jhumkas (Premium)",
-        "description": "Premium Bridal jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "2495",
-        "deposit": "3100",
-        "costPrice": "5400",
-        "sellingPrice": "2100"
-    },
-    {
-        "id": "PB020",
-        "name": "Royal Lakshmi 3d Temple Haram Set (Premium)",
-        "description": "Premium Bridal jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1995",
-        "deposit": "2400",
-        "costPrice": "4050",
-        "sellingPrice": "4700"
-    },
-    {
-        "id": "PB021",
-        "name": "Emerald Pearl Temple Choker set (Premium)",
-        "description": "Premium Gold jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Small Jewel"
-        ],
-        "price": "299",
-        "deposit": "600",
-        "costPrice": "650",
-        "sellingPrice": "900"
-    },
-    {
-        "id": "PB022",
-        "name": "Pearl Guttapusalu Small Choker Set (Premium)",
-        "description": "Premium Gold jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Small Jewel"
-        ],
-        "price": "249",
-        "deposit": "500",
-        "costPrice": "450",
-        "sellingPrice": "650"
-    },
-    {
-        "id": "PB023",
-        "name": "Small Choker Set",
-        "description": "Premium Gold jewel (Premium)",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Small Jewel"
-        ],
-        "price": "249",
-        "deposit": "500",
-        "costPrice": "450",
-        "sellingPrice": "650"
-    },
-    {
-        "id": "PB024",
-        "name": "Small manga Choker set (Premium)",
-        "description": "Premium Gold jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Small Jewel"
-        ],
-        "price": "249",
-        "deposit": "500",
-        "costPrice": "480",
-        "sellingPrice": "700"
-    },
-    {
-        "id": "PB025",
-        "name": "Annapakshi Long Haram Set (Premium)",
-        "description": "Premium Gold jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1099",
-        "deposit": "1500",
-        "costPrice": "2340",
-        "sellingPrice": "2700"
-    },
-    {
-        "id": "PB026",
-        "name": "Kemp Guttapusalu Choker Set (Premium)",
-        "description": "Premium Gold jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "599",
-        "deposit": "900",
-        "costPrice": "1240",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "PB027",
-        "name": "Kemp Guttapusalu Choker set (Premium)",
-        "description": "Premium Gold jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "799",
-        "deposit": "1100",
-        "costPrice": "1599",
-        "sellingPrice": "1900"
-    },
-    {
-        "id": "PB028",
-        "name": "Kasumalai set",
-        "description": "Premium Gold jewel (Premium)",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "799",
-        "deposit": "1200",
-        "costPrice": "1120+570= 1690",
-        "sellingPrice": "2100"
-    },
-    {
-        "id": "PB029",
-        "name": "Classic Guttapusalu Bridal Set (Premium)",
-        "description": "Premium Bridal jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1899",
-        "deposit": "2300",
-        "costPrice": "1740+1550+650 =3940",
-        "sellingPrice": "4500"
-    },
-    {
-        "id": "PB030",
-        "name": "Grand Guttapusalu Bridal Set (Premium)",
-        "description": "Premium Bridal jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "2299",
-        "deposit": "2800",
-        "costPrice": "1740+1550+1600= 4890",
-        "sellingPrice": "5500"
-    },
-    {
-        "id": "PB031",
-        "name": "Guttapusalu Bridal Set (Premium)",
-        "description": "Premium Bridal jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1599",
-        "deposit": "2000",
-        "costPrice": "1740+1550=3290",
-        "sellingPrice": "3700"
-    },
-    {
-        "id": "PB032",
-        "name": "Kasumalai Bridal Set (Premium)",
-        "description": "Premium Bridal jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1045",
-        "deposit": "1400",
-        "costPrice": "1120+570+450=2140",
-        "sellingPrice": "2500"
-    },
-    {
-        "id": "BA001",
-        "name": "Royal Lakshmi Gold Beads Semi Bridal Set",
-        "description": "Bridal Antique Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set"
-        ],
-        "price": "695",
-        "deposit": "1000",
-        "costPrice": "1300",
-        "sellingPrice": "1800"
-    },
-    {
-        "id": "BA002",
-        "name": "Traditional Temple Green Beads Bridal Set",
-        "description": "Bridal Antique Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set"
-        ],
-        "price": "695",
-        "deposit": "1000",
-        "costPrice": "1300",
-        "sellingPrice": "1800"
-    },
-    {
-        "id": "BA003",
-        "name": "Grand Navaratna Green Beads Bridal Set",
-        "description": "Bridal Antique Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set"
-        ],
-        "price": "1095",
-        "deposit": "1000",
-        "costPrice": "1950",
-        "sellingPrice": "2500"
-    },
-    {
-        "id": "BA004",
-        "name": "Meenakshi Temple Inspired Bridal Set",
-        "description": "Bridal Antique Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set"
-        ],
-        "price": "795",
-        "deposit": "800",
-        "costPrice": "1450",
-        "sellingPrice": "1800"
-    },
-    {
-        "id": "BA005",
-        "name": "Antique Lakshmi Semi Bridal Set",
-        "description": "Bridal Antique Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set"
-        ],
-        "price": "695",
-        "deposit": "800",
-        "costPrice": "1300",
-        "sellingPrice": "1800"
-    },
-    {
-        "id": "BA006",
-        "name": "Majestic Peacock Temple Bridal Set",
-        "description": "Bridal Antique Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set"
-        ],
-        "price": "795",
-        "deposit": "1000",
-        "costPrice": "1550",
-        "sellingPrice": "2200"
-    },
-    {
-        "id": "BA007",
-        "name": "Elegant South Indian Bridal Set",
-        "description": "Bridal Antique Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set"
-        ],
-        "price": "695",
-        "deposit": "600",
-        "costPrice": "1400",
-        "sellingPrice": "2000"
-    },
-    {
-        "id": "BA008",
-        "name": "Traditional Temple Grandeur Bridal Set",
-        "description": "Bridal Antique Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set"
-        ],
-        "price": "795",
-        "deposit": "600",
-        "costPrice": "1600",
-        "sellingPrice": "2000"
-    },
-    {
-        "id": "BA009",
-        "name": "Traditional Kemp Stone Bridal Set",
-        "description": "Bridal Antique Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set"
-        ],
-        "price": "795",
-        "deposit": "1000",
-        "costPrice": "1460",
-        "sellingPrice": "2200"
-    },
-    {
-        "id": "BA010",
-        "name": "Antique Lakshmi full Bridal Set",
-        "description": "Bridal Antique Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Accessories"
-        ],
-        "occasion": [
-            "Bridal Set"
-        ],
-        "price": "1095",
-        "deposit": "1200",
-        "costPrice": "2120",
-        "sellingPrice": "3000"
-    },
-    {
-        "id": "BA011",
-        "name": "Peacock Lakshmi Temple jewel Set",
-        "description": "Bridal Antique Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "650",
-        "deposit": "900",
-        "costPrice": "1300",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "BA012",
-        "name": "Short Temple Necklace Set",
-        "description": "Bridal Antique Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Small Jewel"
-        ],
-        "price": "250",
-        "deposit": "400",
-        "costPrice": "480",
-        "sellingPrice": "700"
-    },
-    {
-        "id": "BA013",
-        "name": "Peacock Temple Long Haram Set",
-        "description": "Bridal Antique Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Small Jewel"
-        ],
-        "price": "399",
-        "deposit": "700",
-        "costPrice": "800",
-        "sellingPrice": "1300"
-    },
-    {
-        "id": "HJ001",
-        "name": "Gulnaar Heritage Necklace Set",
-        "description": "Haridage Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "399",
-        "deposit": "700",
-        "costPrice": "560",
-        "sellingPrice": "900"
-    },
-    {
-        "id": "HJ002",
-        "name": "Maharani Heritage Layered Haar Set",
-        "description": "Haridage Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1095",
-        "deposit": "1400",
-        "costPrice": "2100",
-        "sellingPrice": "2500"
-    },
-    {
-        "id": "HJ003",
-        "name": "Begum Royale Layered Haar Bridal Set",
-        "description": "Haridage Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "1495",
-        "deposit": "1800",
-        "costPrice": "2660",
-        "sellingPrice": "3000"
-    },
-    {
-        "id": "HJ004",
-        "name": "Jashn-e-Noor Necklace Set",
-        "description": "Haridage Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "399",
-        "deposit": "700",
-        "costPrice": "560",
-        "sellingPrice": "900"
-    },
-    {
-        "id": "HJ005",
-        "name": "Mughal Rani Layered Haar Bridal Set",
-        "description": "Haridage Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "1495",
-        "deposit": "1800",
-        "costPrice": "2660",
-        "sellingPrice": "3000"
-    },
-    {
-        "id": "HJ006",
-        "name": "Rajputana Heritage Necklace Set",
-        "description": "Haridage Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "495",
-        "deposit": "800",
-        "costPrice": "830",
-        "sellingPrice": "1300"
-    },
-    {
-        "id": "HJ007",
-        "name": "Royal Jharokha Layered Haar Bridal Set",
-        "description": "Haridage Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Set",
-            "Reception"
-        ],
-        "price": "1595",
-        "deposit": "2400",
-        "costPrice": "2930",
-        "sellingPrice": "3700"
-    },
-    {
-        "id": "HJ008",
-        "name": "Begum Heritage Necklace Set",
-        "description": "Haridage Jewel",
-        "catego``````ry": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "495",
-        "deposit": "800",
-        "costPrice": "870",
-        "sellingPrice": "1300"
-    },
-    {
-        "id": "HJ009",
-        "name": "Rajwada Long Haar Set",
-        "description": "Haridage Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Long Haram"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "695",
-        "deposit": "1000",
-        "costPrice": "1230",
-        "sellingPrice": "1500"
-    },
-    {
-        "id": "HJ010",
-        "name": "Rajwada Semi Bridal Set",
-        "description": "Haridage Jewel",
-        "category": [
-            "Gold Antique Jewels"
-        ],
-        "type": [
-            "Semi Bridal & Combo Sets"
-        ],
-        "occasion": [
-            "Bridal Maid",
-            "Reception"
-        ],
-        "price": "1095",
-        "deposit": "1400",
-        "costPrice": "1800",
-        "sellingPrice": "2200"
-    },
-    {
-        "id": "AS001",
-        "name": "Crystal Small AD Jewel Set (Silver)",
-        "description": "Silver Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Party Wear",
-            "Small Jewel"
-        ],
-        "price": 199,
-        "deposit": 400,
-        "costPrice": 450,
-        "sellingPrice": 600
-    },
-    {
-        "id": "AS002",
-        "name": "Crystal Choker AD Jewel Set (Silver)",
-        "description": "Silver Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Reception",
-            "Bridal Maid"
-        ],
-        "price": 695,
-        "deposit": 900,
-        "costPrice": 1300,
-        "sellingPrice": 1600
-    },
-    {
-        "id": "AS003",
-        "name": "Crystal Nacklace Ad Jewel Set (Silver)",
-        "description": "Silver Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace"
-        ],
-        "occasion": [
-            "Reception",
-            "Bridal Maid"
-        ],
-        "price": 595,
-        "deposit": 900,
-        "costPrice": 1180,
-        "sellingPrice": 1600
-    },
-    {
-        "id": "AS004",
-        "name": "Crystal Three-Layered AD Jewel Set (Silver)",
-        "description": "Silver Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Choker & Necklace",
-            "Long Haram"
-        ],
-        "occasion": [
-            "Reception",
-            "Bridal Maid"
-        ],
-        "price": 695,
-        "deposit": 1100,
-        "costPrice": 1450,
-        "sellingPrice": 2000
-    },
-    {
-        "id": "AS005",
-        "name": "Crystal Three-Tier AD Jewel Set (Silver)",
-        "description": "Silver Plated AD Jewel",
-        "category": [
-            "AD Jewels"
-        ],
-        "type": [
-            "Long Haram"
-        ],
-        "occasion": [
-            "Reception",
-            "Bridal Set"
-        ],
-        "price": 1195,
-        "deposit": 1800,
-        "costPrice": 2700,
-        "sellingPrice": 3500
-    }
+  {
+    "id": "MP001",
+    "name": "Emerald Victorian Choker Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "695",
+    "deposit": "1000",
+    "costPrice": "1320",
+    "sellingPrice": "1700"
+  },
+  {
+    "id": "MP002",
+    "name": "Ruby Victorian Choker Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "695",
+    "deposit": "1000",
+    "costPrice": "1320",
+    "sellingPrice": "1700"
+  },
+  {
+    "id": "MP003",
+    "name": "White Victorian Choker Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "695",
+    "deposit": "1000",
+    "costPrice": "1320",
+    "sellingPrice": "1700"
+  },
+  {
+    "id": "MP004",
+    "name": "Emerald Victorian Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "595",
+    "deposit": "900",
+    "costPrice": "1100",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "MP005",
+    "name": "Ruby Victorian Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "595",
+    "deposit": "900",
+    "costPrice": "1100",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "MP006",
+    "name": "White Victorian Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "595",
+    "deposit": "900",
+    "costPrice": "1100",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "MP007",
+    "name": "Emerald Victorian Long Haram Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "995",
+    "deposit": "1400",
+    "costPrice": "2075",
+    "sellingPrice": "2500"
+  },
+  {
+    "id": "MP008",
+    "name": "Ruby Victorian Long Haram Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "995",
+    "deposit": "1400",
+    "costPrice": "2075",
+    "sellingPrice": "2500"
+  },
+  {
+    "id": "MP009",
+    "name": "White Victorian Long Haram Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "995",
+    "deposit": "1400",
+    "costPrice": "2075",
+    "sellingPrice": "2500"
+  },
+  {
+    "id": "MP010",
+    "name": "Emerald Moissanite Choker Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1195",
+    "deposit": "1600",
+    "costPrice": "2570",
+    "sellingPrice": "3000"
+  },
+  {
+    "id": "MP011",
+    "name": "Ruby Moissanite Choker Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1195",
+    "deposit": "1600",
+    "costPrice": "2570",
+    "sellingPrice": "3000"
+  },
+  {
+    "id": "MP012",
+    "name": "White Moissanite Choker Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1195",
+    "deposit": "1600",
+    "costPrice": "2570",
+    "sellingPrice": "3000"
+  },
+  {
+    "id": "MP013",
+    "name": "Emerald Moissanite Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1095",
+    "deposit": "1400",
+    "costPrice": "1400",
+    "sellingPrice": "2600"
+  },
+  {
+    "id": "MP014",
+    "name": "Ruby Moissanite Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1095",
+    "deposit": "1400",
+    "costPrice": "1400",
+    "sellingPrice": "2600"
+  },
+  {
+    "id": "MP015",
+    "name": "White Moissanite Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1095",
+    "deposit": "1400",
+    "costPrice": "1400",
+    "sellingPrice": "2600"
+  },
+  {
+    "id": "MP016",
+    "name": "Emerald Moissanite Long Haram Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "1195",
+    "deposit": "1400",
+    "costPrice": "2100",
+    "sellingPrice": "2600"
+  },
+  {
+    "id": "MP017",
+    "name": "Ruby Moissanite Long Haram Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "1195",
+    "deposit": "1400",
+    "costPrice": "2100",
+    "sellingPrice": "2600"
+  },
+  {
+    "id": "MP018",
+    "name": "White Moissanite Long Haram Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "1195",
+    "deposit": "1400",
+    "costPrice": "2100",
+    "sellingPrice": "2400"
+  },
+  {
+    "id": "MP019",
+    "name": "Emerald Moissanite Bridal Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "1595",
+    "deposit": "2200",
+    "costPrice": "3470",
+    "sellingPrice": "4000"
+  },
+  {
+    "id": "MP020",
+    "name": "Ruby Moissanite Bridal Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "1595",
+    "deposit": "2200",
+    "costPrice": "3470",
+    "sellingPrice": "4000"
+  },
+  {
+    "id": "MP021",
+    "name": "White Moissanite Bridal Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "1595",
+    "deposit": "2200",
+    "costPrice": "3470",
+    "sellingPrice": "4000"
+  },
+  {
+    "id": "MP022",
+    "name": "Emerald Premium Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1295",
+    "deposit": "1700",
+    "costPrice": "2800",
+    "sellingPrice": "3400"
+  },
+  {
+    "id": "MP023",
+    "name": "Amethyst Premium Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "995",
+    "deposit": "1300",
+    "costPrice": "2000",
+    "sellingPrice": "2500"
+  },
+  {
+    "id": "MP024",
+    "name": "White Premium Necklace Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1295",
+    "deposit": "1700",
+    "costPrice": "2800",
+    "sellingPrice": "3400"
+  },
+  {
+    "id": "MP025",
+    "name": "Emerald Moissanite Choker Set",
+    "description": "Victorian & Moissanite Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "730",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "AS005",
+    "name": "Silver AD Necklace Set",
+    "description": "Silver Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "350",
+    "deposit": "600",
+    "costPrice": "640",
+    "sellingPrice": "900"
+  },
+  {
+    "id": "AM004",
+    "name": "Mehndi Polish AD Choker Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "350",
+    "deposit": "600",
+    "costPrice": "640",
+    "sellingPrice": "900"
+  },
+  {
+    "id": "AM005",
+    "name": "Mehndi Polish AD Necklace Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "730",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "AM006",
+    "name": "Mehndi Polish AD Necklace Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "770",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "AM007",
+    "name": "Mehndi Polish AD Necklace Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "770",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "AM008",
+    "name": "Mehndi Polish AD Necklace Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "770",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "AM009",
+    "name": "Mehndi Polish AD Long Haram Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "595",
+    "deposit": "900",
+    "costPrice": "1100",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "AM010",
+    "name": "Mehndi Polish AD Long Haram Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "595",
+    "deposit": "900",
+    "costPrice": "1100",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "AM011",
+    "name": "Mehndi Polish AD Long Haram Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "595",
+    "deposit": "900",
+    "costPrice": "1100",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "AM012",
+    "name": "Mehndi Polish AD Bridal Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "850",
+    "deposit": "1100",
+    "costPrice": "1730",
+    "sellingPrice": "2100"
+  },
+  {
+    "id": "AM013",
+    "name": "Mehndi Polish AD Bridal Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "850",
+    "deposit": "1100",
+    "costPrice": "1730",
+    "sellingPrice": "2100"
+  },
+  {
+    "id": "AM0014",
+    "name": "Mehndi Polish AD Bridal Set",
+    "description": "Mehndi Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "850",
+    "deposit": "1100",
+    "costPrice": "1730",
+    "sellingPrice": "2100"
+  },
+  {
+    "id": "AM015",
+    "name": "Mehndi Plated AD Choker Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "350",
+    "deposit": "600",
+    "costPrice": "640",
+    "sellingPrice": "900"
+  },
+  {
+    "id": "AM016",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "730",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "AM017",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "770",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "AM018",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "770",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "AM019",
+    "name": "Mehndi Plated AD Long Haram Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "595",
+    "deposit": "900",
+    "costPrice": "1100",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "AM020",
+    "name": "Mehndi Plated AD Long Haram Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "595",
+    "deposit": "900",
+    "costPrice": "1100",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "AM021",
+    "name": "Mehndi Plated AD Bridal Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "850",
+    "deposit": "1100",
+    "costPrice": "1730",
+    "sellingPrice": "2100"
+  },
+  {
+    "id": "AM022",
+    "name": "Mehndi Plated AD Choker Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "350",
+    "deposit": "600",
+    "costPrice": "640",
+    "sellingPrice": "900"
+  },
+  {
+    "id": "AM023",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "730",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "AM024",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "770",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "AM025",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "770",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "AM026",
+    "name": "Mehndi Plated AD Long Haram Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "595",
+    "deposit": "900",
+    "costPrice": "1100",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "AM027",
+    "name": "Mehndi Plated AD Long Haram Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "595",
+    "deposit": "900",
+    "costPrice": "1100",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "AM028",
+    "name": "Mehndi Plated AD Bridal Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "850",
+    "deposit": "1100",
+    "costPrice": "1730",
+    "sellingPrice": "2100"
+  },
+  {
+    "id": "AM029",
+    "name": "Mehndi Plated AD Bridal Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "850",
+    "deposit": "1100",
+    "costPrice": "1730",
+    "sellingPrice": "2100"
+  },
+  {
+    "id": "AM030",
+    "name": "Mehndi Plated AD Bridal Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "850",
+    "deposit": "1100",
+    "costPrice": "1730",
+    "sellingPrice": "2100"
+  },
+  {
+    "id": "AM031",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "770",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "AM032",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "770",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "AM033",
+    "name": "Mehndi Plated AD Necklace Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "770",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "AM034",
+    "name": "Mehndi Plated AD Long Haram Set",
+    "description": "Mehndi Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "595",
+    "deposit": "900",
+    "costPrice": "1100",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "AG001",
+    "name": "Gold Polish AD Choker Set",
+    "description": "Gold Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "350",
+    "deposit": "600",
+    "costPrice": "640",
+    "sellingPrice": "900"
+  },
+  {
+    "id": "AG002",
+    "name": "Gold Polish AD Necklace Set",
+    "description": "Gold Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "730",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "AG003",
+    "name": "Gold Polish AD Long Haram Set",
+    "description": "Gold Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "595",
+    "deposit": "900",
+    "costPrice": "1100",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "AG004",
+    "name": "Gold Polish AD Bridal Set",
+    "description": "Gold Polish AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "850",
+    "deposit": "1100",
+    "costPrice": "1730",
+    "sellingPrice": "2100"
+  },
+  {
+    "id": "PK001",
+    "name": "White Kundan Choker Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "695",
+    "deposit": "1000",
+    "costPrice": "1320",
+    "sellingPrice": "1700"
+  },
+  {
+    "id": "PK002",
+    "name": "White Kundan Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "595",
+    "deposit": "900",
+    "costPrice": "1100",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "PK003",
+    "name": "White Kundan Long Haram Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "995",
+    "deposit": "1400",
+    "costPrice": "2075",
+    "sellingPrice": "2500"
+  },
+  {
+    "id": "PK004",
+    "name": "Emerald Kundan Choker Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "695",
+    "deposit": "1000",
+    "costPrice": "1320",
+    "sellingPrice": "1700"
+  },
+  {
+    "id": "PK005",
+    "name": "Emerald Kundan Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "595",
+    "deposit": "900",
+    "costPrice": "1100",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "PK006",
+    "name": "Emerald Kundan Long Haram Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "995",
+    "deposit": "1400",
+    "costPrice": "2075",
+    "sellingPrice": "2500"
+  },
+  {
+    "id": "PK007",
+    "name": "Ruby Kundan Choker Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "695",
+    "deposit": "1000",
+    "costPrice": "1320",
+    "sellingPrice": "1700"
+  },
+  {
+    "id": "PK008",
+    "name": "Ruby Kundan Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "595",
+    "deposit": "900",
+    "costPrice": "1100",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "PK009",
+    "name": "Jade Kundan Choker Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "795",
+    "deposit": "1100",
+    "costPrice": "1550",
+    "sellingPrice": "2100"
+  },
+  {
+    "id": "PK010",
+    "name": "Jade Polgi Necklace Set",
+    "description": "Polgi Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "695",
+    "deposit": "1000",
+    "costPrice": "1300",
+    "sellingPrice": "1800"
+  },
+  {
+    "id": "PK012",
+    "name": "Emerald Victorian Premium AD Necklace Set",
+    "description": "Kundan, Victorian",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1295",
+    "deposit": "1700",
+    "costPrice": "2800",
+    "sellingPrice": "3400"
+  },
+  {
+    "id": "PK013",
+    "name": "Amethyst Victorian Premium Necklace Set",
+    "description": "Kundan, Victorian",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "995",
+    "deposit": "1300",
+    "costPrice": "2000",
+    "sellingPrice": "2500"
+  },
+  {
+    "id": "PK015",
+    "name": "Navratna Stone Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Small Jewel"
+    ],
+    "price": "299",
+    "deposit": "500",
+    "costPrice": "550",
+    "sellingPrice": "800"
+  },
+  {
+    "id": "PK016",
+    "name": "White Kundan Premium Jewel Set",
+    "description": "Kundan, Victorian",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "695",
+    "deposit": "1000",
+    "costPrice": "1320",
+    "sellingPrice": "1700"
+  },
+  {
+    "id": "PK017",
+    "name": "Jade Polgi Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "595",
+    "deposit": "900",
+    "costPrice": "1100",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "PK018",
+    "name": "Jade Polgi Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "595",
+    "deposit": "800",
+    "costPrice": "1000",
+    "sellingPrice": "1300"
+  },
+  {
+    "id": "PK019",
+    "name": "Jade Polgi Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "995",
+    "deposit": "1400",
+    "costPrice": "2075",
+    "sellingPrice": "2500"
+  },
+  {
+    "id": "PK020",
+    "name": "Emerald Choker Set",
+    "description": "Kundan AD Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "730",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "PK021",
+    "name": "Emerald Necklace Set",
+    "description": "Kundan AD Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "350",
+    "deposit": "600",
+    "costPrice": "640",
+    "sellingPrice": "900"
+  },
+  {
+    "id": "PK022",
+    "name": "Emerald Premium Necklace Set",
+    "description": "Moissanite Polgi Jewel",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1095",
+    "deposit": "1400",
+    "costPrice": "1400",
+    "sellingPrice": "2600"
+  },
+  {
+    "id": "PK023",
+    "name": "Pink Morganit Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "770",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "PK024",
+    "name": "Pink Morganit Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets",
+      "Long Haram",
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "395",
+    "deposit": "700",
+    "costPrice": "770",
+    "sellingPrice": "1100"
+  },
+  {
+    "id": "PK025",
+    "name": "Pink Morganit Premium Necklace Set",
+    "description": "Kundan, Victorian",
+    "category": [
+      "victorian-moissinate"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1195",
+    "deposit": "1600",
+    "costPrice": "2570",
+    "sellingPrice": "3000"
+  },
+  {
+    "id": "PK026",
+    "name": "Jade Polgi Necklace Set",
+    "description": "Kundan Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "1195",
+    "deposit": "1400",
+    "costPrice": "2100",
+    "sellingPrice": "2600"
+  },
+  {
+    "id": "PK027",
+    "name": "Emerald Necklace Set",
+    "description": "Kundan AD Jewel",
+    "category": [
+      "Kundan Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "750",
+    "deposit": "1000",
+    "costPrice": "1370",
+    "sellingPrice": "1700"
+  },
+  {
+    "id": "PB001",
+    "name": "Royal Premium Lakshmi Temple Necklace with Jhumkas",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1099",
+    "deposit": "1400",
+    "costPrice": "2350",
+    "sellingPrice": "2700"
+  },
+  {
+    "id": "PB002",
+    "name": "Royal Premium Lakshmi Temple Haram with Jhumkas",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1399",
+    "deposit": "1600",
+    "costPrice": "2900",
+    "sellingPrice": "3300"
+  },
+  {
+    "id": "PB003",
+    "name": "Bridal Premium Temple Haram Combo with Jhumkas",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "2395",
+    "deposit": "3000",
+    "costPrice": "5250",
+    "sellingPrice": "6000"
+  },
+  {
+    "id": "PB004",
+    "name": "Antique Premium Lakshmi Pendant Necklace with Jhumkas",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "995",
+    "deposit": "1200",
+    "costPrice": "2100",
+    "sellingPrice": "2500"
+  },
+  {
+    "id": "PB005",
+    "name": "Antique Premium Lakshmi Pendant Haram with Jhumkas",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1199",
+    "deposit": "1400",
+    "costPrice": "2650",
+    "sellingPrice": "3100"
+  },
+  {
+    "id": "PB006",
+    "name": "Antique Premium Lakshmi Pendant Combo with Jhumkas",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "2190",
+    "deposit": "2800",
+    "costPrice": "4750",
+    "sellingPrice": "5600"
+  },
+  {
+    "id": "PB007",
+    "name": "Lakshmi Premium Temple Necklace Set",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "799",
+    "deposit": "1000",
+    "costPrice": "1650",
+    "sellingPrice": "2000"
+  },
+  {
+    "id": "PB008",
+    "name": "Premium Green Bead Temple Haram with Jhumkas",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1590",
+    "deposit": "2000",
+    "costPrice": "3450",
+    "sellingPrice": "3800"
+  },
+  {
+    "id": "PB009",
+    "name": "Bridal Premium Temple Haram Combo with Jhumkas",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "2390",
+    "deposit": "3000",
+    "costPrice": "5100",
+    "sellingPrice": "5700"
+  },
+  {
+    "id": "PB010",
+    "name": "Real kemp jadau bridal Haram Set",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1495",
+    "deposit": "2000",
+    "costPrice": "3300",
+    "sellingPrice": "3800"
+  },
+  {
+    "id": "PB011",
+    "name": "Premium Temple Bridal Combo Set",
+    "description": "Antique Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1195",
+    "deposit": "1600",
+    "costPrice": "2500",
+    "sellingPrice": "3000"
+  },
+  {
+    "id": "PB012",
+    "name": "Triple Layer Kemp Haram with Jhumkas (Premium)",
+    "description": "Premium Bridal Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "799",
+    "deposit": "1100",
+    "costPrice": "1600",
+    "sellingPrice": "2000"
+  },
+  {
+    "id": "PB013",
+    "name": "Geometric Necklace Set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "799",
+    "deposit": "1100",
+    "costPrice": "1650",
+    "sellingPrice": "2100"
+  },
+  {
+    "id": "PB014",
+    "name": "Guttapusalu Style Pendant Necklace Set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "850",
+    "deposit": "1100",
+    "costPrice": "1730",
+    "sellingPrice": "2100"
+  },
+  {
+    "id": "PB015",
+    "name": "Guttapusalu Style Pendant Haram Set ((Premium))",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1195",
+    "deposit": "1900",
+    "costPrice": "2610",
+    "sellingPrice": "3000"
+  },
+  {
+    "id": "PB016",
+    "name": "Guttapusalu Style Pendant bridal combo set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1995",
+    "deposit": "2500",
+    "costPrice": "4340",
+    "sellingPrice": "5100"
+  },
+  {
+    "id": "PB017",
+    "name": "Lakshmi Antique Pendant Necklace Set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "999",
+    "deposit": "1300",
+    "costPrice": "2030",
+    "sellingPrice": "2400"
+  },
+  {
+    "id": "PB018",
+    "name": "Royal South Indian Haram with Jhumkas (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1495",
+    "deposit": "1900",
+    "costPrice": "3200",
+    "sellingPrice": "3600"
+  },
+  {
+    "id": "PB019",
+    "name": "Grand Royal Bridal Haram with Jhumkas (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "2495",
+    "deposit": "3100",
+    "costPrice": "5400",
+    "sellingPrice": "2100"
+  },
+  {
+    "id": "PB020",
+    "name": "Royal Lakshmi 3d Temple Haram Set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1995",
+    "deposit": "2400",
+    "costPrice": "4050",
+    "sellingPrice": "4700"
+  },
+  {
+    "id": "PB021",
+    "name": "Emerald Pearl Temple Choker set (Premium)",
+    "description": "Premium Gold jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Small Jewel"
+    ],
+    "price": "299",
+    "deposit": "600",
+    "costPrice": "650",
+    "sellingPrice": "900"
+  },
+  {
+    "id": "PB022",
+    "name": "Pearl Guttapusalu Small Choker Set (Premium)",
+    "description": "Premium Gold jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Small Jewel"
+    ],
+    "price": "249",
+    "deposit": "500",
+    "costPrice": "450",
+    "sellingPrice": "650"
+  },
+  {
+    "id": "PB023",
+    "name": "Small Choker Set",
+    "description": "Premium Gold jewel (Premium)",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Small Jewel"
+    ],
+    "price": "249",
+    "deposit": "500",
+    "costPrice": "450",
+    "sellingPrice": "650"
+  },
+  {
+    "id": "PB024",
+    "name": "Small manga Choker set (Premium)",
+    "description": "Premium Gold jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Small Jewel"
+    ],
+    "price": "249",
+    "deposit": "500",
+    "costPrice": "480",
+    "sellingPrice": "700"
+  },
+  {
+    "id": "PB025",
+    "name": "Annapakshi Long Haram Set (Premium)",
+    "description": "Premium Gold jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1099",
+    "deposit": "1500",
+    "costPrice": "2340",
+    "sellingPrice": "2700"
+  },
+  {
+    "id": "PB026",
+    "name": "Kemp Guttapusalu Choker Set (Premium)",
+    "description": "Premium Gold jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "599",
+    "deposit": "900",
+    "costPrice": "1240",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "PB027",
+    "name": "Kemp Guttapusalu Choker set (Premium)",
+    "description": "Premium Gold jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "799",
+    "deposit": "1100",
+    "costPrice": "1599",
+    "sellingPrice": "1900"
+  },
+  {
+    "id": "PB028",
+    "name": "Kasumalai set",
+    "description": "Premium Gold jewel (Premium)",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "799",
+    "deposit": "1200",
+    "costPrice": "1120+570= 1690",
+    "sellingPrice": "2100"
+  },
+  {
+    "id": "PB029",
+    "name": "Classic Guttapusalu Bridal Set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1899",
+    "deposit": "2300",
+    "costPrice": "1740+1550+650 =3940",
+    "sellingPrice": "4500"
+  },
+  {
+    "id": "PB030",
+    "name": "Grand Guttapusalu Bridal Set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "2299",
+    "deposit": "2800",
+    "costPrice": "1740+1550+1600= 4890",
+    "sellingPrice": "5500"
+  },
+  {
+    "id": "PB031",
+    "name": "Guttapusalu Bridal Set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1599",
+    "deposit": "2000",
+    "costPrice": "1740+1550=3290",
+    "sellingPrice": "3700"
+  },
+  {
+    "id": "PB032",
+    "name": "Kasumalai Bridal Set (Premium)",
+    "description": "Premium Bridal jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1045",
+    "deposit": "1400",
+    "costPrice": "1120+570+450=2140",
+    "sellingPrice": "2500"
+  },
+  {
+    "id": "BA001",
+    "name": "Royal Lakshmi Gold Beads Semi Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": "695",
+    "deposit": "1000",
+    "costPrice": "1300",
+    "sellingPrice": "1800"
+  },
+  {
+    "id": "BA002",
+    "name": "Traditional Temple Green Beads Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": "695",
+    "deposit": "1000",
+    "costPrice": "1300",
+    "sellingPrice": "1800"
+  },
+  {
+    "id": "BA003",
+    "name": "Grand Navaratna Green Beads Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": "1095",
+    "deposit": "1000",
+    "costPrice": "1950",
+    "sellingPrice": "2500"
+  },
+  {
+    "id": "BA004",
+    "name": "Meenakshi Temple Inspired Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": "795",
+    "deposit": "800",
+    "costPrice": "1450",
+    "sellingPrice": "1800"
+  },
+  {
+    "id": "BA005",
+    "name": "Antique Lakshmi Semi Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": "695",
+    "deposit": "800",
+    "costPrice": "1300",
+    "sellingPrice": "1800"
+  },
+  {
+    "id": "BA006",
+    "name": "Majestic Peacock Temple Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": "795",
+    "deposit": "1000",
+    "costPrice": "1550",
+    "sellingPrice": "2200"
+  },
+  {
+    "id": "BA007",
+    "name": "Elegant South Indian Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": "695",
+    "deposit": "600",
+    "costPrice": "1400",
+    "sellingPrice": "2000"
+  },
+  {
+    "id": "BA008",
+    "name": "Traditional Temple Grandeur Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": "795",
+    "deposit": "600",
+    "costPrice": "1600",
+    "sellingPrice": "2000"
+  },
+  {
+    "id": "BA009",
+    "name": "Traditional Kemp Stone Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": "795",
+    "deposit": "1000",
+    "costPrice": "1460",
+    "sellingPrice": "2200"
+  },
+  {
+    "id": "BA010",
+    "name": "Antique Lakshmi full Bridal Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Accessories"
+    ],
+    "occasion": [
+      "Bridal Set"
+    ],
+    "price": "1095",
+    "deposit": "1200",
+    "costPrice": "2120",
+    "sellingPrice": "3000"
+  },
+  {
+    "id": "BA011",
+    "name": "Peacock Lakshmi Temple jewel Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "650",
+    "deposit": "900",
+    "costPrice": "1300",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "BA012",
+    "name": "Short Temple Necklace Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Small Jewel"
+    ],
+    "price": "250",
+    "deposit": "400",
+    "costPrice": "480",
+    "sellingPrice": "700"
+  },
+  {
+    "id": "BA013",
+    "name": "Peacock Temple Long Haram Set",
+    "description": "Bridal Antique Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Small Jewel"
+    ],
+    "price": "399",
+    "deposit": "700",
+    "costPrice": "800",
+    "sellingPrice": "1300"
+  },
+  {
+    "id": "HJ001",
+    "name": "Gulnaar Heritage Necklace Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "399",
+    "deposit": "700",
+    "costPrice": "560",
+    "sellingPrice": "900"
+  },
+  {
+    "id": "HJ002",
+    "name": "Maharani Heritage Layered Haar Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1095",
+    "deposit": "1400",
+    "costPrice": "2100",
+    "sellingPrice": "2500"
+  },
+  {
+    "id": "HJ003",
+    "name": "Begum Royale Layered Haar Bridal Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "1495",
+    "deposit": "1800",
+    "costPrice": "2660",
+    "sellingPrice": "3000"
+  },
+  {
+    "id": "HJ004",
+    "name": "Jashn-e-Noor Necklace Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "399",
+    "deposit": "700",
+    "costPrice": "560",
+    "sellingPrice": "900"
+  },
+  {
+    "id": "HJ005",
+    "name": "Mughal Rani Layered Haar Bridal Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "1495",
+    "deposit": "1800",
+    "costPrice": "2660",
+    "sellingPrice": "3000"
+  },
+  {
+    "id": "HJ006",
+    "name": "Rajputana Heritage Necklace Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "495",
+    "deposit": "800",
+    "costPrice": "830",
+    "sellingPrice": "1300"
+  },
+  {
+    "id": "HJ007",
+    "name": "Royal Jharokha Layered Haar Bridal Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Set",
+      "Reception"
+    ],
+    "price": "1595",
+    "deposit": "2400",
+    "costPrice": "2930",
+    "sellingPrice": "3700"
+  },
+  {
+    "id": "HJ009",
+    "name": "Rajwada Long Haar Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "695",
+    "deposit": "1000",
+    "costPrice": "1230",
+    "sellingPrice": "1500"
+  },
+  {
+    "id": "HJ010",
+    "name": "Rajwada Semi Bridal Set",
+    "description": "Haridage Jewel",
+    "category": [
+      "Gold Antique Jewels"
+    ],
+    "type": [
+      "Semi Bridal & Combo Sets"
+    ],
+    "occasion": [
+      "Bridal Maid",
+      "Reception"
+    ],
+    "price": "1095",
+    "deposit": "1400",
+    "costPrice": "1800",
+    "sellingPrice": "2200"
+  },
+  {
+    "id": "AS001",
+    "name": "Crystal Small AD Jewel Set (Silver)",
+    "description": "Silver Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Party Wear",
+      "Small Jewel"
+    ],
+    "price": 199,
+    "deposit": 400,
+    "costPrice": 450,
+    "sellingPrice": 600
+  },
+  {
+    "id": "AS002",
+    "name": "Crystal Choker AD Jewel Set (Silver)",
+    "description": "Silver Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Reception",
+      "Bridal Maid"
+    ],
+    "price": 695,
+    "deposit": 900,
+    "costPrice": 1300,
+    "sellingPrice": 1600
+  },
+  {
+    "id": "AS003",
+    "name": "Crystal Nacklace Ad Jewel Set (Silver)",
+    "description": "Silver Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace"
+    ],
+    "occasion": [
+      "Reception",
+      "Bridal Maid"
+    ],
+    "price": 595,
+    "deposit": 900,
+    "costPrice": 1180,
+    "sellingPrice": 1600
+  },
+  {
+    "id": "AS004",
+    "name": "Crystal Three-Layered AD Jewel Set (Silver)",
+    "description": "Silver Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Choker & Necklace",
+      "Long Haram"
+    ],
+    "occasion": [
+      "Reception",
+      "Bridal Maid"
+    ],
+    "price": 695,
+    "deposit": 1100,
+    "costPrice": 1450,
+    "sellingPrice": 2000
+  },
+  {
+    "id": "AS005",
+    "name": "Crystal Three-Tier AD Jewel Set (Silver)",
+    "description": "Silver Plated AD Jewel",
+    "category": [
+      "AD Jewels"
+    ],
+    "type": [
+      "Long Haram"
+    ],
+    "occasion": [
+      "Reception",
+      "Bridal Set"
+    ],
+    "price": 1195,
+    "deposit": 1800,
+    "costPrice": 2700,
+    "sellingPrice": 3500
+  }
 ]
