@@ -20,7 +20,7 @@ import '../styles/ApilaJewels.css';
 
 /* ── Filter data ── */
 const JEWELLERY_TYPE_OPTIONS = ['Choker & Necklace', 'Long Haram', 'Semi Bridal & Combo', 'Full Bridal Set', 'Bangles & Bracelets', 'Accessories'];
-const OCCASION_OPTIONS = ['Bridal', 'Festive', 'Party Wear', 'Engagement', 'Daily Wear'];
+const OCCASION_OPTIONS = ['Bridal Set', 'Bridal Maid', 'Designer', 'Reception', 'Party Wear', 'Small Jewel'];
 const PRICE_OPTIONS = ['Under ₹1000', '₹1000 - ₹2000', '₹2000 - ₹3000', 'Above ₹3000'];
 const COLOR_OPTIONS = ['Gold', 'Silver', 'Rose Gold', 'Emerald Green', 'Ruby Red', 'Mehndi Polish'];
 const STONE_COLOR_OPT = ['Clear', 'Blue', 'Pink', 'Red', 'Green', 'Yellow', 'White', 'Gold', 'Various', 'Orange', 'Black', 'Purple'];
@@ -191,10 +191,11 @@ export default function DesktopShop() {
     if (occ) {
       const typeName = occasionMap[occ.toLowerCase()];
       if (typeName) {
-        setActiveFilters({ Category: [], Type: [typeName], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
+        setActiveFilters({ Category: [], Type: [], Occasion: [typeName], Price: [], Colour: [], StoneColour: [], Stone: [] });
         return;
       }
     }
+
 
     if (!cat || !categories.length) return;
     const norm = cat.toLowerCase();

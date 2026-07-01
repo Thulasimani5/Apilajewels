@@ -67,6 +67,8 @@ const JewelleryListing = () => {
     const newCategoryFilters = [];
     const newTypeFilters = [];
 
+    const newOccasionFilters = [];
+
     // Helper to map normalized strings to display names
     const typeMap = {
       'bridal-set': 'Bridal Set',
@@ -117,20 +119,20 @@ const JewelleryListing = () => {
 
     if (occasionParam) {
       const normalized = occasionParam.toLowerCase();
-      if (normalized === 'bridal' || normalized === 'bridal-set') newTypeFilters.push('Bridal Set');
-      else if (normalized === 'reception' || normalized === 'reception-jewels') newTypeFilters.push('Reception');
-      else if (normalized === 'party' || normalized === 'party-wear') newTypeFilters.push('Party Wear');
-      else if (normalized === 'bridesmaid') newTypeFilters.push('Bridal Maid');
-      else if (normalized === 'designer' || normalized === 'designer-collection') newTypeFilters.push('Designer');
-      else if (normalized === 'small' || normalized === 'small-jewel' || normalized === 'small-jewels') newTypeFilters.push('Small Jewel');
-      else if (typeMap[normalized]) newTypeFilters.push(typeMap[normalized]); // fallback for other type mappings
+      if (normalized === 'bridal' || normalized === 'bridal-set') newOccasionFilters.push('Bridal Set');
+      else if (normalized === 'reception' || normalized === 'reception-jewels') newOccasionFilters.push('Reception');
+      else if (normalized === 'party' || normalized === 'party-wear') newOccasionFilters.push('Party Wear');
+      else if (normalized === 'bridesmaid') newOccasionFilters.push('Bridal Maid');
+      else if (normalized === 'designer' || normalized === 'designer-collection') newOccasionFilters.push('Designer');
+      else if (normalized === 'small' || normalized === 'small-jewel' || normalized === 'small-jewels') newOccasionFilters.push('Small Jewel');
+      else if (typeMap[normalized]) newOccasionFilters.push(typeMap[normalized]); // fallback for other type mappings
     }
 
     setActiveFilters({
       Colour: [],
       Type: newTypeFilters,
       Price: [],
-      Occasion: [],
+      Occasion: newOccasionFilters,
       Category: newCategoryFilters,
       StoneName: [],
       StoneColour: []
