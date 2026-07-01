@@ -211,7 +211,7 @@ const FilterSidebar = ({ activeFilters, onFilterChange, products = [] }) => {
       <div style={{ flex: 1, overflowY: 'auto', scrollbarWidth: 'none' }}>
         {renderSection('Category', 'Category', categoryOptions, true)}
         {renderSection('Jewellery Type', 'Type', JEWELLERY_TYPE_OPTIONS, true)}
-        {renderSection('Occasion', 'Occasion', OCCASION_OPTIONS)}
+        {renderSection('Occasion', 'Occasion', OCCASION_OPTIONS, true)}
         {renderSection('Price', 'Price', PRICE_OPTIONS)}
         {renderSection('Color', 'Colour', COLOUR_OPTIONS)}
         {renderSection('Stone Color', 'StoneColour', STONE_COLOUR_OPTIONS)}

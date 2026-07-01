@@ -110,7 +110,7 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
   const [expandedSections, setExpandedSections] = useState({
     Category: true,
     Type: true,
-    Occasion: false,
+    Occasion: true,
     Price: false,
     Colour: false,
     StoneColour: false,
