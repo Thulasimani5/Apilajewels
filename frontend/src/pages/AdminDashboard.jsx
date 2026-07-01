@@ -861,7 +861,7 @@ const AdminDashboard = () => {
                       <div className="grid grid-cols-2 gap-2">
                         {[
                           "Crystal", "Sapphire", "Pink Morganite", "Ruby", "Emerald", "Jade", "Kemp Stone", "Pearl",
-                          "Moissanite Stone", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia", "Amethyst", "Amber", "Pink Topaz", "Navarathna", "Polki Stone", "Rose Quartz", "Green Onyx"
+                          "Moissanite Stone", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia", "Amethyst", "Amber", "Pink Topaz", "Navarathna", "Polki Stone", "Polki Diamond", "Rose Quartz", "Green Onyx"
                         ].map(s => (
                           <label key={s} className="inline-flex items-center">
                             <input
