@@ -109,6 +109,7 @@ const JewelleryListing = () => {
     if (categoryParam) {
       const normalized = categoryParam.toLowerCase();
       // First try to match a known category in the data model
+      // e.g. "AD Jewels" -> "ad-jewels", "Gold Antique Jewels" -> "gold-antique-jewels"
       const matchedCategory = categories.find(c =>
         c.name.toLowerCase().replace(/\s+/g, '-') === normalized
       );
@@ -117,22 +118,22 @@ const JewelleryListing = () => {
       } else if (typeMap[normalized]) {
         // If the param actually represents a type/occasion, push to type filters
         newTypeFilters.push(typeMap[normalized]);
-      } else if (normalized === 'moissanite') {
-        newCategoryFilters.push('Moissanite');
+      } else if (normalized === 'victorian-moissinate' || normalized === 'moissanite' || normalized === 'moissinate') {
+        newCategoryFilters.push('victorian-moissinate');
       } else if (normalized.includes('temple')) {
         newCategoryFilters.push('Temple Jewellery');
-      } else if (normalized === 'kundan') {
-        newCategoryFilters.push('Kundan');
-      } else if (normalized === 'american-diamond' || normalized === 'american-diamond-bangles') {
+      } else if (normalized === 'kundan' || normalized === 'kundan-jewels') {
+        newCategoryFilters.push('Kundan Jewels');
+      } else if (normalized === 'american-diamond' || normalized === 'american-diamond-bangles' || normalized === 'ad-jewels') {
         newCategoryFilters.push('AD Jewels');
       } else if (normalized.includes('ad')) {
         newCategoryFilters.push('AD Jewels');
       } else if (normalized === 'polki') {
         newCategoryFilters.push('Polki');
-      } else if (normalized.includes('antique') || normalized === 'gold') {
-        newCategoryFilters.push('Antique Jewel');
+      } else if (normalized.includes('antique') || normalized === 'gold' || normalized === 'gold-antique-jewels') {
+        newCategoryFilters.push('Gold Antique Jewels');
       } else {
-        // Fallback for unmatched categories like "Necklace", "Earrings", etc.
+        // Fallback: try to push the raw param as category name
         newCategoryFilters.push(categoryParam);
       }
     }

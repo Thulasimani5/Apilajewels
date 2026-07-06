@@ -248,11 +248,11 @@ export default function DesktopShop() {
 
     const matched = categories.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === norm);
     const name = matched?.name
-      || (norm === 'moissanite' || norm === 'victorian-moissinate' ? 'Moissanite' : null)
+      || (norm === 'moissanite' || norm === 'victorian-moissinate' || norm === 'moissinate' ? 'victorian-moissinate' : null)
       || (norm.includes('temple') ? 'Temple Jewellery' : null)
-      || (norm === 'kundan' || norm === 'kundan-jewels' ? 'Kundan' : null)
+      || (norm === 'kundan' || norm === 'kundan-jewels' ? 'Kundan Jewels' : null)
       || (norm === 'american-diamond' || norm === 'american-diamond-bangles' || norm === 'ad-jewels' ? 'AD Jewels' : null)
-      || (norm.includes('antique') ? 'Antique Jewel' : null)
+      || (norm.includes('antique') || norm === 'gold-antique-jewels' ? 'Gold Antique Jewels' : null)
       || (norm === 'polki' ? 'Polki' : null)
       || cat;
     setActiveFilters({ Category: [name], Type: [], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });

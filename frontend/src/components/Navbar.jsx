@@ -320,10 +320,10 @@ const Navbar = () => {
               </p>
               <div className="flex flex-col">
                 {[
-                  { label: 'VICTORIAN & MOISSINATE', url: '/shop?category=moissinate' },
+                  { label: 'VICTORIAN & MOISSINATE', url: '/shop?category=victorian-moissinate' },
                   { label: 'AD JEWELS', url: '/shop?category=ad-jewels' },
-                  { label: 'GOLD ANTIQUE JEWELS', url: '/shop?category=gold-antique' },
-                  { label: 'KUNDAN JEWELS', url: '/shop?category=kundan' },
+                  { label: 'GOLD ANTIQUE JEWELS', url: '/shop?category=gold-antique-jewels' },
+                  { label: 'KUNDAN JEWELS', url: '/shop?category=kundan-jewels' },
                 ].map((item) => (
                   <Link
                     key={item.label}
@@ -374,12 +374,12 @@ const Navbar = () => {
               </p>
               <div className="flex flex-col">
                 {[
-                  { label: 'BRIDAL SET', url: '/shop?occasion=bridal' },
+                  { label: 'BRIDAL SET', url: '/shop?occasion=bridal-set' },
                   { label: 'BRIDEMAID', url: '/shop?occasion=bridesmaid' },
                   { label: 'DESIGNER COLLECTION', url: '/shop?occasion=designer' },
                   { label: 'RECEPTION JEWELS', url: '/shop?occasion=reception' },
-                  { label: 'PARTY WEAR', url: '/shop?occasion=party' },
-                  { label: 'SMALL JEWELS', url: '/shop?occasion=small' },
+                  { label: 'PARTY WEAR', url: '/shop?occasion=party-wear' },
+                  { label: 'SMALL JEWELS', url: '/shop?occasion=small-jewels' },
                 ].map((item) => (
                   <Link
                     key={item.label}
