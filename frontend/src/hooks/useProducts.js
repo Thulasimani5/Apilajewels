@@ -13,7 +13,7 @@ export const fetchProducts = async ({ page = 1, limit = 24 } = {}) => {
 // Fetcher for ALL products (used when filters are needed client-side)
 export const fetchAllProducts = async () => {
   const response = await fetch(
-    `${API_BASE_URL}/api/jewellery?limit=500`
+    `${API_BASE_URL}/api/jewellery?random=true&limit=500`
   );
   if (!response.ok) throw new Error("Failed to load products");
   return response.json();

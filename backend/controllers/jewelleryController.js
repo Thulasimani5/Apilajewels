@@ -49,7 +49,7 @@ exports.getJewelleries = async (req, res) => {
     const reqQuery = { ...req.query };
 
     // Fields to exclude from the base filter
-    const removeFields = ['select', 'sort', 'page', 'limit', 'search'];
+    const removeFields = ['select', 'sort', 'page', 'limit', 'search', 'random'];
     removeFields.forEach(param => delete reqQuery[param]);
 
     // Create base filter (convert gt/gte/lt/lte/in operators)
@@ -78,30 +78,49 @@ exports.getJewelleries = async (req, res) => {
       };
     }
 
-    let query = Jewellery.find(finalFilter);
+    const isRandom = req.query.random === 'true';
+    const limit = parseInt(req.query.limit, 10) || 10;
 
-    // Sort
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(',').join(' ');
-      query = query.sort(sortBy);
+    let jewelleries;
+    if (isRandom) {
+      jewelleries = await Jewellery.aggregate([
+        { $match: finalFilter },
+        { $sample: { size: limit } }
+      ]);
     } else {
-      query = query.sort('-createdAt');
+      let query = Jewellery.find(finalFilter);
+
+      // Sort
+      if (req.query.sort) {
+        const sortBy = req.query.sort.split(',').join(' ');
+        query = query.sort(sortBy);
+      } else {
+        query = query.sort('-createdAt');
+      }
+
+      // Pagination
+      const page = parseInt(req.query.page, 10) || 1;
+      const startIndex = (page - 1) * limit;
+      query = query.skip(startIndex).limit(limit);
+
+      // Executing query
+      jewelleries = await query;
     }
 
-    // Pagination
-    const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 10;
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
     const total = await Jewellery.countDocuments(JSON.parse(queryStr));
 
-    query = query.skip(startIndex).limit(limit);
-
-    // Executing query
-    const jewelleries = await query;
-
     const data = await Promise.all(jewelleries.map(async jewellery => {
-      const doc = jewellery.toObject();
+      const doc = jewellery.toObject ? jewellery.toObject() : jewellery;
+      // Populate virtuals for compatibility (if object is from aggregation)
+      if (doc.rentalPrice === undefined && doc.price !== undefined) {
+        doc.rentalPrice = doc.price;
+      }
+      if (doc.code === undefined && doc.jewelId !== undefined) {
+        doc.code = doc.jewelId;
+      }
+      if (doc.id === undefined && doc._id !== undefined) {
+        doc.id = doc._id.toString();
+      }
       const autoImages = await getAutoImages(doc.jewelId);
       if (autoImages && autoImages.length > 0) {
         // Option to combine or override; overriding prioritizes folder structure
@@ -112,6 +131,9 @@ exports.getJewelleries = async (req, res) => {
 
     // Pagination result
     const pagination = {};
+    const page = parseInt(req.query.page, 10) || 1;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
 
     if (endIndex < total) {
       pagination.next = {
