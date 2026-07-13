@@ -30,7 +30,6 @@ const JewellerySchema = new mongoose.Schema({
   type: {
     type: [String],
     required: [true, 'Please add a type'],
-    enum: ["Semi Bridal & Combo Sets", "Full Bridal Set", "Choker & Necklace", "Long Haram", "Bangles & Bracelets", "Accessories"],
     default: []
   },
   price: {

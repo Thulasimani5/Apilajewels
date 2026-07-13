@@ -262,7 +262,8 @@ export default function DesktopShop() {
   const { data: productsData, isLoading, isError, error } = useAllProducts();
   const products = productsData?.data || [];
 
-  const categoryOptions = useMemo(() => categories.map(c => c.name), [categories]);
+  const categoryOptions = useMemo(() => categories.filter(c => c.showInSection !== 'type').map(c => c.name), [categories]);
+  const typeOptions = useMemo(() => categories.filter(c => c.showInSection === 'type').map(c => c.name), [categories]);
 
   /* ── Toggle filter ── */
   const toggle = (section, value) => {
@@ -463,7 +464,7 @@ export default function DesktopShop() {
 
           {/* JEWELLERY TYPE */}
           <FilterSection title="Jewellery Type" open={open.Type} onToggle={() => setOpen(o => ({ ...o, Type: !o.Type }))}>
-            {JEWELLERY_TYPE_OPTIONS.map(opt => (
+            {typeOptions.map(opt => (
               <FilterItem
                 key={opt}
                 label={opt}

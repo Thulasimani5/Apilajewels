@@ -3,7 +3,6 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import CategoryContext from '../context/CategoryContext';
 
 /* ── Filter options ── */
-const JEWELLERY_TYPE_OPTIONS = ['Choker & Necklace', 'Long Haram', 'Semi Bridal & Combo Sets', 'Full Bridal Set', 'Bangles & Bracelets', 'Accessories'];
 const COLOUR_OPTIONS = ['Gold', 'Silver', 'Rose Gold', 'Emerald Green', 'Ruby Red', 'Mehndi Polish'];
 const PRICE_OPTIONS = ['Under ₹1000', '₹1000 - ₹2000', '₹2000 - ₹3000', 'Above ₹3000'];
 const OCCASION_OPTIONS = ['Bridal Set', 'Bridal Maid', 'Designer', 'Reception', 'Party Wear', 'Small Jewel'];
@@ -107,7 +106,8 @@ const CheckboxItem = ({ label, checked, onChange }) => (
 const FilterSidebar = ({ activeFilters, onFilterChange, products = [] }) => {
   const { categories } = useContext(CategoryContext);
 
-  const categoryOptions = useMemo(() => categories.map(c => c.name), [categories]);
+  const categoryOptions = useMemo(() => categories.filter(c => c.showInSection !== 'type').map(c => c.name), [categories]);
+  const typeOptions = useMemo(() => categories.filter(c => c.showInSection === 'type').map(c => c.name), [categories]);
 
   /* ── Toggle a filter value ── */
   const toggleFilter = (section, value) => {
@@ -210,7 +210,7 @@ const FilterSidebar = ({ activeFilters, onFilterChange, products = [] }) => {
       {/* ── Filter Sections ── */}
       <div style={{ flex: 1, overflowY: 'auto', scrollbarWidth: 'none' }}>
         {renderSection('Category', 'Category', categoryOptions, true)}
-        {renderSection('Jewellery Type', 'Type', JEWELLERY_TYPE_OPTIONS, true)}
+        {renderSection('Jewellery Type', 'Type', typeOptions, true)}
         {renderSection('Occasion', 'Occasion', OCCASION_OPTIONS, true)}
         {renderSection('Price', 'Price', PRICE_OPTIONS)}
         {renderSection('Color', 'Colour', COLOUR_OPTIONS)}

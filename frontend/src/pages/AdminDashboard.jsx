@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2, Eye } from 'lucide-react';
+import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2, Eye, Tag } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import CategoryContext from '../context/CategoryContext';
 import { useContext } from 'react';
@@ -123,11 +123,13 @@ const AdminDashboard = () => {
   }, [activeTab, token]);
 
   const occasions = ["Bridal Set", "Bridal Maid", "Designer", "Reception", "Party Wear", "Small Jewel"];
-  const types = ["Semi Bridal & Combo Sets", "Full Bridal Set", "Choker & Necklace", "Long Haram", "Bangles & Bracelets", "Accessories"];
+  const categoryNames = categories.filter(c => c.showInSection !== 'type').map(c => c.name);
+  const typeNames = categories.filter(c => c.showInSection === 'type').map(c => c.name);
   const colours = ["Gold", "Silver", "Rose Gold", "Emerald Green", "Ruby Red", "Mehndi Polish"];
 
   const [newCategoryName, setNewCategoryName] = useState('');
   const [newCategorySubtext, setNewCategorySubtext] = useState('');
+  const [newCategoryShowInSection, setNewCategoryShowInSection] = useState('category');
   const [newCategoryImage, setNewCategoryImage] = useState(null);
   const [isAddingCategory, setIsAddingCategory] = useState(false);
 
@@ -139,12 +141,14 @@ const AdminDashboard = () => {
       const formData = new FormData();
       formData.append('name', newCategoryName);
       formData.append('subtext', newCategorySubtext);
+      formData.append('showInSection', newCategoryShowInSection);
       if (newCategoryImage) {
         formData.append('image', newCategoryImage);
       }
       await addCategory(formData, token);
       setNewCategoryName('');
       setNewCategorySubtext('');
+      setNewCategoryShowInSection('category');
       setNewCategoryImage(null);
       alert("Category added successfully");
     } catch (err) {
@@ -167,6 +171,7 @@ const AdminDashboard = () => {
   const [editingCategory, setEditingCategory] = useState(null); // holds the category object being edited
   const [editCategoryName, setEditCategoryName] = useState('');
   const [editCategorySubtext, setEditCategorySubtext] = useState('');
+  const [editCategoryShowInSection, setEditCategoryShowInSection] = useState('category');
   const [editCategoryImage, setEditCategoryImage] = useState(null);
   const [isSavingCategory, setIsSavingCategory] = useState(false);
 
@@ -174,17 +179,18 @@ const AdminDashboard = () => {
     setEditingCategory(cat);
     setEditCategoryName(cat.name);
     setEditCategorySubtext(cat.subtext || '');
+    setEditCategoryShowInSection(cat.showInSection || 'category');
     setEditCategoryImage(null);
   };
 
   const handleUpdateCategory = async (e) => {
     e.preventDefault();
-    if (!editCategoryName.trim() || !editCategorySubtext.trim()) return;
     setIsSavingCategory(true);
     try {
       const formData = new FormData();
       formData.append('name', editCategoryName);
       formData.append('subtext', editCategorySubtext);
+      formData.append('showInSection', editCategoryShowInSection);
       if (editCategoryImage) formData.append('image', editCategoryImage);
       await updateCategory(editingCategory._id, formData, token);
       setEditingCategory(null);
@@ -192,6 +198,47 @@ const AdminDashboard = () => {
       alert(err?.response?.data?.error || 'Error updating category');
     } finally {
       setIsSavingCategory(false);
+    }
+  };
+
+  // ── Jewellery Types state (reuses CategoryContext with showInSection='type') ──
+  const typesList = categories.filter(c => c.showInSection === 'type');
+  const [typesLoading] = useState(false);
+  const [typeError, setTypeError] = useState('');
+  const [showTypeForm, setShowTypeForm] = useState(false);
+  const [newTypeName, setNewTypeName] = useState('');
+  const [editingTypeId, setEditingTypeId] = useState(null);
+  const [isSavingType, setIsSavingType] = useState(false);
+
+  const handleSaveType = async () => {
+    if (!newTypeName.trim()) { setTypeError('Please enter a type name.'); return; }
+    setTypeError('');
+    setIsSavingType(true);
+    try {
+      const formDataType = new FormData();
+      formDataType.append('name', newTypeName.trim());
+      formDataType.append('showInSection', 'type');
+      if (editingTypeId) {
+        await updateCategory(editingTypeId, formDataType, token);
+      } else {
+        await addCategory(formDataType, token);
+      }
+      setShowTypeForm(false);
+      setNewTypeName('');
+      setEditingTypeId(null);
+    } catch (err) {
+      setTypeError('Error saving type. Please try again.');
+    } finally {
+      setIsSavingType(false);
+    }
+  };
+
+  const handleDeleteType = async (id) => {
+    if (!window.confirm('Delete this jewellery type?')) return;
+    try {
+      await deleteCategory(id, token);
+    } catch (err) {
+      alert('Error deleting type.');
     }
   };
 
@@ -466,6 +513,12 @@ const AdminDashboard = () => {
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'categories' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
           >
             <List size={20} /> Categories
+          </button>
+          <button 
+            onClick={() => { setActiveTab('types'); setShowAddForm(false); }}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'types' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
+          >
+            <Tag size={20} /> Jewellery Types
           </button>
         </nav>
         <div className="absolute bottom-0 w-64 p-4 border-t border-gray-200">
@@ -770,7 +823,7 @@ const AdminDashboard = () => {
                       <FieldUpdateBtn field="category" value={formData.category} />
                     </div>
                     <div className="grid grid-cols-2 gap-2">
-                      {(categories || []).map(c => (
+                      {(categories || []).filter(c => c.showInSection !== 'type').map(c => (
                         <label key={c._id} className="inline-flex items-center">
                           <input
                             type="checkbox"
@@ -829,7 +882,7 @@ const AdminDashboard = () => {
                         <FieldUpdateBtn field="type" value={formData.type} />
                       </div>
                       <div className="grid grid-cols-2 gap-2">
-                        {types.map(t => (
+                        {typeNames.map(t => (
                           <label key={t} className="inline-flex items-center">
                             <input
                               type="checkbox"
@@ -1218,12 +1271,12 @@ const AdminDashboard = () => {
           {activeTab === 'categories' && (
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
               <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-                <h2 className="font-semibold text-gray-800">Manage Categories</h2>
+                <h2 className="font-semibold text-gray-800">Manage Categories & Types</h2>
               </div>
               <div className="p-6 border-b border-gray-100">
                 <form onSubmit={handleAddCategory} className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Category Name <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Name <span className="text-red-500">*</span></label>
                     <input 
                       type="text" 
                       value={newCategoryName} 
@@ -1234,18 +1287,29 @@ const AdminDashboard = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Subtext <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Display in Filter Section <span className="text-red-500">*</span></label>
+                    <select 
+                      value={newCategoryShowInSection} 
+                      onChange={(e) => setNewCategoryShowInSection(e.target.value)} 
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm bg-white" 
+                      required
+                    >
+                      <option value="category">Category Filter</option>
+                      <option value="type">Jewellery Type Filter</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Subtext (Optional)</label>
                     <input 
                       type="text" 
                       value={newCategorySubtext} 
                       onChange={(e) => setNewCategorySubtext(e.target.value)} 
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] text-sm" 
                       placeholder="e.g. Timeless Elegance"
-                      required
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Category Image (Optional)</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Image (Optional)</label>
                     <input 
                       type="file" 
                       accept="image/*"
@@ -1253,13 +1317,13 @@ const AdminDashboard = () => {
                       className="w-full px-3 py-1.5 border border-gray-300 rounded-md focus:outline-none text-sm bg-white file:mr-2 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-[#FFF8F3] file:text-[#B07A85]" 
                     />
                   </div>
-                  <div className="flex items-end">
+                  <div className="flex items-end md:col-span-2">
                     <button 
                       type="submit" 
                       disabled={isAddingCategory}
                       className="flex items-center gap-2 bg-[#B07A85] text-white px-6 py-2 rounded-lg text-sm font-semibold hover:bg-[#9E6A75] transition-colors shadow-sm disabled:opacity-50 h-[38px]"
                     >
-                      <Plus size={16} /> {isAddingCategory ? 'Adding...' : 'Add Category'}
+                      <Plus size={16} /> {isAddingCategory ? 'Adding...' : 'Add Item'}
                     </button>
                   </div>
                 </form>
@@ -1279,8 +1343,20 @@ const AdminDashboard = () => {
                               <input type="text" value={editCategoryName} onChange={e => setEditCategoryName(e.target.value)} className="w-full px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85]" required />
                             </div>
                             <div>
-                              <label className="block text-xs font-semibold text-gray-600 mb-1">Subtext *</label>
-                              <input type="text" value={editCategorySubtext} onChange={e => setEditCategorySubtext(e.target.value)} className="w-full px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85]" required />
+                              <label className="block text-xs font-semibold text-gray-600 mb-1">Display in Filter Section *</label>
+                              <select 
+                                value={editCategoryShowInSection} 
+                                onChange={(e) => setEditCategoryShowInSection(e.target.value)} 
+                                className="w-full px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85] bg-white" 
+                                required
+                              >
+                                <option value="category">Category Filter</option>
+                                <option value="type">Jewellery Type Filter</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="block text-xs font-semibold text-gray-600 mb-1">Subtext (Optional)</label>
+                              <input type="text" value={editCategorySubtext} onChange={e => setEditCategorySubtext(e.target.value)} className="w-full px-3 py-1.5 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-[#B07A85] focus:border-[#B07A85]" />
                             </div>
                             <div>
                               <label className="block text-xs font-semibold text-gray-600 mb-1">Replace Image (Optional)</label>
@@ -1301,13 +1377,20 @@ const AdminDashboard = () => {
                               {cat.image ? (
                                 <img src={cat.image} alt={cat.name} className="w-10 h-10 rounded-full object-cover border border-gray-200" />
                               ) : (
-                                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center border border-gray-200 shadow-sm text-gray-400">
-                                  <Package size={20} />
+                                <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center border border-gray-200 shadow-sm text-[#B07A85]">
+                                  {cat.showInSection === 'type' ? <Tag size={20} /> : <Package size={20} />}
                                 </div>
                               )}
                               <div>
-                                <span className="font-semibold text-gray-800 block">{cat.name}</span>
-                                {cat.subtext && <span className="text-xs text-gray-400">{cat.subtext}</span>}
+                                <span className="font-semibold text-gray-800 block text-sm">{cat.name}</span>
+                                <div className="flex flex-col gap-0.5 mt-0.5">
+                                  {cat.subtext && <span className="text-[11px] text-gray-400">{cat.subtext}</span>}
+                                  <span className={`text-[9px] font-bold uppercase tracking-wider self-start px-1.5 py-0.5 rounded-full ${
+                                    cat.showInSection === 'type' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'bg-gray-100 text-gray-500'
+                                  }`}>
+                                    {cat.showInSection === 'type' ? 'Jewellery Type' : 'Category'}
+                                  </span>
+                                </div>
                               </div>
                             </div>
                             <div className="flex items-center gap-1">
@@ -1328,6 +1411,101 @@ const AdminDashboard = () => {
                             </div>
                           </div>
                         )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Jewellery Types Management */}
+          {activeTab === 'types' && (
+            <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+                <div>
+                  <h2 className="font-semibold text-gray-800">Jewellery Types</h2>
+                  <p className="text-xs text-gray-400 mt-0.5">These appear in the Jewellery Type filter section</p>
+                </div>
+                <button
+                  onClick={() => {
+                    setNewTypeName('');
+                    setEditingTypeId(null);
+                    setShowTypeForm(true);
+                  }}
+                  className="flex items-center gap-2 bg-[#B07A85] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#9E6A75] transition-colors shadow-sm"
+                >
+                  <Plus size={16} /> Add Type
+                </button>
+              </div>
+
+              {showTypeForm && (
+                <div className="p-6 border-b border-gray-100 bg-gray-50/50">
+                  <div className="flex gap-3 items-end">
+                    <div className="flex-1">
+                      <label className="block text-xs font-semibold text-gray-600 mb-1.5">Type Name</label>
+                      <input
+                        type="text"
+                        value={newTypeName}
+                        onChange={e => setNewTypeName(e.target.value)}
+                        placeholder="e.g. Bangles, Bracelets..."
+                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handleSaveType}
+                        className="flex items-center gap-1.5 bg-[#B07A85] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#9E6A75] transition-colors"
+                      >
+                        <Save size={14} /> {editingTypeId ? 'Update' : 'Save'}
+                      </button>
+                      <button
+                        onClick={() => { setShowTypeForm(false); setNewTypeName(''); setEditingTypeId(null); }}
+                        className="flex items-center gap-1.5 border border-gray-200 text-gray-600 px-3 py-2 rounded-lg text-sm hover:bg-gray-100 transition-colors"
+                      >
+                        <X size={14} /> Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {typeError && (
+                <div className="px-6 py-3 bg-red-50 text-red-600 text-sm border-b border-red-100">
+                  {typeError}
+                </div>
+              )}
+
+              <div className="p-6">
+                {typesLoading ? (
+                  <div className="flex justify-center py-12">
+                    <div className="w-8 h-8 border-4 border-[#B07A85] border-t-transparent rounded-full animate-spin" />
+                  </div>
+                ) : typesList.length === 0 ? (
+                  <div className="text-center py-12 text-gray-400">
+                    <List size={40} className="mx-auto mb-3 opacity-30" />
+                    <p className="text-sm">No jewellery types yet. Add your first one!</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {typesList.map(tp => (
+                      <div key={tp._id} className="flex items-center justify-between p-4 rounded-xl border border-gray-100 bg-gray-50/50 hover:border-[#B07A85]/40 hover:shadow-sm transition-all group">
+                        <span className="font-medium text-gray-800 text-sm">{tp.name}</span>
+                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button
+                            onClick={() => { setEditingTypeId(tp._id); setNewTypeName(tp.name); setShowTypeForm(true); }}
+                            className="w-7 h-7 flex items-center justify-center rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
+                            title="Edit Type"
+                          >
+                            <Save size={13} />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteType(tp._id)}
+                            className="w-7 h-7 flex items-center justify-center rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
+                          >
+                            <X size={13} />
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>

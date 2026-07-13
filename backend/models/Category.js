@@ -12,8 +12,12 @@ const CategorySchema = new mongoose.Schema({
   },
   subtext: {
     type: String,
-    required: [true, 'Please add a category subtext'],
     trim: true
+  },
+  showInSection: {
+    type: String,
+    enum: ['category', 'type'],
+    default: 'category'
   }
 }, {
   timestamps: true
