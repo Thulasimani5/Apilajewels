@@ -102,7 +102,6 @@ const JewelleryListing = () => {
       'choker-necklace': 'Choker & Necklace',
       'long-haram': 'Long Haram',
       'full-bridal': 'Full Bridal Set',
-      'bangles-bracelets': 'Bangles & Bracelets',
       'accessories': 'Accessories'
     };
 

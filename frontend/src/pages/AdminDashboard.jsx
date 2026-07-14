@@ -123,7 +123,7 @@ const AdminDashboard = () => {
   }, [activeTab, token]);
 
   const occasions = ["Bridal Set", "Bridal Maid", "Designer", "Reception", "Party Wear", "Small Jewel"];
-  const types = ["Semi Bridal & Combo Sets", "Full Bridal Set", "Choker & Necklace", "Long Haram", "Bangles & Bracelets", "Accessories"];
+  const types = ["Semi Bridal & Combo Sets", "Full Bridal Set", "Choker & Necklace", "Long Haram", "Accessories"];
   const colours = ["Gold", "Silver", "Rose Gold", "Emerald Green", "Ruby Red", "Mehndi Polish"];
 
   const [newCategoryName, setNewCategoryName] = useState('');
