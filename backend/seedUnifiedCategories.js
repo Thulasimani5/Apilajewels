@@ -19,19 +19,19 @@ const seedUnifiedCategories = async () => {
     await connectDB();
     console.log('Connected to MongoDB');
 
-    // 1. First find "Bangles & Bracelets" and change its section to 'type'
+    // 1. First find "Bangles & Bracelets" and change its section to 'category'
     const banglesCategory = await Category.findOne({ name: "Bangles & Bracelets" });
     if (banglesCategory) {
-      banglesCategory.showInSection = 'type';
+      banglesCategory.showInSection = 'category';
       await banglesCategory.save();
-      console.log('✅ Updated "Bangles & Bracelets" to list as Jewellery Type');
+      console.log('✅ Updated "Bangles & Bracelets" to list as Category');
     } else {
       await Category.create({
         name: "Bangles & Bracelets",
         subtext: "Beautiful bracelets & bangles selection",
-        showInSection: 'type'
+        showInSection: 'category'
       });
-      console.log('✅ Created "Bangles & Bracelets" category with showInSection = "type"');
+      console.log('✅ Created "Bangles & Bracelets" category with showInSection = "category"');
     }
 
     // 2. Add other default jewellery types as categories if not already present
