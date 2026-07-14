@@ -13,10 +13,20 @@ export const fetchProducts = async ({ page = 1, limit = 24 } = {}) => {
 // Fetcher for ALL products (used when filters are needed client-side)
 export const fetchAllProducts = async () => {
   const response = await fetch(
-    `${API_BASE_URL}/api/jewellery?random=true&limit=500`
+    `${API_BASE_URL}/api/jewellery?limit=500`
   );
   if (!response.ok) throw new Error("Failed to load products");
-  return response.json();
+  const data = await response.json();
+  if (data && Array.isArray(data.data)) {
+    // Shuffle the products client-side once upon fetch so they are stored in a randomized order in cache
+    const shuffled = [...data.data];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    data.data = shuffled;
+  }
+  return data;
 };
 
 export const useProducts = ({ page = 1, limit = 24 } = {}) => {

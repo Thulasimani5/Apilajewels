@@ -3,11 +3,18 @@ const { cloudinary } = require('../config/cloudinary');
 const { formatError } = require('../utils/errorHandler');
 
 
+// Cache for Cloudinary search results to avoid hitting rate limits and slowing requests
+const autoImagesCache = new Map();
+
 // Auto-assign images from Cloudinary by searching for files matching the jewelId
 const getAutoImages = async (jewelId) => {
   if (!jewelId) return null;
   // Only run if Cloudinary is properly configured
   if (!process.env.CLOUDINARY_CLOUD_NAME) return null;
+
+  if (autoImagesCache.has(jewelId)) {
+    return autoImagesCache.get(jewelId);
+  }
 
   try {
     // Normalize IDs like AM010 -> AM0010
@@ -28,14 +35,18 @@ const getAutoImages = async (jewelId) => {
       .execute();
 
     if (result && result.resources && result.resources.length > 0) {
-      return result.resources.map(resource => ({
+      const images = result.resources.map(resource => ({
         type: resource.resource_type === 'video' ? 'video' : 'image',
         url: resource.secure_url
       }));
+      autoImagesCache.set(jewelId, images);
+      return images;
     }
   } catch (error) {
     console.error('Cloudinary auto-image search error:', error.message);
   }
+  // Cache null/empty results as well to prevent repeated hits for non-existent IDs
+  autoImagesCache.set(jewelId, null);
   return null;
 };
 
@@ -121,10 +132,11 @@ exports.getJewelleries = async (req, res) => {
       if (doc.id === undefined && doc._id !== undefined) {
         doc.id = doc._id.toString();
       }
-      const autoImages = await getAutoImages(doc.jewelId);
-      if (autoImages && autoImages.length > 0) {
-        // Option to combine or override; overriding prioritizes folder structure
-        doc.images = autoImages;
+      if (!doc.images || doc.images.length === 0) {
+        const autoImages = await getAutoImages(doc.jewelId);
+        if (autoImages && autoImages.length > 0) {
+          doc.images = autoImages;
+        }
       }
       return doc;
     }));
@@ -172,9 +184,11 @@ exports.getJewellery = async (req, res) => {
     }
 
     const data = jewellery.toObject();
-    const autoImages = await getAutoImages(data.jewelId);
-    if (autoImages && autoImages.length > 0) {
-      data.images = autoImages;
+    if (!data.images || data.images.length === 0) {
+      const autoImages = await getAutoImages(data.jewelId);
+      if (autoImages && autoImages.length > 0) {
+        data.images = autoImages;
+      }
     }
 
     res.status(200).json({
@@ -216,9 +230,11 @@ exports.createJewellery = async (req, res) => {
     const jewellery = await Jewellery.create(req.body);
 
     const data = jewellery.toObject();
-    const autoImages = await getAutoImages(data.jewelId);
-    if (autoImages && autoImages.length > 0) {
-      data.images = autoImages;
+    if (!data.images || data.images.length === 0) {
+      const autoImages = await getAutoImages(data.jewelId);
+      if (autoImages && autoImages.length > 0) {
+        data.images = autoImages;
+      }
     }
 
     res.status(201).json({
@@ -293,9 +309,11 @@ exports.updateJewellery = async (req, res) => {
     });
 
     const data = jewellery.toObject();
-    const autoImages = await getAutoImages(data.jewelId);
-    if (autoImages && autoImages.length > 0) {
-      data.images = autoImages;
+    if (!data.images || data.images.length === 0) {
+      const autoImages = await getAutoImages(data.jewelId);
+      if (autoImages && autoImages.length > 0) {
+        data.images = autoImages;
+      }
     }
 
     res.status(200).json({
