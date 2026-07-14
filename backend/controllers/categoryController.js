@@ -10,7 +10,8 @@ exports.getCategories = async (req, res) => {
     const categories = await Category.find().sort({ createdAt: -1 });
     
     const categoriesWithCount = await Promise.all(categories.map(async (cat) => {
-      const count = await Jewellery.countDocuments({ category: cat.name });
+      const field = cat.showInSection === 'type' ? 'type' : 'category';
+      const count = await Jewellery.countDocuments({ [field]: cat.name });
       return { ...cat.toObject(), jewelCount: count };
     }));
 
@@ -35,13 +36,10 @@ exports.getCategories = async (req, res) => {
 // @access  Private/Admin
 exports.addCategory = async (req, res) => {
   try {
-    const { name, subtext } = req.body;
+    const { name, subtext, showInSection } = req.body;
     
     if (!name) {
       return res.status(400).json({ success: false, error: 'Please provide a category name' });
-    }
-    if (!subtext || !subtext.trim()) {
-      return res.status(400).json({ success: false, error: 'Please provide a category subtext' });
     }
 
     let image = null;
@@ -49,7 +47,12 @@ exports.addCategory = async (req, res) => {
       image = req.file.path;
     }
 
-    const category = await Category.create({ name, image, subtext: subtext.trim() });
+    const category = await Category.create({ 
+      name, 
+      image, 
+      subtext: subtext ? subtext.trim() : '',
+      showInSection: showInSection || 'category'
+    });
 
     res.status(201).json({ success: true, data: category });
   } catch (error) {
@@ -65,10 +68,11 @@ exports.addCategory = async (req, res) => {
 // @access  Private/Admin
 exports.updateCategory = async (req, res) => {
   try {
-    const { name, subtext } = req.body;
+    const { name, subtext, showInSection } = req.body;
     const updateData = {};
     if (name) updateData.name = name;
     if (subtext !== undefined) updateData.subtext = subtext;
+    if (showInSection) updateData.showInSection = showInSection;
 
     if (req.file) {
       updateData.image = req.file.path;

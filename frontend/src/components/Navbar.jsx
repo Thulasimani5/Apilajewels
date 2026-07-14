@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Search, Menu, X, ChevronRight, Phone, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import CategoryContext from "../context/CategoryContext";
 import SearchOverlay from "./SearchOverlay";
 import DesktopSearchOverlay from "../pages/DesktopSearchOverlay";
 import useIsDesktop from "../hooks/useIsDesktop";
@@ -19,6 +20,8 @@ const Navbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
   const isDesktop = useIsDesktop();
+
+  const { categories } = useContext(CategoryContext);
 
   const location = useLocation();
   const { user, logout, openLogin } = useAuth();
@@ -319,23 +322,21 @@ const Navbar = () => {
                 CATEGORY
               </p>
               <div className="flex flex-col">
-                {[
-                  { label: 'VICTORIAN & MOISSINATE', url: '/shop?category=moissinate' },
-                  { label: 'AD JEWELS', url: '/shop?category=ad-jewels' },
-                  { label: 'GOLD ANTIQUE JEWELS', url: '/shop?category=gold-antique' },
-                  { label: 'KUNDAN JEWELS', url: '/shop?category=kundan' },
-                ].map((item) => (
-                  <Link
-                    key={item.label}
-                    to={item.url}
-                    onClick={() => setIsDrawerOpen(false)}
-                    className="flex items-center justify-between py-[12px] hover:opacity-70 transition-opacity"
-                    style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}
-                  >
-                    <span>{item.label}</span>
-                    <ChevronRight size={14} className="text-black" strokeWidth={1.5} />
-                  </Link>
-                ))}
+                {categories.filter(cat => cat.showInSection !== 'type').map((cat) => {
+                  const slug = cat.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                  return (
+                    <Link
+                      key={cat._id}
+                      to={`/shop?category=${slug}`}
+                      onClick={() => setIsDrawerOpen(false)}
+                      className="flex items-center justify-between py-[12px] hover:opacity-70 transition-opacity"
+                      style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}
+                    >
+                      <span>{cat.name}</span>
+                      <ChevronRight size={14} className="text-black" strokeWidth={1.5} />
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 
@@ -345,25 +346,21 @@ const Navbar = () => {
                 JEWELLERY TYPE
               </p>
               <div className="flex flex-col">
-                {[
-                  { label: 'CHOKER & NECKLACE', url: '/shop?category=choker-necklace' },
-                  { label: 'LONG HARAM', url: '/shop?category=long-haram' },
-                  { label: 'SEMI BRIDAL & COMBO SETS', url: '/shop?category=semi-bridal' },
-                  { label: 'FULL BRIDAL SET', url: '/shop?category=full-bridal' },
-                  { label: 'BANGLES & BRACELETS', url: '/shop?category=bangles-bracelets' },
-                  { label: 'ACCESSORIES', url: '/shop?category=accessories' },
-                ].map((item) => (
-                  <Link
-                    key={item.label}
-                    to={item.url}
-                    onClick={() => setIsDrawerOpen(false)}
-                    className="flex items-center justify-between py-[12px] hover:opacity-70 transition-opacity"
-                    style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}
-                  >
-                    <span>{item.label}</span>
-                    <ChevronRight size={14} className="text-black" strokeWidth={1.5} />
-                  </Link>
-                ))}
+                {categories.filter(cat => cat.showInSection === 'type').map((cat) => {
+                  const slug = cat.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                  return (
+                    <Link
+                      key={cat._id}
+                      to={`/shop?category=${slug}`}
+                      onClick={() => setIsDrawerOpen(false)}
+                      className="flex items-center justify-between py-[12px] hover:opacity-70 transition-opacity"
+                      style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}
+                    >
+                      <span>{cat.name}</span>
+                      <ChevronRight size={14} className="text-black" strokeWidth={1.5} />
+                    </Link>
+                  );
+                })}
               </div>
             </div>
 
@@ -374,12 +371,12 @@ const Navbar = () => {
               </p>
               <div className="flex flex-col">
                 {[
-                  { label: 'BRIDAL SET', url: '/shop?occasion=bridal' },
+                  { label: 'BRIDAL SET', url: '/shop?occasion=bridal-set' },
                   { label: 'BRIDEMAID', url: '/shop?occasion=bridesmaid' },
                   { label: 'DESIGNER COLLECTION', url: '/shop?occasion=designer' },
                   { label: 'RECEPTION JEWELS', url: '/shop?occasion=reception' },
-                  { label: 'PARTY WEAR', url: '/shop?occasion=party' },
-                  { label: 'SMALL JEWELS', url: '/shop?occasion=small' },
+                  { label: 'PARTY WEAR', url: '/shop?occasion=party-wear' },
+                  { label: 'SMALL JEWELS', url: '/shop?occasion=small-jewels' },
                 ].map((item) => (
                   <Link
                     key={item.label}

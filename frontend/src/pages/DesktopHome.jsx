@@ -276,17 +276,11 @@ export default function Home() {
     /* Step 2 — fetch fresh random 12 items in background, update cache */
     const refresh = async () => {
       try {
-        const page = Math.floor(Math.random() * 4) + 1;
-        const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=12&page=${page}`);
+        const res = await fetch(`${API_BASE_URL}/api/jewellery?random=true&limit=12`);
         const data = await res.json();
         let list = Array.isArray(data) ? data : (data.data || data.products || []);
-        if (list.length === 0) {
-          const fb = await fetch(`${API_BASE_URL}/api/jewellery?limit=12`);
-          const fbData = await fb.json();
-          list = Array.isArray(fbData) ? fbData : (fbData.data || fbData.products || []);
-        }
         if (list.length > 0) {
-          const cards = list.slice(0, 12).map(toCard);
+          const cards = list.map(toCard);
           trendingGridMemCache = cards;
           try { localStorage.setItem(TRENDING_GRID_CACHE_KEY, JSON.stringify(cards)); } catch { }
           setTrending(cards);

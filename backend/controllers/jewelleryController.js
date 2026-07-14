@@ -3,11 +3,18 @@ const { cloudinary } = require('../config/cloudinary');
 const { formatError } = require('../utils/errorHandler');
 
 
+// Cache for Cloudinary search results to avoid hitting rate limits and slowing requests
+const autoImagesCache = new Map();
+
 // Auto-assign images from Cloudinary by searching for files matching the jewelId
 const getAutoImages = async (jewelId) => {
   if (!jewelId) return null;
   // Only run if Cloudinary is properly configured
   if (!process.env.CLOUDINARY_CLOUD_NAME) return null;
+
+  if (autoImagesCache.has(jewelId)) {
+    return autoImagesCache.get(jewelId);
+  }
 
   try {
     // Normalize IDs like AM010 -> AM0010
@@ -28,14 +35,18 @@ const getAutoImages = async (jewelId) => {
       .execute();
 
     if (result && result.resources && result.resources.length > 0) {
-      return result.resources.map(resource => ({
+      const images = result.resources.map(resource => ({
         type: resource.resource_type === 'video' ? 'video' : 'image',
         url: resource.secure_url
       }));
+      autoImagesCache.set(jewelId, images);
+      return images;
     }
   } catch (error) {
     console.error('Cloudinary auto-image search error:', error.message);
   }
+  // Cache null/empty results as well to prevent repeated hits for non-existent IDs
+  autoImagesCache.set(jewelId, null);
   return null;
 };
 
@@ -49,7 +60,7 @@ exports.getJewelleries = async (req, res) => {
     const reqQuery = { ...req.query };
 
     // Fields to exclude from the base filter
-    const removeFields = ['select', 'sort', 'page', 'limit', 'search'];
+    const removeFields = ['select', 'sort', 'page', 'limit', 'search', 'random'];
     removeFields.forEach(param => delete reqQuery[param]);
 
     // Create base filter (convert gt/gte/lt/lte/in operators)
@@ -78,40 +89,63 @@ exports.getJewelleries = async (req, res) => {
       };
     }
 
-    let query = Jewellery.find(finalFilter);
+    const isRandom = req.query.random === 'true';
+    const limit = parseInt(req.query.limit, 10) || 10;
 
-    // Sort
-    if (req.query.sort) {
-      const sortBy = req.query.sort.split(',').join(' ');
-      query = query.sort(sortBy);
+    let jewelleries;
+    if (isRandom) {
+      jewelleries = await Jewellery.aggregate([
+        { $match: finalFilter },
+        { $sample: { size: limit } }
+      ]);
     } else {
-      query = query.sort('-createdAt');
+      let query = Jewellery.find(finalFilter);
+
+      // Sort
+      if (req.query.sort) {
+        const sortBy = req.query.sort.split(',').join(' ');
+        query = query.sort(sortBy);
+      } else {
+        query = query.sort('-createdAt');
+      }
+
+      // Pagination
+      const page = parseInt(req.query.page, 10) || 1;
+      const startIndex = (page - 1) * limit;
+      query = query.skip(startIndex).limit(limit);
+
+      // Executing query
+      jewelleries = await query;
     }
 
-    // Pagination
-    const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 10;
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
     const total = await Jewellery.countDocuments(JSON.parse(queryStr));
 
-    query = query.skip(startIndex).limit(limit);
-
-    // Executing query
-    const jewelleries = await query;
-
     const data = await Promise.all(jewelleries.map(async jewellery => {
-      const doc = jewellery.toObject();
-      const autoImages = await getAutoImages(doc.jewelId);
-      if (autoImages && autoImages.length > 0) {
-        // Option to combine or override; overriding prioritizes folder structure
-        doc.images = autoImages;
+      const doc = jewellery.toObject ? jewellery.toObject() : jewellery;
+      // Populate virtuals for compatibility (if object is from aggregation)
+      if (doc.rentalPrice === undefined && doc.price !== undefined) {
+        doc.rentalPrice = doc.price;
+      }
+      if (doc.code === undefined && doc.jewelId !== undefined) {
+        doc.code = doc.jewelId;
+      }
+      if (doc.id === undefined && doc._id !== undefined) {
+        doc.id = doc._id.toString();
+      }
+      if (!doc.images || doc.images.length === 0) {
+        const autoImages = await getAutoImages(doc.jewelId);
+        if (autoImages && autoImages.length > 0) {
+          doc.images = autoImages;
+        }
       }
       return doc;
     }));
 
     // Pagination result
     const pagination = {};
+    const page = parseInt(req.query.page, 10) || 1;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
 
     if (endIndex < total) {
       pagination.next = {
@@ -150,9 +184,11 @@ exports.getJewellery = async (req, res) => {
     }
 
     const data = jewellery.toObject();
-    const autoImages = await getAutoImages(data.jewelId);
-    if (autoImages && autoImages.length > 0) {
-      data.images = autoImages;
+    if (!data.images || data.images.length === 0) {
+      const autoImages = await getAutoImages(data.jewelId);
+      if (autoImages && autoImages.length > 0) {
+        data.images = autoImages;
+      }
     }
 
     res.status(200).json({
@@ -194,9 +230,11 @@ exports.createJewellery = async (req, res) => {
     const jewellery = await Jewellery.create(req.body);
 
     const data = jewellery.toObject();
-    const autoImages = await getAutoImages(data.jewelId);
-    if (autoImages && autoImages.length > 0) {
-      data.images = autoImages;
+    if (!data.images || data.images.length === 0) {
+      const autoImages = await getAutoImages(data.jewelId);
+      if (autoImages && autoImages.length > 0) {
+        data.images = autoImages;
+      }
     }
 
     res.status(201).json({
@@ -271,9 +309,11 @@ exports.updateJewellery = async (req, res) => {
     });
 
     const data = jewellery.toObject();
-    const autoImages = await getAutoImages(data.jewelId);
-    if (autoImages && autoImages.length > 0) {
-      data.images = autoImages;
+    if (!data.images || data.images.length === 0) {
+      const autoImages = await getAutoImages(data.jewelId);
+      if (autoImages && autoImages.length > 0) {
+        data.images = autoImages;
+      }
     }
 
     res.status(200).json({

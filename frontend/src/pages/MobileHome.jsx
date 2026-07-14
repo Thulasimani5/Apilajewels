@@ -134,41 +134,20 @@ const Home = () => {
 
 
   useEffect(() => {
-
     const fetchTrending = async () => {
-
       try {
-
-        const res = await fetch(`${API_BASE_URL}/api/jewellery?sort=popularity&limit=8`);
-
+        const res = await fetch(`${API_BASE_URL}/api/jewellery?random=true&limit=8`);
         const data = await res.json();
-
         if (data.success && data.data) {
-
-          const sorted = [...data.data]
-
-            .sort((a, b) => (b.popularity || 0) - (a.popularity || 0))
-
-            .slice(0, 8);
-
-          setTrending(sorted);
-
+          setTrending(data.data);
         }
-
       } catch (err) {
-
         console.error('Failed to fetch trending items:', err);
-
       } finally {
-
         setTrendingLoading(false);
-
       }
-
     };
-
     fetchTrending();
-
   }, []);
 
 
