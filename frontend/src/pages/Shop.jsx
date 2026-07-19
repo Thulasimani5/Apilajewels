@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useEffect, useRef, useContext } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useContext, useCallback } from 'react';
 import { ChevronDown, X, SlidersHorizontal } from 'lucide-react';
-import { Link, useSearchParams, useNavigationType } from 'react-router-dom';
+import { Link, useSearchParams, useNavigationType, useNavigate } from 'react-router-dom';
 import Card from '../components/Card';
 import FilterBottomSheet from '../components/FilterBottomSheet';
 import FilterSidebar from '../components/FilterSidebar';
@@ -24,6 +24,74 @@ const SORT_OPTIONS = [
   { id: 'popularity', label: 'Popularity' },
 ];
 
+/* ── Filter key names used in the URL ── */
+const FILTER_KEYS = ['Category', 'Type', 'Occasion', 'Price', 'Colour', 'StoneName', 'StoneColour'];
+
+/* ── Read all filter values from URLSearchParams ── */
+const filtersFromParams = (params) => {
+  const result = {};
+  FILTER_KEYS.forEach(key => { result[key] = params.getAll(key); });
+  return result;
+};
+
+/* ── Write filters + sort + page into a new URLSearchParams ── */
+const buildParams = (filters, sort, page) => {
+  const p = new URLSearchParams();
+  FILTER_KEYS.forEach(key => {
+    (filters[key] || []).forEach(v => p.append(key, v));
+  });
+  if (sort && sort !== 'recommended') p.set('sort', sort);
+  if (page && page > 1) p.set('page', String(page));
+  return p;
+};
+
+/* ── Legacy single-param bootstrap: converts old ?category= / ?occasion= to new multi-param format ── */
+const bootstrapFromLegacyParams = (searchParams, categories) => {
+  // If already using new-style multi-value params, skip
+  if (FILTER_KEYS.some(k => searchParams.has(k))) return null;
+
+  const categoryParam = searchParams.get('category');
+  const occasionParam = searchParams.get('occasion');
+  if (!categoryParam && !occasionParam) return null;
+
+  const typeMap = {
+    'bridal-set': 'Bridal Set', 'bridal-maid': 'Bridal Maid', 'designer': 'Designer',
+    'reception': 'Reception', 'party-wear': 'Party Wear', 'small-jewel': 'Small Jewel',
+    'small-jewels': 'Small Jewel', 'semi-bridal': 'Semi Bridal & Combo Sets',
+    'choker-necklace': 'Choker & Necklace', 'long-haram': 'Long Haram',
+    'full-bridal': 'Full Bridal Set', 'accessories': 'Accessories'
+  };
+
+  const filters = { Category: [], Type: [], Occasion: [], Price: [], Colour: [], StoneName: [], StoneColour: [] };
+
+  if (categoryParam) {
+    const norm = categoryParam.toLowerCase();
+    const matched = categories.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === norm);
+    if (matched) filters.Category.push(matched.name);
+    else if (typeMap[norm]) filters.Type.push(typeMap[norm]);
+    else if (norm === 'victorian-moissinate' || norm === 'moissanite' || norm === 'moissinate') filters.Category.push('victorian-moissinate');
+    else if (norm.includes('temple')) filters.Category.push('Temple Jewellery');
+    else if (norm === 'kundan' || norm === 'kundan-jewels') filters.Category.push('Kundan Jewels');
+    else if (norm === 'american-diamond' || norm === 'ad-jewels') filters.Category.push('AD Jewels');
+    else if (norm.includes('antique') || norm === 'gold-antique-jewels') filters.Category.push('Gold Antique Jewels');
+    else if (norm === 'polki') filters.Category.push('Polki');
+    else filters.Category.push(categoryParam);
+  }
+
+  if (occasionParam) {
+    const norm = occasionParam.toLowerCase();
+    if (norm === 'bridal' || norm === 'bridal-set') filters.Occasion.push('Bridal Set');
+    else if (norm === 'reception' || norm === 'reception-jewels') filters.Occasion.push('Reception');
+    else if (norm === 'party' || norm === 'party-wear') filters.Occasion.push('Party Wear');
+    else if (norm === 'bridesmaid') filters.Occasion.push('Bridal Maid');
+    else if (norm === 'designer') filters.Occasion.push('Designer');
+    else if (norm === 'small' || norm === 'small-jewel') filters.Occasion.push('Small Jewel');
+    else if (typeMap[norm]) filters.Occasion.push(typeMap[norm]);
+  }
+
+  return filters;
+};
+
 const JewelleryListing = () => {
   const isDesktop = useIsDesktop();
 
@@ -32,147 +100,57 @@ const JewelleryListing = () => {
   const [isSortOpen, setIsSortOpen] = useState(false);
   const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false);
 
-  const [currentPage, setCurrentPage] = useState(1);
   const sortDropdownRef = useRef(null);
 
-  // Read URL search params
-  const [searchParams] = useSearchParams();
+  // URL is the single source of truth for filters, sort, page
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const { categories } = useContext(CategoryContext);
-
-  // Selected filter criteria state
-  const [activeFilters, setActiveFilters] = useState({
-    Colour: [],
-    Type: [],
-    Price: [],
-    Occasion: [],
-    Category: [],
-    StoneName: [],
-    StoneColour: []
-  });
-
-  // Selected sorting criteria state
-  const [activeSort, setActiveSort] = useState('recommended');
-
   const navType = useNavigationType();
 
-  // Scroll to top on mount
+  // Scroll to top on non-back navigation
   useEffect(() => {
-    if (navType !== 'POP') {
-      window.scrollTo(0, 0);
-    }
+    if (navType !== 'POP') window.scrollTo(0, 0);
   }, [navType]);
 
-  // Initialize active filters from URL query parameters dynamically
+  // Bootstrap: convert legacy ?category= / ?occasion= to new multi-value params once
   useEffect(() => {
-    if (navType === 'POP') {
-      const savedFilters = sessionStorage.getItem('shopActiveFilters');
-      const savedPage = sessionStorage.getItem('shopCurrentPage');
-      const savedSort = sessionStorage.getItem('shopActiveSort');
-      if (savedFilters) {
-        try {
-          setActiveFilters(JSON.parse(savedFilters));
-          if (savedPage) setCurrentPage(parseInt(savedPage, 10));
-          if (savedSort) setActiveSort(savedSort);
-          return; // Skip URL parsing
-        } catch (e) {
-          console.error('Failed to parse saved filters', e);
-        }
-      }
+    if (!categories.length) return;
+    const legacy = bootstrapFromLegacyParams(searchParams, categories);
+    if (legacy) {
+      setSearchParams(buildParams(legacy, 'recommended', 1), { replace: true });
     }
+  }, [categories]); // intentionally only runs when categories loads
 
-    const categoryParam = searchParams.get('category');
-    const occasionParam = searchParams.get('occasion');
+  /* ── Derive active filters directly from URL ── */
+  const activeFilters = useMemo(() => filtersFromParams(searchParams), [searchParams]);
+  const activeSort = searchParams.get('sort') || 'recommended';
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
 
-    const newCategoryFilters = [];
-    const newTypeFilters = [];
+  /* ── Write new filters to URL ── */
+  const setFilters = useCallback((newFilters, sort, page) => {
+    setSearchParams(
+      buildParams(newFilters, sort ?? activeSort, page ?? 1),
+      { replace: false }
+    );
+  }, [setSearchParams, activeSort]);
 
-    const newOccasionFilters = [];
+  const handleApplyFilters = useCallback((newFilters) => {
+    setFilters(newFilters, activeSort, 1);
+  }, [setFilters, activeSort]);
 
-    // Helper to map normalized strings to display names
-    const typeMap = {
-      'bridal-set': 'Bridal Set',
-      'bridal-maid': 'Bridal Maid',
-      'designer': 'Designer',
-      'reception': 'Reception',
-      'party-wear': 'Party Wear',
-      'small-jewel': 'Small Jewel',
-      'small-jewels': 'Small Jewel',
-      'semi-bridal': 'Semi Bridal & Combo Sets',
-      'choker-necklace': 'Choker & Necklace',
-      'long-haram': 'Long Haram',
-      'full-bridal': 'Full Bridal Set',
-      'accessories': 'Accessories'
-    };
+  const setCurrentPage = useCallback((pageOrFn) => {
+    const nextPage = typeof pageOrFn === 'function' ? pageOrFn(currentPage) : pageOrFn;
+    setSearchParams(buildParams(activeFilters, activeSort, nextPage), { replace: false });
+  }, [setSearchParams, activeFilters, activeSort, currentPage]);
 
-    if (categoryParam) {
-      const normalized = categoryParam.toLowerCase();
-      // First try to match a known category in the data model
-      // e.g. "AD Jewels" -> "ad-jewels", "Gold Antique Jewels" -> "gold-antique-jewels"
-      const matchedCategory = categories.find(c =>
-        c.name.toLowerCase().replace(/\s+/g, '-') === normalized
-      );
-      if (matchedCategory) {
-        newCategoryFilters.push(matchedCategory.name);
-      } else if (typeMap[normalized]) {
-        // If the param actually represents a type/occasion, push to type filters
-        newTypeFilters.push(typeMap[normalized]);
-      } else if (normalized === 'victorian-moissinate' || normalized === 'moissanite' || normalized === 'moissinate') {
-        newCategoryFilters.push('victorian-moissinate');
-      } else if (normalized.includes('temple')) {
-        newCategoryFilters.push('Temple Jewellery');
-      } else if (normalized === 'kundan' || normalized === 'kundan-jewels') {
-        newCategoryFilters.push('Kundan Jewels');
-      } else if (normalized === 'american-diamond' || normalized === 'american-diamond-bangles' || normalized === 'ad-jewels') {
-        newCategoryFilters.push('AD Jewels');
-      } else if (normalized.includes('ad')) {
-        newCategoryFilters.push('AD Jewels');
-      } else if (normalized === 'polki') {
-        newCategoryFilters.push('Polki');
-      } else if (normalized.includes('antique') || normalized === 'gold' || normalized === 'gold-antique-jewels') {
-        newCategoryFilters.push('Gold Antique Jewels');
-      } else {
-        // Fallback: try to push the raw param as category name
-        newCategoryFilters.push(categoryParam);
-      }
-    }
-
-    if (occasionParam) {
-      const normalized = occasionParam.toLowerCase();
-      if (normalized === 'bridal' || normalized === 'bridal-set') newOccasionFilters.push('Bridal Set');
-      else if (normalized === 'reception' || normalized === 'reception-jewels') newOccasionFilters.push('Reception');
-      else if (normalized === 'party' || normalized === 'party-wear') newOccasionFilters.push('Party Wear');
-      else if (normalized === 'bridesmaid') newOccasionFilters.push('Bridal Maid');
-      else if (normalized === 'designer' || normalized === 'designer-collection') newOccasionFilters.push('Designer');
-      else if (normalized === 'small' || normalized === 'small-jewel' || normalized === 'small-jewels') newOccasionFilters.push('Small Jewel');
-      else if (typeMap[normalized]) newOccasionFilters.push(typeMap[normalized]); // fallback for other type mappings
-    }
-
-    setActiveFilters({
-      Colour: [],
-      Type: newTypeFilters,
-      Price: [],
-      Occasion: newOccasionFilters,
-      Category: newCategoryFilters,
-      StoneName: [],
-      StoneColour: []
-    });
-  }, [searchParams, categories]);
+  const setActiveSort = useCallback((sort) => {
+    setSearchParams(buildParams(activeFilters, sort, 1), { replace: false });
+  }, [setSearchParams, activeFilters]);
 
   // Phase 5+6: React Query replaces manual fetch — cached across navigations
   const { data: productsData, isLoading, isError, error } = useAllProducts();
   const products = productsData?.data || [];
-
-  const handleApplyFilters = (newFilters) => {
-    setActiveFilters(newFilters);
-    setCurrentPage(1);
-  };
-
-  useEffect(() => {
-    sessionStorage.setItem('shopActiveFilters', JSON.stringify(activeFilters));
-    sessionStorage.setItem('shopCurrentPage', currentPage.toString());
-    sessionStorage.setItem('shopActiveSort', activeSort);
-  }, [activeFilters, currentPage, activeSort]);
 
   const getSortLabel = (sortId) => {
     const opt = SORT_OPTIONS.find(o => o.id === sortId);
@@ -284,10 +262,7 @@ const JewelleryListing = () => {
     }
   }, [filteredProducts, activeSort]);
 
-  // Reset to page 1 when sort changes
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [activeSort]);
+  // No separate useEffect needed — sort changes already reset page via setActiveSort -> buildParams(page=1)
 
   const totalPages = Math.max(1, Math.ceil(sortedProducts.length / ITEMS_PER_PAGE));
   const paginatedProducts = sortedProducts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
@@ -351,12 +326,11 @@ const JewelleryListing = () => {
   }, [activeFilters]);
 
   /* ── Remove a single filter pill ── */
-  const removeFilterPill = (section, value) => {
-    setActiveFilters(prev => ({
-      ...prev,
-      [section]: prev[section].filter(v => v !== value),
-    }));
-  };
+  const removeFilterPill = useCallback((section, value) => {
+    const updated = { ...activeFilters, [section]: activeFilters[section].filter(v => v !== value) };
+    setFilters(updated, activeSort, 1);
+  }, [activeFilters, activeSort, setFilters]);
+
 
   /* ── Total active filter count ── */
   const totalFilterCount = activeFilterPills.length;
@@ -436,7 +410,7 @@ const JewelleryListing = () => {
                     ))}
                     {totalFilterCount > 1 && (
                       <button
-                        onClick={() => handleApplyFilters({ Colour: [], Type: [], Price: [], Occasion: [], Category: [], StoneName: [], StoneColour: [] })}
+                        onClick={() => setSearchParams(new URLSearchParams(), { replace: false })}
                         className="text-[11px] text-[#A56D7A] font-bold uppercase tracking-wide hover:text-[#935b67] transition-colors ml-1"
                       >
                         Clear All
@@ -499,7 +473,7 @@ const JewelleryListing = () => {
                   No matching jewellery found
                 </p>
                 <button
-                  onClick={() => handleApplyFilters({ Colour: [], Type: [], Price: [], Occasion: [], Category: [], StoneName: [], StoneColour: [] })}
+                  onClick={() => setSearchParams(new URLSearchParams(), { replace: false })}
                   className="text-[12px] text-[#A56D7A] font-bold underline underline-offset-2 hover:text-[#935b67] transition-colors"
                 >
                   Clear all filters

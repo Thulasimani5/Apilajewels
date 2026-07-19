@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef, useContext } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useContext, useCallback } from 'react';
 import { Link, useSearchParams, useNavigate, useNavigationType } from 'react-router-dom';
 import CategoryContext from '../context/CategoryContext';
 import { useAllProducts } from '../hooks/useProducts';
@@ -122,29 +122,80 @@ function ShopCard({ product }) {
   );
 }
 
+/* ── Filter key names used in the URL ── */
+const DESKTOP_FILTER_KEYS = ['Category', 'Type', 'Occasion', 'Price', 'Colour', 'StoneColour', 'Stone'];
+
+const desktopFiltersFromParams = (params) => {
+  const result = {};
+  DESKTOP_FILTER_KEYS.forEach(key => { result[key] = params.getAll(key); });
+  return result;
+};
+
+const desktopBuildParams = (filters, sort, page) => {
+  const p = new URLSearchParams();
+  DESKTOP_FILTER_KEYS.forEach(key => {
+    (filters[key] || []).forEach(v => p.append(key, v));
+  });
+  if (sort && sort !== 'recommended') p.set('sort', sort);
+  if (page && page > 1) p.set('page', String(page));
+  return p;
+};
+
+/* ── Bootstrap legacy ?category= / ?occasion= to new multi-param format ── */
+const desktopBootstrapLegacy = (searchParams, categories) => {
+  if (DESKTOP_FILTER_KEYS.some(k => searchParams.has(k))) return null;
+  const cat = searchParams.get('category');
+  const occ = searchParams.get('occasion');
+  if (!cat && !occ) return null;
+
+  const EMPTY = { Category: [], Type: [], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] };
+  const f = { ...EMPTY };
+
+  const occasionMap = {
+    bridal: 'Bridal Set', 'bridal-set': 'Bridal Set', 'bridal-maid': 'Bridal Maid',
+    bridesmaid: 'Bridal Maid', designer: 'Designer', 'designer-collection': 'Designer',
+    reception: 'Reception', 'reception-jewels': 'Reception', party: 'Party Wear',
+    'party-wear': 'Party Wear', small: 'Small Jewel', 'small-jewel': 'Small Jewel', 'small-jewels': 'Small Jewel',
+  };
+  const typeMap = {
+    'semi-bridal': 'Semi Bridal & Combo Sets', 'choker-necklace': 'Choker & Necklace',
+    'long-haram': 'Long Haram', 'full-bridal': 'Full Bridal Set', 'accessories': 'Accessories',
+    'bangles-bracelets': 'Bangles & Bracelets',
+  };
+
+  if (occ) { const v = occasionMap[occ.toLowerCase()]; if (v) { f.Occasion.push(v); return f; } }
+  if (cat) {
+    const norm = cat.toLowerCase();
+    if (typeMap[norm]) { f.Type.push(typeMap[norm]); return f; }
+    const matched = categories.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === norm);
+    if (matched) { f.Category.push(matched.name); return f; }
+    if (norm.includes('moissanite') || norm === 'victorian-moissinate' || norm === 'moissinate') { f.Category.push('victorian-moissinate'); return f; }
+    if (norm === 'kundan' || norm === 'kundan-jewels') { f.Category.push('Kundan Jewels'); return f; }
+    if (norm === 'american-diamond' || norm === 'ad-jewels') { f.Category.push('AD Jewels'); return f; }
+    if (norm.includes('antique') || norm === 'gold-antique-jewels') { f.Category.push('Gold Antique Jewels'); return f; }
+    if (norm === 'polki') { f.Category.push('Polki'); return f; }
+    f.Category.push(cat);
+  }
+  return f;
+};
+
 /* ══════════════════════════════════════════════════════
    DesktopShop — pixel-perfect Figma 263:1322
    ══════════════════════════════════════════════════════ */
 export default function DesktopShop() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { categories } = useContext(CategoryContext);
   const { user, openLogin } = useAuth();
 
-  /* ── Active filter state ── */
-  const EMPTY_FILTERS = { Category: [], Type: [], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] };
-  const [activeFilters, setActiveFilters] = useState(EMPTY_FILTERS);
-
-  /* ── Section open/closed state ── */
+  /* ── Section open/closed state (UI only) ── */
   const [open, setOpen] = useState({
     Category: true, Type: true, Occasion: true,
     Price: false, Colour: false, StoneColour: false, Stone: false,
   });
 
   /* ── Sort + pagination ── */
-  const [activeSort, setActiveSort] = useState('recommended');
   const [sortMenuOpen, setSortMenuOpen] = useState(false);
-  const [page, setPage] = useState(1);
   const sortRef = useRef(null);
 
   /* ── Navbar hide on scroll-down ── */
@@ -166,97 +217,44 @@ export default function DesktopShop() {
 
   /* ── Scroll to top on mount and path change ── */
   useEffect(() => {
-    if (navType !== 'POP') {
-      window.scrollTo(0, 0);
-    }
+    if (navType !== 'POP') window.scrollTo(0, 0);
   }, [navType]);
 
-  /* ── Initialise filters from URL — full reset to prevent stale filters ── */
+  /* ── Bootstrap: convert legacy ?category= / ?occasion= to new multi-value params once ── */
   useEffect(() => {
-    if (navType === 'POP') {
-      const savedFilters = sessionStorage.getItem('desktopShopActiveFilters');
-      const savedPage = sessionStorage.getItem('desktopShopPage');
-      const savedSort = sessionStorage.getItem('desktopShopActiveSort');
-      if (savedFilters) {
-        try {
-          setActiveFilters(JSON.parse(savedFilters));
-          if (savedPage) setPage(parseInt(savedPage, 10));
-          if (savedSort) setActiveSort(savedSort);
-          return; // Skip URL parsing
-        } catch (e) {
-          console.error('Failed to parse saved filters', e);
-        }
-      }
+    if (!categories.length) return;
+    const legacy = desktopBootstrapLegacy(searchParams, categories);
+    if (legacy) {
+      setSearchParams(desktopBuildParams(legacy, 'recommended', 1), { replace: true });
     }
+  }, [categories]); // intentionally only on categories load
 
-    const cat = searchParams.get('category');
-    const occ = searchParams.get('occasion');
+  /* ── Derive active filters, sort, page directly from URL ── */
+  const activeFilters = useMemo(() => desktopFiltersFromParams(searchParams), [searchParams]);
+  const activeSort = searchParams.get('sort') || 'recommended';
+  const page = parseInt(searchParams.get('page') || '1', 10);
 
-    const occasionMap = {
-      bridal: 'Bridal Set',
-      'bridal-set': 'Bridal Set',
-      'bridal-maid': 'Bridal Maid',
-      bridesmaid: 'Bridal Maid',
-      designer: 'Designer',
-      'designer-collection': 'Designer',
-      reception: 'Reception',
-      'reception-jewels': 'Reception',
-      party: 'Party Wear',
-      'party-wear': 'Party Wear',
-      small: 'Small Jewel',
-      'small-jewel': 'Small Jewel',
-      'small-jewels': 'Small Jewel',
-    };
+  /* ── Helpers to write back to URL ── */
+  const toggle = useCallback((section, value) => {
+    const cur = activeFilters[section] || [];
+    const next = cur.includes(value) ? cur.filter(v => v !== value) : [...cur, value];
+    const updated = { ...activeFilters, [section]: next };
+    setSearchParams(desktopBuildParams(updated, activeSort, 1), { replace: false });
+  }, [activeFilters, activeSort, setSearchParams]);
 
-    if (occ) {
-      const typeName = occasionMap[occ.toLowerCase()];
-      if (typeName) {
-        setActiveFilters({ Category: [], Type: [], Occasion: [typeName], Price: [], Colour: [], StoneColour: [], Stone: [] });
-        return;
-      }
-    }
+  const setPage = useCallback((pageOrFn) => {
+    const nextPage = typeof pageOrFn === 'function' ? pageOrFn(page) : pageOrFn;
+    setSearchParams(desktopBuildParams(activeFilters, activeSort, nextPage), { replace: false });
+  }, [activeFilters, activeSort, page, setSearchParams]);
 
+  const setActiveSort = useCallback((sort) => {
+    setSearchParams(desktopBuildParams(activeFilters, sort, 1), { replace: false });
+  }, [activeFilters, setSearchParams]);
 
-    if (!cat || !categories.length) return;
-    const norm = cat.toLowerCase();
+  const clearAll = useCallback(() => {
+    setSearchParams(new URLSearchParams(), { replace: false });
+  }, [setSearchParams]);
 
-    // Map specific pseudo-categories to Types
-    if (norm === 'semi-bridal') {
-      setActiveFilters({ Category: [], Type: ['Semi Bridal & Combo Sets'], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
-      return;
-    }
-    if (norm === 'choker-necklace') {
-      setActiveFilters({ Category: [], Type: ['Choker & Necklace'], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
-      return;
-    }
-    if (norm === 'long-haram') {
-      setActiveFilters({ Category: [], Type: ['Long Haram'], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
-      return;
-    }
-    if (norm === 'full-bridal') {
-      setActiveFilters({ Category: [], Type: ['Full Bridal Set'], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
-      return;
-    }
-    if (norm === 'bangles-bracelets') {
-      setActiveFilters({ Category: ['Bangles & Bracelets'], Type: [], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
-      return;
-    }
-    if (norm === 'accessories') {
-      setActiveFilters({ Category: [], Type: ['Accessories'], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
-      return;
-    }
-
-    const matched = categories.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === norm);
-    const name = matched?.name
-      || (norm === 'moissanite' || norm === 'victorian-moissinate' || norm === 'moissinate' ? 'victorian-moissinate' : null)
-      || (norm.includes('temple') ? 'Temple Jewellery' : null)
-      || (norm === 'kundan' || norm === 'kundan-jewels' ? 'Kundan Jewels' : null)
-      || (norm === 'american-diamond' || norm === 'american-diamond-bangles' || norm === 'ad-jewels' ? 'AD Jewels' : null)
-      || (norm.includes('antique') || norm === 'gold-antique-jewels' ? 'Gold Antique Jewels' : null)
-      || (norm === 'polki' ? 'Polki' : null)
-      || cat;
-    setActiveFilters({ Category: [name], Type: [], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] });
-  }, [searchParams, categories]);
 
   /* ── Data ── */
   const { data: productsData, isLoading, isError, error } = useAllProducts();
@@ -264,16 +262,6 @@ export default function DesktopShop() {
 
   const categoryOptions = useMemo(() => categories.filter(c => c.showInSection !== 'type').map(c => c.name), [categories]);
   const typeOptions = useMemo(() => categories.filter(c => c.showInSection === 'type').map(c => c.name), [categories]);
-
-  /* ── Toggle filter ── */
-  const toggle = (section, value) => {
-    setActiveFilters(f => {
-      const cur = f[section] || [];
-      const next = cur.includes(value) ? cur.filter(v => v !== value) : [...cur, value];
-      return { ...f, [section]: next };
-    });
-    setPage(1);
-  };
 
   /* ── Filter products ── */
   const filtered = useMemo(() => products.filter(p => {
@@ -346,11 +334,6 @@ export default function DesktopShop() {
     return 'All Jewels';
   }, [activeFilters]);
 
-  useEffect(() => {
-    sessionStorage.setItem('desktopShopActiveFilters', JSON.stringify(activeFilters));
-    sessionStorage.setItem('desktopShopPage', page.toString());
-    sessionStorage.setItem('desktopShopActiveSort', activeSort);
-  }, [activeFilters, page, activeSort]);
 
   /* ── Current sort label ── */
   const sortLabel = SORT_OPTIONS.find(o => o.id === activeSort)?.label || 'Recommended';
@@ -362,8 +345,6 @@ export default function DesktopShop() {
     return () => document.removeEventListener('mousedown', handler);
   }, [sortMenuOpen]);
 
-  /* ── Clear all ── */
-  const clearAll = () => { setActiveFilters(EMPTY_FILTERS); setPage(1); };
 
   const navIcons = {
     search: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,.45)" strokeWidth="2"><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /></svg>,
@@ -428,7 +409,7 @@ export default function DesktopShop() {
                   <button
                     key={opt.id}
                     className={`shop-sort-item${activeSort === opt.id ? ' active' : ''}`}
-                    onClick={() => { setActiveSort(opt.id); setSortMenuOpen(false); setPage(1); }}
+                    onClick={() => { setActiveSort(opt.id); setSortMenuOpen(false); }}
                   >
                     {opt.label}
                   </button>
