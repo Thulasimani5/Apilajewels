@@ -370,7 +370,7 @@ const ProductDetails = () => {
             </div>
           </div>
 
-          <h1 className="mb-3 pr-8" style={{ width: "276px", color: "#000", fontFamily: "'Bacasime Antique', serif", fontSize: "25px", fontStyle: "normal", fontWeight: 400, lineHeight: "28px", letterSpacing: "-0.84px" }}>
+          <h1 className="mb-3 pr-8" style={{ color: "#000", fontFamily: "'Bacasime Antique', serif", fontSize: "25px", fontStyle: "normal", fontWeight: 400, lineHeight: "28px", letterSpacing: "-0.84px" }}>
             {product.name}
           </h1>
 
