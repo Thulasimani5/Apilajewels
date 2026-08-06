@@ -107,7 +107,16 @@ const FilterSidebar = ({ activeFilters, onFilterChange, products = [] }) => {
   const { categories } = useContext(CategoryContext);
 
   const categoryOptions = useMemo(() => categories.filter(c => c.showInSection !== 'type').map(c => c.name), [categories]);
-  const typeOptions = useMemo(() => categories.filter(c => c.showInSection === 'type').map(c => c.name), [categories]);
+  const typeOptions = useMemo(() => {
+    const opts = categories.filter(c => c.showInSection === 'type').map(c => c.name);
+    const accIndex = opts.findIndex(o => o.toLowerCase() === 'accessories');
+    if (accIndex > -1) {
+      const [acc] = opts.splice(accIndex, 1);
+      opts.push(acc);
+    }
+    return opts;
+  }, [categories]);
+  const [openAccessoryTypes, setOpenAccessoryTypes] = useState(false);
 
   /* ── Toggle a filter value ── */
   const toggleFilter = (section, value) => {
@@ -128,6 +137,7 @@ const FilterSidebar = ({ activeFilters, onFilterChange, products = [] }) => {
       Category: [],
       StoneName: [],
       StoneColour: [],
+      AccessoryType: [],
     });
   };
 
@@ -139,15 +149,57 @@ const FilterSidebar = ({ activeFilters, onFilterChange, products = [] }) => {
   /* ── Render a filter section ── */
   const renderSection = (title, sectionKey, options, defaultOpen = false) => (
     <FilterSection title={title} defaultOpen={defaultOpen || (activeFilters[sectionKey]?.length > 0)}>
-      <div>
-        {options.map(option => (
-          <CheckboxItem
-            key={option}
-            label={option}
-            checked={activeFilters[sectionKey]?.includes(option) || false}
-            onChange={() => toggleFilter(sectionKey, option)}
-          />
-        ))}
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {options.map(option => {
+          if (sectionKey === 'Type' && option.toLowerCase() === 'accessories') {
+            const isChecked = activeFilters[sectionKey]?.includes(option) || false;
+            return (
+              <div key={option} style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                  <CheckboxItem
+                    label={option}
+                    checked={isChecked}
+                    onChange={() => toggleFilter(sectionKey, option)}
+                  />
+                  <button 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setOpenAccessoryTypes(prev => !prev);
+                    }}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}
+                  >
+                    <svg className={`transform transition-transform ${openAccessoryTypes ? 'rotate-180' : ''}`} width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ transform: openAccessoryTypes ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
+                      <path d="M1 1L5 5L9 1" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
+                {openAccessoryTypes && (
+                  <div style={{ marginLeft: '24px', display: 'flex', flexDirection: 'column' }}>
+                    {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories'].map(sub => {
+                      const subChecked = activeFilters.AccessoryType?.includes(sub) || false;
+                      return (
+                        <CheckboxItem
+                          key={sub}
+                          label={sub.toUpperCase()}
+                          checked={subChecked}
+                          onChange={() => toggleFilter('AccessoryType', sub)}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          }
+          return (
+            <CheckboxItem
+              key={option}
+              label={option}
+              checked={activeFilters[sectionKey]?.includes(option) || false}
+              onChange={() => toggleFilter(sectionKey, option)}
+            />
+          );
+        })}
       </div>
     </FilterSection>
   );

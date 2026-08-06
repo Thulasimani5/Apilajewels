@@ -10,17 +10,24 @@ const INITIAL_FILTER_SECTIONS = {
   Occasion: ['Bridal Set', 'Bridal Maid', 'Designer', 'Reception', 'Party Wear', 'Small Jewel'],
   StoneName: ["Crystal", "Sapphire", "Pink Morganite", "Ruby", "Emerald", "Jade", "Kemp Stone", "Pearl", "Moissanite Stone", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia", "Amethyst", "Amber", "Pink Topaz", "Navarathna", "Polki Stone", "Polki Diamond", "Rose Quartz", "Green Onyx"],
   StoneColour: ["Clear", "Blue", "Pink", "Red", "Green", "Yellow", "White", "Gold", "Various", "Violete", "Orange", "Black", "Purple", "Silver"],
-  Category: [] // Populated dynamically
+  Category: [], // Populated dynamically
+  AccessoryType: ['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories']
 };
 
 const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
   const { categories } = React.useContext(CategoryContext);
 
   const FILTER_SECTIONS = React.useMemo(() => {
+    const types = categories.filter(c => c.showInSection === 'type').map(c => c.name);
+    const accIndex = types.findIndex(o => o.toLowerCase() === 'accessories');
+    if (accIndex > -1) {
+      const [acc] = types.splice(accIndex, 1);
+      types.push(acc);
+    }
     return {
       ...INITIAL_FILTER_SECTIONS,
       Category: categories.filter(c => c.showInSection !== 'type').map(c => c.name),
-      Type: categories.filter(c => c.showInSection === 'type').map(c => c.name)
+      Type: types
     };
   }, [categories]);
 
@@ -35,8 +42,10 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
     Occasion: [],
     Category: [],
     StoneName: [],
-    StoneColour: []
+    StoneColour: [],
+    AccessoryType: []
   });
+  const [openAccessoryTypes, setOpenAccessoryTypes] = useState(false);
 
   // Sync local state when modal opens
   useEffect(() => {
@@ -48,7 +57,8 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
         Occasion: initialFilters.Occasion || [],
         Category: initialFilters.Category || [],
         StoneName: initialFilters.StoneName || [],
-        StoneColour: initialFilters.StoneColour || []
+        StoneColour: initialFilters.StoneColour || [],
+        AccessoryType: initialFilters.AccessoryType || []
       });
     }
   }, [isOpen, initialFilters]);
@@ -86,7 +96,8 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
       Occasion: [],
       Category: [],
       StoneName: [],
-      StoneColour: []
+      StoneColour: [],
+      AccessoryType: []
     });
   };
 
@@ -211,6 +222,68 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
                             {options.map((option) => {
                               const isChecked = localFilters[section]?.includes(option);
                               const displayOption = option === 'victorian-moissinate' ? 'Victorian & Mossianate' : option;
+                              if (section === 'Type' && option.toLowerCase() === 'accessories') {
+                                return (
+                                  <div key={option} className="flex flex-col w-full">
+                                    <div className="flex items-center justify-between w-full">
+                                      <button
+                                        key={option}
+                                        onClick={() => handleCheckboxChange(section, option)}
+                                        className="flex items-center gap-4 text-left focus:outline-none group"
+                                      >
+                                        <div
+                                          className={`w-[12px] h-[12px] rounded-[2px] flex items-center justify-center transition-all ${isChecked
+                                            ? 'bg-black border-black'
+                                            : 'border border-gray-400 bg-white group-hover:border-black'
+                                            }`}
+                                        >
+                                          {isChecked && <Check size={8} strokeWidth={4} className="text-white" />}
+                                        </div>
+                                        <span style={{ color: "#333", fontFamily: "Gotham Book, sans-serif", fontSize: "11px", fontStyle: "normal", fontWeight: 400, letterSpacing: "0.8px", textTransform: "uppercase" }}>
+                                          {displayOption}
+                                        </span>
+                                      </button>
+                                      <button 
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setOpenAccessoryTypes(prev => !prev);
+                                        }}
+                                        className="p-1 focus:outline-none"
+                                      >
+                                        <svg className={`transform transition-transform ${openAccessoryTypes ? 'rotate-180' : ''}`} width="10" height="6" viewBox="0 0 10 6" fill="none">
+                                          <path d="M1 1L5 5L9 1" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                        </svg>
+                                      </button>
+                                    </div>
+                                    {openAccessoryTypes && (
+                                      <div style={{ marginLeft: '28px' }} className="flex flex-col gap-4 mt-4 mb-2">
+                                        {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories'].map(sub => {
+                                          const subChecked = localFilters.AccessoryType?.includes(sub);
+                                          return (
+                                            <button
+                                              key={sub}
+                                              onClick={() => handleCheckboxChange('AccessoryType', sub)}
+                                              className="flex items-center gap-4 text-left focus:outline-none group"
+                                            >
+                                              <div
+                                                className={`w-[12px] h-[12px] rounded-[2px] flex items-center justify-center transition-all ${subChecked
+                                                  ? 'bg-black border-black'
+                                                  : 'border border-gray-400 bg-white group-hover:border-black'
+                                                  }`}
+                                              >
+                                                {subChecked && <Check size={8} strokeWidth={4} className="text-white" />}
+                                              </div>
+                                              <span style={{ color: "#555", fontFamily: "Gotham Book, sans-serif", fontSize: "11px", fontStyle: "normal", fontWeight: 400, letterSpacing: "0.8px", textTransform: "uppercase" }}>
+                                                {sub}
+                                              </span>
+                                            </button>
+                                          );
+                                        })}
+                                      </div>
+                                    )}
+                                  </div>
+                                );
+                              }
                               return (
                                 <button
                                   key={option}

@@ -18,6 +18,7 @@ const AdminDashboard = () => {
   const [selectedUserCart, setSelectedUserCart] = useState(null);
 
   const [selectedAdminCategory, setSelectedAdminCategory] = useState(null);
+  const [selectedAdminAccessorySubtype, setSelectedAdminAccessorySubtype] = useState(null);
   const [adminJewelleries, setAdminJewelleries] = useState([]);
   const [adminJewelleriesLoading, setAdminJewelleriesLoading] = useState(false);
   const [adminJewellerySearch, setAdminJewellerySearch] = useState('');
@@ -28,16 +29,27 @@ const AdminDashboard = () => {
   }
 
   useEffect(() => {
-    // Reset search query when changing categories
+    // Reset search query and sub-type when changing categories
     setAdminJewellerySearch('');
+    setSelectedAdminAccessorySubtype(null);
   }, [selectedAdminCategory]);
 
   useEffect(() => {
     if (activeTab === 'jewellery' && selectedAdminCategory && !showAddForm) {
+      if (selectedAdminCategory.toLowerCase() === 'accessories' && !selectedAdminAccessorySubtype) {
+        setAdminJewelleries([]);
+        return;
+      }
       const fetchJewels = async () => {
         setAdminJewelleriesLoading(true);
         try {
-          const res = await fetch(`${API_BASE_URL}/api/jewellery?category=${encodeURIComponent(selectedAdminCategory)}&limit=500`);
+          const isType = categories.find(c => c.name === selectedAdminCategory)?.showInSection === 'type';
+          const queryParam = isType ? 'type' : 'category';
+          let url = `${API_BASE_URL}/api/jewellery?${queryParam}=${encodeURIComponent(selectedAdminCategory)}&limit=500`;
+          if (selectedAdminCategory.toLowerCase() === 'accessories' && selectedAdminAccessorySubtype) {
+            url += `&accessoryType=${encodeURIComponent(selectedAdminAccessorySubtype)}`;
+          }
+          const res = await fetch(url);
           const result = await res.json();
           if (result.success) {
             setAdminJewelleries(result.data);
@@ -50,7 +62,7 @@ const AdminDashboard = () => {
       };
       fetchJewels();
     }
-  }, [activeTab, selectedAdminCategory, showAddForm]);
+  }, [activeTab, selectedAdminCategory, selectedAdminAccessorySubtype, showAddForm, categories]);
 
   const handleDeleteJewel = async (id) => {
     if (!window.confirm("Are you sure you want to delete this jewel?")) return;
@@ -249,6 +261,7 @@ const AdminDashboard = () => {
     price: '',
     deposit: '',
     category: ['victorian-moissinate'],
+    accessoryType: '',
     type: [],
     occasion: [],
     colour: 'Gold',
@@ -444,7 +457,7 @@ const AdminDashboard = () => {
         setEditingId(null);
         setFormData({
           jewelId: '', name: '', description: '', price: '', deposit: '',
-          category: ['victorian-moissinate'], type: [], occasion: [], colour: 'Gold',
+          category: ['victorian-moissinate'], type: [], accessoryType: '', occasion: [], colour: 'Gold',
           material: '', size: '', finish: '',
           purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: '',
           stoneName: [], stoneColour: []
@@ -577,7 +590,7 @@ const AdminDashboard = () => {
                         setEditingId(null);
                         setFormData({
                           jewelId: '', name: '', description: '', price: '', deposit: '',
-                          category: ['victorian-moissinate'], type: [], occasion: [], colour: 'Gold',
+                          category: ['victorian-moissinate'], type: [], accessoryType: '', occasion: [], colour: 'Gold',
                           material: '', size: '', finish: '',
                           purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: ''
                         });
@@ -607,7 +620,7 @@ const AdminDashboard = () => {
                     ))}
                   </div>
                 </>
-              ) : (
+              ) : selectedAdminCategory.toLowerCase() === 'accessories' && !selectedAdminAccessorySubtype ? (
                 <>
                   <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
                     <div className="flex items-center gap-4">
@@ -618,8 +631,53 @@ const AdminDashboard = () => {
                         <ArrowLeft size={18} />
                       </button>
                       <div>
-                        <h2 className="font-bold text-gray-900 text-lg">{selectedAdminCategory}</h2>
-                        <p className="text-xs text-gray-500 font-medium">Viewing all jewels in this category</p>
+                        <h2 className="font-bold text-gray-900 text-lg">Accessories Sub-Types</h2>
+                        <p className="text-xs text-gray-500 font-medium">Select a sub-type to view its items</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="p-6 grid grid-cols-2 md:grid-cols-3 gap-6">
+                    {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories'].map(sub => (
+                      <div 
+                        key={sub} 
+                        onClick={() => setSelectedAdminAccessorySubtype(sub)} 
+                        className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:border-[#B07A85] hover:shadow-md cursor-pointer transition-all flex flex-col items-center justify-center gap-4 group relative"
+                      >
+                        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform mt-2">
+                          <Package className="text-[#B07A85]" size={28} />
+                        </div>
+                        <span className="font-bold text-gray-800 text-lg text-center">{sub.toUpperCase()}</span>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                    <div className="flex items-center gap-4">
+                      <button 
+                        onClick={() => {
+                          if (selectedAdminCategory.toLowerCase() === 'accessories' && selectedAdminAccessorySubtype) {
+                            setSelectedAdminAccessorySubtype(null);
+                          } else {
+                            setSelectedAdminCategory(null);
+                          }
+                        }}
+                        className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors shadow-sm"
+                      >
+                        <ArrowLeft size={18} />
+                      </button>
+                      <div>
+                        <h2 className="font-bold text-gray-900 text-lg">
+                          {selectedAdminCategory}
+                          {selectedAdminAccessorySubtype && ` > ${selectedAdminAccessorySubtype}`}
+                        </h2>
+                        <p className="text-xs text-gray-500 font-medium">
+                          {selectedAdminAccessorySubtype 
+                            ? `Viewing all ${selectedAdminAccessorySubtype.toLowerCase()} items`
+                            : 'Viewing all jewels in this category'
+                          }
+                        </p>
                       </div>
                     </div>
                     <button 
@@ -627,7 +685,10 @@ const AdminDashboard = () => {
                         setEditingId(null);
                         setFormData({
                           jewelId: '', name: '', description: '', price: '', deposit: '',
-                          category: selectedAdminCategory ? [selectedAdminCategory] : ['victorian-moissinate'], type: [], occasion: [], colour: 'Gold',
+                          category: ['victorian-moissinate'], 
+                          type: selectedAdminCategory.toLowerCase() === 'accessories' ? ['Accessories'] : [], 
+                          accessoryType: selectedAdminAccessorySubtype || '', 
+                          occasion: [], colour: 'Gold',
                           material: '', size: '', finish: '',
                           purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: ''
                         });
@@ -714,6 +775,7 @@ const AdminDashboard = () => {
                                       deposit: jewel.deposit || '',
                                       category: Array.isArray(jewel.category) ? jewel.category : (jewel.category ? [jewel.category] : ['victorian-moissinate']),
                                       type: Array.isArray(jewel.type) ? jewel.type : (jewel.type ? [jewel.type] : []),
+                                      accessoryType: jewel.accessoryType || '',
                                       occasion: Array.isArray(jewel.occasion) ? jewel.occasion : (jewel.occasion ? [jewel.occasion] : []),
                                       colour: jewel.colour || 'Gold',
                                       material: jewel.material || '',
@@ -905,6 +967,35 @@ const AdminDashboard = () => {
                         ))}
                       </div>
                     </div>
+                    {formData.type?.includes('Accessories') && (
+                      <div className="mt-4">
+                        <div className="flex justify-between items-center mb-1">
+                          <label className="text-sm font-medium text-gray-700">Accessory Sub-Type (select one)</label>
+                          <FieldUpdateBtn field="accessoryType" value={formData.accessoryType} />
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories'].map(sub => (
+                            <label key={sub} className="inline-flex items-center">
+                              <input
+                                type="checkbox"
+                                name="accessoryType"
+                                value={sub}
+                                checked={formData.accessoryType === sub}
+                                onChange={e => {
+                                  const checked = e.target.checked;
+                                  setFormData(prev => ({
+                                    ...prev,
+                                    accessoryType: checked ? sub : ''
+                                  }));
+                                }}
+                                className="mr-2 h-4 w-4 text-[#B07A85] border-gray-300 rounded focus:ring-[#B07A85]"
+                              />
+                              <span className="text-sm text-gray-700">{sub}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     {/* Stone Name (multiple) */}
                     <div className="mt-4">
                       <div className="flex justify-between items-center mb-1">

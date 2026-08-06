@@ -25,7 +25,7 @@ const SORT_OPTIONS = [
 ];
 
 /* ── Filter key names used in the URL ── */
-const FILTER_KEYS = ['Category', 'Type', 'Occasion', 'Price', 'Colour', 'StoneName', 'StoneColour'];
+const FILTER_KEYS = ['Category', 'Type', 'Occasion', 'Price', 'Colour', 'StoneName', 'StoneColour', 'AccessoryType'];
 
 /* ── Read all filter values from URLSearchParams ── */
 const filtersFromParams = (params) => {
@@ -62,7 +62,7 @@ const bootstrapFromLegacyParams = (searchParams, categories) => {
     'full-bridal': 'Full Bridal Set', 'accessories': 'Accessories'
   };
 
-  const filters = { Category: [], Type: [], Occasion: [], Price: [], Colour: [], StoneName: [], StoneColour: [] };
+  const filters = { Category: [], Type: [], Occasion: [], Price: [], Colour: [], StoneName: [], StoneColour: [], AccessoryType: [] };
 
   if (categoryParam) {
     const norm = categoryParam.toLowerCase();
@@ -217,6 +217,12 @@ const JewelleryListing = () => {
           return checkMatch(product.type);
         });
         if (!matchesType) return false;
+      }
+
+      // Filter by AccessoryType
+      if (activeFilters.AccessoryType?.length > 0) {
+        const matchesAccType = activeFilters.AccessoryType.some(acc => product.accessoryType?.toLowerCase() === acc.toLowerCase());
+        if (!matchesAccType) return false;
       }
 
       // Filter by Stone Name

@@ -123,7 +123,7 @@ function ShopCard({ product }) {
 }
 
 /* ── Filter key names used in the URL ── */
-const DESKTOP_FILTER_KEYS = ['Category', 'Type', 'Occasion', 'Price', 'Colour', 'StoneColour', 'Stone'];
+const DESKTOP_FILTER_KEYS = ['Category', 'Type', 'Occasion', 'Price', 'Colour', 'StoneColour', 'Stone', 'AccessoryType'];
 
 const desktopFiltersFromParams = (params) => {
   const result = {};
@@ -148,7 +148,7 @@ const desktopBootstrapLegacy = (searchParams, categories) => {
   const occ = searchParams.get('occasion');
   if (!cat && !occ) return null;
 
-  const EMPTY = { Category: [], Type: [], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [] };
+  const EMPTY = { Category: [], Type: [], Occasion: [], Price: [], Colour: [], StoneColour: [], Stone: [], AccessoryType: [] };
   const f = { ...EMPTY };
 
   const occasionMap = {
@@ -191,7 +191,7 @@ export default function DesktopShop() {
   /* ── Section open/closed state (UI only) ── */
   const [open, setOpen] = useState({
     Category: true, Type: true, Occasion: true,
-    Price: false, Colour: false, StoneColour: false, Stone: false,
+    Price: false, Colour: false, StoneColour: false, Stone: false, AccessoryTypes: false
   });
 
   /* ── Sort + pagination ── */
@@ -261,7 +261,15 @@ export default function DesktopShop() {
   const products = productsData?.data || [];
 
   const categoryOptions = useMemo(() => categories.filter(c => c.showInSection !== 'type').map(c => c.name), [categories]);
-  const typeOptions = useMemo(() => categories.filter(c => c.showInSection === 'type').map(c => c.name), [categories]);
+  const typeOptions = useMemo(() => {
+    const opts = categories.filter(c => c.showInSection === 'type').map(c => c.name);
+    const accIndex = opts.findIndex(o => o.toLowerCase() === 'accessories');
+    if (accIndex > -1) {
+      const [acc] = opts.splice(accIndex, 1);
+      opts.push(acc);
+    }
+    return opts;
+  }, [categories]);
 
   /* ── Filter products ── */
   const filtered = useMemo(() => products.filter(p => {
@@ -277,6 +285,10 @@ export default function DesktopShop() {
         if (normT.includes('semi bridal') && normPt.includes('semi bridal')) return true;
         return normPt === normT;
       }))) return false;
+      
+    if (activeFilters.AccessoryType?.length > 0) {
+      if (!activeFilters.AccessoryType.some(acc => p.accessoryType?.toLowerCase() === acc.toLowerCase())) return false;
+    }
 
     const occs = Array.isArray(p.occasion) ? p.occasion : [p.occasion];
     if (activeFilters.Occasion?.length > 0 &&
@@ -445,14 +457,49 @@ export default function DesktopShop() {
 
           {/* JEWELLERY TYPE */}
           <FilterSection title="Jewellery Type" open={open.Type} onToggle={() => setOpen(o => ({ ...o, Type: !o.Type }))}>
-            {typeOptions.map(opt => (
-              <FilterItem
-                key={opt}
-                label={opt}
-                checked={activeFilters.Type.includes(opt)}
-                onToggle={() => toggle('Type', opt)}
-              />
-            ))}
+            {typeOptions.map(opt => {
+              if (opt.toLowerCase() === 'accessories') {
+                return (
+                  <div key={opt} className="mb-2">
+                    <div className="flex items-center justify-between">
+                      <FilterItem
+                        label={opt}
+                        checked={activeFilters.Type.includes(opt)}
+                        onToggle={() => toggle('Type', opt)}
+                      />
+                      <button 
+                        onClick={() => setOpen(o => ({ ...o, AccessoryTypes: !o.AccessoryTypes }))}
+                        className="p-1 focus:outline-none"
+                      >
+                        <svg className={`transform transition-transform ${open.AccessoryTypes ? 'rotate-180' : ''}`} width="10" height="6" viewBox="0 0 10 6" fill="none">
+                          <path d="M1 1L5 5L9 1" stroke="#000" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+                    </div>
+                    {open.AccessoryTypes && (
+                      <div style={{ marginLeft: '29px' }} className="flex flex-col">
+                        {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories'].map(sub => (
+                          <FilterItem
+                            key={sub}
+                            label={sub.toUpperCase()}
+                            checked={activeFilters.AccessoryType?.includes(sub)}
+                            onToggle={() => toggle('AccessoryType', sub)}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+              return (
+                <FilterItem
+                  key={opt}
+                  label={opt}
+                  checked={activeFilters.Type.includes(opt)}
+                  onToggle={() => toggle('Type', opt)}
+                />
+              );
+            })}
           </FilterSection>
 
           {/* OCCASION */}
