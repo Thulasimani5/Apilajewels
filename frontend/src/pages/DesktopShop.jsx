@@ -299,7 +299,9 @@ export default function DesktopShop() {
       }))) return false;
       
     if (activeFilters.AccessoryType?.length > 0) {
-      if (!activeFilters.AccessoryType.some(acc => p.accessoryType?.toLowerCase() === acc.toLowerCase())) return false;
+      const ptypes = Array.isArray(p.type) ? p.type : [p.type];
+      const isAccessory = ptypes.some(t => t?.toLowerCase() === 'accessories');
+      if (!isAccessory || !activeFilters.AccessoryType.some(acc => p.accessoryType?.toLowerCase() === acc.toLowerCase())) return false;
     }
 
     const occs = Array.isArray(p.occasion) ? p.occasion : [p.occasion];

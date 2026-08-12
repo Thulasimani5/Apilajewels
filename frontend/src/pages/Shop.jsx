@@ -232,7 +232,11 @@ const JewelleryListing = () => {
 
       // Filter by AccessoryType
       if (activeFilters.AccessoryType?.length > 0) {
-        const matchesAccType = activeFilters.AccessoryType.some(acc => product.accessoryType?.toLowerCase() === acc.toLowerCase());
+        const matchesAccType = activeFilters.AccessoryType.some(acc => {
+          const pTypes = Array.isArray(product.type) ? product.type : [product.type];
+          const isAccessory = pTypes.some(t => t?.toLowerCase() === 'accessories');
+          return isAccessory && product.accessoryType?.toLowerCase() === acc.toLowerCase();
+        });
         if (!matchesAccType) return false;
       }
 
