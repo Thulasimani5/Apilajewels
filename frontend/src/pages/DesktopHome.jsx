@@ -279,6 +279,11 @@ export default function Home() {
         const res = await fetch(`${API_BASE_URL}/api/jewellery?random=true&limit=12`);
         const data = await res.json();
         let list = Array.isArray(data) ? data : (data.data || data.products || []);
+        // Exclude Accessories items from trending — they should only appear when explicitly filtered
+        list = list.filter(item => {
+          const types = Array.isArray(item.type) ? item.type : [item.type];
+          return !types.some(t => t?.toLowerCase() === 'accessories');
+        });
         if (list.length > 0) {
           const cards = list.map(toCard);
           trendingGridMemCache = cards;

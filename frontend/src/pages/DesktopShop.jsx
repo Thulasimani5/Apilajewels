@@ -272,7 +272,19 @@ export default function DesktopShop() {
   }, [categories]);
 
   /* ── Filter products ── */
-  const filtered = useMemo(() => products.filter(p => {
+  const filtered = useMemo(() => {
+    // Check if user has explicitly selected Accessories type or any AccessoryType subtype
+    const hasAccessoriesTypeFilter = activeFilters.Type?.some(t => t.toLowerCase() === 'accessories');
+    const hasAccessorySubtypeFilter = activeFilters.AccessoryType?.length > 0;
+    const showAccessories = hasAccessoriesTypeFilter || hasAccessorySubtypeFilter;
+
+    return products.filter(p => {
+    // Exclude Accessories items unless user explicitly selected Accessories or a subtype
+    if (!showAccessories) {
+      const ptypes = Array.isArray(p.type) ? p.type : [p.type];
+      if (ptypes.some(t => t?.toLowerCase() === 'accessories')) return false;
+    }
+
     const cats = Array.isArray(p.category) ? p.category : [p.category];
     if (activeFilters.Category.length > 0 &&
       !activeFilters.Category.some(c => cats.some(pc => pc?.toLowerCase() === c.toLowerCase()))) return false;
@@ -319,7 +331,8 @@ export default function DesktopShop() {
       !activeFilters.StoneColour.some(c => sc.some(ps => ps?.toLowerCase() === c.toLowerCase()))) return false;
 
     return true;
-  }), [products, activeFilters]);
+  });
+  }, [products, activeFilters]);
 
   /* ── Sort ── */
   const sorted = useMemo(() => {

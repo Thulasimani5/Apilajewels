@@ -139,7 +139,12 @@ const Home = () => {
         const res = await fetch(`${API_BASE_URL}/api/jewellery?random=true&limit=8`);
         const data = await res.json();
         if (data.success && data.data) {
-          setTrending(data.data);
+          // Exclude Accessories items from trending — they should only appear when explicitly filtered
+          const filtered = data.data.filter(item => {
+            const types = Array.isArray(item.type) ? item.type : [item.type];
+            return !types.some(t => t?.toLowerCase() === 'accessories');
+          });
+          setTrending(filtered);
         }
       } catch (err) {
         console.error('Failed to fetch trending items:', err);

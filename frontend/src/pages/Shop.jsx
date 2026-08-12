@@ -159,7 +159,18 @@ const JewelleryListing = () => {
 
   // Filter products by selected categories, colours, occasions, and price ranges
   const filteredProducts = useMemo(() => {
+    // Check if user has explicitly selected Accessories type or any AccessoryType subtype
+    const hasAccessoriesTypeFilter = activeFilters.Type?.some(t => t.toLowerCase() === 'accessories');
+    const hasAccessorySubtypeFilter = activeFilters.AccessoryType?.length > 0;
+    const showAccessories = hasAccessoriesTypeFilter || hasAccessorySubtypeFilter;
+
     return products.filter((product) => {
+      // Exclude Accessories items unless user explicitly selected Accessories or a subtype
+      if (!showAccessories) {
+        const types = Array.isArray(product.type) ? product.type : [product.type];
+        if (types.some(t => t?.toLowerCase() === 'accessories')) return false;
+      }
+
       // Filter by Category (supports both string and array properties)
       if (activeFilters.Category.length > 0) {
         const matchesCategory = activeFilters.Category.some((cat) => {
