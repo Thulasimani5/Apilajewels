@@ -61,7 +61,8 @@ const JewellerySchema = new mongoose.Schema({
   accessoryType: {
     type: String,
     enum: ['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories'],
-    default: null
+    default: null,
+    set: v => (!v || v === '' || v === 'null' || v === 'undefined' ? null : v)
   },
   material: {
     type: String,

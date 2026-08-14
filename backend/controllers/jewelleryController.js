@@ -227,6 +227,10 @@ exports.createJewellery = async (req, res) => {
     
     req.body.images = images;
 
+    if (!req.body.accessoryType || req.body.accessoryType === '' || req.body.accessoryType === 'null' || req.body.accessoryType === 'undefined') {
+      req.body.accessoryType = null;
+    }
+
     const jewellery = await Jewellery.create(req.body);
 
     const data = jewellery.toObject();
@@ -302,6 +306,10 @@ exports.updateJewellery = async (req, res) => {
     }
 
     req.body.images = images;
+
+    if (!req.body.accessoryType || req.body.accessoryType === '' || req.body.accessoryType === 'null' || req.body.accessoryType === 'undefined') {
+      req.body.accessoryType = null;
+    }
 
     jewellery = await Jewellery.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
