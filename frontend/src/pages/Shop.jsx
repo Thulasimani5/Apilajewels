@@ -133,14 +133,14 @@ const JewelleryListing = () => {
     if (navType !== 'POP') window.scrollTo(0, 0);
   }, [navType]);
 
-  // Bootstrap: convert legacy ?category= / ?occasion= to new multi-value params once
+  // Bootstrap: convert legacy ?category= / ?occasion= to new multi-value params
   useEffect(() => {
     if (!categories.length) return;
     const legacy = bootstrapFromLegacyParams(searchParams, categories);
     if (legacy) {
       setSearchParams(buildParams(legacy, 'recommended', 1), { replace: true });
     }
-  }, [categories]); // intentionally only runs when categories loads
+  }, [categories, searchParams]);
 
   /* ── Derive active filters directly from URL ── */
   const activeFilters = useMemo(() => filtersFromParams(searchParams), [searchParams]);

@@ -234,14 +234,14 @@ export default function DesktopShop() {
     if (navType !== 'POP') window.scrollTo(0, 0);
   }, [navType]);
 
-  /* ── Bootstrap: convert legacy ?category= / ?occasion= to new multi-value params once ── */
+  /* ── Bootstrap: convert legacy ?category= / ?occasion= to new multi-value params ── */
   useEffect(() => {
     if (!categories.length) return;
     const legacy = desktopBootstrapLegacy(searchParams, categories);
     if (legacy) {
       setSearchParams(desktopBuildParams(legacy, 'recommended', 1), { replace: true });
     }
-  }, [categories]); // intentionally only on categories load
+  }, [categories, searchParams]);
 
   /* ── Derive active filters, sort, page directly from URL ── */
   const activeFilters = useMemo(() => desktopFiltersFromParams(searchParams), [searchParams]);
