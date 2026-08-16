@@ -158,17 +158,31 @@ const desktopBootstrapLegacy = (searchParams, categories) => {
     'party-wear': 'Party Wear', small: 'Small Jewel', 'small-jewel': 'Small Jewel', 'small-jewels': 'Small Jewel',
   };
   const typeMap = {
-    'semi-bridal': 'Semi Bridal & Combo Sets', 'choker-necklace': 'Choker & Necklace',
-    'long-haram': 'Long Haram', 'full-bridal': 'Full Bridal Set', 'accessories': 'Accessories',
+    'semi-bridal': 'Semi Bridal & Combo Sets',
+    'semi-bridal-combo': 'Semi Bridal & Combo Sets',
+    'choker-necklace': 'Choker & Necklace',
+    'long-haram': 'Long Haram',
+    'full-bridal': 'Full Bridal Set',
+    'accessories': 'Accessories',
     'bangles-bracelets': 'Bangles & Bracelets',
+    'bangles-and-bracelets': 'Bangles & Bracelets',
+    'bangles': 'Bangles & Bracelets',
+    'gold-bangles': 'Bangles & Bracelets',
   };
 
   if (occ) { const v = occasionMap[occ.toLowerCase()]; if (v) { f.Occasion.push(v); return f; } }
   if (cat) {
     const norm = cat.toLowerCase();
     if (typeMap[norm]) { f.Type.push(typeMap[norm]); return f; }
-    const matched = categories.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === norm);
-    if (matched) { f.Category.push(matched.name); return f; }
+    const matched = categories.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === norm || c.name.toLowerCase() === norm);
+    if (matched) {
+      if (matched.showInSection === 'type') {
+        f.Type.push(matched.name);
+      } else {
+        f.Category.push(matched.name);
+      }
+      return f;
+    }
     if (norm.includes('moissanite') || norm === 'victorian-moissinate' || norm === 'moissinate') { f.Category.push('victorian-moissinate'); return f; }
     if (norm === 'kundan' || norm === 'kundan-jewels') { f.Category.push('Kundan Jewels'); return f; }
     if (norm === 'american-diamond' || norm === 'ad-jewels') { f.Category.push('AD Jewels'); return f; }

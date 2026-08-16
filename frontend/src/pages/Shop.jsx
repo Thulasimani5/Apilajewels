@@ -45,7 +45,6 @@ const buildParams = (filters, sort, page) => {
   return p;
 };
 
-/* ── Legacy single-param bootstrap: converts old ?category= / ?occasion= to new multi-param format ── */
 const bootstrapFromLegacyParams = (searchParams, categories) => {
   // If already using new-style multi-value params, skip
   if (FILTER_KEYS.some(k => searchParams.has(k))) return null;
@@ -54,39 +53,60 @@ const bootstrapFromLegacyParams = (searchParams, categories) => {
   const occasionParam = searchParams.get('occasion');
   if (!categoryParam && !occasionParam) return null;
 
+  const occasionMap = {
+    bridal: 'Bridal Set', 'bridal-set': 'Bridal Set', 'bridal-maid': 'Bridal Maid',
+    bridesmaid: 'Bridal Maid', designer: 'Designer', 'designer-collection': 'Designer',
+    reception: 'Reception', 'reception-jewels': 'Reception', party: 'Party Wear',
+    'party-wear': 'Party Wear', small: 'Small Jewel', 'small-jewel': 'Small Jewel', 'small-jewels': 'Small Jewel',
+  };
+
   const typeMap = {
     'bridal-set': 'Bridal Set', 'bridal-maid': 'Bridal Maid', 'designer': 'Designer',
     'reception': 'Reception', 'party-wear': 'Party Wear', 'small-jewel': 'Small Jewel',
     'small-jewels': 'Small Jewel', 'semi-bridal': 'Semi Bridal & Combo Sets',
     'choker-necklace': 'Choker & Necklace', 'long-haram': 'Long Haram',
-    'full-bridal': 'Full Bridal Set', 'accessories': 'Accessories'
+    'full-bridal': 'Full Bridal Set', 'accessories': 'Accessories',
+    'bangles-bracelets': 'Bangles & Bracelets', 'bangles-and-bracelets': 'Bangles & Bracelets',
+    'bangles': 'Bangles & Bracelets', 'gold-bangles': 'Bangles & Bracelets'
   };
 
   const filters = { Category: [], Type: [], Occasion: [], Price: [], Colour: [], StoneName: [], StoneColour: [], AccessoryType: [] };
 
-  if (categoryParam) {
-    const norm = categoryParam.toLowerCase();
-    const matched = categories.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === norm);
-    if (matched) filters.Category.push(matched.name);
-    else if (typeMap[norm]) filters.Type.push(typeMap[norm]);
-    else if (norm === 'victorian-moissinate' || norm === 'moissanite' || norm === 'moissinate') filters.Category.push('victorian-moissinate');
-    else if (norm.includes('temple')) filters.Category.push('Temple Jewellery');
-    else if (norm === 'kundan' || norm === 'kundan-jewels') filters.Category.push('Kundan Jewels');
-    else if (norm === 'american-diamond' || norm === 'ad-jewels') filters.Category.push('AD Jewels');
-    else if (norm.includes('antique') || norm === 'gold-antique-jewels') filters.Category.push('Gold Antique Jewels');
-    else if (norm === 'polki') filters.Category.push('Polki');
-    else filters.Category.push(categoryParam);
-  }
-
   if (occasionParam) {
     const norm = occasionParam.toLowerCase();
-    if (norm === 'bridal' || norm === 'bridal-set') filters.Occasion.push('Bridal Set');
-    else if (norm === 'reception' || norm === 'reception-jewels') filters.Occasion.push('Reception');
-    else if (norm === 'party' || norm === 'party-wear') filters.Occasion.push('Party Wear');
-    else if (norm === 'bridesmaid') filters.Occasion.push('Bridal Maid');
-    else if (norm === 'designer') filters.Occasion.push('Designer');
-    else if (norm === 'small' || norm === 'small-jewel') filters.Occasion.push('Small Jewel');
+    const v = occasionMap[norm];
+    if (v) filters.Occasion.push(v);
     else if (typeMap[norm]) filters.Occasion.push(typeMap[norm]);
+  }
+
+  if (categoryParam) {
+    const norm = categoryParam.toLowerCase();
+    if (typeMap[norm]) {
+      filters.Type.push(typeMap[norm]);
+    } else {
+      const matched = categories.find(c => c.name.toLowerCase().replace(/\s+/g, '-') === norm || c.name.toLowerCase() === norm);
+      if (matched) {
+        if (matched.showInSection === 'type') {
+          filters.Type.push(matched.name);
+        } else {
+          filters.Category.push(matched.name);
+        }
+      } else if (norm === 'victorian-moissinate' || norm === 'moissanite' || norm === 'moissinate') {
+        filters.Category.push('victorian-moissinate');
+      } else if (norm.includes('temple')) {
+        filters.Category.push('Temple Jewellery');
+      } else if (norm === 'kundan' || norm === 'kundan-jewels') {
+        filters.Category.push('Kundan Jewels');
+      } else if (norm === 'american-diamond' || norm === 'ad-jewels') {
+        filters.Category.push('AD Jewels');
+      } else if (norm.includes('antique') || norm === 'gold-antique-jewels') {
+        filters.Category.push('Gold Antique Jewels');
+      } else if (norm === 'polki') {
+        filters.Category.push('Polki');
+      } else {
+        filters.Category.push(categoryParam);
+      }
+    }
   }
 
   return filters;

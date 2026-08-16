@@ -431,7 +431,8 @@ const Home = () => {
               { img: imgFullBridal, title: 'Full Bridal Set', href: '/shop?category=full-bridal' },
               { img: imgChokerNecklace, title: 'Choker & Necklace', href: '/shop?category=choker-necklace' },
               { img: imgLongHaram, title: 'Long Haram', href: '/shop?category=long-haram' },
-              { img: imgBanglesBracelets, title: 'Bangles & Bracelets', href: '/shop?category=bangles-bracelets' }
+              { img: imgBanglesBracelets, title: 'Bangles & Bracelets', href: '/shop?category=bangles-bracelets' },
+              { img: imgAccessories, title: 'Accessories', href: '/shop?category=accessories' }
             ].map((card) => (
 
               <Link
