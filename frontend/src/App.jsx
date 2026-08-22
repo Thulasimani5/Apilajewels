@@ -11,6 +11,7 @@ import CookieBanner from './components/CookieBanner';
 import LoginSidebar from './components/LoginSidebar';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Profile from './pages/Profile';
 
 function App() {
   // Simple check for admin route to hide navbar
@@ -31,6 +32,7 @@ function App() {
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         </div>
         <CookieBanner />

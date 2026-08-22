@@ -41,6 +41,8 @@ const sendTokenResponse = async (user, statusCode, res, req) => {
       id: user._id,
       name: user.name,
       email: user.email,
+      phone: user.phone,
+      mobile: user.phone,
       role: user.role
     }
   });

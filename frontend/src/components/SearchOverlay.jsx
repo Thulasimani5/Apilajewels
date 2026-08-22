@@ -11,6 +11,19 @@ let jewelsMemCache = null;
 const CACHE_KEY = 'apila_srch_jewels';
 
 
+function isAccessory(product) {
+  if (!product) return false;
+  const types = Array.isArray(product.type) ? product.type : (product.type ? [product.type] : []);
+  const categories = Array.isArray(product.category) ? product.category : (product.category ? [product.category] : []);
+  const hasAccessoryType = Boolean(product.accessoryType);
+
+  return (
+    hasAccessoryType ||
+    types.some(t => t?.toLowerCase() === 'accessories') ||
+    categories.some(c => c?.toLowerCase() === 'accessories')
+  );
+}
+
 const SearchOverlay = ({ isOpen, onClose, category, type }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
@@ -25,14 +38,16 @@ const SearchOverlay = ({ isOpen, onClose, category, type }) => {
     if (!isOpen) return;
 
     if (jewelsMemCache) {
-      setPremiumJewels(jewelsMemCache);
+      const filteredMem = jewelsMemCache.filter(item => !isAccessory(item));
+      setPremiumJewels(filteredMem);
     } else {
       try {
         const stored = localStorage.getItem(CACHE_KEY);
         if (stored) {
           const parsed = JSON.parse(stored);
-          jewelsMemCache = parsed;
-          setPremiumJewels(parsed);
+          const filteredStored = parsed.filter(item => !isAccessory(item));
+          jewelsMemCache = filteredStored;
+          setPremiumJewels(filteredStored);
         }
       } catch { }
     }
@@ -40,19 +55,19 @@ const SearchOverlay = ({ isOpen, onClose, category, type }) => {
     async function refresh() {
       try {
         const page = Math.floor(Math.random() * 4) + 1;
-        const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=4&page=${page}`);
+        const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=20&page=${page}`);
         const data = await res.json();
         let list = Array.isArray(data) ? data : (data.products || data.data || []);
         if (list.length === 0) {
-          const fb = await fetch(`${API_BASE_URL}/api/jewellery?limit=4`);
+          const fb = await fetch(`${API_BASE_URL}/api/jewellery?limit=20`);
           const fbData = await fb.json();
           list = Array.isArray(fbData) ? fbData : (fbData.products || fbData.data || []);
         }
-        if (list.length > 0) {
-          const slicedList = list.slice(0, 4);
-          jewelsMemCache = slicedList;
-          try { localStorage.setItem(CACHE_KEY, JSON.stringify(slicedList)); } catch { }
-          setPremiumJewels(slicedList);
+        const nonAccessories = list.filter(item => !isAccessory(item)).slice(0, 4);
+        if (nonAccessories.length > 0) {
+          jewelsMemCache = nonAccessories;
+          try { localStorage.setItem(CACHE_KEY, JSON.stringify(nonAccessories)); } catch { }
+          setPremiumJewels(nonAccessories);
         }
       } catch { }
     }

@@ -15,6 +15,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import DesktopProduct from './DesktopProduct';
 import useIsDesktop from '../hooks/useIsDesktop';
+import axios from 'axios';
 
 /* ── Accordion ── */
 const Accordion = ({ title, children, defaultOpen = false }) => {
@@ -157,8 +158,25 @@ const ProductDetails = () => {
     return [];
   }, [product]);
 
-  const handleBookOnWhatsapp = () => {
+  const handleBookOnWhatsapp = async () => {
     if (!product) return;
+
+    try {
+      if (product._id) {
+        await axios.post(`${API_BASE_URL}/api/bookings`, {
+          jewelleryIds: [product._id],
+          totalAmount: product.rentalPrice || product.price || 0,
+          bookingDate: new Date(),
+          customerDetails: {
+            name: user?.name || 'Guest Visitor',
+            phone: user?.phone || user?.mobile || 'WhatsApp Inquiry'
+          }
+        });
+      }
+    } catch (e) {
+      console.error('Error recording product booking:', e);
+    }
+
     const price = product.rentalPrice || product.price || 0;
     const priceText = product.showPrice === false || price > 1500 ? 'Price on Request' : `₹${price}`;
     const message = `Hi Apila Jewels, I would like to book:\n\n*${product.name}*\nPrice: ${priceText}\n\nPlease let me know the availability.`;

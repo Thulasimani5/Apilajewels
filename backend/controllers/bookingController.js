@@ -3,21 +3,25 @@ const Jewellery = require('../models/Jewellery');
 
 // @desc    Get all bookings
 // @route   GET /api/bookings
-// @access  Private
+// @access  Private / Optional Admin
 exports.getBookings = async (req, res) => {
   try {
     let query;
 
-    // If user is not admin, only show their bookings
-    if (req.user.role !== 'admin') {
-      query = Booking.find({ userId: req.user.id }).populate({
+    // If user is not admin, only show their bookings or guest bookings
+    if (!req.user || req.user.role !== 'admin') {
+      const matchConditions = [];
+      if (req.user) matchConditions.push({ userId: req.user.id });
+      if (req.visitorId) matchConditions.push({ visitorId: req.visitorId });
+      
+      query = Booking.find(matchConditions.length > 0 ? { $or: matchConditions } : {}).populate({
         path: 'jewelleryIds',
-        select: 'name code images rentalPrice'
+        select: 'name code jewelId images rentalPrice price'
       });
     } else {
       query = Booking.find().populate({
         path: 'jewelleryIds',
-        select: 'name code images rentalPrice'
+        select: 'name code jewelId images rentalPrice price'
       }).populate({
         path: 'userId',
         select: 'name email phone'
@@ -49,11 +53,6 @@ exports.getBooking = async (req, res) => {
       return res.status(404).json({ success: false, error: 'Booking not found' });
     }
 
-    // Make sure user owns booking or is admin
-    if (booking.userId.toString() !== req.user.id && req.user.role !== 'admin') {
-      return res.status(401).json({ success: false, error: 'Not authorized to access this booking' });
-    }
-
     res.status(200).json({
       success: true,
       data: booking
@@ -63,15 +62,20 @@ exports.getBooking = async (req, res) => {
   }
 };
 
-// @desc    Create new booking
+// @desc    Create new booking (Logged-in User or Guest Visitor)
 // @route   POST /api/bookings
-// @access  Private
+// @access  Public / Optional Auth
 exports.createBooking = async (req, res) => {
   try {
-    req.body.userId = req.user.id;
-
-    // Optional: Check if all jewellery items are available for the date
-    // This requires complex date checking logic, we'll implement a simple creation for now
+    if (req.user) {
+      req.body.userId = req.user.id;
+    }
+    if (req.visitorId) {
+      req.body.visitorId = req.visitorId;
+    }
+    if (!req.body.bookingDate) {
+      req.body.bookingDate = new Date();
+    }
 
     const booking = await Booking.create(req.body);
 
@@ -103,11 +107,43 @@ exports.updateBooking = async (req, res) => {
     booking = await Booking.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true
+    }).populate({
+      path: 'jewelleryIds',
+      select: 'name code jewelId images rentalPrice price'
+    }).populate({
+      path: 'userId',
+      select: 'name email phone'
     });
 
     res.status(200).json({
       success: true,
       data: booking
+    });
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+};
+
+// @desc    Delete booking
+// @route   DELETE /api/bookings/:id
+// @access  Private/Admin
+exports.deleteBooking = async (req, res) => {
+  try {
+    const booking = await Booking.findById(req.params.id);
+
+    if (!booking) {
+      return res.status(404).json({ success: false, error: 'Booking not found' });
+    }
+
+    if (req.user.role !== 'admin') {
+      return res.status(401).json({ success: false, error: 'Not authorized to delete this booking' });
+    }
+
+    await booking.deleteOne();
+
+    res.status(200).json({
+      success: true,
+      data: {}
     });
   } catch (err) {
     res.status(400).json({ success: false, error: err.message });

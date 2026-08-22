@@ -168,7 +168,7 @@ export default function Home() {
   const [navHidden, setNavHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const { openLogin } = useAuth();
+  const { user, openLogin } = useAuth();
 
   /* lock body scroll while menu is open */
   useEffect(() => {
@@ -418,7 +418,7 @@ export default function Home() {
           <div className="nav-right">
             <button className="nav-icon-btn" aria-label="Wishlist" onClick={() => navigate('/wishlist')}>{Icon.heart}</button>
             <button className="nav-icon-btn" aria-label="Cart" onClick={() => navigate('/cart')}>{Icon.cart}</button>
-            <button className="nav-icon-btn" aria-label="Account" onClick={openLogin}>{Icon.account}</button>
+            <button className="nav-icon-btn" aria-label="Account" onClick={() => navigate('/profile')}>{Icon.account}</button>
           </div>
         </nav>
       </header>

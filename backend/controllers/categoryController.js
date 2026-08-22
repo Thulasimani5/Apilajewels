@@ -7,7 +7,66 @@ const Jewellery = require('../models/Jewellery');
 // @access  Public
 exports.getCategories = async (req, res) => {
   try {
-    const categories = await Category.find().sort({ createdAt: -1 });
+    // Auto-seed missing default categories & types
+    const defaultCats = [
+      { name: 'Kundan Jewels', showInSection: 'category' },
+      { name: 'Gold Antique Jewels', showInSection: 'category' },
+      { name: 'AD Jewels', showInSection: 'category' },
+      { name: 'victorian-moissinate', showInSection: 'category' }
+    ];
+    const defaultTypes = [
+      { name: 'Semi Bridal & Combo Sets', showInSection: 'type' },
+      { name: 'Full Bridal Set', showInSection: 'type' },
+      { name: 'Choker & Necklace', showInSection: 'type' },
+      { name: 'Long Haram', showInSection: 'type' },
+      { name: 'Bangles & Bracelets', showInSection: 'type' },
+      { name: 'Accessories', showInSection: 'type' }
+    ];
+
+    for (const item of [...defaultCats, ...defaultTypes]) {
+      const existing = await Category.findOne({ name: item.name });
+      if (!existing) {
+        await Category.create({
+          name: item.name,
+          subtext: `${item.name} collection`,
+          showInSection: item.showInSection
+        });
+      } else if (!existing.showInSection || existing.showInSection !== item.showInSection) {
+        existing.showInSection = item.showInSection;
+        await existing.save();
+      }
+    }
+
+    // Also auto-sync any unique types & categories directly from Jewellery products
+    const productTypes = await Jewellery.distinct('type');
+    for (const pType of productTypes) {
+      if (pType) {
+        const existing = await Category.findOne({ name: pType });
+        if (!existing) {
+          await Category.create({
+            name: pType,
+            subtext: `${pType} collection`,
+            showInSection: 'type'
+          });
+        }
+      }
+    }
+
+    const productCats = await Jewellery.distinct('category');
+    for (const pCat of productCats) {
+      if (pCat) {
+        const existing = await Category.findOne({ name: pCat });
+        if (!existing) {
+          await Category.create({
+            name: pCat,
+            subtext: `${pCat} collection`,
+            showInSection: 'category'
+          });
+        }
+      }
+    }
+
+    let categories = await Category.find().sort({ createdAt: -1 });
     
     const categoriesWithCount = await Promise.all(categories.map(async (cat) => {
       const field = cat.showInSection === 'type' ? 'type' : 'category';

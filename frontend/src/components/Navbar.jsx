@@ -217,7 +217,7 @@ const Navbar = () => {
               </Link>
 
               {user ? (
-                <div className={`flex items-center relative ${isHomePage ? 'hidden md:flex' : ''}`} ref={dropdownRef}>
+                <div className="flex items-center relative" ref={dropdownRef}>
                   <button
                     onClick={() => setDropdownOpen(!dropdownOpen)}
                     className="hover:opacity-70 transition-opacity focus:outline-none"
@@ -239,9 +239,16 @@ const Navbar = () => {
                       <div className="px-4 py-2 border-b border-gray-50">
                         <p className="text-xs text-gray-400">Signed in as</p>
                         <p className="text-[13px] font-bold text-gray-800 truncate">
-                          {user.name || "Customer"}
+                          {user.name || user.mobile || "Customer"}
                         </p>
                       </div>
+                      <Link
+                        to="/profile"
+                        onClick={() => setDropdownOpen(false)}
+                        className="block w-full text-left px-4 py-2 text-[13px] text-gray-700 hover:bg-[#FFF8F3] hover:text-[#B07A85] transition-colors font-medium"
+                      >
+                        My Profile
+                      </Link>
                       {user.role === "admin" && (
                         <Link
                           to="/admin"
@@ -256,7 +263,7 @@ const Navbar = () => {
                           logout();
                           setDropdownOpen(false);
                         }}
-                        className="block w-full text-left px-4 py-2 text-[13px] text-red-600 hover:bg-red-50 transition-colors"
+                        className="block w-full text-left px-4 py-2 text-[13px] text-red-600 hover:bg-red-50 transition-colors border-t border-gray-50"
                       >
                         Logout
                       </button>
@@ -265,9 +272,9 @@ const Navbar = () => {
                 </div>
               ) : (
                 <button
-                  onClick={openLogin}
+                  onClick={() => navigate('/profile')}
                   aria-label="Account"
-                  className="hover:opacity-70 transition-opacity hidden md:block"
+                  className="hover:opacity-70 transition-opacity"
                 >
                   <img
                     src={iconPerson}
@@ -393,17 +400,27 @@ const Navbar = () => {
             </div>
 
             {/* Bottom Section */}
-            <div className="py-6 mt-[20px] flex flex-col gap-6 bg-white">
+            <div className="py-6 mt-[20px] flex flex-col gap-4 bg-white border-t border-[#EAEAEA]">
               {user ? (
-                <div className="flex items-center gap-4 text-[#333] cursor-pointer hover:text-[#111] transition-colors" onClick={() => { logout(); setIsDrawerOpen(false); }}>
-                  <User size={16} strokeWidth={1.5} />
-                  <span style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "13px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}>LOGOUT</span>
-                </div>
+                <>
+                  <Link
+                    to="/profile"
+                    onClick={() => setIsDrawerOpen(false)}
+                    className="flex items-center gap-4 text-[#333] hover:text-[#111] transition-colors py-1"
+                  >
+                    <User size={16} strokeWidth={1.5} />
+                    <span style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "13px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}>MY PROFILE</span>
+                  </Link>
+                  <div className="flex items-center gap-4 text-[#333] cursor-pointer hover:text-red-600 transition-colors py-1" onClick={() => { logout(); setIsDrawerOpen(false); }}>
+                    <User size={16} strokeWidth={1.5} className="text-red-500" />
+                    <span style={{ color: "#DC2626", fontFamily: "Gotham Book, sans-serif", fontSize: "13px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}>LOGOUT</span>
+                  </div>
+                </>
               ) : (
                 <Link
                   to="/login"
                   onClick={() => setIsDrawerOpen(false)}
-                  className="flex items-center gap-4 text-[#333] hover:text-[#111] transition-colors w-full text-left"
+                  className="flex items-center gap-4 text-[#333] hover:text-[#111] transition-colors w-full text-left py-1"
                 >
                   <User size={16} strokeWidth={1.5} />
                   <span style={{ color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "13px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}>LOGIN</span>

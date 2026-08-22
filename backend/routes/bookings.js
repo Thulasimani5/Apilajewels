@@ -3,18 +3,23 @@ const {
   getBookings,
   getBooking,
   createBooking,
-  updateBooking
+  updateBooking,
+  deleteBooking
 } = require('../controllers/bookingController');
-const { protect, authorize } = require('../middleware/auth');
+const { protect, authorize, optionalAuth } = require('../middleware/auth');
+const visitorMiddleware = require('../middleware/visitor');
 
 const router = express.Router();
 
+router.use(visitorMiddleware);
+
 router.route('/')
-  .get(protect, getBookings)
-  .post(protect, createBooking);
+  .get(optionalAuth, getBookings)
+  .post(optionalAuth, createBooking);
 
 router.route('/:id')
-  .get(protect, getBooking)
-  .put(protect, authorize('admin'), updateBooking);
+  .get(optionalAuth, getBooking)
+  .put(protect, authorize('admin'), updateBooking)
+  .delete(protect, authorize('admin'), deleteBooking);
 
 module.exports = router;

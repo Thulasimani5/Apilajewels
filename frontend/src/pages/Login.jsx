@@ -13,11 +13,17 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { login } = useAuth();
+  const { user, login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from || '/';
   const isDesktop = useIsDesktop();
+
+  React.useEffect(() => {
+    if (user) {
+      navigate('/profile');
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,7 +42,7 @@ const Login = () => {
       if (userData.role === 'admin') {
         navigate('/admin');
       } else {
-        navigate(from);
+        navigate(from === '/' ? '/profile' : from);
       }
     } catch (err) {
       const raw = err.response?.data?.error || '';

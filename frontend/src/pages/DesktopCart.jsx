@@ -8,7 +8,8 @@ import iconDeliveryTruck from '../assets/icons/icon-delivery-truck.svg';
 import iconSecurePayments from '../assets/icons/icon-secure-payments.svg';
 import iconPremiumJewel from '../assets/icons/Premium JewelIcon.svg';
 import iconDesignerCollection from '../assets/icons/Designer CollectionIcon.svg';
-import '../styles/ApilaJewels.css';
+import axios from 'axios';
+import API_BASE_URL from '../config/api';
 
 /* ── Cart item card ── */
 function CartItemCard({ item, onRemove }) {
@@ -98,8 +99,24 @@ export default function DesktopCart() {
   const hasPremium = premiumItems.length > 0;
   const hasPriced = pricedItems.length > 0;
 
-  const handleBookOnWhatsapp = () => {
+  const handleBookOnWhatsapp = async () => {
     if (!cartItems.length) return;
+
+    try {
+      const jewelleryIds = cartItems.map(item => item._id).filter(Boolean);
+      await axios.post(`${API_BASE_URL}/api/bookings`, {
+        jewelleryIds,
+        totalAmount: pricedSubtotal || 0,
+        bookingDate: new Date(),
+        customerDetails: {
+          name: user?.name || 'Guest Visitor',
+          phone: user?.phone || user?.mobile || 'WhatsApp Inquiry'
+        }
+      });
+    } catch (e) {
+      console.error('Error recording booking:', e);
+    }
+
     let msg = `Hi Apila Jewels, I would like to book the following items:\n\n`;
     cartItems.forEach((item, i) => {
       const price = item.rentalPrice || item.price || 0;
@@ -139,7 +156,7 @@ export default function DesktopCart() {
                 <path d="M8.99887 16C8.83828 16 8.67769 15.9592 8.53717 15.8777C4.1711 13.2582 -0.666706 8.59001 0.0760276 4.0849C0.417284 2.01581 1.97301 0.446155 4.03059 0.0792224C5.89746 -0.246939 7.71414 0.446155 8.98884 1.93427C10.2435 0.486925 11.9899 -0.216362 13.7965 0.0690301C15.8742 0.405385 17.4801 1.96485 17.8916 4.05432C18.7749 8.48808 14.1077 13.0747 9.4405 15.8777C9.29998 15.9592 9.13939 16 8.9788 16H8.99887ZM4.91384 1.82215C4.7131 1.82215 4.53243 1.84254 4.35177 1.87311C3.31796 2.05658 2.11353 2.81083 1.8626 4.38048C1.33064 7.62172 4.99413 11.4847 9.00891 14.0125C12.823 11.6172 16.8277 7.7746 16.1552 4.41106C15.8943 3.07584 14.8604 2.08716 13.5356 1.87311C12.0401 1.62849 10.6449 2.41332 9.79179 3.95239C9.6312 4.23779 9.33009 4.42125 9.00891 4.42125C8.68773 4.42125 8.38662 4.24798 8.22603 3.95239C7.35281 2.37255 6.03798 1.82215 4.92387 1.82215H4.91384Z" fill="currentColor"/>
               </svg>
             </button>
-            <button className="nav-icon-btn" aria-label="Account" onClick={openLogin}>
+            <button className="nav-icon-btn" aria-label="Account" onClick={() => navigate('/profile')}>
               <svg width="13" height="15" viewBox="0 0 13 15" fill="none">
                 <path d="M0.75 13.63C0.75 10.5388 3.19364 8.03 6.20455 8.03C9.21545 8.03 11.6591 10.5388 11.6591 13.63" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M6.20432 6.35C7.71055 6.35 8.9316 5.0964 8.9316 3.55C8.9316 2.0036 7.71055 0.75 6.20432 0.75C4.69809 0.75 3.47705 2.0036 3.47705 3.55C3.47705 5.0964 4.69809 6.35 6.20432 6.35Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

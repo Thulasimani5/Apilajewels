@@ -14,7 +14,7 @@ export default function DesktopLoginOverlay({ onClose }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { login } = useAuth();
+  const { user, login, logout } = useAuth();
   const navigate = useNavigate();
 
   /* Lock body scroll */
@@ -43,7 +43,11 @@ export default function DesktopLoginOverlay({ onClose }) {
       const { token: jwtToken, user: userData } = response.data;
       login(userData, jwtToken);
       onClose();
-      if (userData.role === 'admin') navigate('/admin');
+      if (userData.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/profile');
+      }
     } catch (err) {
       setError(err.response?.data?.error || (mode === 'login' ? 'Invalid credentials' : 'Registration failed'));
     } finally {
@@ -90,76 +94,123 @@ export default function DesktopLoginOverlay({ onClose }) {
         <div className="dlo-divider" />
 
         {/* Body */}
-        <div className="dlo-body">
-          <h1 className="dlo-title">{mode === 'login' ? 'Login' : 'Sign up'}</h1>
-          <p className="dlo-subtitle">Welcome to Apila Jewels</p>
+        {user ? (
+          <div className="dlo-body">
+            <h1 className="dlo-title">My Account</h1>
+            <p className="dlo-subtitle">
+              Signed in as <strong>{user.name || user.mobile || "Customer"}</strong>
+            </p>
 
-          <form onSubmit={handleSubmit} className="dlo-form">
-            {error && <div className="dlo-error">{error}</div>}
-
-            <div className="dlo-field">
-              <input
-                type="text"
-                required
-                value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
-                placeholder="Mobile Number *"
-                autoFocus
-                className="dlo-input"
-              />
+            <div style={{ background: "#FFF8F3", border: "1px solid #FADEC9", borderRadius: "12px", padding: "18px 20px", marginBottom: "28px" }}>
+              <p style={{ margin: "0 0 4px 0", fontFamily: "'Gotham Book', sans-serif", fontSize: "10px", color: "#888", textTransform: "uppercase", letterSpacing: "0.5px" }}>Mobile Number</p>
+              <p style={{ margin: 0, fontFamily: "'Gotham Book', sans-serif", fontSize: "14px", fontWeight: 600, color: "#111" }}>+91 {user.mobile || 'N/A'}</p>
             </div>
 
-            <div className="dlo-field">
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password *"
-                className="dlo-input"
-              />
-            </div>
-
-            {mode === 'login' && (
-              <div className="dlo-forgot">
-                <a href="#" className="dlo-forgot-link">Forgot Your Password?</a>
-              </div>
-            )}
-
-            <button type="submit" disabled={loading} className="dlo-submit-btn">
-              {loading
-                ? (mode === 'login' ? 'LOGGING IN...' : 'REGISTERING...')
-                : (mode === 'login' ? 'LOGIN' : 'SIGN UP')}
+            <button
+              onClick={() => { onClose(); navigate('/profile'); }}
+              className="dlo-submit-btn"
+              style={{ marginBottom: "14px" }}
+            >
+              MY PROFILE PAGE
             </button>
 
-            <div className="dlo-switch">
-              {mode === 'login' ? (
-                <span className="dlo-switch-text">
-                  or{' '}
-                  <button type="button" onClick={() => { setMode('register'); setError(''); }} className="dlo-switch-btn">
-                    Sign up
-                  </button>
-                  {' '}with
-                </span>
-              ) : (
-                <span className="dlo-switch-text">
-                  Already have an account?{' '}
-                  <button type="button" onClick={() => { setMode('login'); setError(''); }} className="dlo-switch-btn">
-                    Log in
-                  </button>
-                </span>
-              )}
-            </div>
-          </form>
+            {user.role === 'admin' && (
+              <button
+                onClick={() => { onClose(); navigate('/admin'); }}
+                className="dlo-submit-btn"
+                style={{ background: "#111", marginBottom: "14px" }}
+              >
+                ADMIN DASHBOARD
+              </button>
+            )}
 
-          <div className="dlo-footer">
-            <span className="dlo-footer-text">Need help?</span>
-            <div className="dlo-whatsapp">
-              <img src={whatsappIcon} alt="WhatsApp" className="dlo-wa-icon" />
-              <span className="dlo-wa-label">Whatsapp Us</span>
+            <button
+              onClick={() => { logout(); onClose(); }}
+              style={{ width: "100%", background: "#FFF0F2", border: "1px solid #F5C2CB", color: "#C0392B", cursor: "pointer", display: "flex", justifyContent: "center", alignItems: "center", fontFamily: "'Gotham Book', sans-serif", fontSize: "12px", letterSpacing: "1.5px", height: "46px", borderRadius: "4px" }}
+            >
+              LOGOUT
+            </button>
+
+            <div className="dlo-footer">
+              <span className="dlo-footer-text">Need help?</span>
+              <div className="dlo-whatsapp">
+                <img src={whatsappIcon} alt="WhatsApp" className="dlo-wa-icon" />
+                <span className="dlo-wa-label">Whatsapp Us</span>
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="dlo-body">
+            <h1 className="dlo-title">{mode === 'login' ? 'Login' : 'Sign up'}</h1>
+            <p className="dlo-subtitle">Welcome to Apila Jewels</p>
+
+            <form onSubmit={handleSubmit} className="dlo-form">
+              {error && <div className="dlo-error">{error}</div>}
+
+              <div className="dlo-field">
+                <input
+                  type="text"
+                  required
+                  value={mobile}
+                  onChange={(e) => setMobile(e.target.value)}
+                  placeholder="Mobile Number *"
+                  autoFocus
+                  className="dlo-input"
+                />
+              </div>
+
+              <div className="dlo-field">
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password *"
+                  className="dlo-input"
+                />
+              </div>
+
+              {mode === 'login' && (
+                <div className="dlo-forgot">
+                  <a href="#" className="dlo-forgot-link">Forgot Your Password?</a>
+                </div>
+              )}
+
+              <button type="submit" disabled={loading} className="dlo-submit-btn">
+                {loading
+                  ? (mode === 'login' ? 'LOGGING IN...' : 'REGISTERING...')
+                  : (mode === 'login' ? 'LOGIN' : 'SIGN UP')}
+              </button>
+
+              <div className="dlo-switch">
+                {mode === 'login' ? (
+                  <span className="dlo-switch-text">
+                    or{' '}
+                    <button type="button" onClick={() => { setMode('register'); setError(''); }} className="dlo-switch-btn">
+                      Sign up
+                    </button>
+                    {' '}with
+                  </span>
+                ) : (
+                  <span className="dlo-switch-text">
+                    Already have an account?{' '}
+                    <button type="button" onClick={() => { setMode('login'); setError(''); }} className="dlo-switch-btn">
+                      Log in
+                    </button>
+                  </span>
+                )}
+              </div>
+            </form>
+
+            <div className="dlo-footer">
+              <span className="dlo-footer-text">Need help?</span>
+              <div className="dlo-whatsapp">
+                <img src={whatsappIcon} alt="WhatsApp" className="dlo-wa-icon" />
+                <span className="dlo-wa-label">Whatsapp Us</span>
+              </div>
+            </div>
+          </div>
+        )}
 
       </div>
     </div>

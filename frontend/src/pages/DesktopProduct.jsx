@@ -17,6 +17,8 @@ import iconFacebook from '../assets/icons/facebook.svg';
 import iconPinterest from '../assets/icons/pinterest.svg';
 import iconWhatsappSocial from '../assets/icons/whatsapp.svg';
 import DesktopSearchOverlay from './DesktopSearchOverlay';
+import axios from 'axios';
+import API_BASE_URL from '../config/api';
 import '../styles/ApilaJewels.css';
 
 /* ── Image Lightbox Carousel ── */
@@ -208,7 +210,23 @@ export default function DesktopProduct({ product, relatedProducts }) {
     navigate('/cart');
   };
 
-  const handleWhatsapp = () => {
+  const handleWhatsapp = async () => {
+    try {
+      if (product._id) {
+        await axios.post(`${API_BASE_URL}/api/bookings`, {
+          jewelleryIds: [product._id],
+          totalAmount: price || 0,
+          bookingDate: new Date(),
+          customerDetails: {
+            name: user?.name || 'Guest Visitor',
+            phone: user?.phone || user?.mobile || 'WhatsApp Inquiry'
+          }
+        });
+      }
+    } catch (e) {
+      console.error('Error recording product booking:', e);
+    }
+
     const msg = `Hi Apila Jewels, I would like to book:\n\n*${product.name}*\nPrice: ${priceText}\n\nPlease let me know the availability.`;
     window.open(`https://wa.me/+917397721122?text=${encodeURIComponent(msg)}`, '_blank');
   };
@@ -272,7 +290,7 @@ export default function DesktopProduct({ product, relatedProducts }) {
                 <path d="M5.52197 6.75H8.52197" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
-            <button className="nav-icon-btn" aria-label="Account" onClick={openLogin}>
+            <button className="nav-icon-btn" aria-label="Account" onClick={() => navigate('/profile')}>
               <svg width="13" height="15" viewBox="0 0 13 15" fill="none">
                 <path d="M0.75 13.63C0.75 10.5388 3.19364 8.03 6.20455 8.03C9.21545 8.03 11.6591 10.5388 11.6591 13.63" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 <path d="M6.20432 6.35C7.71055 6.35 8.9316 5.0964 8.9316 3.55C8.9316 2.0036 7.71055 0.75 6.20432 0.75C4.69809 0.75 3.47705 2.0036 3.47705 3.55C3.47705 5.0964 4.69809 6.35 6.20432 6.35Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />

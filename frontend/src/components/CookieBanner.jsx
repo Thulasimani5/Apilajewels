@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import '../styles/CookieBanner.css';
 import useIsDesktop from '../hooks/useIsDesktop';
 
 const CookieBanner = () => {
   const [isVisible, setIsVisible] = useState(false);
   const isDesktop = useIsDesktop();
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     const cookiesAccepted = localStorage.getItem('cookiesAccepted');
@@ -17,11 +21,24 @@ const CookieBanner = () => {
   const handleAcceptAll = () => {
     setIsVisible(false);
     localStorage.setItem('cookiesAccepted', 'true');
+    if (user) {
+      navigate('/profile');
+    }
   };
 
   const handleDecline = () => {
     setIsVisible(false);
-    // Optionally set a flag that they declined if you need it, but generally just hiding is enough.
+    if (user) {
+      navigate('/profile');
+    }
+  };
+
+  const handleCookieSettings = () => {
+    setIsVisible(false);
+    localStorage.setItem('cookiesAccepted', 'true');
+    if (user) {
+      navigate('/profile');
+    }
   };
 
   if (!isVisible) return null;
@@ -43,7 +60,7 @@ const CookieBanner = () => {
               Continue Without Accepting
             </button>
             <div className="cb-buttons">
-              <button className="cb-btn-outline" onClick={() => {}}>COOKIE SETTINGS</button>
+              <button className="cb-btn-outline" onClick={handleCookieSettings}>COOKIE SETTINGS</button>
               <button className="cb-btn-filled" onClick={handleAcceptAll}>ACCEPT ALL</button>
             </div>
           </div>
@@ -66,7 +83,7 @@ const CookieBanner = () => {
           <button 
             className="flex-1 py-4 border border-[#ab6281] text-[#111] text-[10.5px] font-bold tracking-[0.1em] uppercase bg-white transition-opacity hover:opacity-70" 
             style={{ fontFamily: "'Gotham', sans-serif" }} 
-            onClick={() => {}}
+            onClick={handleCookieSettings}
           >
             COOKIE SETTINGS
           </button>

@@ -77,3 +77,19 @@ exports.syncCart = async (req, res) => {
     res.status(400).json({ success: false, error: err.message });
   }
 };
+
+// @desc    Get all guest carts (Admin)
+// @route   GET /api/cart/all-guests
+// @access  Private/Admin
+exports.getAllGuestCarts = async (req, res) => {
+  try {
+    const guestCarts = await GuestCart.find().populate('cart').sort('-updatedAt');
+    res.status(200).json({
+      success: true,
+      count: guestCarts.length,
+      data: guestCarts
+    });
+  } catch (err) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+};

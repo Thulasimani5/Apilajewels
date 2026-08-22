@@ -41,10 +41,25 @@ const Cart = () => {
   const pricedAmount = pricedSelected.reduce((total, item) => total + (item.rentalPrice || item.price || 0), 0);
   const allPremiumSelected = premiumSelected.length === selectedCartItems.length && selectedCartItems.length > 0;
 
-  const handleBookOnWhatsapp = () => {
+  const handleBookOnWhatsapp = async () => {
     if (selectedCartItems.length === 0) {
       alert("Please select at least one item to book.");
       return;
+    }
+
+    try {
+      const jewelleryIds = selectedCartItems.map(item => item._id).filter(Boolean);
+      await axios.post(`${API_BASE_URL}/api/bookings`, {
+        jewelleryIds,
+        totalAmount: pricedAmount || 0,
+        bookingDate: new Date(),
+        customerDetails: {
+          name: user?.name || 'Guest Visitor',
+          phone: user?.phone || user?.mobile || 'WhatsApp Inquiry'
+        }
+      });
+    } catch (e) {
+      console.error('Error recording booking:', e);
     }
 
     let message = `Hi Apila Jewels, I would like to book the following items:\n\n`;

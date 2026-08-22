@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2, Eye, Tag } from 'lucide-react';
+import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2, Eye, Tag, Edit, FileText, Printer } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import CategoryContext from '../context/CategoryContext';
 import { useContext } from 'react';
@@ -8,7 +8,7 @@ import API_BASE_URL from '../config/api';
 
 const AdminDashboard = () => {
   const { user, logout, token } = useAuth();
-  const { categories, addCategory, deleteCategory, updateCategory } = useContext(CategoryContext);
+  const { categories, refreshCategories, addCategory, deleteCategory, updateCategory } = useContext(CategoryContext);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -16,6 +16,46 @@ const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
   const [usersLoading, setUsersLoading] = useState(false);
   const [selectedUserCart, setSelectedUserCart] = useState(null);
+  
+  const [guestCarts, setGuestCarts] = useState([]);
+  const [guestCartsLoading, setGuestCartsLoading] = useState(false);
+  const [bookings, setBookings] = useState([]);
+  const [bookingsLoading, setBookingsLoading] = useState(false);
+  const [selectedUserOrders, setSelectedUserOrders] = useState(null);
+  const [guestCartFilter, setGuestCartFilter] = useState('active');
+
+  const [showAddBookingModal, setShowAddBookingModal] = useState(false);
+  const [editingBookingId, setEditingBookingId] = useState(null);
+  const [newBookingData, setNewBookingData] = useState({
+    bookingCustomId: '',
+    customerName: '',
+    customerPhone: '',
+    customerAddress: '',
+    bookingPlace: '',
+    bookingDate: new Date().toISOString().split('T')[0],
+    eventDate: '',
+    pickupDate: '',
+    returnDate: '',
+    discountPercent: 0,
+    discountAmount: 0,
+    advancePaid: 0,
+    depositAmount: 0,
+    paymentStatus: 'Pending',
+    status: 'pending',
+    notes: '',
+    jewelleryIds: [],
+    tempJewelleries: []
+  });
+  const [tempJewelInput, setTempJewelInput] = useState({
+    name: '',
+    code: '',
+    rentalPrice: '',
+    deposit: '',
+    image: ''
+  });
+  const [jewelCodeSearch, setJewelCodeSearch] = useState('');
+  const [addBookingLoading, setAddBookingLoading] = useState(false);
+  const [showInvoiceBooking, setShowInvoiceBooking] = useState(null);
 
   const [selectedAdminCategory, setSelectedAdminCategory] = useState(null);
   const [selectedAdminAccessorySubtype, setSelectedAdminAccessorySubtype] = useState(null);
@@ -27,6 +67,182 @@ const AdminDashboard = () => {
   if (!user || user.role !== 'admin') {
     return <Navigate to="/login" replace />;
   }
+
+  const fetchAllJewelleries = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=1000`);
+      const result = await res.json();
+      if (result.success) {
+        setAdminJewelleries(result.data);
+      }
+    } catch (e) {
+      console.error("Error fetching all jewelleries for selection:", e);
+    }
+  };
+
+  const handleOpenEditBooking = (b) => {
+    setEditingBookingId(b._id);
+
+    const bItems = Array.isArray(b.jewelleryIds) ? b.jewelleryIds : [];
+    const bTempItems = Array.isArray(b.tempJewelleries) ? b.tempJewelleries : [];
+    const subtotal = bItems.reduce((sum, j) => sum + (j.rentalPrice || j.price || 0), 0) +
+                     bTempItems.reduce((sum, j) => sum + (j.rentalPrice || 0), 0);
+    const dPercent = b.discountPercent ?? (b.discountAmount && subtotal ? Math.round((b.discountAmount / subtotal) * 100) : 0);
+
+    setNewBookingData({
+      bookingCustomId: b.bookingCustomId || `BK-${String(b._id || '').slice(-4)}`,
+      customerName: b.userId?.name || b.customerDetails?.name || '',
+      customerPhone: b.userId?.phone || b.customerDetails?.phone || '',
+      customerAddress: b.customerDetails?.address || '',
+      bookingPlace: b.bookingPlace || '',
+      bookingDate: b.bookingDate ? new Date(b.bookingDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+      eventDate: b.eventDate ? new Date(b.eventDate).toISOString().split('T')[0] : '',
+      pickupDate: b.pickupDate ? new Date(b.pickupDate).toISOString().split('T')[0] : '',
+      returnDate: b.returnDate ? new Date(b.returnDate).toISOString().split('T')[0] : '',
+      discountPercent: dPercent,
+      discountAmount: b.discountAmount || 0,
+      advancePaid: b.advancePaid || 0,
+      depositAmount: b.depositAmount || 0,
+      paymentStatus: b.paymentStatus || 'Pending',
+      status: b.status || 'pending',
+      notes: b.notes || '',
+      jewelleryIds: bItems.map(item => item._id || item),
+      tempJewelleries: bTempItems
+    });
+    if (!adminJewelleries.length) fetchAllJewelleries();
+    setShowAddBookingModal(true);
+  };
+
+  const handleDeleteBooking = async (bookingId) => {
+    if (!window.confirm('Are you sure you want to delete this booking entry?')) return;
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/bookings/${bookingId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      const result = await res.json();
+      if (result.success) {
+        setBookings(prev => prev.filter(b => b._id !== bookingId));
+        alert('Booking entry deleted successfully!');
+      } else {
+        alert(result.error || 'Failed to delete booking.');
+      }
+    } catch (e) {
+      console.error('Error deleting booking:', e);
+      alert('Failed to delete booking. Please try again.');
+    }
+  };
+
+  const handleSaveBooking = async (e) => {
+    e.preventDefault();
+    if (!newBookingData.jewelleryIds.length && (!newBookingData.tempJewelleries || !newBookingData.tempJewelleries.length)) {
+      alert('Please select at least one jewellery item by Jewel Code or add a temporary item.');
+      return;
+    }
+    if (!newBookingData.customerName) {
+      alert('Please enter customer name.');
+      return;
+    }
+
+    setAddBookingLoading(true);
+
+    const selectedJewels = adminJewelleries.filter(j => newBookingData.jewelleryIds.includes(j._id));
+    const regularRentalAmount = selectedJewels.reduce((sum, j) => sum + (j.rentalPrice || j.price || 0), 0);
+    const tempRentalAmount = (newBookingData.tempJewelleries || []).reduce((sum, j) => sum + (parseFloat(j.rentalPrice) || 0), 0);
+    const rentalAmount = regularRentalAmount + tempRentalAmount;
+
+    const dPercent = parseFloat(newBookingData.discountPercent) || 0;
+    const discountAmount = (rentalAmount * dPercent) / 100;
+    const netAmount = Math.max(0, rentalAmount - discountAmount);
+    const advancePaid = parseFloat(newBookingData.advancePaid) || 0;
+    const balanceAmount = Math.max(0, netAmount - advancePaid);
+    const depositAmount = parseFloat(newBookingData.depositAmount) || 0;
+
+    const url = editingBookingId 
+      ? `${API_BASE_URL}/api/bookings/${editingBookingId}`
+      : `${API_BASE_URL}/api/bookings`;
+    const method = editingBookingId ? 'PUT' : 'POST';
+
+    try {
+      const res = await fetch(url, {
+        method,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          bookingCustomId: newBookingData.bookingCustomId || `BK-${String(bookings.length + 1).padStart(3, '0')}`,
+          jewelleryIds: newBookingData.jewelleryIds,
+          tempJewelleries: newBookingData.tempJewelleries || [],
+          bookingDate: newBookingData.bookingDate,
+          eventDate: newBookingData.eventDate || null,
+          pickupDate: newBookingData.pickupDate || null,
+          returnDate: newBookingData.returnDate || null,
+          bookingPlace: newBookingData.bookingPlace,
+          status: newBookingData.status,
+          paymentStatus: newBookingData.paymentStatus,
+          rentalAmount,
+          discountPercent: dPercent,
+          discountAmount,
+          totalAmount: netAmount,
+          advancePaid,
+          balanceAmount,
+          depositAmount,
+          notes: newBookingData.notes,
+          customerDetails: {
+            name: newBookingData.customerName,
+            phone: newBookingData.customerPhone,
+            address: newBookingData.customerAddress
+          }
+        })
+      });
+
+      const result = await res.json();
+      if (result.success) {
+        setShowAddBookingModal(false);
+        setEditingBookingId(null);
+        setNewBookingData({
+          bookingCustomId: '',
+          customerName: '',
+          customerPhone: '',
+          customerAddress: '',
+          bookingPlace: '',
+          bookingDate: new Date().toISOString().split('T')[0],
+          eventDate: '',
+          pickupDate: '',
+          returnDate: '',
+          discountPercent: 0,
+          discountAmount: 0,
+          advancePaid: 0,
+          depositAmount: 0,
+          paymentStatus: 'Pending',
+          status: 'pending',
+          notes: '',
+          jewelleryIds: [],
+          tempJewelleries: []
+        });
+        setJewelCodeSearch('');
+
+        // Refresh bookings list
+        const bRes = await fetch(`${API_BASE_URL}/api/bookings`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const bResult = await bRes.json();
+        if (bResult.success) setBookings(bResult.data);
+        alert(editingBookingId ? 'Booking updated successfully!' : 'New booking created successfully!');
+      } else {
+        alert(result.error || 'Failed to save booking.');
+      }
+    } catch (err) {
+      console.error('Error saving booking:', err);
+      alert('Failed to save booking. Please try again.');
+    } finally {
+      setAddBookingLoading(false);
+    }
+  };
 
   useEffect(() => {
     // Reset search query and sub-type when changing categories
@@ -113,24 +329,63 @@ const AdminDashboard = () => {
   };
 
   useEffect(() => {
-    if (activeTab === 'users') {
-      const fetchUsers = async () => {
-        setUsersLoading(true);
-        try {
-          const res = await fetch(`${API_BASE_URL}/api/auth/users`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
-          const result = await res.json();
-          if (result.success) {
-            setUsers(result.data);
-          }
-        } catch (e) {
-          console.error("Error fetching users:", e);
-        } finally {
-          setUsersLoading(false);
+    const fetchDashboardData = async () => {
+      // Fetch bookings
+      setBookingsLoading(true);
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/bookings`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const result = await res.json();
+        if (result.success) setBookings(result.data);
+      } catch (e) {
+        console.error("Error fetching bookings:", e);
+      } finally {
+        setBookingsLoading(false);
+      }
+
+      // Fetch users
+      setUsersLoading(true);
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/auth/users`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const result = await res.json();
+        if (result.success) setUsers(result.data);
+      } catch (e) {
+        console.error("Error fetching users:", e);
+      } finally {
+        setUsersLoading(false);
+      }
+
+      // Fetch guest carts
+      setGuestCartsLoading(true);
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/cart/all-guests`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const result = await res.json();
+        if (result.success) setGuestCarts(result.data);
+      } catch (e) {
+        console.error("Error fetching guest carts:", e);
+      } finally {
+        setGuestCartsLoading(false);
+      }
+
+      // Fetch all jewelleries
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=1000`);
+        const result = await res.json();
+        if (result.success) {
+          setAdminJewelleries(result.data);
         }
-      };
-      fetchUsers();
+      } catch (e) {
+        console.error("Error fetching all jewelleries for selection:", e);
+      }
+    };
+
+    if (token) {
+      fetchDashboardData();
     }
   }, [activeTab, token]);
 
@@ -213,8 +468,22 @@ const AdminDashboard = () => {
     }
   };
 
+  useEffect(() => {
+    if (refreshCategories) {
+      refreshCategories();
+    }
+  }, [activeTab]);
+
   // ── Jewellery Types state (reuses CategoryContext with showInSection='type') ──
-  const typesList = categories.filter(c => c.showInSection === 'type');
+  const defaultTypeNames = [
+    "Semi Bridal & Combo Sets",
+    "Full Bridal Set",
+    "Choker & Necklace",
+    "Long Haram",
+    "Bangles & Bracelets",
+    "Accessories"
+  ];
+  const typesList = categories.filter(c => c.showInSection === 'type' || defaultTypeNames.includes(c.name));
   const [typesLoading] = useState(false);
   const [typeError, setTypeError] = useState('');
   const [showTypeForm, setShowTypeForm] = useState(false);
@@ -558,26 +827,196 @@ const AdminDashboard = () => {
         </header>
         
         <div className="p-8">
-          {activeTab === 'dashboard' && (
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-                <div className="text-sm font-medium text-gray-500 mb-1">Total Jewellery</div>
-                <div className="text-3xl font-bold text-gray-900">124</div>
+          {activeTab === 'dashboard' && (() => {
+            const totalJewelleries = adminJewelleries.length;
+            const totalBookings = bookings.length;
+            const pendingBookings = bookings.filter(b => (b.status || 'pending').toLowerCase() === 'pending').length;
+            const confirmedBookings = bookings.filter(b => ['confirmed', 'approved'].includes((b.status || '').toLowerCase())).length;
+            const ineventBookings = bookings.filter(b => (b.status || '').toLowerCase() === 'inevent').length;
+            const completedBookings = bookings.filter(b => (b.status || '').toLowerCase() === 'completed').length;
+            const totalRevenue = bookings
+              .filter(b => (b.status || '').toLowerCase() !== 'rejected')
+              .reduce((sum, b) => sum + (b.totalAmount || 0), 0);
+
+            return (
+              <div className="space-y-8 font-sans">
+                {/* Stats Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex items-center gap-4">
+                    <div className="w-12 h-12 bg-amber-50 rounded-xl flex items-center justify-center text-[#B07A85] flex-shrink-0">
+                      <Package size={24} />
+                    </div>
+                    <div>
+                      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Jewellery</div>
+                      <div className="text-2xl font-bold text-gray-900 mt-0.5">{totalJewelleries}</div>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex items-center gap-4">
+                    <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 flex-shrink-0">
+                      <Calendar size={24} />
+                    </div>
+                    <div>
+                      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Bookings</div>
+                      <div className="text-2xl font-bold text-gray-900 mt-0.5">{totalBookings}</div>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex items-center gap-4">
+                    <div className="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 flex-shrink-0">
+                      <span className="text-xl font-bold">₹</span>
+                    </div>
+                    <div>
+                      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Revenue</div>
+                      <div className="text-2xl font-bold text-emerald-600 mt-0.5">₹{totalRevenue.toLocaleString()}</div>
+                    </div>
+                  </div>
+                  <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex items-center gap-4">
+                    <div className="w-12 h-12 bg-rose-50 rounded-xl flex items-center justify-center text-rose-600 flex-shrink-0">
+                      <Users size={24} />
+                    </div>
+                    <div>
+                      <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider">Pending Bookings</div>
+                      <div className="text-2xl font-bold text-rose-600 mt-0.5">{pendingBookings}</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Booking Status Sub-analysis */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100">
+                  <div className="text-center p-2">
+                    <span className="text-xs text-gray-500 font-medium">Pending Requests</span>
+                    <strong className="block text-lg text-blue-700 mt-0.5">{pendingBookings}</strong>
+                  </div>
+                  <div className="text-center p-2 border-l border-gray-200">
+                    <span className="text-xs text-gray-500 font-medium">Confirmed / Approved</span>
+                    <strong className="block text-lg text-emerald-700 mt-0.5">{confirmedBookings}</strong>
+                  </div>
+                  <div className="text-center p-2 border-l border-gray-200">
+                    <span className="text-xs text-gray-500 font-medium">In Event (Rented Out)</span>
+                    <strong className="block text-lg text-amber-800 mt-0.5">{ineventBookings}</strong>
+                  </div>
+                  <div className="text-center p-2 border-l border-gray-200">
+                    <span className="text-xs text-gray-500 font-medium">Completed Bookings</span>
+                    <strong className="block text-lg text-indigo-700 mt-0.5">{completedBookings}</strong>
+                  </div>
+                </div>
+
+                {/* Bottom section: Recent Bookings & Overview */}
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Recent Bookings List */}
+                  <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div className="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/30">
+                      <h3 className="font-semibold text-gray-800 text-sm">Recent Booking Entries</h3>
+                      <button 
+                        onClick={() => setActiveTab('bookings')} 
+                        className="text-xs text-[#B07A85] font-bold hover:underline"
+                      >
+                        View All Bookings
+                      </button>
+                    </div>
+                    <div className="divide-y divide-gray-50">
+                      {bookings.length === 0 ? (
+                        <div className="p-8 text-center text-xs text-gray-400">No booking entries recorded yet.</div>
+                      ) : (
+                        bookings.slice(0, 5).map((b, idx) => {
+                          const customId = b.bookingCustomId || `BK-${String(idx + 1).padStart(3, '0')}`;
+                          return (
+                            <div key={b._id} className="p-4 flex items-center justify-between hover:bg-gray-50/40 transition-colors">
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-mono text-xs font-bold text-gray-900">{customId}</span>
+                                  <span className="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.2 rounded font-medium">
+                                    {b.bookingDate ? new Date(b.bookingDate).toLocaleDateString() : 'N/A'}
+                                  </span>
+                                </div>
+                                <p className="text-xs font-semibold text-gray-800 mt-1">
+                                  {b.userId?.name || b.customerDetails?.name || 'Guest Customer'} 
+                                  <span className="text-gray-400 font-normal ml-1.5">({b.userId?.phone || b.customerDetails?.phone || 'No phone'})</span>
+                                </p>
+                                <p className="text-[11px] text-[#B07A85] font-medium mt-0.5 truncate max-w-xs">
+                                  {Array.isArray(b.jewelleryIds) ? b.jewelleryIds.map(item => item.name).join(', ') : 'No items'}
+                                </p>
+                              </div>
+                              <div className="text-right">
+                                <div className="text-xs font-bold text-gray-900">₹{(b.totalAmount || 0).toLocaleString()}</div>
+                                <span className={`inline-block text-[9px] font-bold uppercase px-2 py-0.5 rounded-full mt-1 ${
+                                  ['confirmed', 'approved'].includes((b.status || '').toLowerCase()) ? 'bg-green-50 text-green-700' :
+                                  (b.status || 'pending').toLowerCase() === 'pending' ? 'bg-blue-50 text-blue-700' :
+                                  'bg-amber-50 text-amber-800'
+                                }`}>
+                                  {b.status || 'Pending'}
+                                </span>
+                              </div>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Right side: Quick Action Links & Guest Carts summary */}
+                  <div className="space-y-6">
+                    {/* Quick Access links */}
+                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 space-y-4">
+                      <h3 className="font-semibold text-gray-800 text-sm">Quick Administrative Tasks</h3>
+                      <div className="grid grid-cols-2 gap-3 text-center text-xs">
+                        <button 
+                          onClick={() => {
+                            if (!adminJewelleries.length) fetchAllJewelleries();
+                            setShowAddBookingModal(true);
+                          }}
+                          className="p-3 bg-amber-50/50 hover:bg-amber-50 text-amber-900 border border-amber-100 rounded-xl transition-all font-semibold"
+                        >
+                          + New Booking
+                        </button>
+                        <button 
+                          onClick={() => {
+                            setSelectedAdminCategory(null);
+                            setActiveTab('jewellery');
+                          }}
+                          className="p-3 bg-indigo-50/50 hover:bg-indigo-50 text-indigo-900 border border-indigo-100 rounded-xl transition-all font-semibold"
+                        >
+                          Manage Jewels
+                        </button>
+                        <button 
+                          onClick={() => setActiveTab('categories')}
+                          className="p-3 bg-emerald-50/50 hover:bg-emerald-50 text-emerald-900 border border-emerald-100 rounded-xl transition-all font-semibold"
+                        >
+                          Categories
+                        </button>
+                        <button 
+                          onClick={() => setActiveTab('users')}
+                          className="p-3 bg-purple-50/50 hover:bg-purple-50 text-purple-900 border border-purple-100 rounded-xl transition-all font-semibold"
+                        >
+                          User Inquiries
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Guest Inquiries activity box */}
+                    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+                      <h3 className="font-semibold text-gray-800 text-sm mb-3">Live Inquiries Summary</h3>
+                      <div className="space-y-3.5 text-xs">
+                        <div className="flex justify-between items-center py-1.5 border-b border-gray-50">
+                          <span className="text-gray-500">Registered Users</span>
+                          <span className="font-bold text-gray-800">{users.length} users</span>
+                        </div>
+                        <div className="flex justify-between items-center py-1.5 border-b border-gray-50">
+                          <span className="text-gray-500">Guest Visitor Sessions</span>
+                          <span className="font-bold text-gray-800">{guestCarts.length} sessions</span>
+                        </div>
+                        <div className="flex justify-between items-center py-1.5">
+                          <span className="text-gray-500">Average Booking Value</span>
+                          <span className="font-bold text-gray-800">
+                            ₹{totalBookings ? Math.round(totalRevenue / totalBookings).toLocaleString() : '0'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-                <div className="text-sm font-medium text-gray-500 mb-1">Available</div>
-                <div className="text-3xl font-bold text-green-600">89</div>
-              </div>
-              <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-                <div className="text-sm font-medium text-gray-500 mb-1">Total Bookings</div>
-                <div className="text-3xl font-bold text-gray-900">45</div>
-              </div>
-              <div className="bg-white rounded-xl p-6 border border-gray-100 shadow-sm">
-                <div className="text-sm font-medium text-gray-500 mb-1">Upcoming</div>
-                <div className="text-3xl font-bold text-[#B07A85]">12</div>
-              </div>
-            </div>
-          )}
+            );
+          })()}
           
           {activeTab === 'jewellery' && !showAddForm && (
             <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
@@ -1308,50 +1747,449 @@ const AdminDashboard = () => {
           )}
 
           {activeTab === 'users' && (
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
-              <div className="p-6 border-b border-gray-100 flex justify-between items-center">
-                <h2 className="font-semibold text-gray-800">User Details & Carts</h2>
+            <div className="space-y-8">
+              {/* Registered Customers Table */}
+              <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+                <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                  <div>
+                    <h2 className="font-semibold text-gray-800 text-base">Registered Customers & Order History</h2>
+                    <p className="text-xs text-gray-400 mt-0.5">Manage customer profiles, cart items & booking logs</p>
+                  </div>
+                  <span className="text-xs font-semibold px-3 py-1 bg-[#FFF8F3] text-[#B07A85] rounded-full">
+                    {users.length} Customers
+                  </span>
+                </div>
+                
+                {usersLoading ? (
+                  <div className="p-12 text-center text-gray-500">Loading registered users...</div>
+                ) : users.length === 0 ? (
+                  <div className="p-12 text-center text-gray-500">No users registered yet.</div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse text-sm">
+                      <thead>
+                        <tr className="bg-gray-50 border-b border-gray-100 text-gray-500 font-semibold uppercase text-xs">
+                          <th className="px-6 py-4">Customer Name</th>
+                          <th className="px-6 py-4">Mobile / Phone</th>
+                          <th className="px-6 py-4">Email</th>
+                          <th className="px-6 py-4">Role</th>
+                          <th className="px-6 py-4">Active Cart</th>
+                          <th className="px-6 py-4">Order History</th>
+                          <th className="px-6 py-4">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100">
+                        {users.map(u => {
+                          const userOrdersList = bookings.filter(b => 
+                            (b.userId?._id === u._id || b.userId === u._id || b.customerDetails?.phone === u.phone)
+                          );
+                          const displayUserOrders = [...userOrdersList];
+                          if (displayUserOrders.length === 0 && u.cart && u.cart.length > 0) {
+                            displayUserOrders.push({
+                              _id: `inquiry-${u._id?.slice(-6) || 'cart'}`,
+                              bookingDate: u.updatedAt || new Date(),
+                              status: 'Inquiry / Saved Cart',
+                              jewelleryIds: u.cart,
+                              totalAmount: u.cart.reduce((sum, item) => sum + (item.rentalPrice || item.price || 0), 0)
+                            });
+                          }
+                          return (
+                            <tr key={u._id} className="hover:bg-gray-50/50 transition-colors">
+                              <td className="px-6 py-4 font-medium text-gray-900">{u.name || 'Customer'}</td>
+                              <td className="px-6 py-4 text-gray-600 font-mono text-xs">{u.phone || u.mobile || 'N/A'}</td>
+                              <td className="px-6 py-4 text-gray-600">{u.email || 'N/A'}</td>
+                              <td className="px-6 py-4">
+                                <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${u.role === 'admin' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'bg-gray-100 text-gray-600'}`}>
+                                  {u.role}
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 text-gray-600 font-medium">
+                                <span className="px-2 py-0.5 rounded bg-gray-100 text-xs text-gray-700">
+                                  {u.cart?.length || 0} items
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 text-gray-600 font-medium">
+                                <span className="px-2 py-0.5 rounded bg-blue-50 text-xs text-blue-700 font-semibold">
+                                  {displayUserOrders.length} orders
+                                </span>
+                              </td>
+                              <td className="px-6 py-4 flex items-center gap-2">
+                                <button
+                                  onClick={() => setSelectedUserCart({ name: u.name || 'Customer', cart: u.cart || [] })}
+                                  className="text-xs bg-[#B07A85]/10 text-[#B07A85] px-3 py-1.5 rounded-lg hover:bg-[#B07A85] hover:text-white transition-all font-semibold"
+                                >
+                                  View Cart
+                                </button>
+                                <button
+                                  onClick={() => setSelectedUserOrders({ user: u, orders: displayUserOrders })}
+                                  className="text-xs bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-600 hover:text-white transition-all font-semibold"
+                                >
+                                  View Orders
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
-              
-              {usersLoading ? (
-                <div className="p-12 text-center text-gray-500">Loading registered users...</div>
-              ) : users.length === 0 ? (
-                <div className="p-12 text-center text-gray-500">No users registered yet.</div>
+
+              {/* Guest Visitors & Accepted Cookies Data Table */}
+              <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+                <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                  <div>
+                    <h2 className="font-semibold text-gray-800 text-base">Guest Visitors & Cookie Consent Data</h2>
+                    <p className="text-xs text-gray-400 mt-0.5">Tracks guest visitors who accepted cookies and added items to cart</p>
+                  </div>
+                  <span className="text-xs font-semibold px-3 py-1 bg-green-50 text-green-700 rounded-full">
+                    {guestCarts.length} Guest Sessions
+                  </span>
+                </div>
+
+                {guestCartsLoading ? (
+                  <div className="p-12 text-center text-gray-500">Loading guest visitor data...</div>
+                ) : guestCarts.length === 0 ? (
+                  <div className="p-12 text-center text-gray-500">No guest visitor carts recorded yet.</div>
+                ) : (
+                  (() => {
+                    const groupedMap = new Map();
+                    guestCarts.forEach(g => {
+                      const vId = g.visitorId || g._id;
+                      if (!groupedMap.has(vId)) {
+                        groupedMap.set(vId, {
+                          _id: g._id,
+                          visitorId: vId,
+                          cart: [...(g.cart || [])],
+                          sessionCount: 1,
+                          updatedAt: g.updatedAt
+                        });
+                      } else {
+                        const existing = groupedMap.get(vId);
+                        existing.sessionCount += 1;
+                        const existingItemIds = new Set(existing.cart.map(item => item._id || item));
+                        (g.cart || []).forEach(item => {
+                          const itemId = item._id || item;
+                          if (!existingItemIds.has(itemId)) {
+                            existing.cart.push(item);
+                            existingItemIds.add(itemId);
+                          }
+                        });
+                        if (new Date(g.updatedAt) > new Date(existing.updatedAt)) {
+                          existing.updatedAt = g.updatedAt;
+                        }
+                      }
+                    });
+
+                    const allGrouped = Array.from(groupedMap.values()).sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+                    const activeGrouped = allGrouped.filter(g => g.cart && g.cart.length > 0);
+                    const displayedList = guestCartFilter === 'active' ? activeGrouped : allGrouped;
+
+                    return (
+                      <div>
+                        {/* Filter Bar */}
+                        <div className="p-4 border-b border-gray-100 flex flex-wrap justify-between items-center gap-3 bg-gray-50/30">
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={() => setGuestCartFilter('active')}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                                guestCartFilter === 'active'
+                                  ? 'bg-[#B07A85] text-white shadow-sm'
+                                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                              }`}
+                            >
+                              Active Carts With Items ({activeGrouped.length})
+                            </button>
+                            <button
+                              onClick={() => setGuestCartFilter('all')}
+                              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                                guestCartFilter === 'all'
+                                  ? 'bg-[#B07A85] text-white shadow-sm'
+                                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                              }`}
+                            >
+                              All Unique Visitors ({allGrouped.length})
+                            </button>
+                          </div>
+                          <span className="text-xs text-gray-400">
+                            {guestCarts.length} Total Raw Sessions Merged Into {allGrouped.length} Unique Visitors
+                          </span>
+                        </div>
+
+                        {displayedList.length === 0 ? (
+                          <div className="p-12 text-center text-gray-500">
+                            {guestCartFilter === 'active' ? 'No active guest carts with items currently.' : 'No guest sessions found.'}
+                          </div>
+                        ) : (
+                          <div className="overflow-x-auto">
+                            <table className="w-full text-left border-collapse text-sm">
+                              <thead>
+                                <tr className="bg-gray-50 border-b border-gray-100 text-gray-500 font-semibold uppercase text-xs">
+                                  <th className="px-6 py-4">Unique Visitor / Session ID</th>
+                                  <th className="px-6 py-4">Cookie Consent</th>
+                                  <th className="px-6 py-4">Merged Cart Items</th>
+                                  <th className="px-6 py-4">Order History</th>
+                                  <th className="px-6 py-4">Last Activity</th>
+                                  <th className="px-6 py-4">Actions</th>
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-gray-100">
+                                {displayedList.map(g => {
+                                  const visitorOrdersList = bookings.filter(b => b.visitorId === g.visitorId || (b.customerDetails?.name && b.customerDetails?.name.includes(g.visitorId?.slice(0, 8))));
+                                  const displayOrdersList = [...visitorOrdersList];
+                                  if (displayOrdersList.length === 0 && g.cart && g.cart.length > 0) {
+                                    displayOrdersList.push({
+                                      _id: `inquiry-${g.visitorId?.slice(0, 8)}`,
+                                      bookingDate: g.updatedAt || new Date(),
+                                      status: 'Inquiry / Saved Cart',
+                                      jewelleryIds: g.cart,
+                                      totalAmount: g.cart.reduce((sum, item) => sum + (item.rentalPrice || item.price || 0), 0)
+                                    });
+                                  }
+                                  return (
+                                    <tr key={g.visitorId || g._id} className="hover:bg-gray-50/50 transition-colors">
+                                      <td className="px-6 py-4">
+                                        <div className="flex items-center gap-2">
+                                          <span className="font-mono text-xs text-gray-900 font-medium">
+                                            Visitor #{g.visitorId ? `${g.visitorId.slice(0, 14)}...` : 'Guest'}
+                                          </span>
+                                        </div>
+                                      </td>
+                                      <td className="px-6 py-4">
+                                        <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                                          Accepted Cookies
+                                        </span>
+                                      </td>
+                                      <td className="px-6 py-4">
+                                        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                                          g.cart?.length > 0 ? 'bg-[#FFF8F3] text-[#B07A85]' : 'bg-gray-100 text-gray-500'
+                                        }`}>
+                                          {g.cart?.length || 0} items
+                                        </span>
+                                      </td>
+                                      <td className="px-6 py-4 text-gray-600 font-medium">
+                                        <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 font-semibold text-xs">
+                                          {displayOrdersList.length} orders
+                                        </span>
+                                      </td>
+                                      <td className="px-6 py-4 text-xs text-gray-500">
+                                        {g.updatedAt ? new Date(g.updatedAt).toLocaleDateString() : 'Recent'}
+                                      </td>
+                                      <td className="px-6 py-4 flex items-center gap-2">
+                                        <button
+                                          onClick={() => setSelectedUserCart({ name: `Visitor (${g.visitorId?.slice(0, 8)})`, cart: g.cart || [] })}
+                                          className="text-xs bg-[#B07A85]/10 text-[#B07A85] px-3 py-1.5 rounded-lg hover:bg-[#B07A85] hover:text-white transition-all font-semibold"
+                                        >
+                                          View Cart
+                                        </button>
+                                        <button
+                                          onClick={() => setSelectedUserOrders({ 
+                                            user: { name: `Guest (${g.visitorId?.slice(0, 8)})`, phone: 'WhatsApp Guest' }, 
+                                            orders: displayOrdersList 
+                                          })}
+                                          className="text-xs bg-blue-50 text-blue-600 px-3 py-1.5 rounded-lg hover:bg-blue-600 hover:text-white transition-all font-semibold"
+                                        >
+                                          View Orders
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  );
+                                })}
+                              </tbody>
+                            </table>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Bookings / All Orders Tab */}
+          {activeTab === 'bookings' && (
+            <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
+              <div className="p-6 border-b border-gray-100 flex flex-wrap justify-between items-center gap-4 bg-gray-50/50">
+                <div>
+                  <h2 className="font-semibold text-gray-800 text-base">All Customer Bookings & WhatsApp Inquiries</h2>
+                  <p className="text-xs text-gray-400 mt-0.5">Manage customer orders, inquiry logs and add new manual bookings</p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-semibold px-3 py-1 bg-blue-50 text-blue-700 rounded-full">
+                    {bookings.length} Total Bookings
+                  </span>
+                  <button
+                    onClick={() => {
+                      if (!adminJewelleries.length) fetchAllJewelleries();
+                      setShowAddBookingModal(true);
+                    }}
+                    className="px-4 py-2 bg-[#B07A85] text-white text-xs font-semibold rounded-lg hover:bg-[#9E6A75] transition-all flex items-center gap-2 shadow-sm"
+                  >
+                    <Plus size={15} /> Add New Booking
+                  </button>
+                </div>
+              </div>
+
+              {bookingsLoading ? (
+                <div className="p-12 text-center text-gray-500">Loading bookings history...</div>
+              ) : bookings.length === 0 ? (
+                <div className="p-12 text-center text-gray-500">No bookings recorded yet.</div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse text-sm">
+                  <table className="w-full text-left border-collapse text-xs whitespace-nowrap">
                     <thead>
-                      <tr className="bg-gray-50 border-b border-gray-100 text-gray-500 font-semibold uppercase text-xs">
-                        <th className="px-6 py-4">Name</th>
-                        <th className="px-6 py-4">Mobile / Phone</th>
-                        <th className="px-6 py-4">Email</th>
-                        <th className="px-6 py-4">Role</th>
-                        <th className="px-6 py-4">Cart Items</th>
-                        <th className="px-6 py-4">Actions</th>
+                      <tr className="bg-gray-50 border-b border-gray-100 text-gray-500 font-bold uppercase tracking-wider text-[11px]">
+                        <th className="px-4 py-3.5">Booking ID</th>
+                        <th className="px-4 py-3.5">Customer & Phone</th>
+                        <th className="px-4 py-3.5">Dates (Event / Pickup / Return)</th>
+                        <th className="px-4 py-3.5">Jewellery Code & Name</th>
+                        <th className="px-4 py-3.5">Rental ₹</th>
+                        <th className="px-4 py-3.5">Advance Paid ₹</th>
+                        <th className="px-4 py-3.5">Balance ₹</th>
+                        <th className="px-4 py-3.5">Deposit ₹</th>
+                        <th className="px-4 py-3.5">Payment Status</th>
+                        <th className="px-4 py-3.5">Booking Status</th>
+                        <th className="px-4 py-3.5">Notes</th>
+                        <th className="px-4 py-3.5 text-center">Actions</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
-                      {users.map(u => (
-                        <tr key={u._id} className="hover:bg-gray-50/50 transition-colors">
-                          <td className="px-6 py-4 font-medium text-gray-900">{u.name || 'Customer'}</td>
-                          <td className="px-6 py-4 text-gray-600">{u.phone || 'N/A'}</td>
-                          <td className="px-6 py-4 text-gray-600">{u.email || 'N/A'}</td>
-                          <td className="px-6 py-4">
-                            <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${u.role === 'admin' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'bg-gray-100 text-gray-600'}`}>
-                              {u.role}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 text-gray-600 font-medium">{u.cart?.length || 0} items</td>
-                          <td className="px-6 py-4">
-                            <button
-                              onClick={() => setSelectedUserCart({ name: u.name || 'Customer', cart: u.cart || [] })}
-                              className="text-xs bg-[#B07A85]/10 text-[#B07A85] px-3.5 py-1.5 rounded-lg hover:bg-[#B07A85] hover:text-white transition-all font-semibold"
-                            >
-                              View Cart
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
+                      {bookings.map((b, index) => {
+                        const customId = b.bookingCustomId || `BK-${String(index + 1).padStart(3, '0')}`;
+                        const statusKey = (b.status || 'pending').toLowerCase();
+                        let statusText = 'PENDING';
+                        let statusClass = 'bg-blue-50 text-blue-700 border border-blue-200';
+
+                        if (statusKey === 'confirmed' || statusKey === 'approved') {
+                          statusText = 'CONFIRMED';
+                          statusClass = 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+                        } else if (statusKey === 'inevent') {
+                          statusText = 'IN EVENT';
+                          statusClass = 'bg-amber-50 text-amber-800 border border-amber-200';
+                        } else if (statusKey === 'completed') {
+                          statusText = 'COMPLETED';
+                          statusClass = 'bg-indigo-50 text-indigo-700 border border-indigo-200';
+                        } else if (statusKey === 'rejected') {
+                          statusText = 'REJECTED';
+                          statusClass = 'bg-rose-50 text-rose-700 border border-rose-200';
+                        }
+
+                        const pStatus = b.paymentStatus || 'Pending';
+                        let pStatusClass = 'bg-gray-100 text-gray-700';
+                        if (pStatus === 'Paid') pStatusClass = 'bg-green-100 text-green-800 font-bold';
+                        else if (pStatus === 'Partial') pStatusClass = 'bg-amber-100 text-amber-800 font-bold';
+
+                        const rentalSubtotal = b.rentalAmount || b.totalAmount || 0;
+                        const discPercent = b.discountPercent || 0;
+                        const discAmt = b.discountAmount || 0;
+                        const advPaid = b.advancePaid || 0;
+                        const balAmt = b.balanceAmount ?? Math.max(0, (rentalSubtotal - discAmt) - advPaid);
+                        const depAmt = b.depositAmount || 0;
+
+                        return (
+                          <tr key={b._id} className="hover:bg-gray-50/60 transition-colors">
+                            <td className="px-4 py-3.5 font-mono text-xs font-bold text-gray-900">
+                              {customId}
+                            </td>
+                            <td className="px-4 py-3.5">
+                              <p className="font-semibold text-gray-900">{b.userId?.name || b.customerDetails?.name || 'Guest Customer'}</p>
+                              <p className="text-[11px] text-gray-500 font-mono mt-0.5">{b.userId?.phone || b.customerDetails?.phone || 'N/A'}</p>
+                            </td>
+                            <td className="px-4 py-3.5 text-[11px]">
+                              <p><span className="text-gray-400 font-medium">Event:</span> <strong className="text-gray-800">{b.eventDate ? new Date(b.eventDate).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }) : 'N/A'}</strong></p>
+                              <p className="text-gray-500 mt-0.5">
+                                Pickup: {b.pickupDate ? new Date(b.pickupDate).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }) : 'N/A'} | Return: {b.returnDate ? new Date(b.returnDate).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }) : 'N/A'}
+                              </p>
+                            </td>
+                            <td className="px-4 py-3.5">
+                              <div className="space-y-1 max-w-xs">
+                                {Array.isArray(b.jewelleryIds) && b.jewelleryIds.map((item, i) => (
+                                  <div key={item._id || i} className="flex items-center gap-2">
+                                    <img 
+                                      src={item.images?.[0]?.url || (typeof item.images?.[0] === 'string' ? item.images[0] : '') || 'https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=800&q=80'} 
+                                      alt={item.name} 
+                                      className="w-6 h-6 rounded object-cover flex-shrink-0"
+                                    />
+                                    <span className="truncate font-medium text-gray-800">{item.name}</span>
+                                    {(item.code || item.jewelId) && (
+                                      <span className="text-[10px] font-mono bg-amber-50 text-amber-800 border border-amber-200/60 px-1.5 py-0.2 rounded font-semibold">
+                                        {item.code || item.jewelId}
+                                      </span>
+                                    )}
+                                  </div>
+                                ))}
+                                {Array.isArray(b.tempJewelleries) && b.tempJewelleries.map((item, i) => (
+                                  <div key={`temp-${i}`} className="flex items-center gap-2 mt-1">
+                                    <div className="w-6 h-6 rounded bg-amber-100 flex items-center justify-center flex-shrink-0 text-[10px] text-amber-800 font-bold font-mono">
+                                      T
+                                    </div>
+                                    <span className="truncate font-medium text-amber-900">{item.name} (Temp)</span>
+                                    {item.code && (
+                                      <span className="text-[10px] font-mono bg-red-50 text-red-800 border border-red-200/60 px-1.5 py-0.2 rounded font-semibold">
+                                        {item.code}
+                                      </span>
+                                    )}
+                                  </div>
+                                ))}
+                              </div>
+                            </td>
+                            <td className="px-4 py-3.5">
+                              <p className="font-bold text-gray-900">₹{rentalSubtotal ? rentalSubtotal.toLocaleString() : '0'}</p>
+                              {discPercent > 0 && (
+                                <p className="text-[10px] text-emerald-600 font-bold mt-0.5">
+                                  -{discPercent}% (₹{discAmt})
+                                </p>
+                              )}
+                            </td>
+                            <td className="px-4 py-3.5 font-semibold text-gray-700">
+                              {advPaid > 0 ? `₹${advPaid.toLocaleString()}` : '-'}
+                            </td>
+                            <td className="px-4 py-3.5 font-bold text-amber-900">
+                              {balAmt > 0 ? `₹${balAmt.toLocaleString()}` : '-'}
+                            </td>
+                            <td className="px-4 py-3.5 text-gray-700">
+                              {depAmt > 0 ? `₹${depAmt.toLocaleString()}` : '-'}
+                            </td>
+                            <td className="px-4 py-3.5">
+                              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${pStatusClass}`}>
+                                {pStatus}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3.5">
+                              <span className={`text-[10px] font-semibold px-2.5 py-0.5 rounded-full ${statusClass}`}>
+                                {statusText}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3.5 text-gray-600 max-w-[120px] truncate" title={b.notes || ''}>
+                              {b.notes || '-'}
+                            </td>
+                            <td className="px-4 py-3.5">
+                              <div className="flex items-center justify-center gap-1.5 font-sans">
+                                <button
+                                  onClick={() => handleOpenEditBooking(b)}
+                                  className="text-[11px] bg-[#B07A85]/10 text-[#B07A85] px-2.5 py-1 rounded-md hover:bg-[#B07A85] hover:text-white transition-all font-semibold flex items-center gap-1"
+                                >
+                                  <Pencil size={12} /> Edit
+                                </button>
+                                <button
+                                  onClick={() => setShowInvoiceBooking({ ...b, customId })}
+                                  className="text-[11px] bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-md hover:bg-indigo-600 hover:text-white transition-all font-semibold flex items-center gap-1"
+                                >
+                                  <FileText size={12} /> Invoice
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteBooking(b._id)}
+                                  className="text-[11px] bg-red-50 text-red-600 px-2.5 py-1 rounded-md hover:bg-red-600 hover:text-white transition-all font-semibold flex items-center gap-1"
+                                >
+                                  <Trash2 size={12} /> Delete
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
@@ -1661,6 +2499,87 @@ const AdminDashboard = () => {
         </div>
       )}
 
+      {/* Selected User Order History Modal */}
+      {selectedUserOrders && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[85vh] overflow-hidden flex flex-col shadow-2xl">
+            <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+              <div>
+                <h3 className="font-bold text-gray-800 text-lg">{selectedUserOrders.user.name}'s Order History</h3>
+                <p className="text-xs text-gray-400 mt-0.5">
+                  Mobile: {selectedUserOrders.user.phone || selectedUserOrders.user.mobile || 'N/A'} • {selectedUserOrders.orders.length} Total Bookings
+                </p>
+              </div>
+              <button 
+                onClick={() => setSelectedUserOrders(null)} 
+                className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto flex-1 space-y-6">
+              {selectedUserOrders.orders.length === 0 ? (
+                <div className="text-center py-12 text-gray-400 text-sm">
+                  No booking or order history found for this customer.
+                </div>
+              ) : (
+                selectedUserOrders.orders.map((order, idx) => (
+                  <div key={order._id || idx} className="rounded-xl border border-gray-100 overflow-hidden">
+                    <div className="p-4 bg-gray-50/80 flex flex-wrap justify-between items-center gap-2 border-b border-gray-100 text-xs">
+                      <div>
+                        <span className="font-semibold text-gray-700">Order ID: </span>
+                        <span className="font-mono text-gray-500">#{order._id?.slice(-8) || idx + 1}</span>
+                      </div>
+                      <div>
+                        <span className="font-semibold text-gray-700">Date: </span>
+                        <span className="text-gray-500">{order.bookingDate ? new Date(order.bookingDate).toLocaleDateString() : 'N/A'}</span>
+                      </div>
+                      <div>
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-semibold uppercase ${
+                          order.status === 'completed' ? 'bg-green-100 text-green-700' :
+                          order.status === 'approved' ? 'bg-blue-100 text-blue-700' :
+                          order.status === 'rejected' ? 'bg-red-100 text-red-700' : 'bg-yellow-100 text-yellow-700'
+                        }`}>
+                          {order.status || 'Pending'}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="p-4 space-y-3">
+                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Booked Jewellery Items:</p>
+                      {Array.isArray(order.jewelleryIds) && order.jewelleryIds.map((item, i) => (
+                        <div key={item._id || i} className="flex gap-3 items-center text-sm">
+                          <div className="w-10 h-10 rounded bg-gray-100 overflow-hidden flex-shrink-0">
+                            <img 
+                              src={item.images?.[0]?.url || item.images?.[0] || 'https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=800&q=80'} 
+                              alt={item.name} 
+                              className="w-full h-full object-cover" 
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-gray-900 truncate">{item.name}</p>
+                            <p className="text-xs text-gray-400">Code: {item.code || item.jewelId || 'N/A'}</p>
+                          </div>
+                          <div className="font-semibold text-gray-800 text-xs">
+                            ₹{item.rentalPrice?.toFixed(2) || item.price?.toFixed(2) || 0}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="p-3 bg-gray-50/50 border-t border-gray-100 flex justify-between items-center text-xs font-semibold text-gray-700">
+                      <span>Total Booking Value:</span>
+                      <span className="text-sm font-bold text-gray-900">₹{order.totalAmount?.toFixed(2) || 0}</span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Jewel Details Modal (Internal) */}
       {viewingJewel && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
@@ -1752,10 +2671,718 @@ const AdminDashboard = () => {
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add / Edit Booking Modal */}
+      {showAddBookingModal && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[92vh] overflow-y-auto shadow-2xl p-6 border border-gray-100">
+            <div className="flex justify-between items-center pb-4 border-b border-gray-100">
+              <div>
+                <h2 className="text-lg font-bold text-gray-900">
+                  {editingBookingId ? 'Edit Customer Booking Entry' : 'Add New Customer Rental Booking'}
+                </h2>
+                <p className="text-xs text-gray-500">Record customer rental, dates, jewel code selection, advance, balance & notes</p>
+              </div>
+              <button
+                onClick={() => {
+                  setShowAddBookingModal(false);
+                  setEditingBookingId(null);
+                }}
+                className="w-8 h-8 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 flex items-center justify-center transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveBooking} className="mt-5 space-y-5">
+              {/* Row 1: Booking ID, Customer Name, Phone */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Booking ID</label>
+                  <input
+                    type="text"
+                    placeholder={`e.g. BK-${String(bookings.length + 1).padStart(3, '0')}`}
+                    value={newBookingData.bookingCustomId}
+                    onChange={e => setNewBookingData(prev => ({ ...prev, bookingCustomId: e.target.value }))}
+                    className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Customer Name*</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Karthiga akka"
+                    value={newBookingData.customerName}
+                    onChange={e => setNewBookingData(prev => ({ ...prev, customerName: e.target.value }))}
+                    className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Customer Mobile / Phone</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 98765xxxxx"
+                    value={newBookingData.customerPhone}
+                    onChange={e => setNewBookingData(prev => ({ ...prev, customerPhone: e.target.value }))}
+                    className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
+                  />
+                </div>
+              </div>
+
+              {/* Row 2: Event Date, Pickup Date, Return Date, Booking Place */}
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Event Date</label>
+                  <input
+                    type="date"
+                    value={newBookingData.eventDate}
+                    onChange={e => setNewBookingData(prev => ({ ...prev, eventDate: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Pickup Date</label>
+                  <input
+                    type="date"
+                    value={newBookingData.pickupDate}
+                    onChange={e => setNewBookingData(prev => ({ ...prev, pickupDate: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Return Date</label>
+                  <input
+                    type="date"
+                    value={newBookingData.returnDate}
+                    onChange={e => setNewBookingData(prev => ({ ...prev, returnDate: e.target.value }))}
+                    className="w-full px-3 py-2 border border-gray-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Booking Place / Venue</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Chennai Hall"
+                    value={newBookingData.bookingPlace}
+                    onChange={e => setNewBookingData(prev => ({ ...prev, bookingPlace: e.target.value }))}
+                    className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
+                  />
+                </div>
+              </div>
+
+              {/* Row 3: Jewel Code Selection */}
+              <div>
+                <div className="flex justify-between items-center mb-1.5">
+                  <label className="block text-xs font-bold uppercase text-gray-600">Select Jewellery Items by Jewel Code*</label>
+                  <span className="text-xs text-[#B07A85] font-bold">
+                    {newBookingData.jewelleryIds.length} Items Selected
+                  </span>
+                </div>
+
+                <input
+                  type="text"
+                  placeholder="Search by Jewel Code (e.g. JWL-102, PK024) or Name..."
+                  value={jewelCodeSearch}
+                  onChange={e => setJewelCodeSearch(e.target.value)}
+                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] mb-3 bg-gray-50/50"
+                />
+
+                <div className="max-h-44 overflow-y-auto border border-gray-100 rounded-xl divide-y divide-gray-100 bg-white">
+                  {adminJewelleries
+                    .filter(j => {
+                      if (!jewelCodeSearch.trim()) return true;
+                      const q = jewelCodeSearch.toLowerCase();
+                      return (
+                        (j.code && j.code.toLowerCase().includes(q)) ||
+                        (j.jewelId && j.jewelId.toLowerCase().includes(q)) ||
+                        (j.name && j.name.toLowerCase().includes(q))
+                      );
+                    })
+                    .map(j => {
+                      const isSelected = newBookingData.jewelleryIds.includes(j._id);
+                      const p = j.rentalPrice || j.price || 0;
+                      return (
+                        <div
+                          key={j._id}
+                          onClick={() => {
+                            setNewBookingData(prev => ({
+                              ...prev,
+                              jewelleryIds: isSelected
+                                ? prev.jewelleryIds.filter(id => id !== j._id)
+                                : [...prev.jewelleryIds, j._id]
+                            }));
+                          }}
+                          className={`p-2.5 flex items-center justify-between cursor-pointer transition-colors ${
+                            isSelected ? 'bg-[#FFF8F3]' : 'hover:bg-gray-50'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={j.images?.[0]?.url || (typeof j.images?.[0] === 'string' ? j.images[0] : '') || 'https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=800&q=80'}
+                              alt={j.name}
+                              className="w-9 h-9 rounded-lg object-cover"
+                            />
+                            <div>
+                              <p className="text-xs font-semibold text-gray-900 line-clamp-1">{j.name}</p>
+                              <p className="text-[11px] text-gray-500 font-mono">
+                                Code: <span className="font-bold text-amber-800">{j.code || j.jewelId || 'N/A'}</span>
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="text-xs font-bold text-gray-800">₹{p}</span>
+                            <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
+                              isSelected ? 'bg-[#B07A85] text-white' : 'border border-gray-300 text-transparent'
+                            }`}>
+                              ✓
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
+
+                {/* Temp Jewellery Adder */}
+                <div className="mt-3.5 p-3.5 bg-gray-50/50 rounded-xl border border-gray-200/60">
+                  <p className="text-xs font-bold uppercase text-gray-700 mb-2">Or Add Temporary Jewellery (Will not save to database)</p>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 mb-2">
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="Jewel Name (e.g. Temp Choker)"
+                        value={tempJewelInput.name}
+                        onChange={e => setTempJewelInput(prev => ({ ...prev, name: e.target.value }))}
+                        className="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-white focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        type="text"
+                        placeholder="Jewel Code (e.g. TEMP01)"
+                        value={tempJewelInput.code}
+                        onChange={e => setTempJewelInput(prev => ({ ...prev, code: e.target.value }))}
+                        className="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-white focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        type="number"
+                        placeholder="Rental Price ₹"
+                        value={tempJewelInput.rentalPrice}
+                        onChange={e => setTempJewelInput(prev => ({ ...prev, rentalPrice: e.target.value }))}
+                        className="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-white focus:outline-none"
+                      />
+                    </div>
+                    <div>
+                      <input
+                        type="number"
+                        placeholder="Deposit ₹"
+                        value={tempJewelInput.deposit}
+                        onChange={e => setTempJewelInput(prev => ({ ...prev, deposit: e.target.value }))}
+                        className="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-white focus:outline-none"
+                      />
+                    </div>
+                    <div className="flex gap-2 items-center">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={e => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => {
+                              setTempJewelInput(prev => ({ ...prev, image: reader.result }));
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                        className="w-full text-[10px] text-gray-500 file:mr-1 file:py-1 file:px-1.5 file:rounded file:border-0 file:text-[10px] file:font-semibold file:bg-[#B07A85]/10 file:text-[#B07A85] hover:file:bg-[#B07A85]/20 cursor-pointer"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (!tempJewelInput.name.trim()) {
+                            alert('Temporary Jewel Name is required.');
+                            return;
+                          }
+                          const newItem = {
+                            name: tempJewelInput.name,
+                            code: tempJewelInput.code || 'TEMP',
+                            rentalPrice: parseFloat(tempJewelInput.rentalPrice) || 0,
+                            deposit: parseFloat(tempJewelInput.deposit) || 0,
+                            image: tempJewelInput.image || ''
+                          };
+                          setNewBookingData(prev => {
+                            const updatedTempList = [...(prev.tempJewelleries || []), newItem];
+                            return {
+                              ...prev,
+                              tempJewelleries: updatedTempList,
+                              depositAmount: (prev.depositAmount || 0) + (newItem.deposit || 0)
+                            };
+                          });
+                          setTempJewelInput({ name: '', code: '', rentalPrice: '', deposit: '', image: '' });
+                        }}
+                        className="px-3 py-1.5 bg-[#B07A85] text-white text-xs font-semibold rounded-lg hover:bg-[#9E6A75] transition-all whitespace-nowrap"
+                      >
+                        + Add Temp
+                      </button>
+                    </div>
+                  </div>
+
+                  {tempJewelInput.image && (
+                    <div className="mt-1 mb-2 flex items-center gap-2">
+                      <span className="text-[10px] text-gray-500 font-medium">Selected image preview:</span>
+                      <img src={tempJewelInput.image} alt="temp preview" className="w-8 h-8 rounded object-cover border border-gray-200" />
+                      <button type="button" onClick={() => setTempJewelInput(prev => ({ ...prev, image: '' }))} className="text-red-500 text-[10px] underline font-semibold">Remove</button>
+                    </div>
+                  )}
+
+                  {/* Render listed temp items */}
+                  {newBookingData.tempJewelleries && newBookingData.tempJewelleries.length > 0 && (
+                    <div className="mt-2 space-y-1.5">
+                      <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Added Temporary Items:</p>
+                      {newBookingData.tempJewelleries.map((item, idx) => (
+                        <div key={idx} className="flex items-center justify-between text-xs bg-amber-50/50 border border-amber-200/50 px-2.5 py-1.5 rounded-lg">
+                          <div className="flex items-center gap-2.5">
+                            {item.image ? (
+                              <img src={item.image} alt={item.name} className="w-7 h-7 rounded object-cover border border-amber-200/60" />
+                            ) : (
+                              <div className="w-7 h-7 rounded bg-amber-100 flex items-center justify-center text-[10px] text-amber-800 font-bold font-mono">T</div>
+                            )}
+                            <div>
+                              <span className="font-semibold text-amber-900 block">{item.name}</span>
+                              <span className="text-[10px] font-mono bg-amber-100 text-amber-800 px-1 py-0.5 rounded font-bold">{item.code}</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="text-gray-600">Rent: ₹{item.rentalPrice}</span>
+                            <span className="text-gray-600">Deposit: ₹{item.deposit}</span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setNewBookingData(prev => {
+                                  const updatedTempList = prev.tempJewelleries.filter((_, i) => i !== idx);
+                                  return {
+                                    ...prev,
+                                    tempJewelleries: updatedTempList,
+                                    depositAmount: Math.max(0, (prev.depositAmount || 0) - (item.deposit || 0))
+                                  };
+                                });
+                              }}
+                              className="text-red-500 hover:text-red-700 font-bold ml-1 text-sm"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Row 4: Financial Inputs (Discount %, Discount Amount ₹, Advance Paid ₹, Deposit ₹) */}
+              {(() => {
+                const regularSubtotal = adminJewelleries
+                  .filter(j => newBookingData.jewelleryIds.includes(j._id))
+                  .reduce((sum, j) => sum + (j.rentalPrice || j.price || 0), 0);
+                const tempSubtotal = (newBookingData.tempJewelleries || [])
+                  .reduce((sum, j) => sum + (parseFloat(j.rentalPrice) || 0), 0);
+                const subtotal = regularSubtotal + tempSubtotal;
+                
+                return (
+                  <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-amber-50/40 p-4 rounded-xl border border-amber-100">
+                    <div>
+                      <label className="block text-xs font-bold uppercase text-gray-700 mb-1">Discount %</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="100"
+                        placeholder="e.g. 10"
+                        value={newBookingData.discountPercent === 0 ? '' : newBookingData.discountPercent}
+                        onChange={e => {
+                          const valStr = e.target.value;
+                          const pct = valStr === '' ? 0 : parseFloat(valStr) || 0;
+                          const amt = Math.round((subtotal * pct) / 100);
+                          setNewBookingData(prev => ({
+                            ...prev,
+                            discountPercent: valStr === '' ? '' : pct,
+                            discountAmount: valStr === '' ? '' : amt
+                          }));
+                        }}
+                        className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] bg-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase text-gray-700 mb-1">Discount Amount ₹</label>
+                      <input
+                        type="number"
+                        min="0"
+                        placeholder="e.g. 500"
+                        value={newBookingData.discountAmount === 0 ? '' : newBookingData.discountAmount}
+                        onChange={e => {
+                          const valStr = e.target.value;
+                          const amt = valStr === '' ? 0 : parseFloat(valStr) || 0;
+                          const pct = subtotal ? Math.round((amt / subtotal) * 100) : 0;
+                          setNewBookingData(prev => ({
+                            ...prev,
+                            discountAmount: valStr === '' ? '' : amt,
+                            discountPercent: valStr === '' ? '' : pct
+                          }));
+                        }}
+                        className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] bg-white font-semibold text-gray-800"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase text-gray-700 mb-1">Advance Paid ₹</label>
+                      <input
+                        type="number"
+                        min="0"
+                        placeholder="e.g. 1000"
+                        value={newBookingData.advancePaid === 0 ? '' : newBookingData.advancePaid}
+                        onChange={e => {
+                          const valStr = e.target.value;
+                          setNewBookingData(prev => ({
+                            ...prev,
+                            advancePaid: valStr === '' ? '' : parseFloat(valStr) || 0
+                          }));
+                        }}
+                        className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] bg-white font-semibold text-gray-800"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold uppercase text-gray-700 mb-1">Deposit ₹</label>
+                      <input
+                        type="number"
+                        min="0"
+                        placeholder="e.g. 1000"
+                        value={newBookingData.depositAmount === 0 ? '' : newBookingData.depositAmount}
+                        onChange={e => {
+                          const valStr = e.target.value;
+                          setNewBookingData(prev => ({
+                            ...prev,
+                            depositAmount: valStr === '' ? '' : parseFloat(valStr) || 0
+                          }));
+                        }}
+                        className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] bg-white font-semibold text-gray-800"
+                      />
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Row 5: Payment Status, Booking Status, Notes */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Payment Status</label>
+                  <select
+                    value={newBookingData.paymentStatus}
+                    onChange={e => setNewBookingData(prev => ({ ...prev, paymentStatus: e.target.value }))}
+                    className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] bg-white font-semibold"
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Partial">Partial</option>
+                    <option value="Paid">Paid</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Booking Status</label>
+                  <select
+                    value={newBookingData.status}
+                    onChange={e => setNewBookingData(prev => ({ ...prev, status: e.target.value }))}
+                    className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] bg-white font-semibold"
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="confirmed">Confirmed</option>
+                    <option value="inevent">In Event</option>
+                    <option value="completed">Completed</option>
+                    <option value="rejected">Rejected</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Notes / Special Remarks</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Pink set"
+                    value={newBookingData.notes}
+                    onChange={e => setNewBookingData(prev => ({ ...prev, notes: e.target.value }))}
+                    className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
+                  />
+                </div>
+              </div>
+
+              {/* Total & Balance Calculation Summary Box */}
+              {(() => {
+                const regularRentalSubtotal = adminJewelleries
+                  .filter(j => newBookingData.jewelleryIds.includes(j._id))
+                  .reduce((sum, j) => sum + (j.rentalPrice || j.price || 0), 0);
+                const tempRentalSubtotal = (newBookingData.tempJewelleries || [])
+                  .reduce((sum, j) => sum + (parseFloat(j.rentalPrice) || 0), 0);
+                const rentalSubtotal = regularRentalSubtotal + tempRentalSubtotal;
+                const dPercent = parseFloat(newBookingData.discountPercent) || 0;
+                const dAmount = (rentalSubtotal * dPercent) / 100;
+                const netAmount = Math.max(0, rentalSubtotal - dAmount);
+                const advPaid = parseFloat(newBookingData.advancePaid) || 0;
+                const balAmt = Math.max(0, netAmount - advPaid);
+
+                return (
+                  <div className="p-4 bg-gray-50 rounded-xl space-y-2 border border-gray-200">
+                    <div className="flex justify-between items-center text-xs text-gray-600">
+                      <span>Rental Subtotal (Selected Items):</span>
+                      <span className="font-semibold text-gray-800">₹{rentalSubtotal.toFixed(2)}</span>
+                    </div>
+                    {dPercent > 0 && (
+                      <div className="flex justify-between items-center text-xs text-emerald-600 font-semibold">
+                        <span>Discount ({dPercent}% OFF):</span>
+                        <span>-₹{dAmount.toFixed(2)}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between items-center text-xs text-gray-700 font-medium">
+                      <span>Net Rental Total:</span>
+                      <span>₹{netAmount.toFixed(2)}</span>
+                    </div>
+                    {advPaid > 0 && (
+                      <div className="flex justify-between items-center text-xs text-blue-600 font-medium">
+                        <span>Advance Paid:</span>
+                        <span>-₹{advPaid.toFixed(2)}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between items-center pt-2 border-t border-gray-200 text-sm">
+                      <span className="font-bold text-gray-900">Remaining Balance ₹:</span>
+                      <span className="font-bold text-amber-800 text-lg">₹{balAmt.toFixed(2)}</span>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              <div className="flex justify-end gap-3 pt-3 border-t border-gray-100">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowAddBookingModal(false);
+                    setEditingBookingId(null);
+                  }}
+                  className="px-5 py-2 border border-gray-300 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={addBookingLoading}
+                  className="px-6 py-2 bg-[#B07A85] text-white rounded-xl text-xs font-semibold hover:bg-[#9E6A75] transition-colors flex items-center gap-2"
+                >
+                  {addBookingLoading ? 'Saving...' : (editingBookingId ? 'Update Booking Entry' : 'Create Booking Entry')}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* Invoice Generation Modal */}
+      {showInvoiceBooking && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-start justify-center p-4 overflow-y-auto no-print"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setShowInvoiceBooking(null);
+            }
+          }}
+        >
+          <div className="bg-white rounded-2xl max-w-3xl w-full shadow-2xl overflow-hidden border border-gray-100 mt-4 mb-12 relative">
+            
+            {/* Modal Controls */}
+            <div className="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center no-print">
+              <span className="text-sm font-semibold text-gray-700">Invoice Preview</span>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => window.print()}
+                  className="px-4 py-2 bg-[#B07A85] text-white text-xs font-semibold rounded-lg hover:bg-[#9E6A75] transition-all flex items-center gap-1.5 shadow-sm"
+                >
+                  <Printer size={14} /> Print / Save PDF
+                </button>
+                <button
+                  onClick={() => setShowInvoiceBooking(null)}
+                  className="px-4 py-2 bg-gray-200 text-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-300 transition-all"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+
+            {/* Invoice Printable Sheet */}
+            <div className="p-8 sm:p-12 text-gray-800 font-sans print-area bg-white text-left" id="printable-invoice">
+              
+              {/* Header section */}
+              <div className="flex justify-between items-start pb-6 border-b border-gray-100">
+                <div>
+                  <h1 className="text-4xl font-extrabold tracking-tight text-gray-900">INVOICE</h1>
+                  <p className="text-sm font-mono text-gray-500 mt-1">{showInvoiceBooking.customId || `BK-${showInvoiceBooking._id?.slice(-8)}`}</p>
+                </div>
+                <div className="text-right">
+                  <h2 className="text-xl font-bold text-[#B07A85] tracking-wide">Apila Jewels</h2>
+                  <p className="text-xs text-gray-500 mt-0.5">apila.jewels@gmail.com</p>
+                </div>
+              </div>
+
+              {/* Bill To & Info section */}
+              <div className="grid grid-cols-2 gap-8 py-8 text-sm">
+                <div>
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-pink-500 mb-2">BILL TO</h3>
+                  <p className="font-bold text-gray-900 text-base">{showInvoiceBooking.userId?.name || showInvoiceBooking.customerDetails?.name || 'Guest Customer'}</p>
+                  <p className="text-gray-500 mt-0.5">{showInvoiceBooking.userId?.email || 'N/A'}</p>
+                  <p className="text-gray-500 font-mono mt-0.5">{showInvoiceBooking.userId?.phone || showInvoiceBooking.customerDetails?.phone || 'N/A'}</p>
+                </div>
+                <div className="text-right space-y-1">
+                  <p className="text-gray-500"><span className="font-semibold text-gray-700">Issue Date:</span> {showInvoiceBooking.bookingDate ? new Date(showInvoiceBooking.bookingDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</p>
+                  <p className="text-gray-500"><span className="font-semibold text-gray-700">Due Date:</span> {showInvoiceBooking.eventDate ? new Date(showInvoiceBooking.eventDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}</p>
+                  <p className="text-gray-500"><span className="font-semibold text-gray-700">Payment Method:</span> {showInvoiceBooking.paymentStatus === 'Paid' ? 'Paid' : 'Other'}</p>
+                </div>
+              </div>
+
+              {/* Table section */}
+              <div className="border border-gray-200 rounded-xl overflow-hidden mb-6">
+                <table className="w-full text-left border-collapse text-sm">
+                  <thead>
+                    <tr className="bg-gray-50 border-b border-gray-200 text-gray-500 font-semibold uppercase text-xs">
+                      <th className="px-5 py-3 w-12">#</th>
+                      <th className="px-5 py-3">Name</th>
+                      <th className="px-5 py-3 text-center w-16">QTY</th>
+                      <th className="px-5 py-3 text-right w-28">RATE</th>
+                      <th className="px-5 py-3 text-right w-28">TOTAL</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {(() => {
+                      const regularItems = Array.isArray(showInvoiceBooking.jewelleryIds) ? showInvoiceBooking.jewelleryIds : [];
+                      const tempItems = Array.isArray(showInvoiceBooking.tempJewelleries) ? showInvoiceBooking.tempJewelleries : [];
+                      const allItems = [
+                        ...regularItems.map(item => ({ ...item, isTemp: false })),
+                        ...tempItems.map(item => ({ ...item, isTemp: true }))
+                      ];
+                      
+                      return allItems.map((item, idx) => {
+                        const rate = item.rentalPrice || item.price || 0;
+                        return (
+                          <tr key={item._id || `item-${idx}`} className="hover:bg-gray-50/30 transition-colors">
+                            <td className="px-5 py-4.5 text-gray-400 font-mono">{idx + 1}</td>
+                            <td className="px-5 py-4.5 font-medium text-gray-900">
+                              {item.name}
+                              {(item.code || item.jewelId) && (
+                                <span className="ml-2 text-[10px] font-mono bg-amber-50 text-amber-800 border border-amber-200/50 px-1.5 py-0.5 rounded font-semibold">
+                                  {item.code || item.jewelId}
+                                </span>
+                              )}
+                            </td>
+                            <td className="px-5 py-4.5 text-center text-gray-500 font-medium">1</td>
+                            <td className="px-5 py-4.5 text-right font-medium text-gray-700">₹{rate.toFixed(2)}</td>
+                            <td className="px-5 py-4.5 text-right font-semibold text-gray-900">₹{rate.toFixed(2)}</td>
+                          </tr>
+                        );
+                      });
+                    })()}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Summary section */}
+              {(() => {
+                const subtotal = showInvoiceBooking.rentalAmount || showInvoiceBooking.totalAmount || 0;
+                const discPercent = showInvoiceBooking.discountPercent || 0;
+                const discAmt = showInvoiceBooking.discountAmount || 0;
+                const netTotal = Math.max(0, subtotal - discAmt);
+                const advPaid = showInvoiceBooking.advancePaid || 0;
+                const balAmt = showInvoiceBooking.balanceAmount ?? Math.max(0, netTotal - advPaid);
+
+                return (
+                  <div className="flex justify-end mb-8">
+                    <div className="w-72 space-y-2.5 text-sm">
+                      <div className="flex justify-between items-center text-gray-500">
+                        <span>Subtotal</span>
+                        <span className="font-semibold text-gray-800">₹{subtotal.toFixed(2)}</span>
+                      </div>
+                      {discPercent > 0 && (
+                        <div className="flex justify-between items-center text-emerald-600 font-medium">
+                          <span>Discount ({discPercent}% OFF)</span>
+                          <span>-₹{discAmt.toFixed(2)}</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between items-center pt-2 border-t border-gray-100 text-gray-900 font-bold text-base">
+                        <span>Total</span>
+                        <span className="text-[#B07A85] text-lg">₹{netTotal.toFixed(2)}</span>
+                      </div>
+                      {advPaid > 0 && (
+                        <div className="flex justify-between items-center text-blue-600 font-semibold pt-1">
+                          <span>Advance Paid</span>
+                          <span>-₹{advPaid.toFixed(2)}</span>
+                        </div>
+                      )}
+                      {balAmt > 0 && (
+                        <div className="flex justify-between items-center text-amber-800 font-bold pt-1 border-t border-dashed border-gray-200">
+                          <span>Balance Due</span>
+                          <span>₹{balAmt.toFixed(2)}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+
+              <hr className="border-gray-100 my-6" />
+
+              {/* Notes & Security Deposit Section */}
+              <div className="space-y-4 text-xs text-gray-500">
+                <div>
+                  <h4 className="text-[11px] font-bold uppercase tracking-wider text-pink-500 mb-1">NOTES</h4>
+                  <p>Security Deposit (Fully Refundable Upon Jewellery Return): <strong className="text-gray-800 font-bold">₹{(showInvoiceBooking.depositAmount || 0).toLocaleString()}</strong></p>
+                  {showInvoiceBooking.notes && (
+                    <p className="mt-1"><span className="font-semibold text-gray-600">Special Remarks:</span> {showInvoiceBooking.notes}</p>
+                  )}
+                </div>
+                <div>
+                  <h4 className="text-[11px] font-bold uppercase tracking-wider text-pink-500 mb-1">TERMS & CONDITIONS</h4>
+                  <p>Security Deposit: Fully refundable upon return of the jewellery. Damage or loss will be adjusted from the deposit.</p>
+                </div>
+              </div>
+
+              {/* Footer Quote */}
+              <div className="text-center pt-8 text-xs text-gray-400 font-medium mt-8 border-t border-gray-50">
+                Thank you for choosing Apila Jewels.
+              </div>
+
+            </div>
 
           </div>
         </div>
       )}
+
+      <style>{`
+        @media print {
+          body * {
+            visibility: hidden;
+          }
+          #printable-invoice, #printable-invoice * {
+            visibility: visible;
+          }
+          #printable-invoice {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            padding: 20px;
+            margin: 0;
+            background: white !important;
+            color: black !important;
+          }
+          .no-print {
+            display: none !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };

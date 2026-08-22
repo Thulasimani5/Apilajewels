@@ -415,7 +415,7 @@ export default function DesktopShop() {
           <div className="nav-right">
             <button className="nav-icon-btn" aria-label="Wishlist" onClick={() => navigate('/wishlist')}>{navIcons.heart}</button>
             <button className="nav-icon-btn" aria-label="Cart" onClick={() => navigate('/cart')}>{navIcons.cart}</button>
-            <button className="nav-icon-btn" aria-label="Account" onClick={openLogin}>{navIcons.acct}</button>
+            <button className="nav-icon-btn" aria-label="Account" onClick={() => navigate('/profile')}>{navIcons.acct}</button>
           </div>
         </nav>
       </header>

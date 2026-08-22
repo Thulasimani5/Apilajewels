@@ -55,6 +55,19 @@ function ProductCard({ product, onClose }) {
   );
 }
 
+function isAccessory(product) {
+  if (!product) return false;
+  const types = Array.isArray(product.type) ? product.type : (product.type ? [product.type] : []);
+  const categories = Array.isArray(product.category) ? product.category : (product.category ? [product.category] : []);
+  const hasAccessoryType = Boolean(product.accessoryType);
+
+  return (
+    hasAccessoryType ||
+    types.some(t => t?.toLowerCase() === 'accessories') ||
+    categories.some(c => c?.toLowerCase() === 'accessories')
+  );
+}
+
 export default function DesktopSearchOverlay({ onClose }) {
   const navigate = useNavigate();
   const inputRef = useRef(null);
@@ -75,16 +88,18 @@ export default function DesktopSearchOverlay({ onClose }) {
      2. Fall back to localStorage cache (across refreshes)
      3. Always fetch fresh data in background, update both caches */
   useEffect(() => {
-    /* Step 1: show cached data immediately — zero loading time on re-open */
+    /* Step 1: show cached data immediately (excluding accessories) */
     if (jewelsMemCache) {
-      setDefaultProducts(jewelsMemCache);
+      const filteredMem = jewelsMemCache.filter(item => !isAccessory(item));
+      setDefaultProducts(filteredMem);
     } else {
       try {
         const stored = localStorage.getItem(CACHE_KEY);
         if (stored) {
           const parsed = JSON.parse(stored);
-          jewelsMemCache = parsed;
-          setDefaultProducts(parsed);
+          const filteredStored = parsed.filter(item => !isAccessory(item));
+          jewelsMemCache = filteredStored;
+          setDefaultProducts(filteredStored);
         }
       } catch {}
     }
@@ -93,18 +108,19 @@ export default function DesktopSearchOverlay({ onClose }) {
     async function refresh() {
       try {
         const page = Math.floor(Math.random() * 4) + 1;
-        const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=4&page=${page}`);
+        const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=20&page=${page}`);
         const data = await res.json();
         let list = Array.isArray(data) ? data : (data.products || data.data || []);
         if (list.length === 0) {
-          const fb = await fetch(`${API_BASE_URL}/api/jewellery?limit=4`);
+          const fb = await fetch(`${API_BASE_URL}/api/jewellery?limit=20`);
           const fbData = await fb.json();
           list = Array.isArray(fbData) ? fbData : (fbData.products || fbData.data || []);
         }
-        if (list.length > 0) {
-          jewelsMemCache = list;
-          try { localStorage.setItem(CACHE_KEY, JSON.stringify(list)); } catch {}
-          setDefaultProducts(list);
+        const nonAccessories = list.filter(item => !isAccessory(item)).slice(0, 4);
+        if (nonAccessories.length > 0) {
+          jewelsMemCache = nonAccessories;
+          try { localStorage.setItem(CACHE_KEY, JSON.stringify(nonAccessories)); } catch {}
+          setDefaultProducts(nonAccessories);
         }
       } catch {}
     }
@@ -194,7 +210,7 @@ export default function DesktopSearchOverlay({ onClose }) {
               </svg>
             </button>
             <button className="nav-icon-btn" aria-label="Account"
-              onClick={() => { onClose(); openLogin(); }}>
+              onClick={() => { onClose(); navigate('/profile'); }}>
               <svg width="13" height="15" viewBox="0 0 13 15" fill="none">
                 <path d="M0.75 13.63C0.75 10.5388 3.19364 8.03 6.20455 8.03C9.21545 8.03 11.6591 10.5388 11.6591 13.63" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M6.20432 6.35C7.71055 6.35 8.9316 5.0964 8.9316 3.55C8.9316 2.0036 7.71055 0.75 6.20432 0.75C4.69809 0.75 3.47705 2.0036 3.47705 3.55C3.47705 5.0964 4.69809 6.35 6.20432 6.35Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

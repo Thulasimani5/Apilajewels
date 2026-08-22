@@ -34,7 +34,7 @@ const LoginSidebar = ({ isOpen, onClose, initialMode = 'login' }) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const { login } = useAuth();
+  const { user, login, logout } = useAuth();
 
   useEffect(() => {
     if (isOpen) {
@@ -70,7 +70,9 @@ const LoginSidebar = ({ isOpen, onClose, initialMode = 'login' }) => {
         login(userData, jwtToken);
         onClose();
         if (userData.role === 'admin') {
-          window.location.href = '/admin';
+          navigate('/admin');
+        } else {
+          navigate('/profile');
         }
       } else {
         const response = await axios.post(`${API_BASE_URL}/api/auth/register`, {
@@ -81,6 +83,7 @@ const LoginSidebar = ({ isOpen, onClose, initialMode = 'login' }) => {
         const { token: jwtToken, user: userData } = response.data;
         login(userData, jwtToken);
         onClose();
+        navigate('/profile');
       }
     } catch (err) {
       const raw = err.response?.data?.error || '';
@@ -142,99 +145,147 @@ const LoginSidebar = ({ isOpen, onClose, initialMode = 'login' }) => {
           </div>
         </div>
 
-        {/* Form Body - Explicit inline styles to bypass tailwind caching issues */}
-        <div style={{ padding: "56px 48px 0 48px", flex: 1, display: "flex", flexDirection: "column" }}>
-          <h1 style={{ color: "#111", fontFamily: "'Bacasime Antique', serif", fontSize: "28px", fontStyle: "normal", fontWeight: 400, letterSpacing: "0.5px", margin: "0" }}>
-            {mode === 'login' ? 'Login' : 'Sign up'}
-          </h1>
-          
-          <p style={{ margin: "20px 0 32px 0", fontFamily: "'Gotham Book', sans-serif", fontSize: "12px", color: "#222", letterSpacing: "0.2px" }}>
-            Welcome to Apila Jewels
-          </p>
+        {/* Form Body or User Profile Panel */}
+        {user ? (
+          <div style={{ padding: "48px 40px 0 40px", flex: 1, display: "flex", flexDirection: "column" }}>
+            <h1 style={{ color: "#111", fontFamily: "'Bacasime Antique', serif", fontSize: "28px", fontStyle: "normal", fontWeight: 400, letterSpacing: "0.5px", margin: "0 0 6px 0" }}>
+              My Account
+            </h1>
+            <p style={{ margin: "0 0 28px 0", fontFamily: "'Gotham Book', sans-serif", fontSize: "12px", color: "#666" }}>
+              Signed in as <strong style={{ color: "#111" }}>{user.name || user.mobile || "Customer"}</strong>
+            </p>
 
-          <form style={{ display: "flex", flexDirection: "column", width: "100%" }} onSubmit={handleSubmit}>
-            {error && (
-              <div style={{
-                display: 'flex', alignItems: 'flex-start', gap: '8px',
-                background: '#FFF0F2', border: '1px solid #F5C2CB',
-                borderRadius: '6px', padding: '10px 14px', marginBottom: '16px'
-              }}>
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0, marginTop: '1px' }}>
-                  <circle cx="10" cy="10" r="9" stroke="#C0392B" strokeWidth="1.5"/>
-                  <path d="M10 6v4M10 14h.01" stroke="#C0392B" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
-                <span style={{ fontFamily: "'Gotham Book', sans-serif", fontSize: '11.5px', color: '#C0392B', lineHeight: '1.5' }}>{error}</span>
-              </div>
-            )}
-
-            {/* Mobile Number Input */}
-            <div style={{ marginBottom: "16px" }}>
-              <input
-                type="text"
-                required
-                value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
-                placeholder="Mobile Number *"
-                style={{ width: "100%", boxSizing: "border-box", background: "#FAFAFA", border: "1px solid #EAEAEA", color: "#111", outline: "none", fontFamily: "'Gotham Book', sans-serif", fontSize: "12px", padding: "14px 16px" }}
-              />
+            <div style={{ background: "#FFF8F3", border: "1px solid #FADEC9", borderRadius: "12px", padding: "18px 20px", marginBottom: "28px" }}>
+              <p style={{ margin: "0 0 4px 0", fontFamily: "'Gotham Book', sans-serif", fontSize: "10px", color: "#888", textTransform: "uppercase", letterSpacing: "0.5px" }}>Mobile Number</p>
+              <p style={{ margin: 0, fontFamily: "'Gotham Book', sans-serif", fontSize: "14px", fontWeight: 600, color: "#111" }}>+91 {user.mobile || 'N/A'}</p>
             </div>
 
-            {/* Password Input */}
-            <div style={{ marginBottom: "16px" }}>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password *"
-                style={{ width: "100%", boxSizing: "border-box", background: "#FAFAFA", border: "1px solid #EAEAEA", color: "#111", outline: "none", fontFamily: "'Gotham Book', sans-serif", fontSize: "12px", padding: "14px 16px" }}
-              />
-            </div>
-
-            {/* Forgot Password */}
-            {mode === 'login' && (
-              <div style={{ marginBottom: "40px" }}>
-                <a href="#" style={{ color: "#333", textDecoration: "underline", textUnderlineOffset: "4px", textDecorationColor: "#999", fontFamily: "'Gotham Book', sans-serif", fontSize: "11px", letterSpacing: "0.3px" }}>
-                  Forgot Your Password?
-                </a>
-              </div>
-            )}
-
-            {/* Submit Button */}
             <button
-              type="submit"
-              disabled={loading}
-              style={{ width: "100%", background: "#AA6C81", color: "white", border: "none", cursor: "pointer", display: "flex", justifyContent: "center", alignItems: "center", fontFamily: "'Gotham Book', sans-serif", fontSize: "12px", letterSpacing: "1.5px", height: "46px", marginTop: mode === 'login' ? '0' : '32px' }}
+              onClick={() => { onClose(); navigate('/profile'); }}
+              style={{ width: "100%", background: "#AA6C81", color: "white", border: "none", cursor: "pointer", display: "flex", justifyContent: "center", alignItems: "center", fontFamily: "'Gotham Book', sans-serif", fontSize: "12px", letterSpacing: "1.5px", height: "46px", marginBottom: "14px", borderRadius: "4px" }}
             >
-              {loading ? (mode === 'login' ? 'LOGGING IN...' : 'SIGNING UP...') : (mode === 'login' ? 'LOGIN' : 'SIGN UP')}
+              MY PROFILE PAGE
             </button>
-          </form>
 
-          {/* Toggle Mode */}
-          <div style={{ marginTop: "24px", display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <span style={{ fontFamily: "'Gotham Book', sans-serif", fontSize: "12px", color: "#333" }}>
-              {mode === 'login' ? (
-                <>
-                  or <button type="button" onClick={() => setMode('register')} style={{ color: "#AA6C81", background: "none", border: "none", borderBottom: "1px solid #AA6C81", padding: "0 0 1px 0", margin: "0 4px", cursor: "pointer", fontSize: "12px", fontFamily: "'Gotham Book', sans-serif" }}>Sign up</button> with
-                </>
-              ) : (
-                <>
-                  Already have an account? <button type="button" onClick={() => setMode('login')} style={{ color: "#AA6C81", background: "none", border: "none", borderBottom: "1px solid #AA6C81", padding: "0 0 1px 0", margin: "0 4px", cursor: "pointer", fontSize: "12px", fontFamily: "'Gotham Book', sans-serif" }}>Log in</button>
-                </>
-              )}
-            </span>
-          </div>
+            {user.role === 'admin' && (
+              <button
+                onClick={() => { onClose(); navigate('/admin'); }}
+                style={{ width: "100%", background: "#111", color: "white", border: "none", cursor: "pointer", display: "flex", justifyContent: "center", alignItems: "center", fontFamily: "'Gotham Book', sans-serif", fontSize: "12px", letterSpacing: "1.5px", height: "46px", marginBottom: "14px", borderRadius: "4px" }}
+              >
+                ADMIN DASHBOARD
+              </button>
+            )}
 
-          {/* Need help footer section */}
-          <div style={{ marginTop: "auto", paddingBottom: "40px", display: "flex", justifyContent: "center", alignItems: "center", gap: "12px" }}>
-            <span style={{ fontFamily: "'Gotham Book', sans-serif", fontSize: "12.5px", color: "#222" }}>Need help?</span>
-            <div style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
-              <img src={whatsappIcon} alt="WhatsApp" style={{ width: "20px", height: "20px", filter: 'brightness(0)' }} />
-              <span style={{ fontFamily: "'Gotham Book', sans-serif", fontWeight: 600, fontSize: "12.5px", color: "#111" }}>Whatsapp Us</span>
+            <button
+              onClick={() => { logout(); onClose(); }}
+              style={{ width: "100%", background: "#FFF0F2", border: "1px solid #F5C2CB", color: "#C0392B", cursor: "pointer", display: "flex", justifyContent: "center", alignItems: "center", fontFamily: "'Gotham Book', sans-serif", fontSize: "12px", letterSpacing: "1.5px", height: "46px", borderRadius: "4px" }}
+            >
+              LOGOUT
+            </button>
+
+            {/* Need help footer section */}
+            <div style={{ marginTop: "auto", paddingBottom: "40px", display: "flex", justifyContent: "center", alignItems: "center", gap: "12px" }}>
+              <span style={{ fontFamily: "'Gotham Book', sans-serif", fontSize: "12.5px", color: "#222" }}>Need help?</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
+                <img src={whatsappIcon} alt="WhatsApp" style={{ width: "20px", height: "20px", filter: 'brightness(0)' }} />
+                <span style={{ fontFamily: "'Gotham Book', sans-serif", fontWeight: 600, fontSize: "12.5px", color: "#111" }}>Whatsapp Us</span>
+              </div>
             </div>
           </div>
+        ) : (
+          <div style={{ padding: "56px 48px 0 48px", flex: 1, display: "flex", flexDirection: "column" }}>
+            <h1 style={{ color: "#111", fontFamily: "'Bacasime Antique', serif", fontSize: "28px", fontStyle: "normal", fontWeight: 400, letterSpacing: "0.5px", margin: "0" }}>
+              {mode === 'login' ? 'Login' : 'Sign up'}
+            </h1>
+            
+            <p style={{ margin: "20px 0 32px 0", fontFamily: "'Gotham Book', sans-serif", fontSize: "12px", color: "#222", letterSpacing: "0.2px" }}>
+              Welcome to Apila Jewels
+            </p>
 
-        </div>
+            <form style={{ display: "flex", flexDirection: "column", width: "100%" }} onSubmit={handleSubmit}>
+              {error && (
+                <div style={{
+                  display: 'flex', alignItems: 'flex-start', gap: '8px',
+                  background: '#FFF0F2', border: '1px solid #F5C2CB',
+                  borderRadius: '6px', padding: '10px 14px', marginBottom: '16px'
+                }}>
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0, marginTop: '1px' }}>
+                    <circle cx="10" cy="10" r="9" stroke="#C0392B" strokeWidth="1.5"/>
+                    <path d="M10 6v4M10 14h.01" stroke="#C0392B" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                  <span style={{ fontFamily: "'Gotham Book', sans-serif", fontSize: '11.5px', color: '#C0392B', lineHeight: '1.5' }}>{error}</span>
+                </div>
+              )}
+
+              {/* Mobile Number Input */}
+              <div style={{ marginBottom: "16px" }}>
+                <input
+                  type="text"
+                  required
+                  value={mobile}
+                  onChange={(e) => setMobile(e.target.value)}
+                  placeholder="Mobile Number *"
+                  style={{ width: "100%", boxSizing: "border-box", background: "#FAFAFA", border: "1px solid #EAEAEA", color: "#111", outline: "none", fontFamily: "'Gotham Book', sans-serif", fontSize: "12px", padding: "14px 16px" }}
+                />
+              </div>
+
+              {/* Password Input */}
+              <div style={{ marginBottom: "16px" }}>
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password *"
+                  style={{ width: "100%", boxSizing: "border-box", background: "#FAFAFA", border: "1px solid #EAEAEA", color: "#111", outline: "none", fontFamily: "'Gotham Book', sans-serif", fontSize: "12px", padding: "14px 16px" }}
+                />
+              </div>
+
+              {/* Forgot Password */}
+              {mode === 'login' && (
+                <div style={{ marginBottom: "40px" }}>
+                  <a href="#" style={{ color: "#333", textDecoration: "underline", textUnderlineOffset: "4px", textDecorationColor: "#999", fontFamily: "'Gotham Book', sans-serif", fontSize: "11px", letterSpacing: "0.3px" }}>
+                    Forgot Your Password?
+                  </a>
+                </div>
+              )}
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={loading}
+                style={{ width: "100%", background: "#AA6C81", color: "white", border: "none", cursor: "pointer", display: "flex", justifyContent: "center", alignItems: "center", fontFamily: "'Gotham Book', sans-serif", fontSize: "12px", letterSpacing: "1.5px", height: "46px", marginTop: mode === 'login' ? '0' : '32px' }}
+              >
+                {loading ? (mode === 'login' ? 'LOGGING IN...' : 'SIGNING UP...') : (mode === 'login' ? 'LOGIN' : 'SIGN UP')}
+              </button>
+            </form>
+
+            {/* Toggle Mode */}
+            <div style={{ marginTop: "24px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+              <span style={{ fontFamily: "'Gotham Book', sans-serif", fontSize: "12px", color: "#333" }}>
+                {mode === 'login' ? (
+                  <>
+                    or <button type="button" onClick={() => setMode('register')} style={{ color: "#AA6C81", background: "none", border: "none", borderBottom: "1px solid #AA6C81", padding: "0 0 1px 0", margin: "0 4px", cursor: "pointer", fontSize: "12px", fontFamily: "'Gotham Book', sans-serif" }}>Sign up</button> with
+                  </>
+                ) : (
+                  <>
+                    Already have an account? <button type="button" onClick={() => setMode('login')} style={{ color: "#AA6C81", background: "none", border: "none", borderBottom: "1px solid #AA6C81", padding: "0 0 1px 0", margin: "0 4px", cursor: "pointer", fontSize: "12px", fontFamily: "'Gotham Book', sans-serif" }}>Log in</button>
+                  </>
+                )}
+              </span>
+            </div>
+
+            {/* Need help footer section */}
+            <div style={{ marginTop: "auto", paddingBottom: "40px", display: "flex", justifyContent: "center", alignItems: "center", gap: "12px" }}>
+              <span style={{ fontFamily: "'Gotham Book', sans-serif", fontSize: "12.5px", color: "#222" }}>Need help?</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer" }}>
+                <img src={whatsappIcon} alt="WhatsApp" style={{ width: "20px", height: "20px", filter: 'brightness(0)' }} />
+                <span style={{ fontFamily: "'Gotham Book', sans-serif", fontWeight: 600, fontSize: "12.5px", color: "#111" }}>Whatsapp Us</span>
+              </div>
+            </div>
+
+          </div>
+        )}
       </div>
     </div>
   );
