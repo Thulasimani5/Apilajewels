@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2, Eye, Tag, Edit, FileText, Printer } from 'lucide-react';
+import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2, Eye, Tag, Edit, FileText, Printer, GripVertical } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import CategoryContext from '../context/CategoryContext';
 import { useContext } from 'react';
@@ -59,6 +59,7 @@ const AdminDashboard = () => {
   const [showInvoiceBooking, setShowInvoiceBooking] = useState(null);
   const [invoiceItems, setInvoiceItems] = useState([]);
   const [isReorderingInvoiceItems, setIsReorderingInvoiceItems] = useState(false);
+  const [invoiceDraggedIndex, setInvoiceDraggedIndex] = useState(null);
 
   const handleOpenInvoice = (b) => {
     const customId = b.bookingCustomId || `BK-${String(b._id || '').slice(-4)}`;
@@ -70,29 +71,39 @@ const AdminDashboard = () => {
     ];
     setInvoiceItems(combined);
     setIsReorderingInvoiceItems(false);
+    setInvoiceDraggedIndex(null);
     setShowInvoiceBooking({ ...b, customId });
   };
 
-  const handleMoveInvoiceItemUp = (idx) => {
-    if (idx <= 0) return;
-    setInvoiceItems(prev => {
-      const copy = [...prev];
-      const temp = copy[idx];
-      copy[idx] = copy[idx - 1];
-      copy[idx - 1] = temp;
-      return copy;
-    });
+  const handleInvoiceDragStart = (e, index) => {
+    setInvoiceDraggedIndex(index);
+    if (e.dataTransfer) {
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', index.toString());
+    }
   };
 
-  const handleMoveInvoiceItemDown = (idx) => {
+  const handleInvoiceDragOver = (e, index) => {
+    e.preventDefault();
+    if (e.dataTransfer) {
+      e.dataTransfer.dropEffect = 'move';
+    }
+  };
+
+  const handleInvoiceDrop = (e, targetIndex) => {
+    e.preventDefault();
+    if (invoiceDraggedIndex === null || invoiceDraggedIndex === targetIndex) return;
     setInvoiceItems(prev => {
-      if (idx >= prev.length - 1) return prev;
       const copy = [...prev];
-      const temp = copy[idx];
-      copy[idx] = copy[idx + 1];
-      copy[idx + 1] = temp;
+      const [movedItem] = copy.splice(invoiceDraggedIndex, 1);
+      copy.splice(targetIndex, 0, movedItem);
       return copy;
     });
+    setInvoiceDraggedIndex(null);
+  };
+
+  const handleInvoiceDragEnd = () => {
+    setInvoiceDraggedIndex(null);
   };
 
   const [selectedAdminCategory, setSelectedAdminCategory] = useState(null);
@@ -3379,7 +3390,7 @@ const AdminDashboard = () => {
                     <tr className="bg-gray-50 border-b border-gray-200 text-gray-500 font-semibold uppercase text-xs">
                       <th className="px-4 py-3 w-10 text-center">#</th>
                       {isReorderingInvoiceItems && (
-                        <th className="px-2 py-3 w-16 text-center no-print bg-amber-50 text-amber-900 font-bold">REORDER</th>
+                        <th className="px-2 py-3 w-12 text-center no-print bg-amber-50 text-amber-900 font-bold">DRAG</th>
                       )}
                       <th className="px-4 py-3 w-16 text-center">IMAGE</th>
                       <th className="px-5 py-3">NAME</th>
@@ -3400,29 +3411,22 @@ const AdminDashboard = () => {
                         const imgSrc = item.image || (Array.isArray(item.images) ? (item.images[0]?.url || item.images[0]) : item.images);
                         
                         return (
-                          <tr key={item._id || `item-${idx}`} className="hover:bg-gray-50/30 transition-colors">
+                          <tr
+                            key={item._id || `item-${idx}`}
+                            draggable={isReorderingInvoiceItems}
+                            onDragStart={(e) => handleInvoiceDragStart(e, idx)}
+                            onDragOver={(e) => handleInvoiceDragOver(e, idx)}
+                            onDrop={(e) => handleInvoiceDrop(e, idx)}
+                            onDragEnd={handleInvoiceDragEnd}
+                            className={`transition-all ${
+                              isReorderingInvoiceItems ? 'cursor-grab active:cursor-grabbing hover:bg-amber-50/50' : 'hover:bg-gray-50/30'
+                            } ${invoiceDraggedIndex === idx ? 'opacity-40 bg-amber-100/70 border-2 border-dashed border-[#B07A85]' : ''}`}
+                          >
                             <td className="px-4 py-3 text-gray-400 font-mono text-center">{idx + 1}</td>
                             {isReorderingInvoiceItems && (
                               <td className="px-2 py-3 text-center no-print bg-amber-50/40 border-x border-amber-100">
-                                <div className="flex items-center justify-center gap-1">
-                                  <button
-                                    type="button"
-                                    disabled={idx === 0}
-                                    onClick={() => handleMoveInvoiceItemUp(idx)}
-                                    className="w-6 h-6 rounded-md bg-white border border-amber-300 hover:bg-[#B07A85] hover:text-white text-gray-800 font-bold text-xs disabled:opacity-25 disabled:cursor-not-allowed transition-all flex items-center justify-center shadow-sm"
-                                    title="Move Up"
-                                  >
-                                    ▲
-                                  </button>
-                                  <button
-                                    type="button"
-                                    disabled={idx === displayItems.length - 1}
-                                    onClick={() => handleMoveInvoiceItemDown(idx)}
-                                    className="w-6 h-6 rounded-md bg-white border border-amber-300 hover:bg-[#B07A85] hover:text-white text-gray-800 font-bold text-xs disabled:opacity-25 disabled:cursor-not-allowed transition-all flex items-center justify-center shadow-sm"
-                                    title="Move Down"
-                                  >
-                                    ▼
-                                  </button>
+                                <div className="flex items-center justify-center text-amber-800 cursor-grab active:cursor-grabbing" title="Drag to reorder item">
+                                  <GripVertical size={18} className="text-amber-700" />
                                 </div>
                               </td>
                             )}
