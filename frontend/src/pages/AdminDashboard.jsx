@@ -206,8 +206,8 @@ const AdminDashboard = () => {
 
     setNewBookingData({
       bookingCustomId: b.bookingCustomId || `BK-${String(b._id || '').slice(-4)}`,
-      customerName: b.userId?.name || b.customerDetails?.name || '',
-      customerPhone: b.userId?.phone || b.customerDetails?.phone || '',
+      customerName: b.customerDetails?.name || (b.userId?.role !== 'admin' ? b.userId?.name : '') || '',
+      customerPhone: b.customerDetails?.phone || (b.userId?.role !== 'admin' ? b.userId?.phone : '') || '',
       customerAddress: b.customerDetails?.address || '',
       bookingPlace: b.bookingPlace || '',
       bookingDate: b.bookingDate ? new Date(b.bookingDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
@@ -1044,8 +1044,8 @@ const AdminDashboard = () => {
                                   </span>
                                 </div>
                                 <p className="text-xs font-semibold text-gray-800 mt-1">
-                                  {b.userId?.name || b.customerDetails?.name || 'Guest Customer'} 
-                                  <span className="text-gray-400 font-normal ml-1.5">({b.userId?.phone || b.customerDetails?.phone || 'No phone'})</span>
+                                  {b.customerDetails?.name || (b.userId?.role !== 'admin' ? b.userId?.name : '') || 'Guest Customer'} 
+                                  <span className="text-gray-400 font-normal ml-1.5">({b.customerDetails?.phone || (b.userId?.role !== 'admin' ? b.userId?.phone : '') || 'No phone'})</span>
                                 </p>
                                 <p className="text-[11px] text-[#B07A85] font-medium mt-0.5 truncate max-w-xs">
                                   {Array.isArray(b.jewelleryIds) ? b.jewelleryIds.map(item => item.name).join(', ') : 'No items'}
@@ -2209,8 +2209,8 @@ const AdminDashboard = () => {
                               {customId}
                             </td>
                             <td className="px-4 py-3.5">
-                              <p className="font-semibold text-gray-900">{b.userId?.name || b.customerDetails?.name || 'Guest Customer'}</p>
-                              <p className="text-[11px] text-gray-500 font-mono mt-0.5">{b.userId?.phone || b.customerDetails?.phone || 'N/A'}</p>
+                              <p className="font-semibold text-gray-900">{b.customerDetails?.name || (b.userId?.role !== 'admin' ? b.userId?.name : '') || 'Guest Customer'}</p>
+                              <p className="text-[11px] text-gray-500 font-mono mt-0.5">{b.customerDetails?.phone || (b.userId?.role !== 'admin' ? b.userId?.phone : '') || 'N/A'}</p>
                             </td>
                             <td className="px-4 py-3.5 text-[11px]">
                               <p><span className="text-gray-400 font-medium">Event:</span> <strong className="text-gray-800">{b.eventDate ? new Date(b.eventDate).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }) : 'N/A'}</strong></p>
@@ -3505,9 +3505,9 @@ const AdminDashboard = () => {
               <div className="grid grid-cols-2 gap-8 py-8 text-sm">
                 <div>
                   <h3 className="text-xs font-bold uppercase tracking-wider text-pink-500 mb-2">BILL TO</h3>
-                  <p className="font-bold text-gray-900 text-base">{showInvoiceBooking.userId?.name || showInvoiceBooking.customerDetails?.name || 'Guest Customer'}</p>
-                  <p className="text-gray-500 mt-0.5">{showInvoiceBooking.userId?.email || 'N/A'}</p>
-                  <p className="text-gray-500 font-mono mt-0.5">{showInvoiceBooking.userId?.phone || showInvoiceBooking.customerDetails?.phone || 'N/A'}</p>
+                  <p className="font-bold text-gray-900 text-base">{showInvoiceBooking.customerDetails?.name || (showInvoiceBooking.userId?.role !== 'admin' ? showInvoiceBooking.userId?.name : '') || 'Guest Customer'}</p>
+                  <p className="text-gray-500 mt-0.5">{showInvoiceBooking.userId?.role !== 'admin' ? (showInvoiceBooking.userId?.email || 'N/A') : 'N/A'}</p>
+                  <p className="text-gray-500 font-mono mt-0.5">{showInvoiceBooking.customerDetails?.phone || (showInvoiceBooking.userId?.role !== 'admin' ? showInvoiceBooking.userId?.phone : '') || 'N/A'}</p>
                 </div>
                 <div className="text-right space-y-1">
                   <p className="text-gray-500"><span className="font-semibold text-gray-700">Issue Date:</span> {showInvoiceBooking.bookingDate ? new Date(showInvoiceBooking.bookingDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</p>

@@ -67,7 +67,7 @@ exports.getBooking = async (req, res) => {
 // @access  Public / Optional Auth
 exports.createBooking = async (req, res) => {
   try {
-    if (req.user) {
+    if (req.user && req.user.role !== 'admin') {
       req.body.userId = req.user.id;
     }
     if (req.visitorId) {
