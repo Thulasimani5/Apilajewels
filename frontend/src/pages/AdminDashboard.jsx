@@ -117,7 +117,7 @@ const AdminDashboard = () => {
     const customId = showInvoiceBooking.customId || `BK-${showInvoiceBooking._id?.slice(-8)}`;
     const invoiceHtml = printEl.innerHTML;
 
-    const printWin = window.open('', '_blank', 'width=950,height=900');
+    const printWin = window.open('', '_blank', 'width=1150,height=900');
     if (!printWin) {
       window.print();
       return;
@@ -154,7 +154,7 @@ const AdminDashboard = () => {
           </style>
         </head>
         <body className="bg-white">
-          <div className="max-w-3xl mx-auto border border-gray-100 p-6 rounded-2xl shadow-none">
+          <div className="max-w-5xl mx-auto border border-gray-100 p-6 rounded-2xl shadow-none">
             ${invoiceHtml}
           </div>
           <script>
@@ -3454,7 +3454,7 @@ const AdminDashboard = () => {
             }
           }}
         >
-          <div className="bg-white rounded-2xl max-w-3xl w-full shadow-2xl overflow-hidden border border-gray-100 mt-4 mb-12 relative">
+          <div className="bg-white rounded-2xl max-w-5xl w-full shadow-2xl overflow-hidden border border-gray-100 mt-4 mb-12 relative">
             
             {/* Modal Controls */}
             <div className="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center no-print">
