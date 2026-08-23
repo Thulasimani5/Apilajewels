@@ -3506,7 +3506,9 @@ const AdminDashboard = () => {
                 <div>
                   <h3 className="text-xs font-bold uppercase tracking-wider text-pink-500 mb-2">BILL TO</h3>
                   <p className="font-bold text-gray-900 text-base">{showInvoiceBooking.customerDetails?.name || (showInvoiceBooking.userId?.role !== 'admin' ? showInvoiceBooking.userId?.name : '') || 'Guest Customer'}</p>
-                  <p className="text-gray-500 mt-0.5">{showInvoiceBooking.userId?.role !== 'admin' ? (showInvoiceBooking.userId?.email || 'N/A') : 'N/A'}</p>
+                  {showInvoiceBooking.customerDetails?.address && (
+                    <p className="text-gray-500 mt-0.5">{showInvoiceBooking.customerDetails.address}</p>
+                  )}
                   <p className="text-gray-500 font-mono mt-0.5">{showInvoiceBooking.customerDetails?.phone || (showInvoiceBooking.userId?.role !== 'admin' ? showInvoiceBooking.userId?.phone : '') || 'N/A'}</p>
                 </div>
                 <div className="text-right space-y-1">
