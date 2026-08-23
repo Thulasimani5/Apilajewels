@@ -3531,24 +3531,43 @@ const AdminDashboard = () => {
 
       <style>{`
         @media print {
-          body * {
-            visibility: hidden;
+          html, body {
+            height: auto !important;
+            overflow: visible !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #ffffff !important;
+            color: #000000 !important;
           }
-          #printable-invoice, #printable-invoice * {
-            visibility: visible;
+          .no-print, header, nav, footer {
+            display: none !important;
+          }
+          .fixed {
+            position: static !important;
+            background: transparent !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow: visible !important;
+            box-shadow: none !important;
+            border: none !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            height: auto !important;
           }
           #printable-invoice {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            padding: 20px;
-            margin: 0;
-            background: white !important;
-            color: black !important;
+            display: block !important;
+            position: static !important;
+            visibility: visible !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 24px !important;
+            background: #ffffff !important;
+            color: #000000 !important;
+            box-shadow: none !important;
+            border: none !important;
           }
-          .no-print {
-            display: none !important;
+          #printable-invoice * {
+            visibility: visible !important;
           }
         }
       `}</style>
