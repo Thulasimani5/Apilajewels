@@ -3574,7 +3574,7 @@ const AdminDashboard = () => {
                             </td>
                             <td className="px-5 py-3 font-medium text-gray-900">
                               {item.name}
-                              {(item.code || item.jewelId) && (
+                              {!item.isTemp && (item.code || item.jewelId) && (
                                 <span className="ml-2 text-[10px] font-mono bg-amber-50 text-amber-800 border border-amber-200/50 px-1.5 py-0.5 rounded font-semibold">
                                   {item.code || item.jewelId}
                                 </span>
