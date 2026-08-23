@@ -55,6 +55,7 @@ const AdminDashboard = () => {
   });
   const [jewelCodeSearch, setJewelCodeSearch] = useState('');
   const [addBookingLoading, setAddBookingLoading] = useState(false);
+  const [showAddTempJewelModal, setShowAddTempJewelModal] = useState(false);
   const [showInvoiceBooking, setShowInvoiceBooking] = useState(null);
 
   const [selectedAdminCategory, setSelectedAdminCategory] = useState(null);
@@ -2675,25 +2676,26 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* Add / Edit Booking Modal */}
+      {/* Add / Edit Booking Full-Screen Page */}
       {showAddBookingModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[92vh] overflow-y-auto shadow-2xl p-6 border border-gray-100">
-            <div className="flex justify-between items-center pb-4 border-b border-gray-100">
+        <div className="fixed inset-0 z-50 bg-white overflow-y-auto flex flex-col">
+          <div className="max-w-6xl mx-auto w-full p-6 md:p-10 flex-1 flex flex-col">
+            <div className="flex justify-between items-center pb-5 border-b border-gray-200">
               <div>
-                <h2 className="text-lg font-bold text-gray-900">
+                <h2 className="text-2xl font-bold text-gray-900">
                   {editingBookingId ? 'Edit Customer Booking Entry' : 'Add New Customer Rental Booking'}
                 </h2>
-                <p className="text-xs text-gray-500">Record customer rental, dates, jewel code selection, advance, balance & notes</p>
+                <p className="text-sm text-gray-500 mt-0.5">Record customer rental details, dates, jewel selection, advance, balance & notes</p>
               </div>
               <button
+                type="button"
                 onClick={() => {
                   setShowAddBookingModal(false);
                   setEditingBookingId(null);
                 }}
-                className="w-8 h-8 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                className="px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl font-bold text-sm transition-all flex items-center gap-2"
               >
-                <X size={18} />
+                <X size={18} /> Close & Exit
               </button>
             </div>
 
@@ -2846,144 +2848,69 @@ const AdminDashboard = () => {
                     })}
                 </div>
 
-                {/* Temp Jewellery Adder */}
-                <div className="mt-3.5 p-3.5 bg-gray-50/50 rounded-xl border border-gray-200/60">
-                  <p className="text-xs font-bold uppercase text-gray-700 mb-2">Or Add Temporary Jewellery (Will not save to database)</p>
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 mb-2">
-                    <div>
-                      <input
-                        type="text"
-                        placeholder="Jewel Name (e.g. Temp Choker)"
-                        value={tempJewelInput.name}
-                        onChange={e => setTempJewelInput(prev => ({ ...prev, name: e.target.value }))}
-                        className="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-white focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <input
-                        type="text"
-                        placeholder="Jewel Code (e.g. TEMP01)"
-                        value={tempJewelInput.code}
-                        onChange={e => setTempJewelInput(prev => ({ ...prev, code: e.target.value }))}
-                        className="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-white focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <input
-                        type="number"
-                        placeholder="Rental Price ₹"
-                        value={tempJewelInput.rentalPrice}
-                        onChange={e => setTempJewelInput(prev => ({ ...prev, rentalPrice: e.target.value }))}
-                        className="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-white focus:outline-none"
-                      />
-                    </div>
-                    <div>
-                      <input
-                        type="number"
-                        placeholder="Deposit ₹"
-                        value={tempJewelInput.deposit}
-                        onChange={e => setTempJewelInput(prev => ({ ...prev, deposit: e.target.value }))}
-                        className="w-full px-2.5 py-1.5 border border-gray-200 rounded-lg text-xs bg-white focus:outline-none"
-                      />
-                    </div>
-                    <div className="flex gap-2 items-center">
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={e => {
-                          const file = e.target.files[0];
-                          if (file) {
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                              setTempJewelInput(prev => ({ ...prev, image: reader.result }));
-                            };
-                            reader.readAsDataURL(file);
-                          }
-                        }}
-                        className="w-full text-[10px] text-gray-500 file:mr-1 file:py-1 file:px-1.5 file:rounded file:border-0 file:text-[10px] file:font-semibold file:bg-[#B07A85]/10 file:text-[#B07A85] hover:file:bg-[#B07A85]/20 cursor-pointer"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (!tempJewelInput.name.trim()) {
-                            alert('Temporary Jewel Name is required.');
-                            return;
-                          }
-                          const newItem = {
-                            name: tempJewelInput.name,
-                            code: tempJewelInput.code || 'TEMP',
-                            rentalPrice: parseFloat(tempJewelInput.rentalPrice) || 0,
-                            deposit: parseFloat(tempJewelInput.deposit) || 0,
-                            image: tempJewelInput.image || ''
-                          };
-                          setNewBookingData(prev => {
-                            const updatedTempList = [...(prev.tempJewelleries || []), newItem];
-                            return {
-                              ...prev,
-                              tempJewelleries: updatedTempList,
-                              depositAmount: (prev.depositAmount || 0) + (newItem.deposit || 0)
-                            };
-                          });
-                          setTempJewelInput({ name: '', code: '', rentalPrice: '', deposit: '', image: '' });
-                        }}
-                        className="px-3 py-1.5 bg-[#B07A85] text-white text-xs font-semibold rounded-lg hover:bg-[#9E6A75] transition-all whitespace-nowrap"
-                      >
-                        + Add Temp
-                      </button>
-                    </div>
+                {/* Custom / Temporary Jewellery Trigger */}
+                <div className="mt-4 p-4 bg-[#FFF8F3] rounded-2xl border border-[#B07A85]/20 flex flex-col sm:flex-row items-center justify-between gap-3">
+                  <div>
+                    <h4 className="text-sm font-bold text-gray-900">Custom / Temporary Jewellery Item</h4>
+                    <p className="text-xs text-gray-500">Renting an unlisted item for this booking? Add custom details & image without cluttering main DB catalog.</p>
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setTempJewelInput({ name: '', code: '', rentalPrice: '', deposit: '', image: '' });
+                      setShowAddTempJewelModal(true);
+                    }}
+                    className="px-5 py-2.5 bg-[#B07A85] hover:bg-[#9E6A75] text-white text-xs font-bold rounded-xl transition-all shadow-sm flex items-center gap-2 whitespace-nowrap"
+                  >
+                    + Add Temporary Jewellery
+                  </button>
+                </div>
 
-                  {tempJewelInput.image && (
-                    <div className="mt-1 mb-2 flex items-center gap-2">
-                      <span className="text-[10px] text-gray-500 font-medium">Selected image preview:</span>
-                      <img src={tempJewelInput.image} alt="temp preview" className="w-8 h-8 rounded object-cover border border-gray-200" />
-                      <button type="button" onClick={() => setTempJewelInput(prev => ({ ...prev, image: '' }))} className="text-red-500 text-[10px] underline font-semibold">Remove</button>
-                    </div>
-                  )}
-
-                  {/* Render listed temp items */}
-                  {newBookingData.tempJewelleries && newBookingData.tempJewelleries.length > 0 && (
-                    <div className="mt-2 space-y-1.5">
-                      <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Added Temporary Items:</p>
-                      {newBookingData.tempJewelleries.map((item, idx) => (
-                        <div key={idx} className="flex items-center justify-between text-xs bg-amber-50/50 border border-amber-200/50 px-2.5 py-1.5 rounded-lg">
-                          <div className="flex items-center gap-2.5">
-                            {item.image ? (
-                              <img src={item.image} alt={item.name} className="w-7 h-7 rounded object-cover border border-amber-200/60" />
-                            ) : (
-                              <div className="w-7 h-7 rounded bg-amber-100 flex items-center justify-center text-[10px] text-amber-800 font-bold font-mono">T</div>
-                            )}
-                            <div>
-                              <span className="font-semibold text-amber-900 block">{item.name}</span>
-                              <span className="text-[10px] font-mono bg-amber-100 text-amber-800 px-1 py-0.5 rounded font-bold">{item.code}</span>
+                {/* Render listed temp items */}
+                {newBookingData.tempJewelleries && newBookingData.tempJewelleries.length > 0 && (
+                  <div className="mt-3 space-y-2">
+                    <p className="text-xs font-bold text-gray-700 uppercase tracking-wider">Added Temporary Items ({newBookingData.tempJewelleries.length}):</p>
+                    {newBookingData.tempJewelleries.map((item, idx) => (
+                      <div key={idx} className="flex items-center justify-between text-xs bg-amber-50/60 border border-amber-200/70 p-3 rounded-xl shadow-sm">
+                        <div className="flex items-center gap-3">
+                          {item.image ? (
+                            <img src={item.image} alt={item.name} className="w-10 h-10 rounded-lg object-cover border border-amber-300/80 flex-shrink-0" />
+                          ) : (
+                            <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center text-xs text-amber-800 font-bold font-mono flex-shrink-0">
+                              TEMP
                             </div>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <span className="text-gray-600">Rent: ₹{item.rentalPrice}</span>
-                            <span className="text-gray-600">Deposit: ₹{item.deposit}</span>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setNewBookingData(prev => {
-                                  const updatedTempList = prev.tempJewelleries.filter((_, i) => i !== idx);
-                                  return {
-                                    ...prev,
-                                    tempJewelleries: updatedTempList,
-                                    depositAmount: Math.max(0, (prev.depositAmount || 0) - (item.deposit || 0))
-                                  };
-                                });
-                              }}
-                              className="text-red-500 hover:text-red-700 font-bold ml-1 text-sm"
-                            >
-                              ✕
-                            </button>
+                          )}
+                          <div>
+                            <span className="font-bold text-amber-950 text-sm block">{item.name}</span>
+                            <span className="text-[11px] font-mono bg-amber-200/60 text-amber-900 px-2 py-0.5 rounded font-bold">{item.code || 'NO-CODE'}</span>
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                        <div className="flex items-center gap-4">
+                          <div className="text-right">
+                            <p className="font-bold text-gray-900">Rent: ₹{item.rentalPrice}</p>
+                            <p className="text-[11px] text-gray-500">Deposit: ₹{item.deposit}</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setNewBookingData(prev => {
+                                const updatedTempList = prev.tempJewelleries.filter((_, i) => i !== idx);
+                                return {
+                                  ...prev,
+                                  tempJewelleries: updatedTempList,
+                                  depositAmount: Math.max(0, (prev.depositAmount || 0) - (item.deposit || 0))
+                                };
+                              });
+                            }}
+                            className="w-7 h-7 rounded-full bg-red-100 hover:bg-red-200 text-red-600 font-bold flex items-center justify-center text-xs transition-colors"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {/* Row 4: Financial Inputs (Discount %, Discount Amount ₹, Advance Paid ₹, Deposit ₹) */}
@@ -3183,6 +3110,159 @@ const AdminDashboard = () => {
           </div>
         </div>
       )}
+
+      {/* Add Custom / Temporary Jewel Overlay Modal */}
+      {showAddTempJewelModal && (
+        <div className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border border-gray-100 animate-in fade-in zoom-in-95 duration-200">
+            <div className="flex justify-between items-center pb-4 border-b border-gray-100">
+              <div>
+                <h3 className="text-xl font-bold text-gray-900">Add Temporary Jewellery Details</h3>
+                <p className="text-xs text-gray-500 mt-0.5">Enter item information for custom/unlisted rental booking</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAddTempJewelModal(false)}
+                className="w-8 h-8 rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 flex items-center justify-center transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div className="mt-6 space-y-5">
+              {/* BIG JEWELLERY NAME INPUT */}
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-2">Jewellery Name* (Big Input)</label>
+                <input
+                  type="text"
+                  placeholder="Enter Jewellery Name (e.g. Antique Temple Gold Haram)"
+                  value={tempJewelInput.name}
+                  onChange={e => setTempJewelInput(prev => ({ ...prev, name: e.target.value }))}
+                  className="w-full px-4 py-3.5 border-2 border-[#B07A85]/30 focus:border-[#B07A85] rounded-2xl text-lg font-bold text-gray-900 focus:outline-none focus:ring-4 focus:ring-[#B07A85]/10 bg-amber-50/20"
+                  autoFocus
+                />
+              </div>
+
+              {/* Code & Rental Price */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Jewel Code</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. TEMP-001"
+                    value={tempJewelInput.code}
+                    onChange={e => setTempJewelInput(prev => ({ ...prev, code: e.target.value }))}
+                    className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Rental Price ₹</label>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="e.g. 1500"
+                    value={tempJewelInput.rentalPrice}
+                    onChange={e => setTempJewelInput(prev => ({ ...prev, rentalPrice: e.target.value }))}
+                    className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
+                  />
+                </div>
+              </div>
+
+              {/* Deposit Amount & Image Upload */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Security Deposit ₹</label>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="e.g. 500"
+                    value={tempJewelInput.deposit}
+                    onChange={e => setTempJewelInput(prev => ({ ...prev, deposit: e.target.value }))}
+                    className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">Jewel Image</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={e => {
+                      const file = e.target.files[0];
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onloadend = () => {
+                          setTempJewelInput(prev => ({ ...prev, image: reader.result }));
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                    className="w-full text-xs text-gray-500 file:mr-2 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#B07A85]/10 file:text-[#B07A85] hover:file:bg-[#B07A85]/20 cursor-pointer"
+                  />
+                </div>
+              </div>
+
+              {/* Image Preview Box */}
+              {tempJewelInput.image && (
+                <div className="p-3 bg-gray-50 rounded-xl border border-gray-200 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <img src={tempJewelInput.image} alt="Jewel preview" className="w-12 h-12 rounded-lg object-cover border border-gray-200" />
+                    <span className="text-xs font-medium text-gray-700">Jewel photo attached</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setTempJewelInput(prev => ({ ...prev, image: '' }))}
+                    className="text-xs font-bold text-red-600 hover:text-red-700 underline"
+                  >
+                    Remove Photo
+                  </button>
+                </div>
+              )}
+
+              {/* Modal Buttons */}
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
+                <button
+                  type="button"
+                  onClick={() => setShowAddTempJewelModal(false)}
+                  className="px-5 py-2.5 border border-gray-300 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!tempJewelInput.name.trim()) {
+                      alert('Please enter a Jewellery Name.');
+                      return;
+                    }
+                    const newItem = {
+                      name: tempJewelInput.name,
+                      code: tempJewelInput.code || 'TEMP',
+                      rentalPrice: parseFloat(tempJewelInput.rentalPrice) || 0,
+                      deposit: parseFloat(tempJewelInput.deposit) || 0,
+                      image: tempJewelInput.image || ''
+                    };
+                    setNewBookingData(prev => {
+                      const updatedTempList = [...(prev.tempJewelleries || []), newItem];
+                      return {
+                        ...prev,
+                        tempJewelleries: updatedTempList,
+                        depositAmount: (prev.depositAmount || 0) + (newItem.deposit || 0)
+                      };
+                    });
+                    setTempJewelInput({ name: '', code: '', rentalPrice: '', deposit: '', image: '' });
+                    setShowAddTempJewelModal(false);
+                  }}
+                  className="px-6 py-2.5 bg-[#B07A85] text-white rounded-xl text-xs font-bold hover:bg-[#9E6A75] transition-colors shadow-sm"
+                >
+                  Add to Booking
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Invoice Generation Modal */}
       {showInvoiceBooking && (
         <div 
@@ -3249,9 +3329,10 @@ const AdminDashboard = () => {
                 <table className="w-full text-left border-collapse text-sm">
                   <thead>
                     <tr className="bg-gray-50 border-b border-gray-200 text-gray-500 font-semibold uppercase text-xs">
-                      <th className="px-5 py-3 w-12">#</th>
-                      <th className="px-5 py-3">Name</th>
-                      <th className="px-5 py-3 text-center w-16">QTY</th>
+                      <th className="px-4 py-3 w-10 text-center">#</th>
+                      <th className="px-4 py-3 w-16 text-center">IMAGE</th>
+                      <th className="px-5 py-3">NAME</th>
+                      <th className="px-4 py-3 text-center w-16">QTY</th>
                       <th className="px-5 py-3 text-right w-28">RATE</th>
                       <th className="px-5 py-3 text-right w-28">TOTAL</th>
                     </tr>
@@ -3267,10 +3348,21 @@ const AdminDashboard = () => {
                       
                       return allItems.map((item, idx) => {
                         const rate = item.rentalPrice || item.price || 0;
+                        const imgSrc = item.image || (Array.isArray(item.images) ? (item.images[0]?.url || item.images[0]) : item.images);
+                        
                         return (
                           <tr key={item._id || `item-${idx}`} className="hover:bg-gray-50/30 transition-colors">
-                            <td className="px-5 py-4.5 text-gray-400 font-mono">{idx + 1}</td>
-                            <td className="px-5 py-4.5 font-medium text-gray-900">
+                            <td className="px-4 py-3 text-gray-400 font-mono text-center">{idx + 1}</td>
+                            <td className="px-4 py-3 text-center">
+                              {imgSrc ? (
+                                <img src={imgSrc} alt={item.name} className="w-12 h-12 rounded-lg object-cover mx-auto border border-gray-200 shadow-sm" />
+                              ) : (
+                                <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-[9px] text-gray-400 mx-auto font-mono">
+                                  NO IMG
+                                </div>
+                              )}
+                            </td>
+                            <td className="px-5 py-3 font-medium text-gray-900">
                               {item.name}
                               {(item.code || item.jewelId) && (
                                 <span className="ml-2 text-[10px] font-mono bg-amber-50 text-amber-800 border border-amber-200/50 px-1.5 py-0.5 rounded font-semibold">
@@ -3278,9 +3370,9 @@ const AdminDashboard = () => {
                                 </span>
                               )}
                             </td>
-                            <td className="px-5 py-4.5 text-center text-gray-500 font-medium">1</td>
-                            <td className="px-5 py-4.5 text-right font-medium text-gray-700">₹{rate.toFixed(2)}</td>
-                            <td className="px-5 py-4.5 text-right font-semibold text-gray-900">₹{rate.toFixed(2)}</td>
+                            <td className="px-4 py-3 text-center text-gray-500 font-medium">1</td>
+                            <td className="px-5 py-3 text-right font-medium text-gray-700">₹{rate.toFixed(2)}</td>
+                            <td className="px-5 py-3 text-right font-semibold text-gray-900">₹{rate.toFixed(2)}</td>
                           </tr>
                         );
                       });
