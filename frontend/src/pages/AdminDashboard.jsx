@@ -2829,7 +2829,7 @@ const AdminDashboard = () => {
                 <div className="flex justify-between items-center mb-1.5">
                   <label className="block text-xs font-bold uppercase text-gray-600">Select Jewellery Items by Jewel Code*</label>
                   <span className="text-xs text-[#B07A85] font-bold">
-                    {newBookingData.jewelleryIds.length} Items Selected
+                    {(newBookingData.jewelleryIds.length + (newBookingData.tempJewelleries || []).length)} Items Selected
                   </span>
                 </div>
 
@@ -2914,51 +2914,118 @@ const AdminDashboard = () => {
                   </button>
                 </div>
 
-                {/* Render listed temp items */}
-                {newBookingData.tempJewelleries && newBookingData.tempJewelleries.length > 0 && (
-                  <div className="mt-3 space-y-2">
-                    <p className="text-xs font-bold text-gray-700 uppercase tracking-wider">Added Temporary Items ({newBookingData.tempJewelleries.length}):</p>
-                    {newBookingData.tempJewelleries.map((item, idx) => (
-                      <div key={idx} className="flex items-center justify-between text-xs bg-amber-50/60 border border-amber-200/70 p-3 rounded-xl shadow-sm">
-                        <div className="flex items-center gap-3">
-                          {item.image ? (
-                            <img src={item.image} alt={item.name} className="w-10 h-10 rounded-lg object-cover border border-amber-300/80 flex-shrink-0" />
-                          ) : (
-                            <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center text-xs text-amber-800 font-bold font-mono flex-shrink-0">
-                              TEMP
-                            </div>
-                          )}
-                          <div>
-                            <span className="font-bold text-amber-950 text-sm block">{item.name}</span>
-                            <span className="text-[11px] font-mono bg-amber-200/60 text-amber-900 px-2 py-0.5 rounded font-bold">{item.code || 'NO-CODE'}</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <div className="text-right">
-                            <p className="font-bold text-gray-900">Rent: ₹{item.rentalPrice}</p>
-                            <p className="text-[11px] text-gray-500">Deposit: ₹{item.deposit}</p>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setNewBookingData(prev => {
-                                const updatedTempList = prev.tempJewelleries.filter((_, i) => i !== idx);
-                                return {
-                                  ...prev,
-                                  tempJewelleries: updatedTempList,
-                                  depositAmount: Math.max(0, (prev.depositAmount || 0) - (item.deposit || 0))
-                                };
-                              });
-                            }}
-                            className="w-7 h-7 rounded-full bg-red-100 hover:bg-red-200 text-red-600 font-bold flex items-center justify-center text-xs transition-colors"
-                          >
-                            ✕
-                          </button>
-                        </div>
+                {/* UNIFIED ALL SELECTED JEWELLERY ITEMS LIST (Catalogue + Temporary) */}
+                {(() => {
+                  const selectedDbItems = adminJewelleries.filter(j => newBookingData.jewelleryIds.includes(j._id));
+                  const tempItems = newBookingData.tempJewelleries || [];
+                  const totalCount = selectedDbItems.length + tempItems.length;
+
+                  if (totalCount === 0) return null;
+
+                  return (
+                    <div className="mt-4 p-4 bg-gray-50/80 border border-gray-200 rounded-2xl space-y-3">
+                      <div className="flex justify-between items-center pb-2 border-b border-gray-200">
+                        <h4 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
+                          ALL SELECTED JEWELLERY ITEMS FOR THIS BOOKING ({totalCount}):
+                        </h4>
+                        <span className="text-[11px] text-[#B07A85] font-bold">
+                          {selectedDbItems.length} Catalogue + {tempItems.length} Temp Custom
+                        </span>
                       </div>
-                    ))}
-                  </div>
-                )}
+
+                      <div className="space-y-2">
+                        {/* Selected Catalogue Items */}
+                        {selectedDbItems.map(item => (
+                          <div key={item._id} className="flex items-center justify-between text-xs bg-white border border-gray-200 p-3 rounded-xl shadow-sm">
+                            <div className="flex items-center gap-3">
+                              <img
+                                src={item.images?.[0]?.url || (typeof item.images?.[0] === 'string' ? item.images[0] : '') || 'https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=800&q=80'}
+                                alt={item.name}
+                                className="w-10 h-10 rounded-lg object-cover border border-gray-200 flex-shrink-0"
+                              />
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-bold text-gray-900 text-sm">{item.name}</span>
+                                  <span className="text-[9px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200 px-1.5 py-0.5 rounded">
+                                    Catalogue
+                                  </span>
+                                </div>
+                                <span className="text-[11px] font-mono bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded font-bold">
+                                  {item.code || item.jewelId || 'JWL'}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <span className="font-bold text-gray-900">Rent: ₹{item.rentalPrice || item.price || 0}</span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setNewBookingData(prev => ({
+                                    ...prev,
+                                    jewelleryIds: prev.jewelleryIds.filter(id => id !== item._id)
+                                  }));
+                                }}
+                                className="w-7 h-7 rounded-full bg-red-50 hover:bg-red-100 text-red-600 font-bold flex items-center justify-center text-xs transition-colors"
+                                title="Remove Item"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+
+                        {/* Selected Temporary Items */}
+                        {tempItems.map((item, idx) => (
+                          <div key={`temp-${idx}`} className="flex items-center justify-between text-xs bg-amber-50/70 border border-amber-200 p-3 rounded-xl shadow-sm">
+                            <div className="flex items-center gap-3">
+                              {item.image ? (
+                                <img src={item.image} alt={item.name} className="w-10 h-10 rounded-lg object-cover border border-amber-300 flex-shrink-0" />
+                              ) : (
+                                <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center text-xs text-amber-800 font-bold font-mono flex-shrink-0">
+                                  TEMP
+                                </div>
+                              )}
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-bold text-amber-950 text-sm">{item.name}</span>
+                                  <span className="text-[9px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300 px-1.5 py-0.5 rounded">
+                                    Temp Item
+                                  </span>
+                                </div>
+                                <span className="text-[11px] font-mono bg-amber-200/60 text-amber-900 px-1.5 py-0.5 rounded font-bold">
+                                  {item.code || 'TEMP'}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-4">
+                              <div className="text-right">
+                                <p className="font-bold text-gray-900">Rent: ₹{item.rentalPrice}</p>
+                                {item.deposit > 0 && <p className="text-[11px] text-gray-500">Deposit: ₹{item.deposit}</p>}
+                              </div>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setNewBookingData(prev => {
+                                    const updatedTempList = prev.tempJewelleries.filter((_, i) => i !== idx);
+                                    return {
+                                      ...prev,
+                                      tempJewelleries: updatedTempList,
+                                      depositAmount: Math.max(0, (prev.depositAmount || 0) - (item.deposit || 0))
+                                    };
+                                  });
+                                }}
+                                className="w-7 h-7 rounded-full bg-red-100 hover:bg-red-200 text-red-600 font-bold flex items-center justify-center text-xs transition-colors"
+                                title="Remove Item"
+                              >
+                                ✕
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Row 4: Financial Inputs (Discount %, Discount Amount ₹, Advance Paid ₹, Deposit ₹) */}
