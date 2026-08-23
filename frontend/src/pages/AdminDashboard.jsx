@@ -58,6 +58,7 @@ const AdminDashboard = () => {
   const [showAddTempJewelModal, setShowAddTempJewelModal] = useState(false);
   const [showInvoiceBooking, setShowInvoiceBooking] = useState(null);
   const [invoiceItems, setInvoiceItems] = useState([]);
+  const [isReorderingInvoiceItems, setIsReorderingInvoiceItems] = useState(false);
 
   const handleOpenInvoice = (b) => {
     const customId = b.bookingCustomId || `BK-${String(b._id || '').slice(-4)}`;
@@ -68,6 +69,7 @@ const AdminDashboard = () => {
       ...tempItems.map(item => ({ ...item, isTemp: true }))
     ];
     setInvoiceItems(combined);
+    setIsReorderingInvoiceItems(false);
     setShowInvoiceBooking({ ...b, customId });
   };
 
@@ -3313,7 +3315,18 @@ const AdminDashboard = () => {
             {/* Modal Controls */}
             <div className="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center no-print">
               <span className="text-sm font-semibold text-gray-700">Invoice Preview</span>
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsReorderingInvoiceItems(!isReorderingInvoiceItems)}
+                  className={`px-3.5 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 shadow-sm ${
+                    isReorderingInvoiceItems 
+                      ? 'bg-emerald-600 text-white hover:bg-emerald-700' 
+                      : 'bg-amber-100 text-amber-900 hover:bg-amber-200'
+                  }`}
+                >
+                  {isReorderingInvoiceItems ? '✓ Done Reordering' : '⇅ Reorder Items'}
+                </button>
                 <button
                   onClick={() => window.print()}
                   className="px-4 py-2 bg-[#B07A85] text-white text-xs font-semibold rounded-lg hover:bg-[#9E6A75] transition-all flex items-center gap-1.5 shadow-sm"
@@ -3365,7 +3378,9 @@ const AdminDashboard = () => {
                   <thead>
                     <tr className="bg-gray-50 border-b border-gray-200 text-gray-500 font-semibold uppercase text-xs">
                       <th className="px-4 py-3 w-10 text-center">#</th>
-                      <th className="px-2 py-3 w-16 text-center no-print">REORDER</th>
+                      {isReorderingInvoiceItems && (
+                        <th className="px-2 py-3 w-16 text-center no-print bg-amber-50 text-amber-900 font-bold">REORDER</th>
+                      )}
                       <th className="px-4 py-3 w-16 text-center">IMAGE</th>
                       <th className="px-5 py-3">NAME</th>
                       <th className="px-4 py-3 text-center w-16">QTY</th>
@@ -3387,28 +3402,30 @@ const AdminDashboard = () => {
                         return (
                           <tr key={item._id || `item-${idx}`} className="hover:bg-gray-50/30 transition-colors">
                             <td className="px-4 py-3 text-gray-400 font-mono text-center">{idx + 1}</td>
-                            <td className="px-2 py-3 text-center no-print">
-                              <div className="flex items-center justify-center gap-1">
-                                <button
-                                  type="button"
-                                  disabled={idx === 0}
-                                  onClick={() => handleMoveInvoiceItemUp(idx)}
-                                  className="w-6 h-6 rounded-md bg-gray-100 hover:bg-[#B07A85] hover:text-white text-gray-700 font-bold text-xs disabled:opacity-25 disabled:cursor-not-allowed transition-all flex items-center justify-center"
-                                  title="Move Up in Invoice"
-                                >
-                                  ▲
-                                </button>
-                                <button
-                                  type="button"
-                                  disabled={idx === displayItems.length - 1}
-                                  onClick={() => handleMoveInvoiceItemDown(idx)}
-                                  className="w-6 h-6 rounded-md bg-gray-100 hover:bg-[#B07A85] hover:text-white text-gray-700 font-bold text-xs disabled:opacity-25 disabled:cursor-not-allowed transition-all flex items-center justify-center"
-                                  title="Move Down in Invoice"
-                                >
-                                  ▼
-                                </button>
-                              </div>
-                            </td>
+                            {isReorderingInvoiceItems && (
+                              <td className="px-2 py-3 text-center no-print bg-amber-50/40 border-x border-amber-100">
+                                <div className="flex items-center justify-center gap-1">
+                                  <button
+                                    type="button"
+                                    disabled={idx === 0}
+                                    onClick={() => handleMoveInvoiceItemUp(idx)}
+                                    className="w-6 h-6 rounded-md bg-white border border-amber-300 hover:bg-[#B07A85] hover:text-white text-gray-800 font-bold text-xs disabled:opacity-25 disabled:cursor-not-allowed transition-all flex items-center justify-center shadow-sm"
+                                    title="Move Up"
+                                  >
+                                    ▲
+                                  </button>
+                                  <button
+                                    type="button"
+                                    disabled={idx === displayItems.length - 1}
+                                    onClick={() => handleMoveInvoiceItemDown(idx)}
+                                    className="w-6 h-6 rounded-md bg-white border border-amber-300 hover:bg-[#B07A85] hover:text-white text-gray-800 font-bold text-xs disabled:opacity-25 disabled:cursor-not-allowed transition-all flex items-center justify-center shadow-sm"
+                                    title="Move Down"
+                                  >
+                                    ▼
+                                  </button>
+                                </div>
+                              </td>
+                            )}
                             <td className="px-4 py-3 text-center">
                               {imgSrc ? (
                                 <img src={imgSrc} alt={item.name} className="w-12 h-12 rounded-lg object-cover mx-auto border border-gray-200 shadow-sm" />
