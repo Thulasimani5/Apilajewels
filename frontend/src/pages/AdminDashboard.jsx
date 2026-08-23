@@ -106,6 +106,72 @@ const AdminDashboard = () => {
     setInvoiceDraggedIndex(null);
   };
 
+  const handlePrintInvoice = () => {
+    if (!showInvoiceBooking) return;
+    const printEl = document.getElementById('printable-invoice');
+    if (!printEl) {
+      window.print();
+      return;
+    }
+
+    const customId = showInvoiceBooking.customId || `BK-${showInvoiceBooking._id?.slice(-8)}`;
+    const invoiceHtml = printEl.innerHTML;
+
+    const printWin = window.open('', '_blank', 'width=950,height=900');
+    if (!printWin) {
+      window.print();
+      return;
+    }
+
+    printWin.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <title>Invoice_${customId}</title>
+          <script src="https://cdn.tailwindcss.com"></script>
+          <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+            body {
+              font-family: 'Inter', sans-serif;
+              padding: 2rem;
+              background-color: #ffffff !important;
+              color: #111827 !important;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+            }
+            .no-print {
+              display: none !important;
+            }
+            @page {
+              size: A4 portrait;
+              margin: 10mm;
+            }
+            img {
+              max-width: 100%;
+              height: auto;
+            }
+          </style>
+        </head>
+        <body className="bg-white">
+          <div className="max-w-3xl mx-auto border border-gray-100 p-6 rounded-2xl shadow-none">
+            ${invoiceHtml}
+          </div>
+          <script>
+            window.onload = function() {
+              setTimeout(function() {
+                window.focus();
+                window.print();
+                setTimeout(function() { window.close(); }, 500);
+              }, 400);
+            };
+          </script>
+        </body>
+      </html>
+    `);
+    printWin.document.close();
+  };
+
   const [selectedAdminCategory, setSelectedAdminCategory] = useState(null);
   const [selectedAdminAccessorySubtype, setSelectedAdminAccessorySubtype] = useState(null);
   const [adminJewelleries, setAdminJewelleries] = useState([]);
@@ -3406,7 +3472,7 @@ const AdminDashboard = () => {
                   {isReorderingInvoiceItems ? '✓ Done Reordering' : '⇅ Reorder Items'}
                 </button>
                 <button
-                  onClick={() => window.print()}
+                  onClick={handlePrintInvoice}
                   className="px-4 py-2 bg-[#B07A85] text-white text-xs font-semibold rounded-lg hover:bg-[#9E6A75] transition-all flex items-center gap-1.5 shadow-sm"
                 >
                   <Printer size={14} /> Print / Save PDF
