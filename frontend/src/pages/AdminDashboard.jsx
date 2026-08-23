@@ -202,7 +202,19 @@ const AdminDashboard = () => {
     const bTempItems = Array.isArray(b.tempJewelleries) ? b.tempJewelleries : [];
     const subtotal = bItems.reduce((sum, j) => sum + (j.rentalPrice || j.price || 0), 0) +
                      bTempItems.reduce((sum, j) => sum + (j.rentalPrice || 0), 0);
-    const dPercent = b.discountPercent ?? (b.discountAmount && subtotal ? Math.round((b.discountAmount / subtotal) * 100) : 0);
+    const dbPercent = parseFloat(b.discountPercent) || 0;
+    const dbAmount = parseFloat(b.discountAmount) || 0;
+    
+    let initialPercent = 0;
+    let initialAmount = 0;
+
+    if (dbPercent > 0) {
+      initialPercent = dbPercent;
+      initialAmount = 0;
+    } else if (dbAmount > 0) {
+      initialPercent = 0;
+      initialAmount = dbAmount;
+    }
 
     setNewBookingData({
       bookingCustomId: b.bookingCustomId || `BK-${String(b._id || '').slice(-4)}`,
@@ -214,8 +226,8 @@ const AdminDashboard = () => {
       eventDate: b.eventDate ? new Date(b.eventDate).toISOString().split('T')[0] : '',
       pickupDate: b.pickupDate ? new Date(b.pickupDate).toISOString().split('T')[0] : '',
       returnDate: b.returnDate ? new Date(b.returnDate).toISOString().split('T')[0] : '',
-      discountPercent: dPercent,
-      discountAmount: b.discountAmount || 0,
+      discountPercent: initialPercent,
+      discountAmount: initialAmount,
       advancePaid: b.advancePaid || 0,
       depositAmount: b.depositAmount || 0,
       paymentStatus: b.paymentStatus || 'Pending',
