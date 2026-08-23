@@ -57,6 +57,41 @@ const AdminDashboard = () => {
   const [addBookingLoading, setAddBookingLoading] = useState(false);
   const [showAddTempJewelModal, setShowAddTempJewelModal] = useState(false);
   const [showInvoiceBooking, setShowInvoiceBooking] = useState(null);
+  const [invoiceItems, setInvoiceItems] = useState([]);
+
+  const handleOpenInvoice = (b) => {
+    const customId = b.bookingCustomId || `BK-${String(b._id || '').slice(-4)}`;
+    const regularItems = Array.isArray(b.jewelleryIds) ? b.jewelleryIds : [];
+    const tempItems = Array.isArray(b.tempJewelleries) ? b.tempJewelleries : [];
+    const combined = [
+      ...regularItems.map(item => ({ ...item, isTemp: false })),
+      ...tempItems.map(item => ({ ...item, isTemp: true }))
+    ];
+    setInvoiceItems(combined);
+    setShowInvoiceBooking({ ...b, customId });
+  };
+
+  const handleMoveInvoiceItemUp = (idx) => {
+    if (idx <= 0) return;
+    setInvoiceItems(prev => {
+      const copy = [...prev];
+      const temp = copy[idx];
+      copy[idx] = copy[idx - 1];
+      copy[idx - 1] = temp;
+      return copy;
+    });
+  };
+
+  const handleMoveInvoiceItemDown = (idx) => {
+    setInvoiceItems(prev => {
+      if (idx >= prev.length - 1) return prev;
+      const copy = [...prev];
+      const temp = copy[idx];
+      copy[idx] = copy[idx + 1];
+      copy[idx + 1] = temp;
+      return copy;
+    });
+  };
 
   const [selectedAdminCategory, setSelectedAdminCategory] = useState(null);
   const [selectedAdminAccessorySubtype, setSelectedAdminAccessorySubtype] = useState(null);
@@ -2175,7 +2210,7 @@ const AdminDashboard = () => {
                                   <Pencil size={12} /> Edit
                                 </button>
                                 <button
-                                  onClick={() => setShowInvoiceBooking({ ...b, customId })}
+                                  onClick={() => handleOpenInvoice(b)}
                                   className="text-[11px] bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-md hover:bg-indigo-600 hover:text-white transition-all font-semibold flex items-center gap-1"
                                 >
                                   <FileText size={12} /> Invoice
@@ -3330,6 +3365,7 @@ const AdminDashboard = () => {
                   <thead>
                     <tr className="bg-gray-50 border-b border-gray-200 text-gray-500 font-semibold uppercase text-xs">
                       <th className="px-4 py-3 w-10 text-center">#</th>
+                      <th className="px-2 py-3 w-16 text-center no-print">REORDER</th>
                       <th className="px-4 py-3 w-16 text-center">IMAGE</th>
                       <th className="px-5 py-3">NAME</th>
                       <th className="px-4 py-3 text-center w-16">QTY</th>
@@ -3339,20 +3375,40 @@ const AdminDashboard = () => {
                   </thead>
                   <tbody className="divide-y divide-gray-100">
                     {(() => {
-                      const regularItems = Array.isArray(showInvoiceBooking.jewelleryIds) ? showInvoiceBooking.jewelleryIds : [];
-                      const tempItems = Array.isArray(showInvoiceBooking.tempJewelleries) ? showInvoiceBooking.tempJewelleries : [];
-                      const allItems = [
-                        ...regularItems.map(item => ({ ...item, isTemp: false })),
-                        ...tempItems.map(item => ({ ...item, isTemp: true }))
+                      const displayItems = invoiceItems.length > 0 ? invoiceItems : [
+                        ...(Array.isArray(showInvoiceBooking.jewelleryIds) ? showInvoiceBooking.jewelleryIds : []).map(item => ({ ...item, isTemp: false })),
+                        ...(Array.isArray(showInvoiceBooking.tempJewelleries) ? showInvoiceBooking.tempJewelleries : []).map(item => ({ ...item, isTemp: true }))
                       ];
                       
-                      return allItems.map((item, idx) => {
+                      return displayItems.map((item, idx) => {
                         const rate = item.rentalPrice || item.price || 0;
                         const imgSrc = item.image || (Array.isArray(item.images) ? (item.images[0]?.url || item.images[0]) : item.images);
                         
                         return (
                           <tr key={item._id || `item-${idx}`} className="hover:bg-gray-50/30 transition-colors">
                             <td className="px-4 py-3 text-gray-400 font-mono text-center">{idx + 1}</td>
+                            <td className="px-2 py-3 text-center no-print">
+                              <div className="flex items-center justify-center gap-1">
+                                <button
+                                  type="button"
+                                  disabled={idx === 0}
+                                  onClick={() => handleMoveInvoiceItemUp(idx)}
+                                  className="w-6 h-6 rounded-md bg-gray-100 hover:bg-[#B07A85] hover:text-white text-gray-700 font-bold text-xs disabled:opacity-25 disabled:cursor-not-allowed transition-all flex items-center justify-center"
+                                  title="Move Up in Invoice"
+                                >
+                                  ▲
+                                </button>
+                                <button
+                                  type="button"
+                                  disabled={idx === displayItems.length - 1}
+                                  onClick={() => handleMoveInvoiceItemDown(idx)}
+                                  className="w-6 h-6 rounded-md bg-gray-100 hover:bg-[#B07A85] hover:text-white text-gray-700 font-bold text-xs disabled:opacity-25 disabled:cursor-not-allowed transition-all flex items-center justify-center"
+                                  title="Move Down in Invoice"
+                                >
+                                  ▼
+                                </button>
+                              </div>
+                            </td>
                             <td className="px-4 py-3 text-center">
                               {imgSrc ? (
                                 <img src={imgSrc} alt={item.name} className="w-12 h-12 rounded-lg object-cover mx-auto border border-gray-200 shadow-sm" />
