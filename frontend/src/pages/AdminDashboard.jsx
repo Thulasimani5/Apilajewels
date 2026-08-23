@@ -270,7 +270,8 @@ const AdminDashboard = () => {
     const rentalAmount = regularRentalAmount + tempRentalAmount;
 
     const dPercent = parseFloat(newBookingData.discountPercent) || 0;
-    const discountAmount = (rentalAmount * dPercent) / 100;
+    const dAmount = parseFloat(newBookingData.discountAmount) || 0;
+    const discountAmount = dAmount > 0 ? dAmount : (rentalAmount * dPercent) / 100;
     const netAmount = Math.max(0, rentalAmount - discountAmount);
     const advancePaid = parseFloat(newBookingData.advancePaid) || 0;
     const balanceAmount = Math.max(0, netAmount - advancePaid);
@@ -3105,47 +3106,49 @@ const AdminDashboard = () => {
                 
                 return (
                   <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-amber-50/40 p-4 rounded-xl border border-amber-100">
-                    <div>
-                      <label className="block text-xs font-bold uppercase text-gray-700 mb-1">Discount %</label>
-                      <input
-                        type="number"
-                        min="0"
-                        max="100"
-                        placeholder="e.g. 10"
-                        value={newBookingData.discountPercent === 0 ? '' : newBookingData.discountPercent}
-                        onChange={e => {
-                          const valStr = e.target.value;
-                          const pct = valStr === '' ? 0 : parseFloat(valStr) || 0;
-                          const amt = Math.round((subtotal * pct) / 100);
-                          setNewBookingData(prev => ({
-                            ...prev,
-                            discountPercent: valStr === '' ? '' : pct,
-                            discountAmount: valStr === '' ? '' : amt
-                          }));
-                        }}
-                        className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] bg-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold uppercase text-gray-700 mb-1">Discount Amount ₹</label>
-                      <input
-                        type="number"
-                        min="0"
-                        placeholder="e.g. 500"
-                        value={newBookingData.discountAmount === 0 ? '' : newBookingData.discountAmount}
-                        onChange={e => {
-                          const valStr = e.target.value;
-                          const amt = valStr === '' ? 0 : parseFloat(valStr) || 0;
-                          const pct = subtotal ? Math.round((amt / subtotal) * 100) : 0;
-                          setNewBookingData(prev => ({
-                            ...prev,
-                            discountAmount: valStr === '' ? '' : amt,
-                            discountPercent: valStr === '' ? '' : pct
-                          }));
-                        }}
-                        className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] bg-white font-semibold text-gray-800"
-                      />
-                    </div>
+                    {(!newBookingData.discountAmount || parseFloat(newBookingData.discountAmount) === 0) && (
+                      <div>
+                        <label className="block text-xs font-bold uppercase text-gray-700 mb-1">Discount %</label>
+                        <input
+                          type="number"
+                          min="0"
+                          max="100"
+                          placeholder="e.g. 10"
+                          value={newBookingData.discountPercent === 0 ? '' : newBookingData.discountPercent}
+                          onChange={e => {
+                            const valStr = e.target.value;
+                            const pct = valStr === '' ? 0 : parseFloat(valStr) || 0;
+                            setNewBookingData(prev => ({
+                              ...prev,
+                              discountPercent: pct,
+                              discountAmount: 0
+                            }));
+                          }}
+                          className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] bg-white"
+                        />
+                      </div>
+                    )}
+                    {(!newBookingData.discountPercent || parseFloat(newBookingData.discountPercent) === 0) && (
+                      <div>
+                        <label className="block text-xs font-bold uppercase text-gray-700 mb-1">Discount Amount ₹</label>
+                        <input
+                          type="number"
+                          min="0"
+                          placeholder="e.g. 500"
+                          value={newBookingData.discountAmount === 0 ? '' : newBookingData.discountAmount}
+                          onChange={e => {
+                            const valStr = e.target.value;
+                            const amt = valStr === '' ? 0 : parseFloat(valStr) || 0;
+                            setNewBookingData(prev => ({
+                              ...prev,
+                              discountAmount: amt,
+                              discountPercent: 0
+                            }));
+                          }}
+                          className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] bg-white font-semibold text-gray-800"
+                        />
+                      </div>
+                    )}
                     <div>
                       <label className="block text-xs font-bold uppercase text-gray-700 mb-1">Advance Paid ₹</label>
                       <input
@@ -3233,8 +3236,9 @@ const AdminDashboard = () => {
                   .reduce((sum, j) => sum + (parseFloat(j.rentalPrice) || 0), 0);
                 const rentalSubtotal = regularRentalSubtotal + tempRentalSubtotal;
                 const dPercent = parseFloat(newBookingData.discountPercent) || 0;
-                const dAmount = (rentalSubtotal * dPercent) / 100;
-                const netAmount = Math.max(0, rentalSubtotal - dAmount);
+                const dAmountInput = parseFloat(newBookingData.discountAmount) || 0;
+                const discountAmount = dAmountInput > 0 ? dAmountInput : (rentalSubtotal * dPercent) / 100;
+                const netAmount = Math.max(0, rentalSubtotal - discountAmount);
                 const advPaid = parseFloat(newBookingData.advancePaid) || 0;
                 const balAmt = Math.max(0, netAmount - advPaid);
 
@@ -3244,12 +3248,17 @@ const AdminDashboard = () => {
                       <span>Rental Subtotal (Selected Items):</span>
                       <span className="font-semibold text-gray-800">₹{rentalSubtotal.toFixed(2)}</span>
                     </div>
-                    {dPercent > 0 && (
+                    {dAmountInput > 0 ? (
+                      <div className="flex justify-between items-center text-xs text-emerald-600 font-semibold">
+                        <span>Flat Discount:</span>
+                        <span>-₹{dAmountInput.toFixed(2)}</span>
+                      </div>
+                    ) : dPercent > 0 ? (
                       <div className="flex justify-between items-center text-xs text-emerald-600 font-semibold">
                         <span>Discount ({dPercent}% OFF):</span>
-                        <span>-₹{dAmount.toFixed(2)}</span>
+                        <span>-₹{discountAmount.toFixed(2)}</span>
                       </div>
-                    )}
+                    ) : null}
                     <div className="flex justify-between items-center text-xs text-gray-700 font-medium">
                       <span>Net Rental Total:</span>
                       <span>₹{netAmount.toFixed(2)}</span>
