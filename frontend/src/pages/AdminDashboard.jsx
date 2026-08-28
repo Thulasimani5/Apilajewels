@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2, Eye, Tag, Edit, FileText, Printer, GripVertical } from 'lucide-react';
+import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2, Eye, Tag, Edit, FileText, Printer, GripVertical, Menu } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import CategoryContext from '../context/CategoryContext';
 import { useContext } from 'react';
@@ -10,6 +10,7 @@ const AdminDashboard = () => {
   const { user, logout, token } = useAuth();
   const { categories, refreshCategories, addCategory, deleteCategory, updateCategory } = useContext(CategoryContext);
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   
@@ -887,51 +888,67 @@ const AdminDashboard = () => {
   });
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-gray-50 overflow-hidden relative">
+      {/* Mobile Backdrop Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity" 
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-gray-200 relative">
-        <div className="h-16 flex items-center px-6 border-b border-gray-200">
-          <span className="text-xl font-serif font-bold tracking-widest text-[#B07A85]">Apila Admin</span>
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 flex flex-col justify-between transform transition-transform duration-300 ease-in-out md:static md:translate-x-0 md:z-auto ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        <div>
+          <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200">
+            <span className="text-xl font-serif font-bold tracking-widest text-[#B07A85]">Apila Admin</span>
+            <button 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="md:hidden text-gray-500 hover:text-gray-700 p-1"
+            >
+              <X size={20} />
+            </button>
+          </div>
+          <nav className="p-4 space-y-1">
+            <button 
+              onClick={() => { setActiveTab('dashboard'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'dashboard' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
+            >
+              <LayoutDashboard size={20} /> Dashboard
+            </button>
+            <button 
+              onClick={() => { setActiveTab('jewellery'); setShowAddForm(false); setSelectedAdminCategory(null); setIsMobileMenuOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'jewellery' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
+            >
+              <Package size={20} /> Manage Jewellery
+            </button>
+            <button 
+              onClick={() => { setActiveTab('bookings'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'bookings' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
+            >
+              <Calendar size={20} /> Bookings
+            </button>
+            <button 
+              onClick={() => { setActiveTab('users'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'users' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
+            >
+              <Users size={20} /> Users
+            </button>
+            <button 
+              onClick={() => { setActiveTab('categories'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'categories' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
+            >
+              <List size={20} /> Categories
+            </button>
+            <button 
+              onClick={() => { setActiveTab('types'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'types' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
+            >
+              <Tag size={20} /> Jewellery Types
+            </button>
+          </nav>
         </div>
-        <nav className="p-4 space-y-1">
-          <button 
-            onClick={() => { setActiveTab('dashboard'); setShowAddForm(false); }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'dashboard' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
-          >
-            <LayoutDashboard size={20} /> Dashboard
-          </button>
-          <button 
-            onClick={() => { setActiveTab('jewellery'); setShowAddForm(false); setSelectedAdminCategory(null); }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'jewellery' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
-          >
-            <Package size={20} /> Manage Jewellery
-          </button>
-          <button 
-            onClick={() => { setActiveTab('bookings'); setShowAddForm(false); }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'bookings' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
-          >
-            <Calendar size={20} /> Bookings
-          </button>
-          <button 
-            onClick={() => { setActiveTab('users'); setShowAddForm(false); }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'users' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
-          >
-            <Users size={20} /> Users
-          </button>
-          <button 
-            onClick={() => { setActiveTab('categories'); setShowAddForm(false); }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'categories' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
-          >
-            <List size={20} /> Categories
-          </button>
-          <button 
-            onClick={() => { setActiveTab('types'); setShowAddForm(false); }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'types' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
-          >
-            <Tag size={20} /> Jewellery Types
-          </button>
-        </nav>
-        <div className="absolute bottom-0 w-64 p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-gray-200">
           <button 
             onClick={logout}
             className="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium text-gray-600 hover:text-red-600 transition-colors"
@@ -942,19 +959,28 @@ const AdminDashboard = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto">
-        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-8">
-          <h1 className="text-xl font-semibold text-gray-800 capitalize">
-            {activeTab.replace('-', ' ')}
-            {showAddForm && ' > Add New'}
-          </h1>
-          <div className="flex items-center gap-4">
-            <span className="text-sm font-medium text-gray-600">Admin User</span>
-            <div className="w-8 h-8 rounded-full bg-[#B07A85] text-white flex items-center justify-center font-bold">A</div>
+      <main className="flex-1 overflow-auto min-w-0">
+        <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 sm:px-8 sticky top-0 z-30">
+          <div className="flex items-center gap-3 min-w-0">
+            <button 
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-100 flex-shrink-0"
+              title="Toggle Menu"
+            >
+              <Menu size={22} />
+            </button>
+            <h1 className="text-base sm:text-xl font-semibold text-gray-800 capitalize truncate">
+              {activeTab.replace('-', ' ')}
+              {showAddForm && ' > Add New'}
+            </h1>
+          </div>
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <span className="hidden sm:inline text-sm font-medium text-gray-600">Admin User</span>
+            <div className="w-8 h-8 rounded-full bg-[#B07A85] text-white flex items-center justify-center font-bold text-sm">A</div>
           </div>
         </header>
         
-        <div className="p-8">
+        <div className="p-4 sm:p-6 md:p-8">
           {activeTab === 'dashboard' && (() => {
             const totalJewelleries = adminJewelleries.length;
             const totalBookings = bookings.length;
@@ -2265,11 +2291,15 @@ const AdminDashboard = () => {
                             </td>
                             <td className="px-4 py-3.5">
                               <p className="font-bold text-gray-900">₹{rentalSubtotal ? rentalSubtotal.toLocaleString() : '0'}</p>
-                              {discPercent > 0 && (
+                              {discPercent > 0 ? (
                                 <p className="text-[10px] text-emerald-600 font-bold mt-0.5">
-                                  -{discPercent}% (₹{discAmt})
+                                  -{discPercent}% (₹{discAmt.toLocaleString()})
                                 </p>
-                              )}
+                              ) : discAmt > 0 ? (
+                                <p className="text-[10px] text-emerald-600 font-bold mt-0.5">
+                                  -₹{discAmt.toLocaleString()}
+                                </p>
+                              ) : null}
                             </td>
                             <td className="px-4 py-3.5 font-semibold text-gray-700">
                               {advPaid > 0 ? `₹${advPaid.toLocaleString()}` : '-'}
@@ -3484,13 +3514,13 @@ const AdminDashboard = () => {
           <div className="bg-white rounded-2xl max-w-5xl w-full shadow-2xl overflow-hidden border border-gray-100 mt-4 mb-12 relative">
             
             {/* Modal Controls */}
-            <div className="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center no-print">
+            <div className="p-4 bg-gray-50 border-b border-gray-100 flex flex-col sm:flex-row justify-between sm:items-center gap-3 no-print">
               <span className="text-sm font-semibold text-gray-700">Invoice Preview</span>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="button"
                   onClick={() => setIsReorderingInvoiceItems(!isReorderingInvoiceItems)}
-                  className={`px-3.5 py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 shadow-sm ${
+                  className={`px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 shadow-sm ${
                     isReorderingInvoiceItems 
                       ? 'bg-emerald-600 text-white hover:bg-emerald-700' 
                       : 'bg-amber-100 text-amber-900 hover:bg-amber-200'
@@ -3500,13 +3530,13 @@ const AdminDashboard = () => {
                 </button>
                 <button
                   onClick={handlePrintInvoice}
-                  className="px-4 py-2 bg-[#B07A85] text-white text-xs font-semibold rounded-lg hover:bg-[#9E6A75] transition-all flex items-center gap-1.5 shadow-sm"
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 bg-[#B07A85] text-white text-xs font-semibold rounded-lg hover:bg-[#9E6A75] transition-all flex items-center gap-1.5 shadow-sm"
                 >
                   <Printer size={14} /> Print / Save PDF
                 </button>
                 <button
                   onClick={() => setShowInvoiceBooking(null)}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-300 transition-all"
+                  className="px-3 py-1.5 sm:px-4 sm:py-2 bg-gray-200 text-gray-700 text-xs font-semibold rounded-lg hover:bg-gray-300 transition-all"
                 >
                   Close
                 </button>
@@ -3514,7 +3544,7 @@ const AdminDashboard = () => {
             </div>
 
             {/* Invoice Printable Sheet */}
-            <div className="p-8 sm:p-12 text-gray-800 font-sans print-area bg-white text-left" id="printable-invoice">
+            <div className="p-4 sm:p-8 md:p-12 text-gray-800 font-sans print-area bg-white text-left overflow-x-auto" id="printable-invoice">
               
               {/* Header section */}
               <div className="flex justify-between items-start pb-6 border-b border-gray-100">
@@ -3622,11 +3652,22 @@ const AdminDashboard = () => {
 
               {/* Summary section */}
               {(() => {
-                const subtotal = showInvoiceBooking.rentalAmount || showInvoiceBooking.totalAmount || 0;
-                const discPercent = showInvoiceBooking.discountPercent || 0;
-                const discAmt = showInvoiceBooking.discountAmount || 0;
+                const displayItems = invoiceItems.length > 0 ? invoiceItems : [
+                  ...(Array.isArray(showInvoiceBooking.jewelleryIds) ? showInvoiceBooking.jewelleryIds : []).map(item => ({ ...item, isTemp: false })),
+                  ...(Array.isArray(showInvoiceBooking.tempJewelleries) ? showInvoiceBooking.tempJewelleries : []).map(item => ({ ...item, isTemp: true }))
+                ];
+
+                const calculatedItemsSubtotal = displayItems.reduce((sum, item) => sum + (item.rentalPrice || item.price || 0), 0);
+                const subtotal = showInvoiceBooking.rentalAmount || calculatedItemsSubtotal || showInvoiceBooking.totalAmount || 0;
+                const discPercent = parseFloat(showInvoiceBooking.discountPercent) || 0;
+                let discAmt = parseFloat(showInvoiceBooking.discountAmount) || 0;
+
+                if (discAmt === 0 && discPercent > 0) {
+                  discAmt = (subtotal * discPercent) / 100;
+                }
+
                 const netTotal = Math.max(0, subtotal - discAmt);
-                const advPaid = showInvoiceBooking.advancePaid || 0;
+                const advPaid = parseFloat(showInvoiceBooking.advancePaid) || 0;
                 const balAmt = showInvoiceBooking.balanceAmount ?? Math.max(0, netTotal - advPaid);
 
                 return (
@@ -3636,9 +3677,9 @@ const AdminDashboard = () => {
                         <span>Subtotal</span>
                         <span className="font-semibold text-gray-800">₹{subtotal.toFixed(2)}</span>
                       </div>
-                      {discPercent > 0 && (
+                      {(discAmt > 0 || discPercent > 0) && (
                         <div className="flex justify-between items-center text-emerald-600 font-medium">
-                          <span>Discount ({discPercent}% OFF)</span>
+                          <span>{discPercent > 0 ? `Discount (${discPercent}% OFF)` : 'Discount'}</span>
                           <span>-₹{discAmt.toFixed(2)}</span>
                         </div>
                       )}
