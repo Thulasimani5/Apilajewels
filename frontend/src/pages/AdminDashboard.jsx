@@ -1035,22 +1035,22 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* Booking Status Sub-analysis */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-gray-50/50 p-4 rounded-xl border border-gray-100">
-                  <div className="text-center p-2">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-gray-50/50 p-3 sm:p-4 rounded-xl border border-gray-100">
+                  <div className="text-center p-2 bg-white sm:bg-transparent rounded-lg border border-gray-100 sm:border-0">
                     <span className="text-xs text-gray-500 font-medium">Pending Requests</span>
-                    <strong className="block text-lg text-blue-700 mt-0.5">{pendingBookings}</strong>
+                    <strong className="block text-base sm:text-lg text-blue-700 mt-0.5">{pendingBookings}</strong>
                   </div>
-                  <div className="text-center p-2 border-l border-gray-200">
+                  <div className="text-center p-2 bg-white sm:bg-transparent rounded-lg border border-gray-100 sm:border-0 sm:border-l sm:border-gray-200">
                     <span className="text-xs text-gray-500 font-medium">Confirmed / Approved</span>
-                    <strong className="block text-lg text-emerald-700 mt-0.5">{confirmedBookings}</strong>
+                    <strong className="block text-base sm:text-lg text-emerald-700 mt-0.5">{confirmedBookings}</strong>
                   </div>
-                  <div className="text-center p-2 border-l border-gray-200">
+                  <div className="text-center p-2 bg-white sm:bg-transparent rounded-lg border border-gray-100 sm:border-0 sm:border-l sm:border-gray-200">
                     <span className="text-xs text-gray-500 font-medium">In Event (Rented Out)</span>
-                    <strong className="block text-lg text-amber-800 mt-0.5">{ineventBookings}</strong>
+                    <strong className="block text-base sm:text-lg text-amber-800 mt-0.5">{ineventBookings}</strong>
                   </div>
-                  <div className="text-center p-2 border-l border-gray-200">
+                  <div className="text-center p-2 bg-white sm:bg-transparent rounded-lg border border-gray-100 sm:border-0 sm:border-l sm:border-gray-200">
                     <span className="text-xs text-gray-500 font-medium">Completed Bookings</span>
-                    <strong className="block text-lg text-indigo-700 mt-0.5">{completedBookings}</strong>
+                    <strong className="block text-base sm:text-lg text-indigo-700 mt-0.5">{completedBookings}</strong>
                   </div>
                 </div>
 
@@ -1195,7 +1195,7 @@ const AdminDashboard = () => {
                       <Plus size={16} /> Add New Jewel
                     </button>
                   </div>
-                  <div className="p-6 grid grid-cols-2 md:grid-cols-3 gap-6">
+                  <div className="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                     {(categories || []).map(c => (
                       <div 
                         key={c._id} 
@@ -1229,7 +1229,7 @@ const AdminDashboard = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="p-6 grid grid-cols-2 md:grid-cols-3 gap-6">
+                  <div className="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                     {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories'].map(sub => (
                       <div 
                         key={sub} 
@@ -1319,7 +1319,7 @@ const AdminDashboard = () => {
                     </div>
                   ) : (
                     <div className="overflow-x-auto">
-                      <table className="w-full text-left border-collapse text-sm">
+                      <table className="w-full min-w-[650px] text-left border-collapse text-sm">
                         <thead>
                           <tr className="bg-white border-b border-gray-100 text-gray-400 font-semibold uppercase text-xs tracking-wider">
                             <th className="px-6 py-4 w-16">S.No</th>
@@ -2192,7 +2192,7 @@ const AdminDashboard = () => {
                 <div className="p-12 text-center text-gray-500">No bookings recorded yet.</div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full text-left border-collapse text-xs whitespace-nowrap">
+                  <table className="w-full min-w-[900px] text-left border-collapse text-xs whitespace-nowrap">
                     <thead>
                       <tr className="bg-gray-50 border-b border-gray-100 text-gray-500 font-bold uppercase tracking-wider text-[11px]">
                         <th className="px-4 py-3.5">Booking ID</th>
@@ -2578,7 +2578,7 @@ const AdminDashboard = () => {
                     {typesList.map(tp => (
                       <div key={tp._id} className="flex items-center justify-between p-4 rounded-xl border border-gray-100 bg-gray-50/50 hover:border-[#B07A85]/40 hover:shadow-sm transition-all group">
                         <span className="font-medium text-gray-800 text-sm">{tp.name}</span>
-                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                           <button
                             onClick={() => { setEditingTypeId(tp._id); setNewTypeName(tp.name); setShowTypeForm(true); }}
                             className="w-7 h-7 flex items-center justify-center rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
@@ -3559,7 +3559,7 @@ const AdminDashboard = () => {
               </div>
 
               {/* Bill To & Info section */}
-              <div className="grid grid-cols-2 gap-8 py-8 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8 py-4 sm:py-8 text-sm">
                 <div>
                   <h3 className="text-xs font-bold uppercase tracking-wider text-pink-500 mb-2">BILL TO</h3>
                   <p className="font-bold text-gray-900 text-base">{showInvoiceBooking.customerDetails?.name || (showInvoiceBooking.userId?.role !== 'admin' ? showInvoiceBooking.userId?.name : '') || 'Guest Customer'}</p>
@@ -3568,7 +3568,7 @@ const AdminDashboard = () => {
                   )}
                   <p className="text-gray-500 font-mono mt-0.5">{showInvoiceBooking.customerDetails?.phone || (showInvoiceBooking.userId?.role !== 'admin' ? showInvoiceBooking.userId?.phone : '') || 'N/A'}</p>
                 </div>
-                <div className="text-right space-y-1">
+                <div className="text-left sm:text-right space-y-1">
                   <p className="text-gray-500"><span className="font-semibold text-gray-700">Issue Date:</span> {showInvoiceBooking.bookingDate ? new Date(showInvoiceBooking.bookingDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</p>
                   <p className="text-gray-500"><span className="font-semibold text-gray-700">Due Date:</span> {showInvoiceBooking.eventDate ? new Date(showInvoiceBooking.eventDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'N/A'}</p>
                   <p className="text-gray-500"><span className="font-semibold text-gray-700">Payment Method:</span> {showInvoiceBooking.paymentStatus === 'Paid' ? 'Paid' : 'Other'}</p>
@@ -3672,7 +3672,7 @@ const AdminDashboard = () => {
 
                 return (
                   <div className="flex justify-end mb-8">
-                    <div className="w-72 space-y-2.5 text-sm">
+                    <div className="w-full sm:w-72 space-y-2.5 text-sm">
                       <div className="flex justify-between items-center text-gray-500">
                         <span>Subtotal</span>
                         <span className="font-semibold text-gray-800">₹{subtotal.toFixed(2)}</span>
