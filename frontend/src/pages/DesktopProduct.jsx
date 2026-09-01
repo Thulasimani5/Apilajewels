@@ -446,10 +446,11 @@ export default function DesktopProduct({ product, relatedProducts }) {
             <p><strong>Finish:</strong> {product.finish || 'Antique'}</p>
           </Accordion>
           <Accordion title="Delivery & Return Policy">
-            <p>Standard delivery within 3–5 business days. Easy returns within 7 days of receipt.</p>
+            <p>• Booking confirmed after full rental payment + deposit. No cancellation or refund after confirmation.</p>
+            <p className="mt-1">• Return jewellery carefully bubble-wrapped on agreed date. Late returns or damage incur charges.</p>
           </Accordion>
           <Accordion title="Care Instructions">
-            <p>Store in a dry place. Avoid contact with water, perfume, and harsh chemicals. Clean gently with a soft cloth.</p>
+            <p>Keep away from water, perfume, makeup, sweat & chemicals. Handle and store with care.</p>
           </Accordion>
 
         </div>{/* end pdp-panel */}

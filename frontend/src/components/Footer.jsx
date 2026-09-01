@@ -81,7 +81,7 @@ const Footer = () => {
               <ul className="pb-5 space-y-3">
                 {['Delivery & Pickup', 'Rental Terms', 'FAQ', 'Care Instructions', 'Contact Us'].map(item => (
                   <li key={item}>
-                    <Link to="#" className="text-[11px] text-[#555] tracking-[0.08em] uppercase">
+                    <Link to="/terms" className="text-[11px] text-[#555] tracking-[0.08em] uppercase hover:text-[#B07A85] transition-colors">
                       {item}
                     </Link>
                   </li>
@@ -179,7 +179,7 @@ const Footer = () => {
               <ul className="space-y-4">
                 {['Delivery & Pickup', 'Rental Terms', 'FAQ', 'Care Instructions', 'Contact Us'].map(item => (
                   <li key={item}>
-                    <Link to="#" className="text-[11px] text-[#555] hover:text-[#A56D7A] transition-colors tracking-[0.08em] uppercase">
+                    <Link to="/terms" className="text-[11px] text-[#555] hover:text-[#A56D7A] transition-colors tracking-[0.08em] uppercase">
                       {item}
                     </Link>
                   </li>

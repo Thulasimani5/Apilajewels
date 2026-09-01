@@ -12,6 +12,7 @@ import LoginSidebar from './components/LoginSidebar';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
+import Terms from './pages/Terms';
 
 function App() {
   // Simple check for admin route to hide navbar
@@ -33,6 +34,9 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/rental-policy" element={<Terms />} />
+          <Route path="/terms-and-conditions" element={<Terms />} />
         </Routes>
         </div>
         <CookieBanner />

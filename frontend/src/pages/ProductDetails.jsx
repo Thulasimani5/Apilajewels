@@ -301,10 +301,11 @@ const ProductDetails = () => {
           <p className="mt-1"><span className="font-bold text-black">Finish : </span>{product.finish || 'Antique'}</p>
         </Accordion>
         <Accordion title="Delivery & Return Policy">
-          <p>Standard delivery within 3–5 business days. Easy returns within 7 days of receipt.</p>
+          <p className="text-xs leading-relaxed">• Booking confirmed after full rental payment + deposit. No cancellation or refund after confirmation.</p>
+          <p className="text-xs leading-relaxed mt-1">• Return jewellery carefully bubble-wrapped on agreed date. Late returns or damage incur charges.</p>
         </Accordion>
         <Accordion title="Care Instructions">
-          <p>Store in a dry place. Avoid contact with water, perfume, and harsh chemicals. Clean gently with a soft cloth.</p>
+          <p className="text-xs leading-relaxed">Keep away from water, perfume, makeup, sweat & chemicals. Handle and store with care.</p>
         </Accordion>
       </div>
 
@@ -445,10 +446,11 @@ const ProductDetails = () => {
               <p className="mt-1"><span style={{ fontFamily: "Gotham Medium, sans-serif", fontWeight: 500 }}>Finish : </span>{product.finish || 'Antique'}</p>
             </MobileAccordion>
             <MobileAccordion title="Delivery & Return Policy">
-              <p>Standard delivery within 3–5 business days. Easy returns within 7 days of receipt.</p>
+              <p className="text-xs leading-relaxed">• Booking confirmed after full rental payment + deposit. No cancellation or refund after confirmation.</p>
+              <p className="text-xs leading-relaxed mt-1">• Return jewellery carefully bubble-wrapped on agreed date. Late returns or damage incur charges.</p>
             </MobileAccordion>
             <MobileAccordion title="Care Instructions">
-              <p>Store in a dry place. Avoid contact with water, perfume, and harsh chemicals. Clean gently with a soft cloth.</p>
+              <p className="text-xs leading-relaxed">Keep away from water, perfume, makeup, sweat & chemicals. Handle and store with care.</p>
             </MobileAccordion>
           </div>
 

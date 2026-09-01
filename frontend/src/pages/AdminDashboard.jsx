@@ -3717,13 +3717,19 @@ const AdminDashboard = () => {
                 </div>
                 <div>
                   <h4 className="text-[11px] font-bold uppercase tracking-wider text-pink-500 mb-1">TERMS & CONDITIONS</h4>
-                  <p>Security Deposit: Fully refundable upon return of the jewellery. Damage or loss will be adjusted from the deposit.</p>
+                  <ul className="list-disc list-inside space-y-0.5 text-gray-600 text-[11px]">
+                    <li><strong>Booking & Payment:</strong> Confirmed after full rental payment + security deposit. No cancellation or refund after confirmation.</li>
+                    <li><strong>Packing & Return:</strong> Return in original packing with bubble wrap on agreed date. Late returns or damage incur charges.</li>
+                    <li><strong>Damage / Loss:</strong> Do not attempt repair for stone damage/loss. Charges will be adjusted from security deposit.</li>
+                    <li><strong>Care:</strong> Keep away from water, perfume, makeup, sweat & chemicals. Handle and store with care.</li>
+                    <li><strong>Support:</strong> For any queries, please contact us using your booking number.</li>
+                  </ul>
                 </div>
               </div>
 
               {/* Footer Quote */}
-              <div className="text-center pt-8 text-xs text-gray-400 font-medium mt-8 border-t border-gray-50">
-                Thank you for choosing Apila Jewels.
+              <div className="text-center pt-6 text-xs text-gray-500 font-semibold mt-6 border-t border-gray-100">
+                🙏 Thank you for choosing Apila Jewels.
               </div>
 
             </div>
