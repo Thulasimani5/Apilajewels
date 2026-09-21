@@ -1,5 +1,5 @@
 const Jewellery = require('../models/Jewellery');
-const { cloudinary } = require('../config/cloudinary');
+const { cloudinary, accounts, getCloudinaryAccount } = require('../config/cloudinary');
 const { formatError } = require('../utils/errorHandler');
 
 
@@ -7,17 +7,14 @@ const { formatError } = require('../utils/errorHandler');
 const autoImagesCache = new Map();
 
 // Auto-assign images from Cloudinary by searching for files matching the jewelId
-const getAutoImages = async (jewelId) => {
+const getAutoImages = async (jewelId, category, accessoryType) => {
   if (!jewelId) return null;
-  // Only run if Cloudinary is properly configured
-  if (!process.env.CLOUDINARY_CLOUD_NAME) return null;
 
   if (autoImagesCache.has(jewelId)) {
     return autoImagesCache.get(jewelId);
   }
 
   try {
-    // Normalize IDs like AM010 -> AM0010
     let normalizedId = jewelId;
     if (/^[A-Z]{2}0[1-9]\d$/.test(jewelId)) {
       normalizedId = `${jewelId.slice(0, 2)}0${jewelId.slice(2)}`;
@@ -25,8 +22,17 @@ const getAutoImages = async (jewelId) => {
     const upperJewelId = normalizedId.toUpperCase();
     const originalUpper = jewelId.toUpperCase();
 
-    // Build expression to search Cloudinary for files whose filename starts with the jewelId
     const expression = `folder:apila_jewels/* AND (public_id:*/${upperJewelId}* OR public_id:*/${originalUpper}*)`;
+
+    // Pick targeted Cloudinary credentials based on category
+    const { account } = getCloudinaryAccount(category, accessoryType);
+    if (account && account.cloud_name) {
+      cloudinary.config({
+        cloud_name: account.cloud_name,
+        api_key: account.api_key,
+        api_secret: account.api_secret
+      });
+    }
 
     const result = await cloudinary.search
       .expression(expression)
@@ -45,7 +51,6 @@ const getAutoImages = async (jewelId) => {
   } catch (error) {
     console.error('Cloudinary auto-image search error:', error.message);
   }
-  // Cache null/empty results as well to prevent repeated hits for non-existent IDs
   autoImagesCache.set(jewelId, null);
   return null;
 };
