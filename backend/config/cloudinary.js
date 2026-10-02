@@ -4,47 +4,49 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-// Primary default Cloudinary configuration
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_1_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_1_API_KEY || process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_1_API_SECRET || process.env.CLOUDINARY_API_SECRET
-});
+// Default fallback credentials (Account 1: AD Jewels) if env vars are missing
+const defaultAccount = {
+  cloud_name: process.env.CLOUDINARY_1_CLOUD_NAME || process.env.CLOUDINARY_CLOUD_NAME || 'l1taixkl',
+  api_key: process.env.CLOUDINARY_1_API_KEY || process.env.CLOUDINARY_API_KEY || '152397527562413',
+  api_secret: process.env.CLOUDINARY_1_API_SECRET || process.env.CLOUDINARY_API_SECRET || 'ld8Ka4QG7KSc7anWSwFRcZRlSmU'
+};
+
+cloudinary.config(defaultAccount);
 
 const accounts = {
   1: {
-    cloud_name: process.env.CLOUDINARY_1_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_1_API_KEY,
-    api_secret: process.env.CLOUDINARY_1_API_SECRET
+    cloud_name: process.env.CLOUDINARY_1_CLOUD_NAME || 'l1taixkl',
+    api_key: process.env.CLOUDINARY_1_API_KEY || '152397527562413',
+    api_secret: process.env.CLOUDINARY_1_API_SECRET || 'ld8Ka4QG7KSc7anWSwFRcZRlSmU'
   },
   2: {
-    cloud_name: process.env.CLOUDINARY_2_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_2_API_KEY,
-    api_secret: process.env.CLOUDINARY_2_API_SECRET
+    cloud_name: process.env.CLOUDINARY_2_CLOUD_NAME || 'wz6zmdta',
+    api_key: process.env.CLOUDINARY_2_API_KEY || '699777414828683',
+    api_secret: process.env.CLOUDINARY_2_API_SECRET || '4i_cjHgr-ETgBdFqh0YUnfHwzTE'
   },
   3: {
-    cloud_name: process.env.CLOUDINARY_3_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_3_API_KEY,
-    api_secret: process.env.CLOUDINARY_3_API_SECRET
+    cloud_name: process.env.CLOUDINARY_3_CLOUD_NAME || 'ibt4lpq6',
+    api_key: process.env.CLOUDINARY_3_API_KEY || '664525671552765',
+    api_secret: process.env.CLOUDINARY_3_API_SECRET || 'mIJyaiM-Qwq6LMqiRONPFBHin8A'
   },
   4: {
-    cloud_name: process.env.CLOUDINARY_4_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_4_API_KEY,
-    api_secret: process.env.CLOUDINARY_4_API_SECRET
+    cloud_name: process.env.CLOUDINARY_4_CLOUD_NAME || 'ay9ixzta',
+    api_key: process.env.CLOUDINARY_4_API_KEY || '571649416998459',
+    api_secret: process.env.CLOUDINARY_4_API_SECRET || 'uY13UzUhsQQLziPxwapYqhtPVBY'
   },
   5: {
-    cloud_name: process.env.CLOUDINARY_5_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_5_API_KEY,
-    api_secret: process.env.CLOUDINARY_5_API_SECRET
+    cloud_name: process.env.CLOUDINARY_5_CLOUD_NAME || 'x10uudea',
+    api_key: process.env.CLOUDINARY_5_API_KEY || '653951454214127',
+    api_secret: process.env.CLOUDINARY_5_API_SECRET || 'pBGUM2eh_g0bA4q3Y5z9lu_jQE4'
   }
 };
 
 const cloudNames = {
-  1: process.env.CLOUDINARY_1_CLOUD_NAME,
-  2: process.env.CLOUDINARY_2_CLOUD_NAME,
-  3: process.env.CLOUDINARY_3_CLOUD_NAME,
-  4: process.env.CLOUDINARY_4_CLOUD_NAME,
-  5: process.env.CLOUDINARY_5_CLOUD_NAME
+  1: accounts[1].cloud_name,
+  2: accounts[2].cloud_name,
+  3: accounts[3].cloud_name,
+  4: accounts[4].cloud_name,
+  5: accounts[5].cloud_name
 };
 
 const getCloudinaryAccount = (category, accessoryType) => {
@@ -59,15 +61,22 @@ const getCloudinaryAccount = (category, accessoryType) => {
     }
   }
 
-  if (cats.includes('AD Jewels')) return { account: accounts[1], accountIndex: 1 };
-  if (cats.includes('victorian-moissinate')) return { account: accounts[2], accountIndex: 2 };
-  if (cats.includes('Gold Antique Jewels')) return { account: accounts[3], accountIndex: 3 };
-  if (cats.includes('Kundan Jewels')) return { account: accounts[4], accountIndex: 4 };
-  if (cats.includes('Bangles & Bracelets') || (accessoryType && accessoryType !== '' && accessoryType !== 'null')) {
-    return { account: accounts[5], accountIndex: 5 };
+  let selected = { account: accounts[5], accountIndex: 5 };
+
+  if (cats.includes('AD Jewels')) selected = { account: accounts[1], accountIndex: 1 };
+  else if (cats.includes('victorian-moissinate')) selected = { account: accounts[2], accountIndex: 2 };
+  else if (cats.includes('Gold Antique Jewels')) selected = { account: accounts[3], accountIndex: 3 };
+  else if (cats.includes('Kundan Jewels')) selected = { account: accounts[4], accountIndex: 4 };
+  else if (cats.includes('Bangles & Bracelets') || (accessoryType && accessoryType !== '' && accessoryType !== 'null')) {
+    selected = { account: accounts[5], accountIndex: 5 };
   }
 
-  return { account: accounts[5], accountIndex: 5 };
+  // Safety check to ensure we never return a disabled cloud_name ('apilajewels') or undefined
+  if (!selected.account || !selected.account.cloud_name || selected.account.cloud_name === 'apilajewels') {
+    selected = { account: accounts[1], accountIndex: 1 };
+  }
+
+  return selected;
 };
 
 // Custom Storage Engine for Multer to upload directly to targeted Cloudinary account

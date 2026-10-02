@@ -364,7 +364,11 @@ export default function DesktopProduct({ product, relatedProducts }) {
           <p className="pdp-category-label">{category || 'Jewellery'}</p>
 
           {/* Product title */}
-          <h1 className="pdp-title">{product.name}</h1>
+          <h1 className="pdp-title">
+            {product.jewelId && !product.name?.includes(`(${product.jewelId})`)
+              ? `${product.name} (${product.jewelId})`
+              : product.name}
+          </h1>
 
           {/* Price + wishlist / share */}
           <div className="pdp-price-row">

@@ -247,12 +247,16 @@ const ProductDetails = () => {
   };
 
   // Shared product details content (used on both mobile & desktop)
-  const ProductInfo = () => (
+  const ProductInfo = () => {
+    const displayName = product.jewelId && !product.name?.includes(`(${product.jewelId})`)
+      ? `${product.name} (${product.jewelId})`
+      : product.name;
+    return (
     <>
       <div className="flex justify-between items-start mb-4">
         <div>
           <h1 className="font-bold text-lg text-gray-900 leading-tight">
-            {product.name}
+            {displayName}
           </h1>
           <p className="text-xl font-semibold mt-2">
             {product.showPrice === false || (product.rentalPrice || product.price || 0) > 1500
@@ -327,7 +331,8 @@ const ProductDetails = () => {
         </div>
       </div>
     </>
-  );
+    );
+  };
 
   return (
     <div className="bg-white min-h-screen  overflow-x-hidden">
@@ -390,7 +395,7 @@ const ProductDetails = () => {
           </div>
 
           <h1 className="mb-3 pr-8" style={{ color: "#000", fontFamily: "'Bacasime Antique', serif", fontSize: "25px", fontStyle: "normal", fontWeight: 400, lineHeight: "28px", letterSpacing: "-0.84px" }}>
-            {product.name}
+            {product.jewelId && !product.name?.includes(`(${product.jewelId})`) ? `${product.name} (${product.jewelId})` : product.name}
           </h1>
 
           <div className="mb-5" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "14px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal" }}>
