@@ -3,13 +3,13 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
+const validateEnv = require('./config/envCheck');
 
-// Load env vars
+// Load & Validate env vars
 dotenv.config();
-
+validateEnv();
 
 const app = express();
-
 const PORT = process.env.PORT || 5000;
 
 // Body parser
@@ -18,6 +18,14 @@ app.use(express.json());
 // Cookie parser
 app.use(cookieParser());
 
+// Security headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  next();
+});
+
 // Enable CORS
 const allowedOrigins = ['http://localhost:5173', 'http://localhost:5174', 'https://apilajewels.in', 'https://apilajewels.vercel.app'];
 app.use(cors({
@@ -25,23 +33,22 @@ app.use(cors({
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
-      callback(null, true); // Allow any for development, change to false in strict prod
+      callback(null, true);
     }
   },
   credentials: true
 }));
 
-// Apply visitor middleware globally to ensure visitor_id cookie is present
+// Visitor tracking middleware
 app.use(require('./middleware/visitor'));
 
-// Middleware to dynamically rewrite legacy port 5000 image/file URLs to the active port
+// Middleware to dynamically rewrite legacy port 5000 URLs
 app.use((req, res, next) => {
   const originalJson = res.json;
   res.json = function (body) {
     if (body) {
       try {
         let str = JSON.stringify(body);
-        // Replace legacy localhost:5000 with the actual request host and protocol
         const hostUrl = `${req.protocol}://${req.get('host')}`;
         str = str.replace(/http:\/\/localhost:5000/g, hostUrl);
         body = JSON.parse(str);
@@ -52,9 +59,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Note: Static file serving removed — images are now served via Cloudinary.
-
-// Lazily connect to MongoDB on the first request (required for Vercel serverless)
+// Database connection middleware
 app.use(async (req, res, next) => {
   try {
     await connectDB();
@@ -65,18 +70,29 @@ app.use(async (req, res, next) => {
   }
 });
 
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    success: true,
+    status: 'healthy',
+    timestamp: new Date().toISOString(),
+    service: 'Apila Jewels API'
+  });
+});
+
 // Mount routers
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/jewellery', require('./routes/jewellery'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/categories', require('./routes/category'));
 app.use('/api/cart', require('./routes/cart'));
+app.use('/api/payments', require('./routes/paymentRoutes'));
 
 app.get('/', (req, res) => {
   res.send('Apila Jewels API is running...');
 });
 
-// Global error handler — catches multer errors and other unhandled errors
+// Global error handler
 app.use((err, req, res, next) => {
   if (err && err.code === 'LIMIT_UNEXPECTED_FILE') {
     return res.status(400).json({ success: false, error: 'Too many files uploaded. Maximum allowed is 20.' });
@@ -85,7 +101,11 @@ app.use((err, req, res, next) => {
     return res.status(400).json({ success: false, error: err.message });
   }
   console.error('Unhandled error:', err);
-  res.status(500).json({ success: false, error: err.message || 'Server Error' });
+  res.status(err.statusCode || 500).json({
+    success: false,
+    error: err.message || 'Server Error',
+    code: err.code || 'SERVER_ERROR'
+  });
 });
 
 if (process.env.NODE_ENV !== 'production') {

@@ -5,49 +5,8 @@ import Card from './Card';
 import LazyImage from './LazyImage';
 import HeroBannerImage from '../assets/images/Header-image01.jpg';
 
-import imgC1 from '../assets/images/c1.jpg';
-import imgC2 from '../assets/images/c2.jpg';
-import imgC3 from '../assets/images/c3.jpg';
-import imgC4 from '../assets/images/c4.jpg';
-import imgC5 from '../assets/images/c5.jpg';
-import imgC6 from '../assets/images/c6.jpg';
-
-import iconDoorstepDelivery from '../assets/icons/Doorstepdelivery.svg';
-import iconHassleFree from '../assets/icons/HassleFree.svg';
-import iconSecure from '../assets/icons/Secure.svg';
-import iconTimelyReturn from '../assets/icons/TimelyReturn.svg';
-
-const occasions = [
-  { slug: 'bridal', title: 'Bridal Set', img: imgC1 },
-  { slug: 'bridesmaid', title: 'Bridemaid', img: imgC2, arrow: true },
-  { slug: 'designer', title: 'Designer', img: imgC3, arrow: true },
-  { slug: 'reception', title: 'Reception', img: imgC4, arrow: true },
-  { slug: 'party', title: 'Party Wear', img: imgC5, arrow: true },
-  { slug: 'small', title: 'Small Jewel', img: imgC6, arrow: true },
-];
-
-const deliveryFeatures = [
-  {
-    title: 'Secure Packaging',
-    desc: 'Tamper proof packaging for your precious jewels',
-    iconSrc: iconSecure,
-  },
-  {
-    title: 'Doorstep Delivery',
-    desc: 'Delivered Safely to your Doorstep on time',
-    iconSrc: iconDoorstepDelivery,
-  },
-  {
-    title: 'Timely Return Pickup',
-    desc: 'We Pick up your Jewels at your convenience',
-    iconSrc: iconTimelyReturn,
-  },
-  {
-    title: 'Hassle Free Experience',
-    desc: 'Smooth, easy & worry-free from Start to finish',
-    iconSrc: iconHassleFree,
-  },
-];
+import { occasions, deliveryFeatures } from '../utils/homeConstants';
+import CategoryCard from './CategoryCard';
 
 const ArrowIcon = () => (
   <div className="w-[46px] h-[46px] rounded-full bg-white/25 backdrop-blur-md flex items-center justify-center border border-white/20 flex-shrink-0 transition-all duration-300 group-hover:bg-white/40">
@@ -57,32 +16,6 @@ const ArrowIcon = () => (
   </div>
 );
 
-const CategoryCard = ({ cat, index, className }) => (
-  <Link
-    to={`/shop?category=${cat.slug}`}
-    className={`relative rounded-[1.5rem] overflow-hidden group shadow-sm ${className}`}
-  >
-    <LazyImage
-      src={cat.img}
-      alt={cat.title}
-      priority={index === 0}
-      className="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
-    />
-    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/60" />
-    <div className="absolute top-6 left-5 right-5 text-white">
-      <h2 className="text-xl font-serif font-semibold leading-snug tracking-wide">{cat.title}</h2>
-      <p className="text-sm text-white/75 mt-1 font-light">{cat.sub}</p>
-    </div>
-    <div className="absolute bottom-6 left-5 right-5 flex items-center justify-between text-white">
-      <span className="text-sm font-light tracking-wide">Explore Now</span>
-      <div className="w-7 h-7 rounded-full bg-white/25 backdrop-blur-md flex items-center justify-center border border-white/20">
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
-      </div>
-    </div>
-  </Link>
-);
 
 /**
  * Desktop / tablet homepage — Figma frame 179:56 (webview)

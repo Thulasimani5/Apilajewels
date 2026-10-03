@@ -1,0 +1,10 @@
+{
+  "name": "apila-root",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "node run-dev.js",
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend"
+  }
+}

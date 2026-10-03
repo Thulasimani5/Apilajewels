@@ -16,21 +16,25 @@ const JewellerySchema = new mongoose.Schema({
   jewelId: {
     type: String,
     required: [true, 'Please add a jewel ID'],
-    unique: true
+    unique: true,
+    index: true
   },
   name: {
     type: String,
-    required: [true, 'Please add a name']
+    required: [true, 'Please add a name'],
+    trim: true
   },
   category: {
     type: [String],
     required: [true, 'Please add a category'],
-    default: []
+    default: [],
+    index: true
   },
   type: {
     type: [String],
     required: [true, 'Please add a type'],
-    default: []
+    default: [],
+    index: true
   },
   price: {
     type: Number,
@@ -43,7 +47,8 @@ const JewellerySchema = new mongoose.Schema({
   stoneName: {
     type: [String],
     default: [],
-    enum: ["Crystal", "Sapphire", "Pink Morganite", "Ruby", "Emerald", "Jade", "Kemp Stone", "Pearl", "Moissanite Stone", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia", "Amethyst", "Amber", "Pink Topaz", "Navarathna", "Polki Stone", "Polki Diamond", "Rose Quartz", "Green Onyx"]
+    enum: ["Crystal", "Sapphire", "Pink Morganite", "Ruby", "Emerald", "Jade", "Kemp Stone", "Pearl", "Moissanite Stone", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia", "Amethyst", "Amber", "Pink Topaz", "Navarathna", "Polki Stone", "Polki Diamond", "Rose Quartz", "Green Onyx"],
+    index: true
   },
   stoneColour: {
     type: [String],
@@ -56,13 +61,15 @@ const JewellerySchema = new mongoose.Schema({
   occasion: {
     type: [String],
     enum: ["Bridal Set", "Bridal Maid", "Designer", "Reception", "Party Wear", "Small Jewel"],
-    default: []
+    default: [],
+    index: true
   },
   accessoryType: {
     type: String,
     enum: ['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories'],
     default: null,
-    set: v => (!v || v === '' || v === 'null' || v === 'undefined' ? null : v)
+    set: v => (!v || v === '' || v === 'null' || v === 'undefined' ? null : v),
+    index: true
   },
   material: {
     type: String,
@@ -86,11 +93,13 @@ const JewellerySchema = new mongoose.Schema({
   },
   availability: {
     type: Boolean,
-    default: true
+    default: true,
+    index: true
   },
   popularity: {
     type: Number,
-    default: 0
+    default: 0,
+    index: true
   },
   showPrice: {
     type: Boolean,
@@ -117,6 +126,9 @@ const JewellerySchema = new mongoose.Schema({
   toJSON: { virtuals: true },
   toObject: { virtuals: true }
 });
+
+// Text index for search
+JewellerySchema.index({ name: 'text', jewelId: 'text', description: 'text' });
 
 // Virtual properties for backward compatibility with frontend code
 JewellerySchema.virtual('rentalPrice').get(function() {

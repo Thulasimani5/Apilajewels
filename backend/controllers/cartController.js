@@ -1,95 +1,49 @@
-const User = require('../models/User');
-const GuestCart = require('../models/GuestCart');
+const cartService = require('../services/cartService');
+const { formatError } = require('../utils/errorHandler');
 
 // @desc    Get current cart (User or Guest)
 // @route   GET /api/cart
 // @access  Public (Guest) or Private (User)
-exports.getCart = async (req, res) => {
+exports.getCart = async (req, res, next) => {
   try {
-    let cart = [];
-    
-    if (req.user) {
-      // Logged in user
-      const user = await User.findById(req.user.id).populate('cart');
-      if (user) {
-        cart = user.cart;
-      }
-    } else {
-      // Guest user
-      const guestCart = await GuestCart.findOne({ visitorId: req.visitorId }).populate('cart');
-      if (guestCart) {
-        cart = guestCart.cart;
-      }
-    }
-
+    const cart = await cartService.getCart(req.user, req.visitorId);
     res.status(200).json({
       success: true,
       data: cart
     });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(err.statusCode || 400).json({ success: false, error: err.message || formatError(err) });
   }
 };
 
 // @desc    Update/Sync current cart (User or Guest)
 // @route   PUT /api/cart
 // @access  Public (Guest) or Private (User)
-exports.syncCart = async (req, res) => {
+exports.syncCart = async (req, res, next) => {
   try {
-    const { cartItems } = req.body; // Array of Jewellery ObjectIds
-
-    let updatedCart = [];
-
-    if (req.user) {
-      // Update User cart
-      const user = await User.findByIdAndUpdate(
-        req.user.id,
-        { cart: cartItems || [] },
-        { new: true, runValidators: true }
-      ).populate('cart');
-      
-      if (user) updatedCart = user.cart;
-    } else {
-      // Update Guest cart
-      let guestCart = await GuestCart.findOne({ visitorId: req.visitorId });
-      
-      if (guestCart) {
-        guestCart.cart = cartItems || [];
-        // Reset expiry on activity
-        guestCart.expiresAt = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
-        await guestCart.save();
-      } else {
-        guestCart = await GuestCart.create({
-          visitorId: req.visitorId,
-          cart: cartItems || []
-        });
-      }
-      
-      const populatedCart = await GuestCart.findById(guestCart._id).populate('cart');
-      updatedCart = populatedCart.cart;
-    }
-
+    const { cartItems } = req.body;
+    const updatedCart = await cartService.syncCart(req.user, req.visitorId, cartItems || []);
     res.status(200).json({
       success: true,
       data: updatedCart
     });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(err.statusCode || 400).json({ success: false, error: err.message || formatError(err) });
   }
 };
 
 // @desc    Get all guest carts (Admin)
 // @route   GET /api/cart/all-guests
 // @access  Private/Admin
-exports.getAllGuestCarts = async (req, res) => {
+exports.getAllGuestCarts = async (req, res, next) => {
   try {
-    const guestCarts = await GuestCart.find().populate('cart').sort('-updatedAt');
+    const guestCarts = await cartService.getAllGuestCarts();
     res.status(200).json({
       success: true,
       count: guestCarts.length,
       data: guestCarts
     });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(err.statusCode || 400).json({ success: false, error: err.message || formatError(err) });
   }
 };

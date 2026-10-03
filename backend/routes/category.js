@@ -8,13 +8,14 @@ const {
 
 const { protect, authorize } = require('../middleware/auth');
 const { upload } = require('../config/cloudinary');
+const { validateCategoryCreate } = require('../validators/categoryValidator');
 
 const router = express.Router();
 
 router
   .route('/')
   .get(getCategories)
-  .post(protect, authorize('admin'), upload.single('image'), addCategory);
+  .post(protect, authorize('admin'), upload.single('image'), validateCategoryCreate, addCategory);
 
 router
   .route('/:id')

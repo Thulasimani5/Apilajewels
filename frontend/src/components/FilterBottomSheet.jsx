@@ -3,17 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Check } from 'lucide-react';
 import CategoryContext from '../context/CategoryContext';
 
-const INITIAL_FILTER_SECTIONS = {
-  Colour: ['Gold', 'Silver', 'Rose Gold', 'Emerald Green', 'Ruby Red', 'Mehndi Polish'],
-  Type: [], // Populated dynamically
-  Price: ['Under ₹1000', '₹1000 - ₹2000', '₹2000 - ₹3000', 'Above ₹3000'],
-  Occasion: ['Bridal Set', 'Bridal Maid', 'Designer', 'Reception', 'Party Wear', 'Small Jewel'],
-  StoneName: ["Crystal", "Sapphire", "Pink Morganite", "Ruby", "Emerald", "Jade", "Kemp Stone", "Pearl", "Moissanite Stone", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia", "Amethyst", "Amber", "Pink Topaz", "Navarathna", "Polki Stone", "Polki Diamond", "Rose Quartz", "Green Onyx"],
-  StoneColour: ["Clear", "Blue", "Pink", "Red", "Green", "Yellow", "White", "Gold", "Various", "Violete", "Orange", "Black", "Purple", "Silver"],
-  Category: [], // Populated dynamically
-  AccessoryType: ['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories']
-};
-
+import { INITIAL_FILTER_SECTIONS, SECTION_LABELS, SECTION_ORDER } from '../utils/filterConstants';
+import FilterCheckbox from './FilterCheckbox';
 const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
   const { categories } = React.useContext(CategoryContext);
 
@@ -136,18 +127,6 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
     }));
   };
 
-  const sectionLabels = {
-    Category: 'CATEGORY',
-    Type: 'JEWELLERY TYPE',
-    Occasion: 'OCCASION',
-    Price: 'PRICE',
-    Colour: 'COLOR',
-    StoneColour: 'STONE COLOR',
-    StoneName: 'STONE'
-  };
-
-  const sectionOrder = ['Category', 'Type', 'Occasion', 'Price', 'Colour', 'StoneColour', 'StoneName'];
-
   return (
     <AnimatePresence>
       {isOpen && (
@@ -188,7 +167,7 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
             {/* Accordion Content Area */}
             <div className="flex-1 overflow-y-auto px-6 pb-4 pt-0">
               <div className="flex flex-col gap-2">
-                {sectionOrder.map((section) => {
+                {SECTION_ORDER.map((section) => {
                   const isExpanded = expandedSections[section];
                   const options = FILTER_SECTIONS[section] || [];
                   if (options.length === 0) return null;
@@ -201,7 +180,7 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
                         className="w-full flex items-center justify-between py-4 text-left focus:outline-none hover:opacity-80 transition-opacity"
                       >
                         <span style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "1.05px", textTransform: "uppercase" }}>
-                          {sectionLabels[section]}
+                          {SECTION_LABELS[section]}
                         </span>
                         {!isExpanded && (
                           <svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-black">
@@ -226,23 +205,11 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
                                 return (
                                   <div key={option} className="flex flex-col w-full">
                                     <div className="flex items-center justify-between w-full">
-                                      <button
-                                        key={option}
-                                        onClick={() => handleCheckboxChange(section, option)}
-                                        className="flex items-center gap-4 text-left focus:outline-none group"
-                                      >
-                                        <div
-                                          className={`w-[12px] h-[12px] rounded-[2px] flex items-center justify-center transition-all ${isChecked
-                                            ? 'bg-black border-black'
-                                            : 'border border-gray-400 bg-white group-hover:border-black'
-                                            }`}
-                                        >
-                                          {isChecked && <Check size={8} strokeWidth={4} className="text-white" />}
-                                        </div>
-                                        <span style={{ color: "#333", fontFamily: "Gotham Book, sans-serif", fontSize: "11px", fontStyle: "normal", fontWeight: 400, letterSpacing: "0.8px", textTransform: "uppercase" }}>
-                                          {displayOption}
-                                        </span>
-                                      </button>
+                                      <FilterCheckbox 
+                                        label={displayOption} 
+                                        isChecked={isChecked} 
+                                        onChange={() => handleCheckboxChange(section, option)} 
+                                      />
                                       <button 
                                         onClick={(e) => {
                                           e.stopPropagation();
@@ -257,52 +224,26 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
                                     </div>
                                     {openAccessoryTypes && (
                                       <div style={{ marginLeft: '28px' }} className="flex flex-col gap-4 mt-4 mb-2">
-                                        {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories'].map(sub => {
-                                          const subChecked = localFilters.AccessoryType?.includes(sub);
-                                          return (
-                                            <button
-                                              key={sub}
-                                              onClick={() => handleCheckboxChange('AccessoryType', sub)}
-                                              className="flex items-center gap-4 text-left focus:outline-none group"
-                                            >
-                                              <div
-                                                className={`w-[12px] h-[12px] rounded-[2px] flex items-center justify-center transition-all ${subChecked
-                                                  ? 'bg-black border-black'
-                                                  : 'border border-gray-400 bg-white group-hover:border-black'
-                                                  }`}
-                                              >
-                                                {subChecked && <Check size={8} strokeWidth={4} className="text-white" />}
-                                              </div>
-                                              <span style={{ color: "#555", fontFamily: "Gotham Book, sans-serif", fontSize: "11px", fontStyle: "normal", fontWeight: 400, letterSpacing: "0.8px", textTransform: "uppercase" }}>
-                                                {sub}
-                                              </span>
-                                            </button>
-                                          );
-                                        })}
+                                        {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories'].map(sub => (
+                                          <FilterCheckbox 
+                                            key={sub}
+                                            label={sub} 
+                                            isChecked={localFilters.AccessoryType?.includes(sub)} 
+                                            onChange={() => handleCheckboxChange('AccessoryType', sub)} 
+                                          />
+                                        ))}
                                       </div>
                                     )}
                                   </div>
                                 );
                               }
                               return (
-                                <button
+                                <FilterCheckbox 
                                   key={option}
-                                  onClick={() => handleCheckboxChange(section, option)}
-                                  className="flex items-center gap-4 text-left focus:outline-none group"
-                                >
-                                  {/* Custom Checkbox */}
-                                  <div
-                                    className={`w-[12px] h-[12px] rounded-[2px] flex items-center justify-center transition-all ${isChecked
-                                      ? 'bg-black border-black'
-                                      : 'border border-gray-400 bg-white group-hover:border-black'
-                                      }`}
-                                  >
-                                    {isChecked && <Check size={8} strokeWidth={4} className="text-white" />}
-                                  </div>
-                                  <span style={{ color: "#333", fontFamily: "Gotham Book, sans-serif", fontSize: "11px", fontStyle: "normal", fontWeight: 400, letterSpacing: "0.8px", textTransform: "uppercase" }}>
-                                    {displayOption}
-                                  </span>
-                                </button>
+                                  label={displayOption} 
+                                  isChecked={isChecked} 
+                                  onChange={() => handleCheckboxChange(section, option)} 
+                                />
                               );
                             })}
                           </motion.div>

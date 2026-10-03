@@ -3,21 +3,25 @@ const mongoose = require('mongoose');
 const BookingSchema = new mongoose.Schema({
   bookingCustomId: {
     type: String,
-    default: ''
+    default: '',
+    index: true
   },
   userId: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
-    required: false
+    required: false,
+    index: true
   },
   visitorId: {
     type: String,
-    required: false
+    required: false,
+    index: true
   },
   jewelleryIds: [{
     type: mongoose.Schema.ObjectId,
     ref: 'Jewellery',
-    required: false
+    required: false,
+    index: true
   }],
   tempJewelleries: [{
     name: {
@@ -43,26 +47,32 @@ const BookingSchema = new mongoose.Schema({
   }],
   bookingDate: {
     type: Date,
-    default: Date.now
+    default: Date.now,
+    index: true
   },
   eventDate: {
-    type: Date
+    type: Date,
+    index: true
   },
   pickupDate: {
-    type: Date
+    type: Date,
+    index: true
   },
   returnDate: {
-    type: Date
+    type: Date,
+    index: true
   },
   status: {
     type: String,
     enum: ['pending', 'confirmed', 'inevent', 'completed', 'rejected', 'approved'],
-    default: 'pending'
+    default: 'pending',
+    index: true
   },
   paymentStatus: {
     type: String,
     enum: ['Pending', 'Partial', 'Paid'],
-    default: 'Pending'
+    default: 'Pending',
+    index: true
   },
   bookingPlace: {
     type: String,
@@ -107,5 +117,8 @@ const BookingSchema = new mongoose.Schema({
     default: 0
   }
 }, { timestamps: true });
+
+// Compound index for booking conflict checks
+BookingSchema.index({ jewelleryIds: 1, status: 1, pickupDate: 1, returnDate: 1 });
 
 module.exports = mongoose.model('Booking', BookingSchema);

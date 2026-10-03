@@ -1,34 +1,19 @@
-const Booking = require('../models/Booking');
-const Jewellery = require('../models/Jewellery');
+const bookingService = require('../services/bookingService');
+const { formatError } = require('../utils/errorHandler');
 
 // @desc    Get all bookings
 // @route   GET /api/bookings
 // @access  Private / Optional Admin
-exports.getBookings = async (req, res) => {
+exports.getBookings = async (req, res, next) => {
   try {
-    let query;
-
-    // If user is not admin, only show their bookings or guest bookings
-    if (!req.user || req.user.role !== 'admin') {
-      const matchConditions = [];
-      if (req.user) matchConditions.push({ userId: req.user.id });
-      if (req.visitorId) matchConditions.push({ visitorId: req.visitorId });
-      
-      query = Booking.find(matchConditions.length > 0 ? { $or: matchConditions } : {}).populate({
-        path: 'jewelleryIds',
-        select: 'name code jewelId images rentalPrice price'
-      });
+    let bookings;
+    if (req.user && req.user.role === 'admin') {
+      bookings = await bookingService.getAllBookings();
+    } else if (req.user) {
+      bookings = await bookingService.getUserBookings(req.user.id);
     } else {
-      query = Booking.find().populate({
-        path: 'jewelleryIds',
-        select: 'name code jewelId images rentalPrice price'
-      }).populate({
-        path: 'userId',
-        select: 'name email phone'
-      });
+      bookings = await bookingService.getAllBookings();
     }
-
-    const bookings = await query.sort('-createdAt');
 
     res.status(200).json({
       success: true,
@@ -36,116 +21,98 @@ exports.getBookings = async (req, res) => {
       data: bookings
     });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(err.statusCode || 400).json({ success: false, error: err.message || formatError(err) });
+  }
+};
+
+// @desc    Get user's personal bookings
+// @route   GET /api/bookings/my-bookings
+// @access  Private
+exports.getMyBookings = async (req, res, next) => {
+  try {
+    const bookings = await bookingService.getUserBookings(req.user.id);
+    res.status(200).json({
+      success: true,
+      count: bookings.length,
+      data: bookings
+    });
+  } catch (err) {
+    res.status(err.statusCode || 400).json({ success: false, error: err.message || formatError(err) });
   }
 };
 
 // @desc    Get single booking
 // @route   GET /api/bookings/:id
 // @access  Private
-exports.getBooking = async (req, res) => {
+exports.getBooking = async (req, res, next) => {
   try {
-    const booking = await Booking.findById(req.params.id)
-      .populate('jewelleryIds')
-      .populate('userId', 'name email phone');
-
-    if (!booking) {
-      return res.status(404).json({ success: false, error: 'Booking not found' });
-    }
-
+    const booking = await bookingService.getBookingById(req.params.id);
     res.status(200).json({
       success: true,
       data: booking
     });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(err.statusCode || 404).json({ success: false, error: err.message || formatError(err) });
   }
 };
 
 // @desc    Create new booking (Logged-in User or Guest Visitor)
 // @route   POST /api/bookings
 // @access  Public / Optional Auth
-exports.createBooking = async (req, res) => {
+exports.createBooking = async (req, res, next) => {
   try {
-    if (req.user && req.user.role !== 'admin') {
-      req.body.userId = req.user.id;
-    }
-    if (req.visitorId) {
-      req.body.visitorId = req.visitorId;
-    }
-    if (!req.body.bookingDate) {
-      req.body.bookingDate = new Date();
-    }
-
-    const booking = await Booking.create(req.body);
-
+    const booking = await bookingService.createBooking(req.body, req.user, req.visitorId);
     res.status(201).json({
       success: true,
       data: booking
     });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(err.statusCode || 400).json({ success: false, error: err.message || formatError(err) });
   }
 };
 
 // @desc    Update booking
 // @route   PUT /api/bookings/:id
 // @access  Private/Admin
-exports.updateBooking = async (req, res) => {
+exports.updateBooking = async (req, res, next) => {
   try {
-    let booking = await Booking.findById(req.params.id);
-
-    if (!booking) {
-      return res.status(404).json({ success: false, error: 'Booking not found' });
-    }
-
-    // Make sure user is admin
-    if (req.user.role !== 'admin') {
-      return res.status(401).json({ success: false, error: 'Not authorized to update this booking' });
-    }
-
-    booking = await Booking.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    }).populate({
-      path: 'jewelleryIds',
-      select: 'name code jewelId images rentalPrice price'
-    }).populate({
-      path: 'userId',
-      select: 'name email phone'
-    });
-
+    const booking = await bookingService.updateBooking(req.params.id, req.body, req.user);
     res.status(200).json({
       success: true,
       data: booking
     });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(err.statusCode || 400).json({ success: false, error: err.message || formatError(err) });
+  }
+};
+
+// @desc    Update booking status
+// @route   PATCH /api/bookings/:id/status
+// @access  Private/Admin
+exports.updateBookingStatus = async (req, res, next) => {
+  try {
+    const { status, paymentStatus } = req.body;
+    const booking = await bookingService.updateBookingStatus(req.params.id, { status, paymentStatus }, req.user);
+    res.status(200).json({
+      success: true,
+      data: booking
+    });
+  } catch (err) {
+    res.status(err.statusCode || 400).json({ success: false, error: err.message || formatError(err) });
   }
 };
 
 // @desc    Delete booking
 // @route   DELETE /api/bookings/:id
 // @access  Private/Admin
-exports.deleteBooking = async (req, res) => {
+exports.deleteBooking = async (req, res, next) => {
   try {
-    const booking = await Booking.findById(req.params.id);
-
-    if (!booking) {
-      return res.status(404).json({ success: false, error: 'Booking not found' });
-    }
-
-    if (req.user.role !== 'admin') {
-      return res.status(401).json({ success: false, error: 'Not authorized to delete this booking' });
-    }
-
-    await booking.deleteOne();
-
+    await bookingService.deleteBooking(req.params.id, req.user);
     res.status(200).json({
       success: true,
       data: {}
     });
   } catch (err) {
-    res.status(400).json({ success: false, error: err.message });
+    res.status(err.statusCode || 400).json({ success: false, error: err.message || formatError(err) });
   }
 };

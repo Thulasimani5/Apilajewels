@@ -1,176 +1,76 @@
-const Category = require('../models/Category');
-
-const Jewellery = require('../models/Jewellery');
+const categoryService = require('../services/categoryService');
+const { formatError } = require('../utils/errorHandler');
 
 // @desc    Get all categories
 // @route   GET /api/categories
 // @access  Public
-exports.getCategories = async (req, res) => {
+exports.getCategories = async (req, res, next) => {
   try {
-    // Auto-seed missing default categories & types
-    const defaultCats = [
-      { name: 'Kundan Jewels', showInSection: 'category' },
-      { name: 'Gold Antique Jewels', showInSection: 'category' },
-      { name: 'AD Jewels', showInSection: 'category' },
-      { name: 'victorian-moissinate', showInSection: 'category' }
-    ];
-    const defaultTypes = [
-      { name: 'Semi Bridal & Combo Sets', showInSection: 'type' },
-      { name: 'Full Bridal Set', showInSection: 'type' },
-      { name: 'Choker & Necklace', showInSection: 'type' },
-      { name: 'Long Haram', showInSection: 'type' },
-      { name: 'Bangles & Bracelets', showInSection: 'type' },
-      { name: 'Accessories', showInSection: 'type' }
-    ];
-
-    for (const item of [...defaultCats, ...defaultTypes]) {
-      const existing = await Category.findOne({ name: item.name });
-      if (!existing) {
-        await Category.create({
-          name: item.name,
-          subtext: `${item.name} collection`,
-          showInSection: item.showInSection
-        });
-      } else if (!existing.showInSection || existing.showInSection !== item.showInSection) {
-        existing.showInSection = item.showInSection;
-        await existing.save();
-      }
-    }
-
-    // Also auto-sync any unique types & categories directly from Jewellery products
-    const productTypes = await Jewellery.distinct('type');
-    for (const pType of productTypes) {
-      if (pType) {
-        const existing = await Category.findOne({ name: pType });
-        if (!existing) {
-          await Category.create({
-            name: pType,
-            subtext: `${pType} collection`,
-            showInSection: 'type'
-          });
-        }
-      }
-    }
-
-    const productCats = await Jewellery.distinct('category');
-    for (const pCat of productCats) {
-      if (pCat) {
-        const existing = await Category.findOne({ name: pCat });
-        if (!existing) {
-          await Category.create({
-            name: pCat,
-            subtext: `${pCat} collection`,
-            showInSection: 'category'
-          });
-        }
-      }
-    }
-
-    let categories = await Category.find().sort({ createdAt: -1 });
-    
-    const categoriesWithCount = await Promise.all(categories.map(async (cat) => {
-      const field = cat.showInSection === 'type' ? 'type' : 'category';
-      const count = await Jewellery.countDocuments({ [field]: cat.name });
-      return { ...cat.toObject(), jewelCount: count };
-    }));
-
+    const categories = await categoryService.getCategories();
     res.status(200).json({
       success: true,
-      count: categoriesWithCount.length,
-      data: categoriesWithCount
+      count: categories.length,
+      data: categories
     });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      success: false,
-      error: 'Server Error',
-      message: error.message,
-      stack: error.stack
-    });
+  } catch (err) {
+    res.status(err.statusCode || 500).json({ success: false, error: err.message || formatError(err) });
   }
 };
 
 // @desc    Add category
 // @route   POST /api/categories
 // @access  Private/Admin
-exports.addCategory = async (req, res) => {
+exports.addCategory = async (req, res, next) => {
   try {
     const { name, subtext, showInSection } = req.body;
-    
-    if (!name) {
-      return res.status(400).json({ success: false, error: 'Please provide a category name' });
-    }
-
     let image = null;
     if (req.file) {
       image = req.file.path;
     }
 
-    const category = await Category.create({ 
-      name, 
-      image, 
-      subtext: subtext ? subtext.trim() : '',
-      showInSection: showInSection || 'category'
-    });
+    const category = await categoryService.createCategory(
+      {
+        name,
+        image,
+        subtext: subtext ? subtext.trim() : '',
+        showInSection: showInSection || 'category'
+      },
+      req.user
+    );
 
     res.status(201).json({ success: true, data: category });
-  } catch (error) {
-    if (error.code === 11000) {
-      return res.status(400).json({ success: false, error: 'Category already exists' });
-    }
-    res.status(500).json({ success: false, error: 'Server Error' });
+  } catch (err) {
+    res.status(err.statusCode || 400).json({ success: false, error: err.message || formatError(err) });
   }
 };
 
 // @desc    Update category
 // @route   PUT /api/categories/:id
 // @access  Private/Admin
-exports.updateCategory = async (req, res) => {
+exports.updateCategory = async (req, res, next) => {
   try {
     const { name, subtext, showInSection } = req.body;
     const updateData = {};
     if (name) updateData.name = name;
     if (subtext !== undefined) updateData.subtext = subtext;
     if (showInSection) updateData.showInSection = showInSection;
+    if (req.file) updateData.image = req.file.path;
 
-    if (req.file) {
-      updateData.image = req.file.path;
-    }
-
-    const category = await Category.findByIdAndUpdate(
-      req.params.id,
-      updateData,
-      { new: true, runValidators: true }
-    );
-
-    if (!category) {
-      return res.status(404).json({ success: false, error: 'Category not found' });
-    }
-
+    const category = await categoryService.updateCategory(req.params.id, updateData, req.user);
     res.status(200).json({ success: true, data: category });
-  } catch (error) {
-    if (error.code === 11000) {
-      return res.status(400).json({ success: false, error: 'Category name already exists' });
-    }
-    res.status(500).json({ success: false, error: 'Server Error' });
+  } catch (err) {
+    res.status(err.statusCode || 400).json({ success: false, error: err.message || formatError(err) });
   }
 };
 
 // @desc    Delete category
 // @route   DELETE /api/categories/:id
 // @access  Private/Admin
-exports.deleteCategory = async (req, res) => {
+exports.deleteCategory = async (req, res, next) => {
   try {
-    const category = await Category.findById(req.params.id);
-
-    if (!category) {
-      return res.status(404).json({ success: false, error: 'No category found' });
-    }
-
-    await category.deleteOne();
-
+    await categoryService.deleteCategory(req.params.id, req.user);
     res.status(200).json({ success: true, data: {} });
-  } catch (error) {
-    res.status(500).json({ success: false, error: 'Server Error' });
+  } catch (err) {
+    res.status(err.statusCode || 400).json({ success: false, error: err.message || formatError(err) });
   }
 };
