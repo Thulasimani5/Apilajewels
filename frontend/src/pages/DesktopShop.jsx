@@ -24,11 +24,106 @@ const SORT_OPTIONS = [
 
 const ITEMS_PER_PAGE = 18;
 
+<<<<<<< HEAD
 const navIcons = {
   search: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,.45)" strokeWidth="2"><circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" /></svg>,
   heart: <svg width="18" height="16" viewBox="0 0 18 16" fill="none"><path d="M8.99887 16C8.83828 16 8.67769 15.9592 8.53717 15.8777C4.1711 13.2582 -0.666706 8.59001 0.0760276 4.0849C0.417284 2.01581 1.97301 0.446155 4.03059 0.0792224C5.89746 -0.246939 7.71414 0.446155 8.98884 1.93427C10.2435 0.486925 11.9899 -0.216362 13.7965 0.0690301C15.8742 0.405385 17.4801 1.96485 17.8916 4.05432C18.7749 8.48808 14.1077 13.0747 9.4405 15.8777C9.29998 15.9592 9.13939 16 8.9788 16H8.99887ZM4.91384 1.82215C4.7131 1.82215 4.53243 1.84254 4.35177 1.87311C3.31796 2.05658 2.11353 2.81083 1.8626 4.38048C1.33064 7.62172 4.99413 11.4847 9.00891 14.0125C12.823 11.6172 16.8277 7.7746 16.1552 4.41106C15.8943 3.07584 14.8604 2.08716 13.5356 1.87311C12.0401 1.62849 10.6449 2.41332 9.79179 3.95239C9.6312 4.23779 9.33009 4.42125 9.00891 4.42125C8.68773 4.42125 8.38662 4.24798 8.22603 3.95239C7.35281 2.37255 6.03798 1.82215 4.92387 1.82215H4.91384Z" fill="currentColor" /></svg>,
   cart: <svg width="15" height="17" viewBox="0 0 15 17" fill="none"><path d="M13.282 13.5346C13.4101 14.7175 12.4834 15.75 11.2936 15.75H2.75034C1.56051 15.75 0.633827 14.7175 0.761975 13.5346L1.62864 5.53459C1.73863 4.51934 2.59581 3.75 3.61701 3.75H10.4269C11.4481 3.75 12.3053 4.51934 12.4153 5.53459L13.282 13.5346Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /><path d="M7.02516 0.75C8.40732 0.75 9.52197 1.69624 9.52197 2.85753V3.75H4.52197V2.85753C4.52197 1.69086 5.64299 0.75 7.01879 0.75H7.02516Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /><path d="M5.52197 6.75H8.52197" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>,
   acct: <svg width="13" height="15" viewBox="0 0 13 15" fill="none"><path d="M0.75 13.63C0.75 10.5388 3.19364 8.03 6.20455 8.03C9.21545 8.03 11.6591 10.5388 11.6591 13.63" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /><path d="M6.20432 6.35C7.71055 6.35 8.9316 5.0964 8.9316 3.55C8.9316 2.0036 7.71055 0.75 6.20432 0.75C4.69809 0.75 3.47705 2.0036 3.47705 3.55C3.47705 5.0964 4.69809 6.35 6.20432 6.35Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>,
+=======
+/* ── Funnel icon ── */
+const FilterIcon = () => (
+  <svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
+    <rect x="0" y="0" width="16" height="1.5" fill="#000" />
+    <rect x="2" y="4.25" width="12" height="1.5" fill="#000" />
+    <rect x="5" y="8.5" width="6" height="1.5" fill="#000" />
+  </svg>
+);
+
+/* ── Chevron ── */
+const ChevronIcon = () => (
+  <svg width="14" height="8" viewBox="0 0 14 8" fill="none" aria-hidden="true">
+    <path d="M1 1l6 6 6-6" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+/* ── Collapsible filter section ── */
+function FilterSection({ title, open, onToggle, children }) {
+  return (
+    <div className="shop-filter-section">
+      <button className="shop-filter-head" onClick={onToggle}>
+        <span className="shop-filter-head-text">{title}</span>
+        <span className={`shop-filter-arrow${open ? ' open' : ''}`}><ChevronIcon /></span>
+      </button>
+      {open && <div className="shop-filter-items">{children}</div>}
+    </div>
+  );
+}
+
+/* ── Checkbox row ── */
+function FilterItem({ label, checked, onToggle }) {
+  return (
+    <label className="shop-filter-item" onClick={onToggle}>
+      <span className={`shop-filter-cb${checked ? ' checked' : ''}`}>
+        {checked && (
+          <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
+            <path d="M1 3l2 2 4-4" stroke="#fff" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        )}
+      </span>
+      <span className="shop-filter-item-text">{label}</span>
+    </label>
+  );
+}
+
+/* ── Product card — matches homepage trending collections UI ── */
+function ShopCard({ product }) {
+  const navigate = useNavigate();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const { user } = useAuth();
+  const liked = isInWishlist(product._id);
+  const imgUrl = product.images?.[0]?.url || product.media?.[0]?.url || '';
+  const price = product.rentalPrice || product.price || 0;
+  const priceText = product.showPrice === false || price > 1200 ? 'Price on Request' : `₹${price.toFixed(2)}`;
+  const category = Array.isArray(product.category) ? product.category[0] : product.category;
+
+  return (
+    <Link to={`/shop/${product._id}`} className="product-card">
+      <div className="product-img-wrap">
+        <button
+          className={`product-wish${liked ? ' active' : ''}`}
+          aria-label={liked ? 'Remove from wishlist' : 'Add to wishlist'}
+          onClick={(e) => {
+            e.preventDefault(); e.stopPropagation();
+            toggleWishlist(product);
+          }}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24"
+            fill={liked ? '#fff' : 'none'}
+            stroke={liked ? '#fff' : 'currentColor'} strokeWidth="1.6">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+          </svg>
+        </button>
+        <img
+          src={getOptimizedCloudinaryUrl(imgUrl, { width: 390, height: 450 })}
+          alt={product.name}
+          loading="lazy"
+        />
+      </div>
+      <p className="product-name">{category || 'Jewels'}</p>
+      <p className="product-desc">{product.name}</p>
+      <p className="product-price">{priceText}</p>
+    </Link>
+  );
+}
+
+/* ── Filter key names used in the URL ── */
+const DESKTOP_FILTER_KEYS = ['Category', 'Type', 'Occasion', 'Price', 'Colour', 'StoneColour', 'Stone', 'AccessoryType'];
+
+const desktopFiltersFromParams = (params) => {
+  const result = {};
+  DESKTOP_FILTER_KEYS.forEach(key => { result[key] = params.getAll(key); });
+  return result;
 };
 
 export default function DesktopShop() {

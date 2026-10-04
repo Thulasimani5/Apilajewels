@@ -388,7 +388,7 @@ const AdminDashboard = () => {
       const fetchJewels = async () => {
         setAdminJewelleriesLoading(true);
         try {
-          const isType = categories.find(c => c.name === selectedAdminCategory)?.showInSection === 'type';
+          const isType = categories.find(c => c.name?.toLowerCase() === selectedAdminCategory.toLowerCase())?.showInSection === 'type';
           const queryParam = isType ? 'type' : 'category';
           let url = `${API_BASE_URL}/api/jewellery?${queryParam}=${encodeURIComponent(selectedAdminCategory)}&limit=500`;
           if (selectedAdminCategory.toLowerCase() === 'accessories' && selectedAdminAccessorySubtype) {
@@ -873,9 +873,13 @@ const AdminDashboard = () => {
   };
 
   const filteredAdminJewelleries = (adminJewelleries || []).filter(jewel => {
+    if (selectedAdminCategory && selectedAdminCategory.toLowerCase() === 'accessories' && selectedAdminAccessorySubtype) {
+      if (!jewel.accessoryType || jewel.accessoryType.toLowerCase() !== selectedAdminAccessorySubtype.toLowerCase()) {
+        return false;
+      }
+    }
     const q = adminJewellerySearch.toLowerCase().trim();
     if (!q) return true;
-    // jewel.type can be an array or a string — normalise to a lowercase string before searching
     const typeStr = Array.isArray(jewel.type)
       ? jewel.type.join(' ').toLowerCase()
       : (jewel.type || '').toLowerCase();

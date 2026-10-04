@@ -87,9 +87,9 @@ const Card = ({ jewellery, priority = false, imageAspect, imageClassName = 'roun
           {jewellery.name}
         </h3>
         <p className="mt-[4px]" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal" }}>
-          {jewellery.showPrice === false || jewellery.rentalPrice > 1500
+          {jewellery.showPrice === false || (jewellery.rentalPrice || jewellery.price || 0) > 1200
             ? 'Price on Request'
-            : `₹${jewellery.rentalPrice?.toFixed(2)}`}
+            : `₹${(jewellery.rentalPrice || jewellery.price || 0)?.toFixed(2)}`}
         </p>
       </div>
     </Link>

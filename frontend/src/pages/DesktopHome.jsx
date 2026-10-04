@@ -111,6 +111,182 @@ export default function DesktopHome() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  /* ---- Context & API logic ---- */
+  const TRENDING_SAMPLES = [
+    { id: 's1', category: 'victorian-moissinate', name: 'Moissanite Designer Polki Necklace', price: '₹1299.00', img: carouselImg1 },
+    { id: 's2', category: 'AD Jewels', name: 'American Diamond Necklace Set', price: '₹1299.00', img: carouselImg2 },
+    { id: 's3', category: 'Antique Jewel', name: 'Gold Antique Premium Necklace', price: '₹1299.00', img: carouselImg3 },
+    { id: 's4', category: 'Kundan Jewels', name: 'Kundan Bridal Necklace Set', price: '₹1299.00', img: carouselImg4 },
+    { id: 's6', category: 'AD Jewels', name: 'American Diamond Bangle Set', price: '₹1299.00', img: carouselImg6 },
+    { id: 's8', category: 'victorian-moissinate', name: 'Moissanite Designer Polki Necklace', price: '₹1299.00', img: carouselImg1 },
+    { id: 's9', category: 'AD Jewels', name: 'American Diamond Necklace Set', price: '₹1299.00', img: carouselImg2 },
+    { id: 's10', category: 'Antique Jewel', name: 'Gold Antique Premium Necklace', price: '₹1299.00', img: carouselImg3 },
+    { id: 's11', category: 'Kundan Jewels', name: 'Kundan Bridal Necklace Set', price: '₹1299.00', img: carouselImg4 },
+  ];
+
+  const [trending, setTrending] = useState([]);
+  const [wishlisted, setWishlisted] = useState({});
+
+  useEffect(() => {
+    localStorage.removeItem('apila_trending_grid'); // clear old v1 cache key
+    const toCard = item => {
+      const rawImg = item.images?.[0];
+      const imgUrl = rawImg?.url || rawImg?.secure_url
+        || (typeof rawImg === 'string' && rawImg.startsWith('http') ? rawImg : '')
+        || '';
+      const priceVal = item.rentalPrice || item.price || 0;
+      const price = (item.showPrice === false || priceVal > 1200) ? 'Price on Request' : `₹${priceVal.toFixed(2)}`;
+      const category = Array.isArray(item.category) ? item.category[0] : (item.category || 'Jewels');
+      return {
+        id: item._id,
+        category,
+        name: item.name || '',
+        price,
+        img: imgUrl,
+        showPrice: item.showPrice
+      };
+    };
+
+    /* Step 1 — show cache instantly, zero loading time on revisit.
+       Invalidate cache if it predates the category field (schema v2). */
+    if (trendingGridMemCache && !trendingGridMemCache[0]?.category) {
+      trendingGridMemCache = null;
+    }
+    if (trendingGridMemCache) {
+      setTrending(trendingGridMemCache);
+    } else {
+      try {
+        const stored = localStorage.getItem(TRENDING_GRID_CACHE_KEY);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          trendingGridMemCache = parsed;
+          setTrending(parsed);
+        }
+      } catch { }
+    }
+
+    /* Step 2 — fetch fresh random 12 items in background, update cache */
+    const refresh = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/api/jewellery?random=true&limit=12`);
+        const data = await res.json();
+        let list = Array.isArray(data) ? data : (data.data || data.products || []);
+        // Exclude Accessories items from trending — they should only appear when explicitly filtered
+        list = list.filter(item => {
+          const types = Array.isArray(item.type) ? item.type : [item.type];
+          return !types.some(t => t?.toLowerCase() === 'accessories');
+        });
+        if (list.length > 0) {
+          const cards = list.map(toCard);
+          trendingGridMemCache = cards;
+          try { localStorage.setItem(TRENDING_GRID_CACHE_KEY, JSON.stringify(cards)); } catch { }
+          setTrending(cards);
+        }
+      } catch (err) {
+        console.error('Failed to fetch trending items:', err);
+      }
+    };
+    refresh();
+  }, []);
+
+  const toggleWishlist = (e, id) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setWishlisted(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  /* Grid — 4 static cards matching Figma design */
+  const MAIN_JEWELLERY_TYPES = [
+    { title: "Victorian & Moissinate", sub: "Premium Luxury Design", img: imgVictorianMoissinate, slug: "victorian-moissinate" },
+    { title: "American Diamond", sub: "Modern Sparkle Collections", img: imgAmericanDiamond, slug: "american-diamond" },
+    { title: "Gold Antique Jewels", sub: "Timeless Heritage Designs", img: imgGoldAntique, slug: "gold-antique-jewels" },
+    { title: "Kundan Jewels", sub: "Traditional Collections", img: imgKundan, slug: "kundan-jewels" },
+  ];
+
+  /* Carousel — 6 static cards matching Figma design */
+  const CAROUSEL = [
+    { title: "Semi Bridal & Combo Sets", sub: "Explore Now", img: imgSemiBridal, slug: "semi-bridal" },
+    { title: "Full Bridal Set", sub: "Explore Now", img: imgLongHaram, slug: "full-bridal" },
+    { title: "Choker & Necklace Set", sub: "Explore Now", img: imgChokerNecklace, slug: "choker-necklace" },
+    { title: "Long Haram", sub: "Explore Now", img: imgFullBridal, slug: "long-haram" },
+    { title: "Bangles & Bracelets", sub: "Explore Now", img: imgBanglesBracelets, slug: "bangles-bracelets" },
+    { title: "Accessories", sub: "Explore Now", img: imgAccessories, slug: "accessories" },
+  ];
+
+  /* ---- carousel logic ---- */
+  const trackRef = useRef(null);
+  const [current, setCurrent] = useState(0);
+  // Desktop: 100/30.73 ≈ 3.254 — matches Figma's 531px-wide cards on 1728px canvas
+  // This shows 3 full cards + a ~4% peek of the 4th card on the right edge
+  const visibleCount = () =>
+    window.innerWidth <= 640 ? 1 : window.innerWidth <= 1024 ? 2 : 100 / 30.73;
+  const maxSlide = useCallback(
+    () => Math.max(0, CAROUSEL.length - Math.floor(visibleCount())),
+    [CAROUSEL.length]
+  );
+  const goTo = useCallback((idx) => {
+    setCurrent((prev) => {
+      const next = Math.max(0, Math.min(idx, maxSlide()));
+      return next;
+    });
+  }, [maxSlide]);
+
+  // keep position valid on resize, and recalculate pixel translation
+  useEffect(() => {
+    const onResize = () => {
+      goTo(current);
+      const wrapper = trackRef.current?.parentElement;
+      const ww = wrapper ? wrapper.offsetWidth : window.innerWidth;
+      const isSmall = window.innerWidth <= 640;
+      const isMed = !isSmall && window.innerWidth <= 1024;
+      const cardW = isSmall ? ww : isMed ? ww * 0.5 : ww * 0.3073;
+      const gap = (!isSmall && !isMed) ? 16 : 0;
+      setTranslatePx(current * (cardW + gap));
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [current, goTo]);
+
+  // auto-advance, pause on hover
+  const pausedRef = useRef(false);
+  useEffect(() => {
+    const id = setInterval(() => {
+      if (pausedRef.current) return;
+      setCurrent((c) => (c >= maxSlide() ? 0 : c + 1));
+    }, 3500);
+    return () => clearInterval(id);
+  }, [maxSlide]);
+
+  // Pixel-based translation accounts for the 16px column-gap between cards
+  const [translatePx, setTranslatePx] = useState(0);
+  useEffect(() => {
+    const wrapper = trackRef.current?.parentElement;
+    const ww = wrapper ? wrapper.offsetWidth : window.innerWidth;
+    const isSmall = window.innerWidth <= 640;
+    const isMed = !isSmall && window.innerWidth <= 1024;
+    const cardW = isSmall ? ww : isMed ? ww * 0.5 : ww * 0.3073;
+    const gap = (!isSmall && !isMed) ? 16 : 0;
+    setTranslatePx(current * (cardW + gap));
+  }, [current]);
+
+  const dotCount = 3;
+  const activeDotIndex = maxSlide() > 0 ? Math.round((current / maxSlide()) * (dotCount - 1)) : 0;
+
+  // Row 1: Bridal Set, Bridesmaid, Designer — Row 2: Reception, Party Wear, Small Jewel
+  const OCCASIONS = [
+    { img: imgC1, label: "Bridal Set", sub: "Collections", slug: "bridal-set" },
+    { img: imgC2, label: "Bridesmaid", sub: "Collections", slug: "bridesmaid" },
+    { img: imgC3, label: "Designer", sub: "Collections", slug: "designer" },
+    { img: imgC4, label: "Reception", sub: "Collections", slug: "reception" },
+    { img: imgC5, label: "Party Wear", sub: "Collections", slug: "party-wear" },
+    { img: imgC6, label: "Small Jewel", sub: "Collections", slug: "small-jewel" }
+  ];
+
+  const DELIVERY = [
+    { icon: iconSecurePackaging, head: "Secure Packaging", desc: "Tamper proof packaging for your precious jewels." },
+    { icon: iconDoorstepDelivery, head: "Doorstep Delivery", desc: "Delivered safely to your doorstep on time." },
+    { icon: iconTimelyReturn, head: "Timely Return Pickup", desc: "We pick up your jewels at your convenience." },
+  ];
   return (
     <div className="apila">
       {/* NAVBAR */}

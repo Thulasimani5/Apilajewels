@@ -36,8 +36,9 @@ const Cart = () => {
   };
 
   const selectedCartItems = cartItems.filter(item => selectedItems.includes(item._id));
-  const premiumSelected = selectedCartItems.filter(item => (item.rentalPrice || item.price || 0) > 1500);
-  const pricedSelected = selectedCartItems.filter(item => (item.rentalPrice || item.price || 0) <= 1500);
+  const isPremium = (item) => item.showPrice === false || (item.rentalPrice || item.price || 0) > 1200;
+  const premiumSelected = selectedCartItems.filter(isPremium);
+  const pricedSelected = selectedCartItems.filter(item => !isPremium(item));
   const pricedAmount = pricedSelected.reduce((total, item) => total + (item.rentalPrice || item.price || 0), 0);
   const allPremiumSelected = premiumSelected.length === selectedCartItems.length && selectedCartItems.length > 0;
 
@@ -65,7 +66,7 @@ const Cart = () => {
     let message = `Hi Apila Jewels, I would like to book the following items:\n\n`;
     selectedCartItems.forEach((item, index) => {
       const price = item.rentalPrice || item.price || 0;
-      const pText = price > 1500 ? 'Price on Request' : `₹${price}`;
+      const pText = isPremium(item) ? 'Price on Request' : `₹${price}`;
       message += `${index + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – ${pText}\n`;
     });
     if (allPremiumSelected) {
@@ -161,7 +162,7 @@ const Cart = () => {
                         marginRight: 20
                       }}
                     >
-                      {(item.rentalPrice || item.price || 0) > 1500
+                      {isPremium(item)
                         ? 'Price on Request'
                         : `₹${(item.rentalPrice || item.price || 0).toFixed(2)}`}
                     </div>

@@ -18,7 +18,7 @@ function CartItemCard({ item, onRemove }) {
     item.media?.[0]?.url || '';
   const isVideo = rawImg?.type === 'video';
   const price = item.rentalPrice || item.price || 0;
-  const priceText = price > 1500 ? 'Price on Request' : `₹${price.toFixed(2)}`;
+  const priceText = item.showPrice === false || price > 1200 ? 'Price on Request' : `₹${price.toFixed(2)}`;
   const category = Array.isArray(item.category) ? item.category[0] : (item.category || 'victorian-moissinate');
   const ref = item.code || item.jewelId || item.sku || 'N/A';
 
@@ -92,8 +92,9 @@ export default function DesktopCart() {
   const [coupon, setCoupon] = useState('');
 
   const cartCount = cartItems.length;
-  const premiumItems = cartItems.filter(item => (item.rentalPrice || item.price || 0) > 1500);
-  const pricedItems = cartItems.filter(item => (item.rentalPrice || item.price || 0) <= 1500);
+  const isPremium = (item) => item.showPrice === false || (item.rentalPrice || item.price || 0) > 1200;
+  const premiumItems = cartItems.filter(isPremium);
+  const pricedItems = cartItems.filter(item => !isPremium(item));
   const pricedSubtotal = pricedItems.reduce((sum, item) => sum + (item.rentalPrice || item.price || 0), 0);
   const allPremium = premiumItems.length === cartItems.length && cartItems.length > 0;
   const hasPremium = premiumItems.length > 0;
@@ -120,7 +121,7 @@ export default function DesktopCart() {
     let msg = `Hi Apila Jewels, I would like to book the following items:\n\n`;
     cartItems.forEach((item, i) => {
       const price = item.rentalPrice || item.price || 0;
-      const pText = price > 1500 ? 'Price on Request' : `₹${price}`;
+      const pText = isPremium(item) ? 'Price on Request' : `₹${price}`;
       msg += `${i + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – ${pText}\n`;
     });
     if (allPremium) {

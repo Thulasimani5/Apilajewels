@@ -4,14 +4,20 @@ const ErrorResponse = require('../utils/errorHandler');
 
 class JewelleryService {
   async getJewelleries(query = {}) {
-    const { category, type, occasion, stoneName, search, page = 1, limit = 1000 } = query;
+    const { category, type, accessoryType, occasion, stoneName, search, page = 1, limit = 1000 } = query;
     const filter = {};
 
     if (category) {
-      filter.category = category;
+      const escapedCat = category.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      filter.category = { $regex: new RegExp(`^${escapedCat}$`, 'i') };
     }
     if (type) {
-      filter.type = type;
+      const escapedType = type.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      filter.type = { $regex: new RegExp(`^${escapedType}$`, 'i') };
+    }
+    if (accessoryType) {
+      const escapedAcc = accessoryType.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      filter.accessoryType = { $regex: new RegExp(`^${escapedAcc}$`, 'i') };
     }
     if (occasion) {
       filter.occasion = occasion;
