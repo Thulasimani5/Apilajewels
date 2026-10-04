@@ -16,7 +16,7 @@ export function useTrendingProducts() {
         || (typeof rawImg === 'string' && rawImg.startsWith('http') ? rawImg : '')
         || '';
       const priceVal = item.rentalPrice || item.price || 0;
-      const price = priceVal > 1500 ? 'Price on Request' : `₹${priceVal.toFixed(2)}`;
+      const price = (item.showPrice === false || priceVal > 1200) ? 'Price on Request' : `₹${priceVal.toFixed(2)}`;
       const category = Array.isArray(item.category) ? item.category[0] : (item.category || 'Jewels');
       return {
         id: item._id,
