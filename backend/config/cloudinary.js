@@ -67,7 +67,7 @@ const getCloudinaryAccount = (category, accessoryType) => {
   else if (cats.includes('victorian-moissinate')) selected = { account: accounts[2], accountIndex: 2 };
   else if (cats.includes('Gold Antique Jewels')) selected = { account: accounts[3], accountIndex: 3 };
   else if (cats.includes('Kundan Jewels')) selected = { account: accounts[4], accountIndex: 4 };
-  else if (cats.includes('Bangles & Bracelets') || (accessoryType && accessoryType !== '' && accessoryType !== 'null')) {
+  else if (cats.includes('Bangles') || (accessoryType && accessoryType !== '' && accessoryType !== 'null')) {
     selected = { account: accounts[5], accountIndex: 5 };
   }
 

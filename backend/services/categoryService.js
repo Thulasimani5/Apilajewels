@@ -14,7 +14,7 @@ class CategoryService {
         { name: 'Bridal Combos', image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&q=80', subtext: 'Grand Bridal Collections', showInSection: 'category' },
         { name: 'Semi Bridal & Choker Sets', image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&q=80', subtext: 'Chokers & Neckpieces', showInSection: 'category' },
         { name: 'Long Harams', image: 'https://images.unsplash.com/photo-1603561591411-07134e71a2a9?w=800&q=80', subtext: 'Long Necklaces', showInSection: 'category' },
-        { name: 'Bangles & Bracelets', image: 'https://images.unsplash.com/photo-1611591475777-233ca732222e?w=800&q=80', subtext: 'Bangles Collection', showInSection: 'category' },
+        { name: 'Bangles', image: 'https://images.unsplash.com/photo-1611591475777-233ca732222e?w=800&q=80', subtext: 'Bangles Collection', showInSection: 'category' },
         { name: 'Accessories', image: 'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=800&q=80', subtext: 'Earrings & Tikka', showInSection: 'category' }
       ];
 

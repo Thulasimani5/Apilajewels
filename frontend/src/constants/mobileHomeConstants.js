@@ -30,11 +30,11 @@ export const MAIN_JEWELLERY_TYPES = [
 ];
 
 export const JEWELLERY_TYPES_CAROUSEL = [
-  { img: imgSemiBridal, title: 'Semi Bridal & Combo Sets', href: '/shop?category=semi-bridal' },
   { img: imgFullBridal, title: 'Full Bridal Set', href: '/shop?category=full-bridal' },
-  { img: imgChokerNecklace, title: 'Choker & Necklace', href: '/shop?category=choker-necklace' },
+  { img: imgSemiBridal, title: 'Semi Bridal & Combo Sets', href: '/shop?category=semi-bridal' },
   { img: imgLongHaram, title: 'Long Haram', href: '/shop?category=long-haram' },
-  { img: imgBanglesBracelets, title: 'Bangles & Bracelets', href: '/shop?category=bangles-bracelets' },
+  { img: imgChokerNecklace, title: 'Choker & Necklace', href: '/shop?category=choker-necklace' },
+  { img: imgBanglesBracelets, title: 'Bangles', href: '/shop?category=bangles' },
   { img: imgAccessories, title: 'Accessories', href: '/shop?category=accessories' }
 ];
 

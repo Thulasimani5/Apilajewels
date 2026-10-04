@@ -97,7 +97,7 @@ export default function ShopFilterSidebar({
                 </div>
                 {open.AccessoryTypes && (
                   <div style={{ marginLeft: '29px' }} className="flex flex-col">
-                    {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories'].map(sub => (
+                    {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories', 'Bracelet', 'Others'].map(sub => (
                       <FilterItem
                         key={sub}
                         label={sub.toUpperCase()}

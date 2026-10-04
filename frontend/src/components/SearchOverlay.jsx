@@ -205,7 +205,7 @@ const SearchOverlay = ({ isOpen, onClose, category, type }) => {
                     )}
                   </div>
                   <div className="flex flex-col ">
-                    <h4 className="mb-2 mt-4 truncate" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "10px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "0.7px", textTransform: "uppercase" }}>{Array.isArray(item.category) ? item.category[0] : item.category || item.type || 'victorian-moissinate'}</h4>
+                    <h4 className="mb-2 mt-4 truncate" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "10px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "0.7px", textTransform: "uppercase" }}>{ (Array.isArray(item.type) ? item.type : (item.type ? [item.type] : [])).includes('Accessories') && item.accessoryType ? item.accessoryType : (item.category === 'Bangles & Bracelets' ? 'Bangles' : (Array.isArray(item.category) ? item.category[0] : item.category || item.type || 'victorian-moissinate')) }</h4>
                     <p className=" pr-4 line-clamp-2 w-[165px] whitespace-normal" style={{ fontFamily: "var(--f-gotham-b)", fontSize: "12px", color: "rgba(0, 0, 0, 0.60)", letterSpacing: "-0.13px" }}>{item.name}</p>
                     <span className="text-left inline-block self-start transition-colors mt-6" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "13px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "-0.14px", borderBottom: "1px solid rgba(0, 0, 0, 0.55)" }}>Details</span>
                   </div>
@@ -240,7 +240,7 @@ const SearchOverlay = ({ isOpen, onClose, category, type }) => {
                   )}
                 </div>
                 <div className="flex flex-col justify-center">
-                  <h4 className="mb-1 truncate" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "10px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "0.7px", textTransform: "uppercase" }}>{Array.isArray(item.category) ? item.category[0] : item.category || item.type || 'victorian-moissinate'}</h4>
+                  <h4 className="mb-1 truncate" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "10px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "0.7px", textTransform: "uppercase" }}>{ (Array.isArray(item.type) ? item.type : (item.type ? [item.type] : [])).includes('Accessories') && item.accessoryType ? item.accessoryType : (item.category === 'Bangles & Bracelets' ? 'Bangles' : (Array.isArray(item.category) ? item.category[0] : item.category || item.type || 'victorian-moissinate')) }</h4>
                   <p className="mb-2 pr-4 line-clamp-2 w-[165px] whitespace-normal" style={{ fontFamily: "var(--f-gotham-b)", fontSize: "13px", color: "rgba(0, 0, 0, 0.60)", letterSpacing: "-0.13px" }}>{item.name}</p>
                   <span className="text-left inline-block self-start transition-colors" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "14px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "-0.14px", borderBottom: "1px solid rgba(0, 0, 0, 0.55)" }}>Details</span>
                 </div>

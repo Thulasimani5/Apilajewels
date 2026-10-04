@@ -142,11 +142,11 @@ export const useAdminDashboard = () => {
 
   // Jewellery Types State
   const defaultTypeNames = [
-    "Semi Bridal & Combo Sets",
     "Full Bridal Set",
-    "Choker & Necklace",
+    "Semi Bridal & Combo Sets",
     "Long Haram",
-    "Bangles & Bracelets",
+    "Choker & Necklace",
+    "Bangles",
     "Accessories"
   ];
   const typesList = categories ? categories.filter(c => c.showInSection === 'type' || defaultTypeNames.includes(c.name)) : [];

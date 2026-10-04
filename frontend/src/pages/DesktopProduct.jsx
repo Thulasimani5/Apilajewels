@@ -129,7 +129,12 @@ function RelatedCard({ product }) {
   const liked = isInWishlist(product._id);
   const imgUrl = product.images?.[0]?.url || product.media?.[0]?.url || '';
   const price = product.rentalPrice || product.price || 0;
-  const category = Array.isArray(product.category) ? product.category[0] : product.category;
+  let category = Array.isArray(product.category) ? product.category[0] : product.category;
+  if (category === 'Bangles & Bracelets') category = 'Bangles';
+  const typeArray = Array.isArray(product.type) ? product.type : (product.type ? [product.type] : []);
+  if (typeArray.includes('Accessories') && product.accessoryType) {
+    category = product.accessoryType;
+  }
 
   return (
     <Link to={`/shop/${product._id}`} className="pdp-rel-card">
@@ -203,7 +208,12 @@ export default function DesktopProduct({ product, relatedProducts }) {
   const liked = isInWishlist(product._id);
   const price = product.rentalPrice || product.price || 0;
   const priceText = product.showPrice === false || price > 1200 ? 'Price on Request' : `₹${price.toFixed(2)}`;
-  const category = Array.isArray(product.category) ? product.category[0] : product.category;
+  let category = Array.isArray(product.category) ? product.category[0] : product.category;
+  if (category === 'Bangles & Bracelets') category = 'Bangles';
+  const typeArray = Array.isArray(product.type) ? product.type : (product.type ? [product.type] : []);
+  if (typeArray.includes('Accessories') && product.accessoryType) {
+    category = product.accessoryType;
+  }
 
   const handleAddToCart = () => {
     addToCart(product);
@@ -518,11 +528,11 @@ export default function DesktopProduct({ product, relatedProducts }) {
             <span className="menu-section-heading">Jewellery Type</span>
             <ul className="menu-section">
               {[
-                { label: 'Choker & Necklace', slug: 'choker-necklace' },
-                { label: 'Long Haram', slug: 'long-haram' },
-                { label: 'Semi Bridal & Combo Sets', slug: 'semi-bridal' },
                 { label: 'Full Bridal Set', slug: 'full-bridal' },
-                { label: 'Bangles', slug: 'bangles-bracelets' },
+                { label: 'Semi Bridal & Combo Sets', slug: 'semi-bridal' },
+                { label: 'Long Haram', slug: 'long-haram' },
+                { label: 'Choker & Necklace', slug: 'choker-necklace' },
+                { label: 'Bangles', slug: 'bangles' },
                 { label: 'Accessories', slug: 'accessories' },
               ].map(item => (
                 <li key={item.slug} className="menu-item">

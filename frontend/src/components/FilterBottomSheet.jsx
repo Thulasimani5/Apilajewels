@@ -3,22 +3,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Check } from 'lucide-react';
 import CategoryContext from '../context/CategoryContext';
 
-import { INITIAL_FILTER_SECTIONS, SECTION_LABELS, SECTION_ORDER } from '../utils/filterConstants';
+import { INITIAL_FILTER_SECTIONS, SECTION_LABELS, SECTION_ORDER, sortJewelleryTypes } from '../utils/filterConstants';
 import FilterCheckbox from './FilterCheckbox';
 const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
   const { categories } = React.useContext(CategoryContext);
 
   const FILTER_SECTIONS = React.useMemo(() => {
     const types = categories.filter(c => c.showInSection === 'type').map(c => c.name);
-    const accIndex = types.findIndex(o => o.toLowerCase() === 'accessories');
-    if (accIndex > -1) {
-      const [acc] = types.splice(accIndex, 1);
-      types.push(acc);
-    }
     return {
       ...INITIAL_FILTER_SECTIONS,
       Category: categories.filter(c => c.showInSection !== 'type').map(c => c.name),
-      Type: types
+      Type: sortJewelleryTypes(types)
     };
   }, [categories]);
 
@@ -224,7 +219,7 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
                                     </div>
                                     {openAccessoryTypes && (
                                       <div style={{ marginLeft: '28px' }} className="flex flex-col gap-4 mt-4 mb-2">
-                                        {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories'].map(sub => (
+                                        {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories', 'Bracelet', 'Others'].map(sub => (
                                           <FilterCheckbox 
                                             key={sub}
                                             label={sub} 

@@ -8,7 +8,12 @@ export default function RelatedCard({ product }) {
   const liked = isInWishlist(product._id);
   const imgUrl = product.images?.[0]?.url || product.media?.[0]?.url || '';
   const price = product.rentalPrice || product.price || 0;
-  const category = Array.isArray(product.category) ? product.category[0] : product.category;
+  let category = Array.isArray(product.category) ? product.category[0] : product.category;
+  if (category === 'Bangles & Bracelets') category = 'Bangles';
+  const typeArray = Array.isArray(product.type) ? product.type : (product.type ? [product.type] : []);
+  if (typeArray.includes('Accessories') && product.accessoryType) {
+    category = product.accessoryType;
+  }
 
   return (
     <Link to={`/shop/${product._id}`} className="pdp-rel-card">

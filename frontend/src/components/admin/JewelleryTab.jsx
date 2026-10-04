@@ -177,6 +177,8 @@ const JewelleryTab = ({
                   'Ring',
                   'Ring Bracelet',
                   'Hair Accessories',
+                  'Bracelet',
+                  'Others',
                 ].map((sub) => (
                   <div
                     key={sub}
@@ -678,6 +680,8 @@ const JewelleryTab = ({
                         'Ring',
                         'Ring Bracelet',
                         'Hair Accessories',
+                        'Bracelet',
+                        'Others',
                       ].map((sub) => (
                         <label key={sub} className="inline-flex items-center">
                           <input

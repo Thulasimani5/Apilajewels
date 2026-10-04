@@ -57,14 +57,16 @@ export const ACCESSORY_SUBTYPES = [
   'Ring',
   'Ring Bracelet',
   'Hair Accessories',
+  'Bracelet',
+  'Others',
 ];
 
 export const DEFAULT_TYPE_NAMES = [
-  'Semi Bridal & Combo Sets',
   'Full Bridal Set',
-  'Choker & Necklace',
+  'Semi Bridal & Combo Sets',
   'Long Haram',
-  'Bangles & Bracelets',
+  'Choker & Necklace',
+  'Bangles',
   'Accessories',
 ];
 

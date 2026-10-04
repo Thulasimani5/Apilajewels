@@ -605,11 +605,11 @@ const AdminDashboard = () => {
 
   // ── Jewellery Types state (reuses CategoryContext with showInSection='type') ──
   const defaultTypeNames = [
-    "Semi Bridal & Combo Sets",
     "Full Bridal Set",
-    "Choker & Necklace",
+    "Semi Bridal & Combo Sets",
     "Long Haram",
-    "Bangles & Bracelets",
+    "Choker & Necklace",
+    "Bangles",
     "Accessories"
   ];
   const typesList = categories.filter(c => c.showInSection === 'type' || defaultTypeNames.includes(c.name));
@@ -1234,7 +1234,7 @@ const AdminDashboard = () => {
                     </div>
                   </div>
                   <div className="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-                    {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories'].map(sub => (
+                    {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories', 'Bracelet', 'Others'].map(sub => (
                       <div 
                         key={sub} 
                         onClick={() => setSelectedAdminAccessorySubtype(sub)} 
@@ -1571,7 +1571,7 @@ const AdminDashboard = () => {
                           <FieldUpdateBtn field="accessoryType" value={formData.accessoryType} />
                         </div>
                         <div className="grid grid-cols-2 gap-2">
-                          {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories'].map(sub => (
+                          {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories', 'Bracelet', 'Others'].map(sub => (
                             <label key={sub} className="inline-flex items-center">
                               <input
                                 type="checkbox"

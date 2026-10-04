@@ -130,6 +130,7 @@ export default function DesktopShop() {
   const headerTitle = useMemo(() => {
     if (activeFilters.Category.length) return activeFilters.Category.join(', ');
     if (activeFilters.Type?.length) return activeFilters.Type.join(', ');
+    if (activeFilters.AccessoryType?.length) return activeFilters.AccessoryType.join(', ');
     if (activeFilters.Occasion.length) return activeFilters.Occasion.join(', ');
     return 'All Jewels';
   }, [activeFilters]);

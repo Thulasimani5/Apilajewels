@@ -10,11 +10,11 @@ const CATEGORY_ITEMS = [
 ];
 
 const TYPE_ITEMS = [
-  { label: 'Choker & Necklace', slug: 'choker-necklace' },
-  { label: 'Long Haram', slug: 'long-haram' },
-  { label: 'Semi Bridal & Combo Sets', slug: 'semi-bridal' },
   { label: 'Full Bridal Set', slug: 'full-bridal' },
-  { label: 'Bangles', slug: 'bangles-bracelets' },
+  { label: 'Semi Bridal & Combo Sets', slug: 'semi-bridal' },
+  { label: 'Long Haram', slug: 'long-haram' },
+  { label: 'Choker & Necklace', slug: 'choker-necklace' },
+  { label: 'Bangles', slug: 'bangles' },
   { label: 'Accessories', slug: 'accessories' },
 ];
 

@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { sortJewelleryTypes } from '../utils/filterConstants';
 
 export function useFilteredProducts(products, activeFilters, activeSort, categories) {
   const categoryOptions = useMemo(
@@ -8,12 +9,7 @@ export function useFilteredProducts(products, activeFilters, activeSort, categor
 
   const typeOptions = useMemo(() => {
     const opts = categories.filter(c => c.showInSection === 'type').map(c => c.name);
-    const accIndex = opts.findIndex(o => o.toLowerCase() === 'accessories');
-    if (accIndex > -1) {
-      const [acc] = opts.splice(accIndex, 1);
-      opts.push(acc);
-    }
-    return opts;
+    return sortJewelleryTypes(opts);
   }, [categories]);
 
   const filtered = useMemo(() => {

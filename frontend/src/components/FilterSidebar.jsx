@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useContext } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import CategoryContext from '../context/CategoryContext';
+import { sortJewelleryTypes } from '../utils/filterConstants';
 
 /* ── Filter options ── */
 const COLOUR_OPTIONS = ['Gold', 'Silver', 'Rose Gold', 'Emerald Green', 'Ruby Red', 'Mehndi Polish'];
@@ -109,12 +110,7 @@ const FilterSidebar = ({ activeFilters, onFilterChange, products = [] }) => {
   const categoryOptions = useMemo(() => categories.filter(c => c.showInSection !== 'type').map(c => c.name), [categories]);
   const typeOptions = useMemo(() => {
     const opts = categories.filter(c => c.showInSection === 'type').map(c => c.name);
-    const accIndex = opts.findIndex(o => o.toLowerCase() === 'accessories');
-    if (accIndex > -1) {
-      const [acc] = opts.splice(accIndex, 1);
-      opts.push(acc);
-    }
-    return opts;
+    return sortJewelleryTypes(opts);
   }, [categories]);
   const [openAccessoryTypes, setOpenAccessoryTypes] = useState(false);
 
@@ -175,7 +171,7 @@ const FilterSidebar = ({ activeFilters, onFilterChange, products = [] }) => {
                 </div>
                 {openAccessoryTypes && (
                   <div style={{ marginLeft: '24px', display: 'flex', flexDirection: 'column' }}>
-                    {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories'].map(sub => {
+                    {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories', 'Bracelet', 'Others'].map(sub => {
                       const subChecked = activeFilters.AccessoryType?.includes(sub) || false;
                       return (
                         <CheckboxItem

@@ -157,7 +157,7 @@ export default function MobileProductView({
         <div className="bg-white relative px-2 pt-4 ">
           <div className="flex justify-between items-start" style={{ marginTop: '20px', marginBottom: '20px' }}>
             <span style={{ color: "#000", fontFamily: "var(--f-gotham-b), 'Gotham Book', sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 400, lineHeight: "normal", letterSpacing: "0.91px", textTransform: "uppercase" }}>
-              {product.category || 'victorian-moissinate'}
+              { (Array.isArray(product.type) ? product.type : (product.type ? [product.type] : [])).includes('Accessories') && product.accessoryType ? product.accessoryType : (product.category === 'Bangles & Bracelets' ? 'Bangles' : (product.category || 'victorian-moissinate')) }
             </span>
             <div className="flex gap-4">
               <button onClick={() => toggleWishlist(product)} className="transition-colors">

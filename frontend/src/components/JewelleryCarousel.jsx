@@ -9,11 +9,11 @@ import imgSemiBridal from '../assets/images/E5.jpg';
 import imgFullBridal from '../assets/images/E8.jpg';
 
 const CAROUSEL = [
+  { title: "Full Bridal Set", sub: "Explore Now", img: imgFullBridal, slug: "full-bridal" },
   { title: "Semi Bridal & Combo Sets", sub: "Explore Now", img: imgSemiBridal, slug: "semi-bridal" },
-  { title: "Full Bridal Set", sub: "Explore Now", img: imgLongHaram, slug: "full-bridal" },
+  { title: "Long Haram", sub: "Explore Now", img: imgLongHaram, slug: "long-haram" },
   { title: "Choker & Necklace Set", sub: "Explore Now", img: imgChokerNecklace, slug: "choker-necklace" },
-  { title: "Long Haram", sub: "Explore Now", img: imgFullBridal, slug: "long-haram" },
-  { title: "Bangles & Bracelets", sub: "Explore Now", img: imgBanglesBracelets, slug: "bangles-bracelets" },
+  { title: "Bangles", sub: "Explore Now", img: imgBanglesBracelets, slug: "bangles" },
   { title: "Accessories", sub: "Explore Now", img: imgAccessories, slug: "accessories" },
 ];
 

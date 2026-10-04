@@ -177,6 +177,8 @@ const JewelleryTab = ({
                   'Ring',
                   'Ring Bracelet',
                   'Hair Accessories',
+                  'Bracelet',
+                  'Others',
                 ].map((sub) => (
                   <div
                     key={sub}

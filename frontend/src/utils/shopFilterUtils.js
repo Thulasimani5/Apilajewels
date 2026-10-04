@@ -35,8 +35,9 @@ export const bootstrapFromLegacyParams = (searchParams, categories) => {
     'small-jewels': 'Small Jewel', 'semi-bridal': 'Semi Bridal & Combo Sets',
     'choker-necklace': 'Choker & Necklace', 'long-haram': 'Long Haram',
     'full-bridal': 'Full Bridal Set', 'accessories': 'Accessories',
-    'bangles-bracelets': 'Bangles & Bracelets', 'bangles-and-bracelets': 'Bangles & Bracelets',
-    'bangles': 'Bangles & Bracelets', 'gold-bangles': 'Bangles & Bracelets'
+    'bangles-bracelets': 'Bangles', 'bangles-and-bracelets': 'Bangles',
+    'bangles': 'Bangles', 'gold-bangles': 'Bangles',
+    'bracelets': 'Accessories'
   };
 
   const filters = { Category: [], Type: [], Occasion: [], Price: [], Colour: [], StoneName: [], StoneColour: [], Stone: [], AccessoryType: [] };

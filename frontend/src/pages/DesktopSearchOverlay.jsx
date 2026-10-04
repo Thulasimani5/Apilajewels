@@ -24,9 +24,14 @@ function ProductCard({ product, onClose }) {
   const rawImg = product.images?.[0];
   const imgUrl = rawImg?.url || (typeof rawImg === 'string' ? rawImg : '') || product.media?.[0]?.url || '';
   const optimized = imgUrl ? getOptimizedCloudinaryUrl(imgUrl, { width: 190, height: 190 }) : '';
-  const category = Array.isArray(product.category)
+  let category = Array.isArray(product.category)
     ? product.category[0]
     : (product.category || '');
+  if (category === 'Bangles & Bracelets') category = 'Bangles';
+  const typeArray = Array.isArray(product.type) ? product.type : (product.type ? [product.type] : []);
+  if (typeArray.includes('Accessories') && product.accessoryType) {
+    category = product.accessoryType;
+  }
 
   return (
     <div className="srch-product-card">
