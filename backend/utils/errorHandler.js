@@ -1,3 +1,10 @@
+class ErrorResponse extends Error {
+  constructor(message, statusCode) {
+    super(message);
+    this.statusCode = statusCode;
+  }
+}
+
 const formatError = (err) => {
   // Check for Mongoose/MongoDB duplicate key error
   if (err.code === 11000) {
@@ -25,4 +32,7 @@ const formatError = (err) => {
   return err.message || 'Server Error';
 };
 
-module.exports = { formatError };
+ErrorResponse.formatError = formatError;
+ErrorResponse.ErrorResponse = ErrorResponse;
+
+module.exports = ErrorResponse;
