@@ -33,7 +33,7 @@ export default function TrendingSection() {
     setWishlisted(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  const list = trending.length > 0 ? trending : TRENDING_SAMPLES;
+  const list = (trending.length > 0 ? trending : TRENDING_SAMPLES).slice(0, 8);
 
   return (
     <section className="trending-section">
