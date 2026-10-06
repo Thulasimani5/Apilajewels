@@ -113,7 +113,7 @@ export const EMPTY_JEWEL_FORM = {
   description: '',
   price: '',
   deposit: '',
-  category: ['victorian-moissinate'],
+  category: [],
   accessoryType: '',
   type: [],
   occasion: [],

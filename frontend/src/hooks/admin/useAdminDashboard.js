@@ -102,7 +102,7 @@ export const useAdminDashboard = () => {
     description: '',
     price: '',
     deposit: '',
-    category: ['victorian-moissinate'],
+    category: [],
     accessoryType: '',
     type: [],
     occasion: [],
@@ -158,6 +158,7 @@ export const useAdminDashboard = () => {
 
   // Fetching Helpers
   const fetchAllJewelleriesData = async () => {
+    setAdminJewelleriesLoading(true);
     try {
       const result = await fetchAllJewelleries(1000);
       if (result.success) {
@@ -165,6 +166,8 @@ export const useAdminDashboard = () => {
       }
     } catch (e) {
       console.error("Error fetching all jewelleries for selection:", e);
+    } finally {
+      setAdminJewelleriesLoading(false);
     }
   };
 
@@ -439,6 +442,13 @@ export const useAdminDashboard = () => {
     setAdminJewellerySearch('');
     setSelectedAdminAccessorySubtype(null);
   }, [selectedAdminCategory]);
+
+  // Fetch all jewelleries when global search is used from the root (no category selected) view
+  useEffect(() => {
+    if (!selectedAdminCategory && adminJewellerySearch.trim() && !adminJewelleries.length) {
+      fetchAllJewelleriesData();
+    }
+  }, [adminJewellerySearch, selectedAdminCategory]);
 
   useEffect(() => {
     if (activeTab === 'jewellery' && selectedAdminCategory && !showAddForm) {
@@ -764,7 +774,7 @@ export const useAdminDashboard = () => {
         setEditingId(null);
         setFormData({
           jewelId: '', name: '', description: '', price: '', deposit: '',
-          category: ['victorian-moissinate'], type: [], accessoryType: '', occasion: [], colour: 'Gold',
+          category: [], type: [], accessoryType: '', occasion: [], colour: 'Gold',
           material: '', size: '', finish: '',
           purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: '',
           stoneName: [], stoneColour: []

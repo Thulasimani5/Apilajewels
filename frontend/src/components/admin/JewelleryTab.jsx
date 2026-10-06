@@ -96,7 +96,7 @@ const JewelleryTab = ({
         <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
           {!selectedAdminCategory ? (
             <>
-              <div className="p-6 border-b border-gray-100 flex justify-between items-center">
+              <div className="p-4 sm:p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
                 <h2 className="font-semibold text-gray-800">Jewellery Categories</h2>
                 <button
                   onClick={() => {
@@ -107,7 +107,7 @@ const JewelleryTab = ({
                       description: '',
                       price: '',
                       deposit: '',
-                      category: ['victorian-moissinate'],
+                      category: [],
                       type: [],
                       accessoryType: '',
                       occasion: [],
@@ -123,39 +123,178 @@ const JewelleryTab = ({
                     setMediaList([]);
                     setShowAddForm(true);
                   }}
-                  className="flex items-center gap-2 bg-[#B07A85] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#9E6A75] transition-colors shadow-sm"
+                  className="flex items-center justify-center w-full sm:w-auto gap-2 bg-[#B07A85] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#9E6A75] transition-colors shadow-sm"
                 >
                   <Plus size={16} /> Add New Jewel
                 </button>
               </div>
-              <div className="p-6 grid grid-cols-2 md:grid-cols-3 gap-6">
-                {(categories || []).map((c) => (
-                  <div
-                    key={c._id}
-                    onClick={() => setSelectedAdminCategory(c.name)}
-                    className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:border-[#B07A85] hover:shadow-md cursor-pointer transition-all flex flex-col items-center justify-center gap-4 group relative"
-                  >
-                    <div className="absolute top-4 right-4 bg-white text-gray-600 border border-gray-200 text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">
-                      {c.jewelCount || 0}
-                    </div>
-                    <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform mt-2">
-                      <Package className="text-[#B07A85]" size={28} />
-                    </div>
-                    <span className="font-bold text-gray-800 text-lg text-center">
-                      {c.name}
-                    </span>
-                  </div>
-                ))}
+
+              {/* Global Search Bar */}
+              <div className="px-4 sm:px-6 py-4 bg-white border-b border-gray-100">
+                <div className="relative max-w-lg">
+                  <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
+                  <input
+                    type="text"
+                    value={adminJewellerySearch}
+                    onChange={(e) => setAdminJewellerySearch(e.target.value)}
+                    placeholder="Search all jewels by name, code, type..."
+                    className="w-full pl-10 pr-10 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#B07A85] focus:border-[#B07A85]"
+                  />
+                  {adminJewellerySearch && (
+                    <button
+                      onClick={() => setAdminJewellerySearch('')}
+                      className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+                    >
+                      <X size={16} />
+                    </button>
+                  )}
+                </div>
               </div>
+
+              {adminJewellerySearch.trim() ? (
+                /* Global Search Results Table */
+                adminJewelleriesLoading ? (
+                  <div className="p-16 text-center">
+                    <div className="w-8 h-8 border-4 border-[#B07A85] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <span className="text-sm font-medium text-gray-400">Loading jewels...</span>
+                  </div>
+                ) : filteredAdminJewelleries.length === 0 ? (
+                  <div className="p-16 text-center text-gray-500">No matching jewels found.</div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <div className="px-4 sm:px-6 py-3 bg-gray-50 border-b border-gray-100">
+                      <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                        {filteredAdminJewelleries.length} result{filteredAdminJewelleries.length !== 1 ? 's' : ''} across all categories
+                      </span>
+                    </div>
+                    <table className="w-full text-left border-collapse text-sm">
+                      <thead>
+                        <tr className="bg-white border-b border-gray-100 text-gray-400 font-semibold uppercase text-xs tracking-wider">
+                          <th className="px-6 py-4 w-16">S.No</th>
+                          <th className="px-6 py-4">Image & Name</th>
+                          <th className="px-6 py-4">Code</th>
+                          <th className="px-6 py-4">Category</th>
+                          <th className="px-6 py-4">Price</th>
+                          <th className="px-6 py-4 text-right">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-50">
+                        {filteredAdminJewelleries.map((jewel, index) => (
+                          <tr key={jewel._id} className="hover:bg-gray-50/50 transition-colors">
+                            <td className="px-6 py-4 text-sm font-semibold text-gray-400 text-center">{index + 1}</td>
+                            <td className="px-6 py-4">
+                              <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                                  {jewel.images?.[0]?.type === 'video' ? (
+                                    <video src={jewel.images[0].url} className="w-full h-full object-cover" />
+                                  ) : (
+                                    <img
+                                      src={jewel.images?.[0]?.url || jewel.images?.[0]}
+                                      alt={jewel.name}
+                                      className="w-full h-full object-cover"
+                                    />
+                                  )}
+                                </div>
+                                <div className="font-bold text-gray-900 max-w-[160px] truncate">{jewel.name}</div>
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 font-mono text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded-md inline-block mt-3">
+                              {jewel.jewelId}
+                            </td>
+                            <td className="px-6 py-4 text-gray-600 text-xs">
+                              {Array.isArray(jewel.category) ? jewel.category.join(', ') : jewel.category}
+                            </td>
+                            <td className="px-6 py-4 font-bold text-gray-900">₹{jewel.rentalPrice || jewel.price}</td>
+                            <td className="px-6 py-4 text-right flex justify-end gap-2 items-center">
+                              <button
+                                onClick={() => onViewJewel(jewel)}
+                                title="View internal details"
+                                className="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center hover:bg-green-600 hover:text-white transition-all shadow-sm"
+                              >
+                                <Eye size={14} />
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setEditingId(jewel._id);
+                                  setFormData({
+                                    jewelId: jewel.jewelId || '',
+                                    name: jewel.name || '',
+                                    description: jewel.description || '',
+                                    price: jewel.price || jewel.rentalPrice || '',
+                                    deposit: jewel.deposit || '',
+                                    category: Array.isArray(jewel.category) ? jewel.category : jewel.category ? [jewel.category] : [],
+                                    type: Array.isArray(jewel.type) ? jewel.type : jewel.type ? [jewel.type] : [],
+                                    accessoryType: jewel.accessoryType || '',
+                                    occasion: Array.isArray(jewel.occasion) ? jewel.occasion : jewel.occasion ? [jewel.occasion] : [],
+                                    colour: jewel.colour || 'Gold',
+                                    material: jewel.material || '',
+                                    size: jewel.size || '',
+                                    finish: jewel.finish || '',
+                                    purchaseAmount: jewel.purchaseAmount || '',
+                                    rentAmount: jewel.rentAmount || '',
+                                    salesAmount: jewel.salesAmount || '',
+                                    shopName: jewel.shopName || '',
+                                    stoneName: jewel.stoneName || [],
+                                    stoneColour: Array.isArray(jewel.stoneColour) ? jewel.stoneColour : jewel.stoneColour ? [jewel.stoneColour] : [],
+                                    showPrice: jewel.showPrice !== false,
+                                  });
+                                  setMediaList(
+                                    jewel.images
+                                      ? jewel.images.map((img) => ({ type: img.type || 'image', url: img.url || img, file: null }))
+                                      : []
+                                  );
+                                  setShowAddForm(true);
+                                }}
+                                title="Edit jewellery"
+                                className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-sm"
+                              >
+                                <Pencil size={14} />
+                              </button>
+                              <button
+                                onClick={() => onDeleteJewel(jewel._id)}
+                                title="Delete jewellery"
+                                className="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-all shadow-sm"
+                              >
+                                <Trash2 size={14} />
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )
+              ) : (
+                /* Default Category Grid */
+                <div className="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+                  {(categories || []).map((c) => (
+                    <div
+                      key={c._id}
+                      onClick={() => setSelectedAdminCategory(c.name)}
+                      className="bg-gray-50 p-8 rounded-xl border border-gray-200 hover:border-[#B07A85] hover:shadow-md cursor-pointer transition-all flex flex-col items-center justify-center gap-4 group relative"
+                    >
+                      <div className="absolute top-4 right-4 bg-white text-gray-600 border border-gray-200 text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">
+                        {c.jewelCount || 0}
+                      </div>
+                      <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform mt-2">
+                        <Package className="text-[#B07A85]" size={28} />
+                      </div>
+                      <span className="font-bold text-gray-800 text-lg text-center">
+                        {c.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </>
           ) : selectedAdminCategory.toLowerCase() === 'accessories' &&
             !selectedAdminAccessorySubtype ? (
             <>
-              <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+              <div className="p-4 sm:p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 bg-gray-50/50">
                 <div className="flex items-center gap-4">
                   <button
                     onClick={() => setSelectedAdminCategory(null)}
-                    className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors shadow-sm"
+                    className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors shadow-sm shrink-0"
                   >
                     <ArrowLeft size={18} />
                   </button>
@@ -167,7 +306,7 @@ const JewelleryTab = ({
                   </div>
                 </div>
               </div>
-              <div className="p-6 grid grid-cols-2 md:grid-cols-3 gap-6">
+              <div className="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                 {[
                   'Hip Belt',
                   'Ear Rings',
@@ -197,7 +336,7 @@ const JewelleryTab = ({
             </>
           ) : (
             <>
-              <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+              <div className="p-4 sm:p-6 border-b border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 bg-gray-50/50">
                 <div className="flex items-center gap-4">
                   <button
                     onClick={() => {
@@ -210,12 +349,12 @@ const JewelleryTab = ({
                         setSelectedAdminCategory(null);
                       }
                     }}
-                    className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors shadow-sm"
+                    className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors shadow-sm shrink-0"
                   >
                     <ArrowLeft size={18} />
                   </button>
                   <div>
-                    <h2 className="font-bold text-gray-900 text-lg">
+                    <h2 className="font-bold text-gray-900 text-lg break-words">
                       {selectedAdminCategory}
                       {selectedAdminAccessorySubtype &&
                         ` > ${selectedAdminAccessorySubtype}`}
@@ -229,6 +368,16 @@ const JewelleryTab = ({
                 </div>
                 <button
                   onClick={() => {
+                    const isType = selectedAdminCategory
+                      ? (categories || []).find((c) => c.name?.toLowerCase() === selectedAdminCategory.toLowerCase())?.showInSection === 'type'
+                      : false;
+                    const initialCategory = !isType && selectedAdminCategory
+                      ? [selectedAdminCategory]
+                      : [];
+                    const initialType = isType && selectedAdminCategory
+                      ? [selectedAdminCategory]
+                      : [];
+
                     setEditingId(null);
                     setFormData({
                       jewelId: '',
@@ -236,11 +385,8 @@ const JewelleryTab = ({
                       description: '',
                       price: '',
                       deposit: '',
-                      category: ['victorian-moissinate'],
-                      type:
-                        selectedAdminCategory.toLowerCase() === 'accessories'
-                          ? ['Accessories']
-                          : [],
+                      category: initialCategory,
+                      type: initialType,
                       accessoryType: selectedAdminAccessorySubtype || '',
                       occasion: [],
                       colour: 'Gold',
@@ -255,7 +401,7 @@ const JewelleryTab = ({
                     setMediaList([]);
                     setShowAddForm(true);
                   }}
-                  className="flex items-center gap-2 bg-[#B07A85] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#9E6A75] transition-colors shadow-sm"
+                  className="flex items-center justify-center w-full sm:w-auto gap-2 bg-[#B07A85] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#9E6A75] transition-colors shadow-sm"
                 >
                   <Plus size={16} /> Add New Jewel
                 </button>
@@ -368,7 +514,7 @@ const JewelleryTab = ({
                                     ? jewel.category
                                     : jewel.category
                                     ? [jewel.category]
-                                    : ['victorian-moissinate'],
+                                    : [],
                                   type: Array.isArray(jewel.type)
                                     ? jewel.type
                                     : jewel.type
@@ -446,8 +592,8 @@ const JewelleryTab = ({
             </h2>
           </div>
 
-          <form onSubmit={onSubmitForm} className="p-6 space-y-6">
-            <div className="grid grid-cols-2 gap-6">
+          <form onSubmit={onSubmitForm} className="p-4 sm:p-6 space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
               <div>
                 <div className="flex justify-between items-center mb-1">
                   <label className="text-sm font-medium text-gray-700">
@@ -550,7 +696,7 @@ const JewelleryTab = ({
                   </label>
                   <FieldUpdateBtn field="category" value={formData.category} />
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   {(categories || [])
                     .filter((c) => c.showInSection !== 'type')
                     .map((c) => (
@@ -602,7 +748,7 @@ const JewelleryTab = ({
                       value={formData.occasion}
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {occasions.map((o) => (
                       <label key={o} className="inline-flex items-center">
                         <input
@@ -634,7 +780,7 @@ const JewelleryTab = ({
                     </label>
                     <FieldUpdateBtn field="type" value={formData.type} />
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {typeNames.map((t) => (
                       <label key={t} className="inline-flex items-center">
                         <input
@@ -670,7 +816,7 @@ const JewelleryTab = ({
                         value={formData.accessoryType}
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {[
                         'Hip Belt',
                         'Ear Rings',
@@ -716,7 +862,7 @@ const JewelleryTab = ({
                       value={formData.stoneName}
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {[
                       'Crystal',
                       'Sapphire',
@@ -775,7 +921,7 @@ const JewelleryTab = ({
                       value={formData.stoneColour}
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {[
                       'Clear',
                       'Blue',

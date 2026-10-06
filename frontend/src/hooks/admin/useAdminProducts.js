@@ -27,7 +27,7 @@ export const useAdminProducts = (token, categories, showAddForm, setShowAddForm)
     description: '',
     price: '',
     deposit: '',
-    category: ['victorian-moissinate'],
+    category: [],
     accessoryType: '',
     type: [],
     occasion: [],
@@ -211,7 +211,7 @@ export const useAdminProducts = (token, categories, showAddForm, setShowAddForm)
         setEditingId(null);
         setFormData({
           jewelId: '', name: '', description: '', price: '', deposit: '',
-          category: ['victorian-moissinate'], type: [], accessoryType: '', occasion: [], colour: 'Gold',
+          category: [], type: [], accessoryType: '', occasion: [], colour: 'Gold',
           material: '', size: '', finish: '',
           purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: '',
           stoneName: [], stoneColour: [], showPrice: true
