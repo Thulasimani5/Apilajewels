@@ -561,6 +561,34 @@
   background: #fff;
 }
 
+/* Skeleton loading */
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.product-card-skeleton {
+  pointer-events: none;
+}
+
+.skeleton-img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 400px 100%;
+  animation: shimmer 1.4s infinite linear;
+  border-radius: 2px;
+}
+
+.skeleton-line {
+  height: 12px;
+  margin-top: 8px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 400px 100%;
+  animation: shimmer 1.4s infinite linear;
+}
+
 .products-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -720,6 +748,109 @@
 
 .view-all-link:hover {
   opacity: .75;
+}
+
+/* JEWELLERY TO OWN BANNER */
+.jto-section {
+  padding: 40px 48px;
+  background: #fff;
+}
+
+.jto-banner {
+  position: relative;
+  width: 100%;
+  max-width: 1700px;
+  margin: 0 auto;
+  height: 340px;
+  border-radius: 16px;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+}
+
+.jto-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(20, 10, 5, 0.78) 0%,
+    rgba(20, 10, 5, 0.55) 45%,
+    rgba(20, 10, 5, 0.10) 75%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.jto-content {
+  position: relative;
+  z-index: 1;
+  padding: 0 60px;
+  max-width: 560px;
+}
+
+.jto-eyebrow {
+  font-family: var(--f-gotham-m);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.80);
+  margin-bottom: 14px;
+}
+
+.jto-headline {
+  font-family: var(--f-belgan);
+  font-size: 44px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  color: #fff;
+  margin-bottom: 14px;
+}
+
+.jto-sub {
+  font-family: var(--f-gotham-b);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.82);
+  margin-bottom: 28px;
+  max-width: 340px;
+}
+
+.jto-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #fff;
+  background: none;
+  cursor: pointer;
+  padding: 0 32px;
+  height: 50px;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.jto-btn span {
+  font-family: var(--f-gotham-m);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #fff;
+  transition: color 0.2s;
+}
+
+.jto-btn:hover {
+  background: #fff;
+  border-color: #fff;
+}
+
+.jto-btn:hover span {
+  color: #1e1e1e;
 }
 
 /* DELIVERY */
@@ -2324,6 +2455,27 @@
 
   .product-img-wrap {
     height: 220px;
+  }
+
+  .jto-section {
+    padding: 24px 16px;
+  }
+
+  .jto-banner {
+    height: 260px;
+    background-position: center 30%;
+  }
+
+  .jto-content {
+    padding: 0 28px;
+  }
+
+  .jto-headline {
+    font-size: 30px;
+  }
+
+  .jto-sub {
+    font-size: 12px;
   }
 
   .trending-section,
@@ -4030,4 +4182,97 @@
   font-size: 14px;
   font-weight: 700;
   color: #111;
+}
+
+/* ─── Jewellery To Own Banner ─────────────────────────────────────────── */
+.jto-section {
+  width: 100%;
+  padding: 60px 0;
+}
+
+.jto-banner {
+  position: relative;
+  width: 100%;
+  min-height: 420px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.jto-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,0,0,0.62) 0%, rgba(80,20,40,0.55) 100%);
+  z-index: 1;
+}
+
+.jto-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 48px 32px;
+  color: #fff;
+  max-width: 600px;
+}
+
+.jto-eyebrow {
+  font-family: var(--f-gotham-book);
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #f5c6a0;
+  margin-bottom: 14px;
+}
+
+.jto-headline {
+  font-family: var(--f-cormorant, Georgia, serif);
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 600;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+.jto-sub {
+  font-family: var(--f-gotham-book);
+  font-size: 16px;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 32px;
+  line-height: 1.6;
+}
+
+.jto-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 2px;
+  padding: 14px 36px;
+  font-family: var(--f-gotham-book);
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-weight: 700;
+  transition: background 0.22s ease, color 0.22s ease, transform 0.18s ease;
+}
+
+.jto-btn:hover {
+  background: #9e5571;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .jto-banner {
+    min-height: 320px;
+  }
+  .jto-content {
+    padding: 36px 20px;
+  }
 }
