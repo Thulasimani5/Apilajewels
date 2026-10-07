@@ -1,18 +1,16 @@
 import { useState, useEffect } from 'react';
 import API_BASE_URL from '../config/api';
 
-let trendingGridMemCache = null;
-const TRENDING_GRID_CACHE_KEY = 'apila_trending_grid_v5';
+// No persistent cache — we re-randomize on every load for variety
+const TRENDING_STALE_KEYS = ['apila_trending_grid', 'apila_trending_grid_v2', 'apila_trending_grid_v3', 'apila_trending_grid_v4', 'apila_trending_grid_v5'];
 
 export function useTrendingProducts() {
   const [trending, setTrending] = useState([]);
 
   useEffect(() => {
+    // Clear all stale caches so items re-randomize each load
     try {
-      localStorage.removeItem('apila_trending_grid');
-      localStorage.removeItem('apila_trending_grid_v2');
-      localStorage.removeItem('apila_trending_grid_v3');
-      localStorage.removeItem('apila_trending_grid_v4');
+      TRENDING_STALE_KEYS.forEach(k => localStorage.removeItem(k));
     } catch {}
 
     const toCard = item => {
@@ -33,24 +31,10 @@ export function useTrendingProducts() {
       };
     };
 
-    if (trendingGridMemCache && trendingGridMemCache.length >= 12) {
-      setTrending(trendingGridMemCache);
-    } else {
-      try {
-        const stored = localStorage.getItem(TRENDING_GRID_CACHE_KEY);
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length >= 12) {
-            trendingGridMemCache = parsed;
-            setTrending(parsed);
-          }
-        }
-      } catch { }
-    }
-
     const refresh = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=100`);
+        // Fetch with high limit to get all items (not just newest)
+        const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=500`);
         const data = await res.json();
         let list = Array.isArray(data) ? data : (data.data || data.products || []);
         // Filter out accessories, bangles, items without images, and sale items
@@ -70,18 +54,13 @@ export function useTrendingProducts() {
           return !isAccessory && !isBangle && hasImg && !item.isSale;
         });
 
-        // Shuffle the filtered list for random display
+        // Fisher-Yates shuffle for true randomization across all items
         for (let i = list.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [list[i], list[j]] = [list[j], list[i]];
         }
 
-        if (list.length >= 12) {
-          const cards = list.slice(0, 12).map(toCard);
-          trendingGridMemCache = cards;
-          try { localStorage.setItem(TRENDING_GRID_CACHE_KEY, JSON.stringify(cards)); } catch { }
-          setTrending(cards);
-        } else if (list.length > 0) {
+        if (list.length > 0) {
           const cards = list.slice(0, 12).map(toCard);
           setTrending(cards);
         }
