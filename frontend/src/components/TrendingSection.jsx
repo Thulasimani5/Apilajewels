@@ -6,7 +6,7 @@ import { useTrendingProducts } from '../hooks/useTrendingProducts';
 
 export default function TrendingSection() {
   const navigate = useNavigate();
-  const trending = useTrendingProducts();
+  const { trending, loaded } = useTrendingProducts();
   const [wishlisted, setWishlisted] = useState({});
 
   const toggleWishlist = (e, id) => {
@@ -15,9 +15,12 @@ export default function TrendingSection() {
     setWishlisted(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
-  // Show skeletons while loading, real items once available
-  const isLoading = trending.length === 0;
+  const isLoading = !loaded && trending.length === 0;
+  const hasItems = trending.length > 0;
   const list = trending.slice(0, 12);
+
+  // Hide section entirely if loaded but no data (e.g., DB offline)
+  if (loaded && !hasItems) return null;
 
   return (
     <section className="trending-section">

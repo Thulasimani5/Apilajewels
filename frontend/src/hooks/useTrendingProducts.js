@@ -6,6 +6,7 @@ const TRENDING_STALE_KEYS = ['apila_trending_grid', 'apila_trending_grid_v2', 'a
 
 export function useTrendingProducts() {
   const [trending, setTrending] = useState([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     // Clear all stale caches so items re-randomize each load
@@ -30,6 +31,9 @@ export function useTrendingProducts() {
         img: imgUrl,
       };
     };
+
+    // Safety timeout — stop showing skeleton after 10s if API doesn't respond
+    const timeoutId = setTimeout(() => setLoaded(true), 10000);
 
     const refresh = async () => {
       try {
@@ -66,11 +70,17 @@ export function useTrendingProducts() {
         }
       } catch (err) {
         console.error('Failed to fetch trending items:', err);
+      } finally {
+        clearTimeout(timeoutId);
+        setLoaded(true);
       }
     };
     refresh();
+
+    return () => clearTimeout(timeoutId);
   }, []);
 
-  return trending;
+  return { trending, loaded };
 }
+
 
