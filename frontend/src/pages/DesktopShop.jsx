@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect, useRef, useContext, useCallback } from 'react';
-import { Link, useSearchParams, useNavigate, useNavigationType } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate, useNavigationType, useLocation } from 'react-router-dom';
 import CategoryContext from '../context/CategoryContext';
 import { useAllProducts } from '../hooks/useProducts';
 import { useFilteredProducts } from '../hooks/useFilteredProducts';
@@ -53,6 +53,7 @@ const navIcons = {
 
 export default function DesktopShop() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const { categories } = useContext(CategoryContext);
 
@@ -93,7 +94,13 @@ export default function DesktopShop() {
     }
   }, [categories, searchParams]);
 
-  const activeFilters = useMemo(() => desktopFiltersFromParams(searchParams), [searchParams]);
+  const activeFilters = useMemo(() => {
+    const f = desktopFiltersFromParams(searchParams);
+    if (location.pathname === '/sale') {
+      f.sale = true;
+    }
+    return f;
+  }, [searchParams, location.pathname]);
   const activeSort = searchParams.get('sort') || 'recommended';
   const page = parseInt(searchParams.get('page') || '1', 10);
 
@@ -113,9 +120,11 @@ export default function DesktopShop() {
     setSearchParams(desktopBuildParams(activeFilters, sort, 1), { replace: false });
   }, [activeFilters, setSearchParams]);
 
+  const isSalePage = Boolean(activeFilters.sale || searchParams.get('sale') === 'true' || searchParams.get('isSale') === 'true');
+
   const clearAll = useCallback(() => {
-    setSearchParams(new URLSearchParams(), { replace: false });
-  }, [setSearchParams]);
+    setSearchParams(isSalePage ? new URLSearchParams({ sale: 'true' }) : new URLSearchParams(), { replace: false });
+  }, [setSearchParams, isSalePage]);
 
   const { data: productsData, isLoading, isError, error } = useAllProducts();
   const products = productsData?.data || [];
@@ -132,8 +141,9 @@ export default function DesktopShop() {
     if (activeFilters.Type?.length) return activeFilters.Type.join(', ');
     if (activeFilters.AccessoryType?.length) return activeFilters.AccessoryType.join(', ');
     if (activeFilters.Occasion.length) return activeFilters.Occasion.join(', ');
+    if (isSalePage) return 'Jewellery to Own';
     return 'All Jewels';
-  }, [activeFilters]);
+  }, [activeFilters, isSalePage]);
 
   const sortLabel = SORT_OPTIONS.find(o => o.id === activeSort)?.label || 'Recommended';
 
@@ -174,7 +184,11 @@ export default function DesktopShop() {
           <nav className="shop-breadcrumb" aria-label="Breadcrumb">
             <Link to="/" className="shop-bc-home">Home</Link>
             <span className="shop-bc-sep" aria-hidden="true" />
-            <span className="shop-bc-current">{headerTitle}</span>
+            <span className="shop-bc-current">
+              {isSalePage && headerTitle !== 'Jewellery to Own'
+                ? `Jewellery to Own / ${headerTitle}`
+                : headerTitle}
+            </span>
           </nav>
 
           <div className="shop-sort-wrap" ref={sortRef}>
@@ -229,12 +243,12 @@ export default function DesktopShop() {
             <div className="shop-error">{error?.message || 'Failed to load products'}</div>
           ) : sorted.length === 0 ? (
             <div className="shop-empty">
-              <p>No matching jewellery found</p>
+              <p>{isSalePage ? 'No sale jewellery items found' : 'No matching jewellery found'}</p>
               <button className="shop-clear-btn" onClick={clearAll}>Clear all filters</button>
             </div>
           ) : (
             <div className="shop-grid">
-              {paginated.map(p => <ShopCard key={p._id} product={p} />)}
+              {paginated.map(p => <ShopCard key={p._id} product={p} activeCategory={activeFilters.Category.length === 1 ? activeFilters.Category[0] : undefined} />)}
             </div>
           )}
 

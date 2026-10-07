@@ -3,15 +3,31 @@ import { Link } from 'react-router-dom';
 import { useWishlist } from '../context/WishlistContext';
 import { getOptimizedCloudinaryUrl } from '../utils/imageUtils';
 
-export default function ShopCard({ product }) {
+export default function ShopCard({ product, activeCategory }) {
   const { toggleWishlist, isInWishlist } = useWishlist();
   const liked = isInWishlist(product._id);
   const imgUrl = product.images?.[0]?.url || product.media?.[0]?.url || '';
-  const price = product.rentalPrice || product.price || 0;
-  const priceText = product.showPrice === false || price > 1200 ? 'Price on Request' : `₹${price.toFixed(2)}`;
-  let category = Array.isArray(product.category) ? product.category[0] : product.category;
-  if (category === 'Bangles & Bracelets') category = 'Bangles';
+  const isSale = Boolean(product.isSale);
+  const price = isSale && product.salesAmount ? product.salesAmount : (product.rentalPrice || product.price || 0);
+  const priceText = product.showPrice === false
+    ? 'Price on Request'
+    : isSale
+    ? `₹${price.toFixed(2)}`
+    : price > 1200
+    ? 'Price on Request'
+    : `₹${price.toFixed(2)}`;
+
+  const categoryArr = Array.isArray(product.category) ? product.category : (product.category ? [product.category] : []);
   const typeArray = Array.isArray(product.type) ? product.type : (product.type ? [product.type] : []);
+
+  // If filtering by a specific category, show that category label if the product belongs to it
+  let category;
+  if (activeCategory && categoryArr.some(c => c?.toLowerCase() === activeCategory.toLowerCase())) {
+    category = activeCategory;
+  } else {
+    category = categoryArr[0] || 'Jewels';
+  }
+  if (category === 'Bangles & Bracelets') category = 'Bangles';
   if (typeArray.includes('Accessories') && product.accessoryType) {
     category = product.accessoryType;
   }
@@ -19,6 +35,27 @@ export default function ShopCard({ product }) {
   return (
     <Link to={`/shop/${product._id}`} className="product-card">
       <div className="product-img-wrap">
+        {isSale && (
+          <span
+            style={{
+              position: 'absolute',
+              top: '12px',
+              left: '12px',
+              background: '#B07A85',
+              color: '#fff',
+              fontSize: '10px',
+              fontWeight: '600',
+              letterSpacing: '0.6px',
+              textTransform: 'uppercase',
+              padding: '3px 8px',
+              borderRadius: '4px',
+              zIndex: 2,
+              boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+            }}
+          >
+            For Sale
+          </span>
+        )}
         <button
           className={`product-wish${liked ? ' active' : ''}`}
           aria-label={liked ? 'Remove from wishlist' : 'Add to wishlist'}
