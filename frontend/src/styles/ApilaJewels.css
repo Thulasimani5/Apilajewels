@@ -788,60 +788,64 @@
   position: relative;
   z-index: 1;
   padding: 0 60px;
-  max-width: 560px;
+  max-width: 520px;
+  text-align: left;
 }
 
 .jto-eyebrow {
   font-family: var(--f-gotham-m);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 500;
-  letter-spacing: 0.18em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.80);
-  margin-bottom: 14px;
+  color: rgba(255, 220, 160, 0.95);
+  margin-bottom: 12px;
 }
 
 .jto-headline {
   font-family: var(--f-belgan);
-  font-size: 44px;
+  font-size: 46px;
   font-weight: 400;
-  line-height: 1.1;
-  letter-spacing: 0.02em;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
   color: #fff;
   margin-bottom: 14px;
 }
 
 .jto-sub {
   font-family: var(--f-gotham-b);
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 400;
-  line-height: 1.55;
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.82);
-  margin-bottom: 28px;
-  max-width: 340px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.80);
+  margin-bottom: 30px;
+  max-width: 320px;
 }
 
 .jto-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid #fff;
-  background: none;
+  gap: 8px;
+  border: 1.5px solid rgba(255,255,255,0.9);
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(4px);
   cursor: pointer;
-  padding: 0 32px;
-  height: 50px;
-  transition: background 0.2s, border-color 0.2s;
+  padding: 0 34px;
+  height: 48px;
+  border-radius: 2px;
+  transition: background 0.22s ease, border-color 0.22s ease;
 }
 
 .jto-btn span {
   font-family: var(--f-gotham-m);
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.16em;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: #fff;
-  transition: color 0.2s;
+  transition: color 0.22s ease;
 }
 
 .jto-btn:hover {
@@ -850,7 +854,7 @@
 }
 
 .jto-btn:hover span {
-  color: #1e1e1e;
+  color: #1a0a00;
 }
 
 /* DELIVERY */
@@ -4185,94 +4189,3 @@
 }
 
 /* ─── Jewellery To Own Banner ─────────────────────────────────────────── */
-.jto-section {
-  width: 100%;
-  padding: 60px 0;
-}
-
-.jto-banner {
-  position: relative;
-  width: 100%;
-  min-height: 420px;
-  background-size: cover;
-  background-position: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.jto-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(0,0,0,0.62) 0%, rgba(80,20,40,0.55) 100%);
-  z-index: 1;
-}
-
-.jto-content {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: 48px 32px;
-  color: #fff;
-  max-width: 600px;
-}
-
-.jto-eyebrow {
-  font-family: var(--f-gotham-book);
-  font-size: 13px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #f5c6a0;
-  margin-bottom: 14px;
-}
-
-.jto-headline {
-  font-family: var(--f-cormorant, Georgia, serif);
-  font-size: clamp(32px, 5vw, 52px);
-  font-weight: 600;
-  line-height: 1.15;
-  margin-bottom: 16px;
-  color: #fff;
-}
-
-.jto-sub {
-  font-family: var(--f-gotham-book);
-  font-size: 16px;
-  color: rgba(255,255,255,0.85);
-  margin-bottom: 32px;
-  line-height: 1.6;
-}
-
-.jto-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: #fff;
-  color: #1a1a1a;
-  border: none;
-  border-radius: 2px;
-  padding: 14px 36px;
-  font-family: var(--f-gotham-book);
-  font-size: 13px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-  font-weight: 700;
-  transition: background 0.22s ease, color 0.22s ease, transform 0.18s ease;
-}
-
-.jto-btn:hover {
-  background: #9e5571;
-  color: #fff;
-  transform: translateY(-2px);
-}
-
-@media (max-width: 768px) {
-  .jto-banner {
-    min-height: 320px;
-  }
-  .jto-content {
-    padding: 36px 20px;
-  }
-}
