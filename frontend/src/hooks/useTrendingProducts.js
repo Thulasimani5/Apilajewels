@@ -38,7 +38,7 @@ export function useTrendingProducts() {
     const refresh = async () => {
       try {
         // Fetch with high limit to get all items (not just newest)
-        const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=500`);
+        const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=5000`);
         const data = await res.json();
         let list = Array.isArray(data) ? data : (data.data || data.products || []);
         // Filter out accessories, bangles, items without images, and sale items
