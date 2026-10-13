@@ -55,9 +55,7 @@ A full-stack e-commerce platform for jewellery rental and booking — built to b
 
 ## Architecture
 
-```
 
-## Architecture
 
 ```mermaid
 flowchart TB
@@ -89,7 +87,7 @@ flowchart TB
     Services <--> Cloudinary
 ```
 
-```
+
 
 **Data Flow:** Client → Axios → Express Routes → Middleware (Auth, Rate Limiting, Visitor Tracking) → Controllers → Services/Repositories → MongoDB / Cloudinary → Response
 
