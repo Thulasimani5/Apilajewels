@@ -56,27 +56,39 @@ A full-stack e-commerce platform for jewellery rental and booking — built to b
 ## Architecture
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                        CLIENT (React)                        │
-│  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌───────────────┐  │
-│  │  Pages   │  │Components│  │  Hooks  │  │ Services/API  │  │
-│  └─────────┘  └─────────┘  └─────────┘  └───────┬───────┘  │
-└──────────────────────────────────────────────────┼───────────┘
-                                                   │ Axios
-                                                   ▼
-┌──────────────────────────────────────────────────────────────┐
-│                      SERVER (Express 5)                      │
-│  ┌──────────┐  ┌────────────┐  ┌───────────┐  ┌──────────┐ │
-│  │  Routes   │→│ Middleware  │→│Controllers │→│ Services  │ │
-│  │          │  │(Auth, Rate │  │           │  │          │  │
-│  │          │  │ Limit, CORS)│  │           │  │          │  │
-│  └──────────┘  └────────────┘  └─────┬─────┘  └────┬─────┘ │
-└──────────────────────────────────────┼──────────────┼────────┘
-                                       │              │
-                              ┌────────▼──────┐  ┌────▼──────┐
-                              │   MongoDB     │  │ Cloudinary│
-                              │  (Mongoose)   │  │  (Images) │
-                              └───────────────┘  └───────────┘
+
+## Architecture
+
+```mermaid
+flowchart TB
+    User(["Customer / Admin"])
+
+    subgraph Frontend["Frontend — React 19"]
+        UI["Pages & Components"]
+        Hooks["Hooks & React Query"]
+        Axios["Axios API Services"]
+        UI --> Hooks --> Axios
+    end
+
+    subgraph Backend["Backend — Express 5"]
+        Routes["API Routes"]
+        Middleware["Authentication · Validation · Rate Limiting"]
+        Controllers["Controllers"]
+        Services["Business Logic"]
+        Repositories["Repositories"]
+
+        Routes --> Middleware --> Controllers --> Services --> Repositories
+    end
+
+    MongoDB[("MongoDB Atlas")]
+    Cloudinary["Cloudinary Image Storage"]
+
+    User --> UI
+    Axios <-->|"REST API / JSON"| Routes
+    Repositories <--> MongoDB
+    Services <--> Cloudinary
+```
+
 ```
 
 **Data Flow:** Client → Axios → Express Routes → Middleware (Auth, Rate Limiting, Visitor Tracking) → Controllers → Services/Repositories → MongoDB / Cloudinary → Response
