@@ -58,33 +58,61 @@ A full-stack e-commerce platform for jewellery rental and booking — built to b
 
 
 ```mermaid
+
 flowchart TB
-    User(["Customer / Admin"])
+    User["Customer / Admin"]
 
     subgraph Frontend["Frontend — React 19"]
-        UI["Pages & Components"]
-        Hooks["Hooks & React Query"]
-        Axios["Axios API Services"]
-        UI --> Hooks --> Axios
+        UI["Pages & Responsive Components"]
+        Hooks["Custom Hooks & State Management"]
+        Services["API Services — Axios"]
+        UI --> Hooks
+        Hooks --> Services
     end
 
-    subgraph Backend["Backend — Express 5"]
+    subgraph Backend["Backend — Node.js & Express 5"]
         Routes["API Routes"]
-        Middleware["Authentication · Validation · Rate Limiting"]
+        Middleware["Middleware<br/>JWT Authentication · Authorization<br/>Rate Limiting · Visitor Tracking · CORS"]
+        Validators["Request Validation"]
         Controllers["Controllers"]
-        Services["Business Logic"]
-        Repositories["Repositories"]
+        Business["Services — Business Logic"]
+        Repositories["Repositories — Data Access"]
 
-        Routes --> Middleware --> Controllers --> Services --> Repositories
+        Routes --> Middleware
+        Middleware --> Validators
+        Validators --> Controllers
+        Controllers --> Business
+        Business --> Repositories
     end
 
-    MongoDB[("MongoDB Atlas")]
-    Cloudinary["Cloudinary Image Storage"]
+    subgraph Data["Data & External Services"]
+        MongoDB[("MongoDB Atlas<br/>Mongoose Models")]
+        Cloudinary["Cloudinary<br/>Image Storage & Optimization"]
+        Cache["TanStack React Query<br/>Client-Side Caching & Persistence"]
+    end
+
+    Services -->|"HTTP / REST API"| Routes
+    Repositories --> MongoDB
+    Business -->|"Image Upload / Management"| Cloudinary
+    Hooks -.-> Cache
+
+    MongoDB -->|"Data Results"| Repositories
+    Cloudinary -->|"Image URLs"| Business
+    Repositories --> Business
+    Business --> Controllers
+    Controllers --> Routes
+    Routes -->|"JSON Responses"| Services
 
     User --> UI
-    Axios <-->|"REST API / JSON"| Routes
-    Repositories <--> MongoDB
-    Services <--> Cloudinary
+
+    classDef frontend fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef backend fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef storage fill:#fef3c7,stroke:#d97706,color:#78350f
+
+    class UI,Hooks,Services,Cache frontend
+    class Routes,Middleware,Validators,Controllers,Business,Repositories backend
+    class MongoDB,Cloudinary storage
+
 ```
 
 
