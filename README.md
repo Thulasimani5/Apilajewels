@@ -362,12 +362,23 @@ npm run dev
 
 ## License
 
-MIT License
+## License
 
+Copyright (c) 2026 [ Thulasimani ]. All rights reserved.
+
+This source code is made available for viewing and inspection purposes only.
+
+No permission is granted to use, copy, modify, distribute, sublicense, or commercially exploit this software without prior written permission from the copyright holder.
+
+Access to this repository does not grant any rights to the software beyond viewing its source code.
+
+Unauthorized use, reproduction, or distribution of this software is prohibited.
+
+Third-party components, if any, remain subject to their respective licenses.
 ---
 
 ## Author
 
 **Thulasimani**
 
-[GitHub](https://github.com/Thulasimani5) · [LinkedIn](#) · [Portfolio](#) · [Email](#)
+[GitHub](https://github.com/Thulasimani5) · [LinkedIn](https://www.linkedin.com/in/thulasimani-d-3a55382b4/) · [Portfolio](#) · [Email](thulasi3st@gmail.com)
