@@ -264,6 +264,80 @@ const AdminDashboard = () => {
     }
   };
 
+  const [savingBookingField, setSavingBookingField] = useState(null);
+  const [savedBookingField, setSavedBookingField] = useState(null);
+
+  const getBookingFinancials = () => {
+    const selectedJewels = adminJewelleries.filter(j => newBookingData.jewelleryIds.includes(j._id));
+    const regularRentalAmount = selectedJewels.reduce((sum, j) => sum + (j.rentalPrice || j.price || 0), 0);
+    const tempRentalAmount = (newBookingData.tempJewelleries || []).reduce((sum, j) => sum + (parseFloat(j.rentalPrice) || 0), 0);
+    const rentalAmount = regularRentalAmount + tempRentalAmount;
+
+    const dPercent = parseFloat(newBookingData.discountPercent) || 0;
+    const dAmount = parseFloat(newBookingData.discountAmount) || 0;
+    const discountAmount = dAmount > 0 ? dAmount : (rentalAmount * dPercent) / 100;
+    const netAmount = Math.max(0, rentalAmount - discountAmount);
+    const advancePaid = parseFloat(newBookingData.advancePaid) || 0;
+    const balanceAmount = Math.max(0, netAmount - advancePaid);
+    const depositAmount = parseFloat(newBookingData.depositAmount) || 0;
+
+    return {
+      rentalAmount,
+      discountPercent: dPercent,
+      discountAmount,
+      totalAmount: netAmount,
+      advancePaid,
+      balanceAmount,
+      depositAmount
+    };
+  };
+
+  const handleSaveBookingField = async (fieldKey, payloadOrFn) => {
+    if (!editingBookingId) return;
+    setSavingBookingField(fieldKey);
+    try {
+      const payload = typeof payloadOrFn === 'function' ? payloadOrFn() : payloadOrFn;
+      const res = await fetch(`${API_BASE_URL}/api/bookings/${editingBookingId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+      const result = await res.json();
+      if (result.success) {
+        setSavedBookingField(fieldKey);
+        setTimeout(() => setSavedBookingField(prev => prev === fieldKey ? null : prev), 2500);
+        if (result.data) {
+          setBookings(prev => prev.map(b => b._id === editingBookingId ? { ...b, ...result.data } : b));
+        }
+      } else {
+        alert(result.error || 'Failed to update field.');
+      }
+    } catch (err) {
+      console.error('Error updating booking field:', err);
+      alert('Network error while saving booking field.');
+    } finally {
+      setSavingBookingField(null);
+    }
+  };
+
+  const BookingFieldUpdateBtn = ({ fieldKey, onClick }) => !editingBookingId ? null : (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={savingBookingField === fieldKey}
+      className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full transition-all flex-shrink-0 flex items-center gap-1 ${
+        savingBookingField === fieldKey ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+        : savedBookingField === fieldKey ? 'bg-emerald-100 text-emerald-600'
+        : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white border border-emerald-200 shadow-xs'
+      }`}
+    >
+      {savingBookingField === fieldKey ? '…' : savedBookingField === fieldKey ? <><Check size={9} /> Saved</> : 'Update'}
+    </button>
+  );
+
   const handleSaveBooking = async (e) => {
     e.preventDefault();
     if (!newBookingData.jewelleryIds.length && (!newBookingData.tempJewelleries || !newBookingData.tempJewelleries.length)) {
@@ -672,7 +746,8 @@ const AdminDashboard = () => {
     shopName: '',
     stoneName: [],
     stoneColour: [],
-    showPrice: true
+    showPrice: true,
+    isSale: false
   });
   const [mediaList, setMediaList] = useState([]);
   const [dragActive, setDragActive] = useState(false);
@@ -858,7 +933,7 @@ const AdminDashboard = () => {
           category: [], type: [], accessoryType: '', occasion: [], colour: 'Gold',
           material: '', size: '', finish: '',
           purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: '',
-          stoneName: [], stoneColour: []
+          stoneName: [], stoneColour: [], showPrice: true, isSale: false
         });
         setMediaList([]);
       } else {
@@ -1189,7 +1264,8 @@ const AdminDashboard = () => {
                           jewelId: '', name: '', description: '', price: '', deposit: '',
                           category: [], type: [], accessoryType: '', occasion: [], colour: 'Gold',
                           material: '', size: '', finish: '',
-                          purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: ''
+                          purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: '',
+                          isSale: false
                         });
                         setMediaList([]);
                         setShowAddForm(true);
@@ -1262,7 +1338,14 @@ const AdminDashboard = () => {
                                         <img src={jewel.images?.[0]?.url || jewel.images?.[0]} alt={jewel.name} className="w-full h-full object-cover" />
                                       )}
                                     </div>
-                                    <div className="font-bold text-gray-900 max-w-[160px] truncate">{jewel.name}</div>
+                                    <div className="flex items-center gap-1.5 flex-wrap">
+                                      <div className="font-bold text-gray-900 max-w-[160px] truncate">{jewel.name}</div>
+                                      {jewel.isSale && (
+                                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 uppercase tracking-wide">
+                                          SALE
+                                        </span>
+                                      )}
+                                    </div>
                                   </div>
                                 </td>
                                 <td className="px-6 py-4">
@@ -1302,6 +1385,8 @@ const AdminDashboard = () => {
                                           rentAmount: jewel.rentAmount || '',
                                           salesAmount: jewel.salesAmount || '',
                                           shopName: jewel.shopName || '',
+                                          showPrice: jewel.showPrice !== false,
+                                          isSale: jewel.isSale === true,
                                         });
                                         setMediaList(
                                           jewel.images
@@ -1491,7 +1576,14 @@ const AdminDashboard = () => {
                                       <img src={jewel.images?.[0]?.url || jewel.images?.[0]} alt={jewel.name} className="w-full h-full object-cover" />
                                     )}
                                   </div>
-                                  <div className="font-bold text-gray-900 max-w-[200px] truncate">{jewel.name}</div>
+                                  <div className="flex items-center gap-1.5 flex-wrap">
+                                    <div className="font-bold text-gray-900 max-w-[200px] truncate">{jewel.name}</div>
+                                    {jewel.isSale && (
+                                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 uppercase tracking-wide">
+                                        SALE
+                                      </span>
+                                    )}
+                                  </div>
                                 </div>
                               </td>
                               <td className="px-6 py-4 font-mono text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded-md inline-block mt-3">{jewel.jewelId}</td>
@@ -1609,6 +1701,38 @@ const AdminDashboard = () => {
                       <div className="flex justify-between items-center flex-1">
                         <span className="text-xs text-gray-600">Show price on detail page</span>
                         <FieldUpdateBtn field="showPrice" value={formData.showPrice !== false} />
+                      </div>
+                    </div>
+
+                    <div className={`p-3.5 rounded-lg border transition-all mt-3 ${formData.isSale ? 'bg-amber-50/80 border-amber-300 ring-1 ring-amber-300/50' : 'bg-gray-50 border-gray-200'}`}>
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2.5">
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={formData.isSale === true}
+                              onChange={e => setFormData(prev => ({ ...prev, isSale: e.target.checked }))}
+                              className="sr-only peer"
+                            />
+                            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#B07A85]"></div>
+                          </label>
+                          <div>
+                            <span className="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+                              Tag as Sale Item (Shop to Own)
+                              {formData.isSale && (
+                                <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-200 text-amber-900 uppercase">
+                                  Sale Only
+                                </span>
+                              )}
+                            </span>
+                            <p className="text-[11px] text-gray-500 mt-0.5">
+                              {formData.isSale
+                                ? 'Only displayed on the Sale page. Excluded from Rental jewellery page.'
+                                : 'Click to make this a Sale-only item (hidden from Rental collection).'}
+                            </p>
+                          </div>
+                        </div>
+                        <FieldUpdateBtn field="isSale" value={formData.isSale === true} />
                       </div>
                     </div>
                   </div>
@@ -3008,7 +3132,10 @@ const AdminDashboard = () => {
               {/* Row 1: Booking ID, Customer Name, Phone */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Booking ID</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Booking ID</label>
+                    <BookingFieldUpdateBtn fieldKey="bookingCustomId" onClick={() => handleSaveBookingField('bookingCustomId', { bookingCustomId: newBookingData.bookingCustomId })} />
+                  </div>
                   <input
                     type="text"
                     placeholder={`e.g. BK-${String(bookings.length + 1).padStart(3, '0')}`}
@@ -3018,7 +3145,16 @@ const AdminDashboard = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Customer Name*</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Customer Name*</label>
+                    <BookingFieldUpdateBtn fieldKey="customerName" onClick={() => handleSaveBookingField('customerName', {
+                      customerDetails: {
+                        name: newBookingData.customerName,
+                        phone: newBookingData.customerPhone,
+                        address: newBookingData.customerAddress
+                      }
+                    })} />
+                  </div>
                   <input
                     type="text"
                     required
@@ -3029,7 +3165,16 @@ const AdminDashboard = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Customer Mobile / Phone</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Customer Mobile / Phone</label>
+                    <BookingFieldUpdateBtn fieldKey="customerPhone" onClick={() => handleSaveBookingField('customerPhone', {
+                      customerDetails: {
+                        name: newBookingData.customerName,
+                        phone: newBookingData.customerPhone,
+                        address: newBookingData.customerAddress
+                      }
+                    })} />
+                  </div>
                   <input
                     type="text"
                     placeholder="e.g. 98765xxxxx"
@@ -3043,7 +3188,10 @@ const AdminDashboard = () => {
               {/* Row 2: Event Date, Pickup Date, Return Date, Booking Place */}
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Event Date</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Event Date</label>
+                    <BookingFieldUpdateBtn fieldKey="eventDate" onClick={() => handleSaveBookingField('eventDate', { eventDate: newBookingData.eventDate || null })} />
+                  </div>
                   <input
                     type="date"
                     value={newBookingData.eventDate}
@@ -3052,7 +3200,10 @@ const AdminDashboard = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Pickup Date</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Pickup Date</label>
+                    <BookingFieldUpdateBtn fieldKey="pickupDate" onClick={() => handleSaveBookingField('pickupDate', { pickupDate: newBookingData.pickupDate || null })} />
+                  </div>
                   <input
                     type="date"
                     value={newBookingData.pickupDate}
@@ -3061,7 +3212,10 @@ const AdminDashboard = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Return Date</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Return Date</label>
+                    <BookingFieldUpdateBtn fieldKey="returnDate" onClick={() => handleSaveBookingField('returnDate', { returnDate: newBookingData.returnDate || null })} />
+                  </div>
                   <input
                     type="date"
                     value={newBookingData.returnDate}
@@ -3070,7 +3224,10 @@ const AdminDashboard = () => {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Booking Place / Venue</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Booking Place / Venue</label>
+                    <BookingFieldUpdateBtn fieldKey="bookingPlace" onClick={() => handleSaveBookingField('bookingPlace', { bookingPlace: newBookingData.bookingPlace })} />
+                  </div>
                   <input
                     type="text"
                     placeholder="e.g. Chennai Hall"
@@ -3185,9 +3342,16 @@ const AdminDashboard = () => {
                         <h4 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
                           ALL SELECTED JEWELLERY ITEMS FOR THIS BOOKING ({totalCount}):
                         </h4>
-                        <span className="text-[11px] text-[#B07A85] font-bold">
-                          {selectedDbItems.length} Catalogue + {tempItems.length} Temp Custom
-                        </span>
+                        <div className="flex items-center gap-3">
+                          <span className="text-[11px] text-[#B07A85] font-bold">
+                            {selectedDbItems.length} Catalogue + {tempItems.length} Temp Custom
+                          </span>
+                          <BookingFieldUpdateBtn fieldKey="jewelleryItems" onClick={() => handleSaveBookingField('jewelleryItems', () => ({
+                            jewelleryIds: newBookingData.jewelleryIds,
+                            tempJewelleries: newBookingData.tempJewelleries || [],
+                            ...getBookingFinancials()
+                          }))} />
+                        </div>
                       </div>
 
                       <div className="space-y-2">
@@ -3297,7 +3461,10 @@ const AdminDashboard = () => {
                 return (
                   <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-amber-50/40 p-4 rounded-xl border border-amber-100">
                     <div>
-                      <label className="block text-xs font-bold uppercase text-gray-700 mb-1">Discount %</label>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="block text-xs font-bold uppercase text-gray-700">Discount %</label>
+                        <BookingFieldUpdateBtn fieldKey="discountPercent" onClick={() => handleSaveBookingField('discountPercent', () => getBookingFinancials())} />
+                      </div>
                       <input
                         type="number"
                         min="0"
@@ -3322,7 +3489,10 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold uppercase text-gray-700 mb-1">Discount Amount ₹</label>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="block text-xs font-bold uppercase text-gray-700">Discount Amount ₹</label>
+                        <BookingFieldUpdateBtn fieldKey="discountAmount" onClick={() => handleSaveBookingField('discountAmount', () => getBookingFinancials())} />
+                      </div>
                       <input
                         type="number"
                         min="0"
@@ -3346,7 +3516,10 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold uppercase text-gray-700 mb-1">Advance Paid ₹</label>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="block text-xs font-bold uppercase text-gray-700">Advance Paid ₹</label>
+                        <BookingFieldUpdateBtn fieldKey="advancePaid" onClick={() => handleSaveBookingField('advancePaid', () => getBookingFinancials())} />
+                      </div>
                       <input
                         type="number"
                         min="0"
@@ -3363,7 +3536,10 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold uppercase text-gray-700 mb-1">Deposit ₹</label>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="block text-xs font-bold uppercase text-gray-700">Deposit ₹</label>
+                        <BookingFieldUpdateBtn fieldKey="depositAmount" onClick={() => handleSaveBookingField('depositAmount', () => getBookingFinancials())} />
+                      </div>
                       <input
                         type="number"
                         min="0"
@@ -3386,7 +3562,10 @@ const AdminDashboard = () => {
               {/* Row 5: Payment Status, Booking Status, Notes */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Payment Status</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Payment Status</label>
+                    <BookingFieldUpdateBtn fieldKey="paymentStatus" onClick={() => handleSaveBookingField('paymentStatus', { paymentStatus: newBookingData.paymentStatus })} />
+                  </div>
                   <select
                     value={newBookingData.paymentStatus}
                     onChange={e => setNewBookingData(prev => ({ ...prev, paymentStatus: e.target.value }))}
@@ -3398,7 +3577,10 @@ const AdminDashboard = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Booking Status</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Booking Status</label>
+                    <BookingFieldUpdateBtn fieldKey="status" onClick={() => handleSaveBookingField('status', { status: newBookingData.status })} />
+                  </div>
                   <select
                     value={newBookingData.status}
                     onChange={e => setNewBookingData(prev => ({ ...prev, status: e.target.value }))}
@@ -3412,7 +3594,10 @@ const AdminDashboard = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Notes / Special Remarks</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Notes / Special Remarks</label>
+                    <BookingFieldUpdateBtn fieldKey="notes" onClick={() => handleSaveBookingField('notes', { notes: newBookingData.notes })} />
+                  </div>
                   <input
                     type="text"
                     placeholder="e.g. Pink set"

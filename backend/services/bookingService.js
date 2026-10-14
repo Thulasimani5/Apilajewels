@@ -4,26 +4,28 @@ const auditLogService = require('./auditLogService');
 const ErrorResponse = require('../utils/errorHandler');
 
 class BookingService {
-  validateBookingDates(pickupDate, eventDate, returnDate) {
-    if (pickupDate && eventDate) {
-      const pDate = new Date(pickupDate);
-      const eDate = new Date(eventDate);
-      if (pDate > eDate) {
-        throw new ErrorResponse('Pickup date must be on or before event date', 400);
-      }
-    }
-    if (eventDate && returnDate) {
-      const eDate = new Date(eventDate);
-      const rDate = new Date(returnDate);
-      if (eDate > rDate) {
-        throw new ErrorResponse('Event date must be on or before return date', 400);
-      }
-    }
+  validateBookingDates(pickupDate, eventDate, returnDate, isAdmin = false) {
     if (pickupDate && returnDate) {
       const pDate = new Date(pickupDate);
       const rDate = new Date(returnDate);
       if (pDate > rDate) {
         throw new ErrorResponse('Pickup date must be on or before return date', 400);
+      }
+    }
+    if (!isAdmin) {
+      if (pickupDate && eventDate) {
+        const pDate = new Date(pickupDate);
+        const eDate = new Date(eventDate);
+        if (pDate > eDate) {
+          throw new ErrorResponse('Pickup date must be on or before event date', 400);
+        }
+      }
+      if (eventDate && returnDate) {
+        const eDate = new Date(eventDate);
+        const rDate = new Date(returnDate);
+        if (eDate > rDate) {
+          throw new ErrorResponse('Event date must be on or before return date', 400);
+        }
       }
     }
   }
@@ -155,19 +157,30 @@ class BookingService {
       throw new ErrorResponse('Booking not found', 404);
     }
 
-    const pickupDate = bookingData.pickupDate || existing.pickupDate;
-    const eventDate = bookingData.eventDate || existing.eventDate;
-    const returnDate = bookingData.returnDate || existing.returnDate;
-    const jewelleryIds = bookingData.jewelleryIds || existing.jewelleryIds;
+    const pickupDate = bookingData.pickupDate !== undefined ? bookingData.pickupDate : existing.pickupDate;
+    const eventDate = bookingData.eventDate !== undefined ? bookingData.eventDate : existing.eventDate;
+    const returnDate = bookingData.returnDate !== undefined ? bookingData.returnDate : existing.returnDate;
+    const jewelleryIds = bookingData.jewelleryIds !== undefined ? bookingData.jewelleryIds : existing.jewelleryIds;
 
-    this.validateBookingDates(pickupDate, eventDate, returnDate);
+    const datesModified = bookingData.pickupDate !== undefined || bookingData.eventDate !== undefined || bookingData.returnDate !== undefined;
+    if (datesModified) {
+      this.validateBookingDates(pickupDate, eventDate, returnDate, !!adminUser);
+    }
 
     if (bookingData.status) {
       this.validateStatusTransition(existing.status, bookingData.status);
     }
 
-    if (jewelleryIds && jewelleryIds.length > 0 && pickupDate && returnDate) {
+    if (datesModified && jewelleryIds && jewelleryIds.length > 0 && pickupDate && returnDate) {
       await this.checkDateConflicts(jewelleryIds, pickupDate, returnDate, id);
+    }
+
+    // Merge customerDetails if partially provided
+    if (bookingData.customerDetails) {
+      bookingData.customerDetails = {
+        ...(existing.customerDetails || {}),
+        ...bookingData.customerDetails
+      };
     }
 
     const oldValue = existing.toObject();
