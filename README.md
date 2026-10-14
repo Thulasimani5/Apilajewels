@@ -1,8 +1,10 @@
 # Apila Jewels
 
-A full-stack e-commerce platform for jewellery rental and booking — built to bring a premium, mobile-first shopping experience to traditional jewellery businesses.
+![Apila Jewels Banner](./docs/banner.png)
 
-[Live Demo](https://apilajewels.in) · [GitHub](https://github.com/Thulasimani5/Apilajewels) · [API Docs](#api-documentation) · [Demo Video](#screenshots--demo)
+> A full-stack e-commerce platform for jewellery rental and booking — built to bring a premium, mobile-first shopping experience to traditional jewellery businesses.
+
+[Live Demo](https://apilajewels.in) · [GitHub](https://github.com/Thulasimani5/Apilajewels) · [API Docs](#api-documentation)
 
 ---
 
@@ -17,22 +19,28 @@ A full-stack e-commerce platform for jewellery rental and booking — built to b
 
 ## Key Features
 
-- 🛍️ **Product Catalog** — Browse jewellery with rich image galleries, pricing, and detailed descriptions
-- 🔍 **Advanced Filtering** — Filter by category, type, price range, and more with a mobile-optimized bottom sheet
-- 🛒 **Cart & Wishlist** — Persistent cart with guest support (syncs on login) and wishlist functionality
-- 📅 **Booking System** — Book jewellery for rental with date selection, payment tracking, and status management
-- 👤 **Authentication** — JWT-based auth with email login, registration, and role-based access control
-- 🛡️ **Admin Dashboard** — Full CRUD for products, bookings, categories, users, and analytics
-- 📱 **Responsive Design** — Dedicated mobile and desktop views for an optimized experience on every device
-- 💳 **Payment Tracking** — Record payments against bookings with admin-managed payment summaries
-- ☁️ **Cloud Image Management** — Cloudinary integration for product and category image uploads
-- 📊 **Visitor Tracking** — Built-in middleware for tracking site visitors and guest carts
+- **Product Catalog** — Browse jewellery with rich image galleries, pricing, and detailed descriptions
+- **Advanced Filtering** — Filter by category, type, price range, and more with a mobile-optimized bottom sheet
+- **Cart & Wishlist** — Persistent cart with guest support (syncs on login) and wishlist functionality
+- **Booking System** — Book jewellery for rental with date selection, payment tracking, and status management
+- **Authentication** — JWT-based auth with email login, registration, and role-based access control
+- **Admin Dashboard** — Full CRUD for products, bookings, categories, users, and analytics
+- **Responsive Design** — Dedicated mobile and desktop views for an optimized experience on every device
+- **Payment Tracking** — Record payments against bookings with admin-managed payment summaries
+- **Cloud Image Management** — Cloudinary integration for product and category image uploads (up to 20 images per item)
+- **Visitor Tracking** — Built-in middleware for tracking site visitors and guest carts
 
 ---
 
 ## Screenshots / Demo
 
-> *Screenshots and demo video coming soon.*
+| Home | Catalog |
+|---|---|
+| ![Apila Jewels Home](./docs/screenshots/home.png) | ![Shop Catalog & Filters](./docs/screenshots/shop.png) |
+
+| Product Details & Booking |
+|---|
+| ![Product Details](./docs/screenshots/product.png) |
 
 ---
 
@@ -44,21 +52,18 @@ A full-stack e-commerce platform for jewellery rental and booking — built to b
 | **Backend** | Node.js, Express 5 |
 | **Database** | MongoDB, Mongoose 9 |
 | **State Management** | TanStack React Query 5 (with persistence) |
-| **Authentication** | JWT (JSON Web Tokens) |
+| **Authentication** | JWT (JSON Web Tokens), bcryptjs |
 | **Image Storage** | Cloudinary |
 | **Icons** | Lucide React |
 | **HTTP Client** | Axios |
-| **Deployment** | Vercel (Backend & Frontend) |
-| **Tools** | Git, GitHub, Nodemon |
+| **Deployment** | Vercel (Frontend & Backend) |
+| **Tools** | Git, Nodemon |
 
 ---
 
 ## Architecture
 
-
-
 ```mermaid
-
 flowchart TB
     User["Customer / Admin"]
 
@@ -112,10 +117,7 @@ flowchart TB
     class UI,Hooks,Services,Cache frontend
     class Routes,Middleware,Validators,Controllers,Business,Repositories backend
     class MongoDB,Cloudinary storage
-
 ```
-
-
 
 **Data Flow:** Client → Axios → Express Routes → Middleware (Auth, Rate Limiting, Visitor Tracking) → Controllers → Services/Repositories → MongoDB / Cloudinary → Response
 
@@ -123,12 +125,12 @@ flowchart TB
 
 ## Project Structure
 
-```
+```text
 Apilajewels/
 ├── backend/
 │   ├── config/          # DB connection, Cloudinary, env validation
 │   ├── controllers/     # Route handlers (auth, jewellery, bookings, cart, category, payment)
-│   ├── middleware/       # Auth (JWT), rate limiter, visitor tracking
+│   ├── middleware/      # Auth (JWT), rate limiter, visitor tracking
 │   ├── models/          # Mongoose schemas (User, Jewellery, Booking, Category, Cart, AuditLog)
 │   ├── repositories/    # Data access layer
 │   ├── routes/          # Express route definitions
@@ -143,14 +145,15 @@ Apilajewels/
 │   │   │   ├── admin/   # Admin dashboard components (products, bookings, users, categories)
 │   │   │   └── mobileHome/ # Mobile-specific home components
 │   │   ├── constants/   # App-wide constants and config
-│   │   ├── context/     # React Context (Auth, Category)
+│   │   ├── context/     # React Context (Auth, Category, Cart, Wishlist)
 │   │   ├── hooks/       # Custom hooks (useFilteredProducts, useAdminProducts, etc.)
-│   │   │   └── admin/   # Admin-specific hooks
 │   │   ├── pages/       # Route pages (Home, Shop, ProductDetails, Cart, Wishlist, Admin, etc.)
 │   │   ├── services/    # API service functions
 │   │   ├── styles/      # CSS styles
 │   │   └── utils/       # Utility functions (filters, constants)
 │   └── package.json
+├── docs/                # Project banner and screenshots
+├── run-dev.js           # Concurrent runner for development
 ├── .gitignore
 └── README.md
 ```
@@ -169,8 +172,8 @@ Apilajewels/
 ## Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/Thulasimani5/Apilajewels.git
+# Clone the repository (SalesDev branch)
+git clone --branch SalesDev --single-branch https://github.com/Thulasimani5/Apilajewels.git
 cd Apilajewels
 
 # Install backend dependencies
@@ -208,8 +211,19 @@ CLOUDINARY_API_SECRET=your_api_secret
 Create a `.env` file in the `frontend/` directory:
 
 ```env
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=http://localhost:5000
 ```
+
+| Variable | Required | Description |
+| --- | --- | --- |
+| `MONGO_URI` | Yes | MongoDB connection string |
+| `JWT_SECRET` | Yes | Secret key for signing JSON Web Tokens |
+| `PORT` | No | Server port (defaults to 5000) |
+| `NODE_ENV` | No | Runtime environment (`development` / `production`) |
+| `CLOUDINARY_CLOUD_NAME` | Yes (for uploads) | Cloudinary account cloud name |
+| `CLOUDINARY_API_KEY` | Yes (for uploads) | Cloudinary API key |
+| `CLOUDINARY_API_SECRET` | Yes (for uploads) | Cloudinary API secret |
+| `VITE_API_URL` | Yes (frontend) | Backend API base origin URL |
 
 ---
 
@@ -221,15 +235,16 @@ node run-dev.js
 
 # Or run separately:
 
-# Backend (from /backend)
+# Backend (from backend/)
 npm run dev
 
-# Frontend (from /frontend)
+# Frontend (from frontend/)
 npm run dev
 ```
 
 - **Frontend:** http://localhost:5173
 - **Backend API:** http://localhost:5000
+- **Health Check:** http://localhost:5000/api/health
 
 ---
 
@@ -238,7 +253,7 @@ npm run dev
 ### Authentication
 
 | Method | Endpoint | Description | Access |
-|--------|----------|-------------|--------|
+|---|---|---|---|
 | `POST` | `/api/auth/register` | Register a new user | Public |
 | `POST` | `/api/auth/login` | Login with credentials | Public |
 | `POST` | `/api/auth/email-login` | Login with email only | Public |
@@ -249,7 +264,7 @@ npm run dev
 ### Jewellery
 
 | Method | Endpoint | Description | Access |
-|--------|----------|-------------|--------|
+|---|---|---|---|
 | `GET` | `/api/jewellery` | Get all jewellery items | Public |
 | `GET` | `/api/jewellery/:id` | Get single jewellery item | Public |
 | `POST` | `/api/jewellery` | Create jewellery (with images) | Admin |
@@ -260,7 +275,7 @@ npm run dev
 ### Bookings
 
 | Method | Endpoint | Description | Access |
-|--------|----------|-------------|--------|
+|---|---|---|---|
 | `GET` | `/api/bookings` | Get all bookings | Public (optional auth) |
 | `POST` | `/api/bookings` | Create a booking | Public (optional auth) |
 | `GET` | `/api/bookings/my-bookings` | Get current user's bookings | Private |
@@ -272,7 +287,7 @@ npm run dev
 ### Categories
 
 | Method | Endpoint | Description | Access |
-|--------|----------|-------------|--------|
+|---|---|---|---|
 | `GET` | `/api/categories` | Get all categories | Public |
 | `POST` | `/api/categories` | Create category (with image) | Admin |
 | `PUT` | `/api/categories/:id` | Update category (with image) | Admin |
@@ -281,7 +296,7 @@ npm run dev
 ### Cart
 
 | Method | Endpoint | Description | Access |
-|--------|----------|-------------|--------|
+|---|---|---|---|
 | `GET` | `/api/cart` | Get cart | Public (optional auth) |
 | `PUT` | `/api/cart` | Sync/update cart | Public (optional auth) |
 | `GET` | `/api/cart/all-guests` | Get all guest carts | Admin |
@@ -289,7 +304,7 @@ npm run dev
 ### Payments
 
 | Method | Endpoint | Description | Access |
-|--------|----------|-------------|--------|
+|---|---|---|---|
 | `GET` | `/api/payments/booking/:bookingId` | Get payment summary | Private |
 | `POST` | `/api/payments/record` | Record a payment | Admin |
 | `POST` | `/api/payments/create-order` | Create payment gateway order | Private |
@@ -297,7 +312,7 @@ npm run dev
 ### Health
 
 | Method | Endpoint | Description | Access |
-|--------|----------|-------------|--------|
+|---|---|---|---|
 | `GET` | `/api/health` | API health check | Public |
 
 ---
@@ -305,9 +320,9 @@ npm run dev
 ## Deployment
 
 | Service | Platform | URL |
-|---------|----------|-----|
-| **Frontend** | Vercel | [apilajewels.in](https://apilajewels.in) |
-| **Backend** | Vercel | [apilajewels.vercel.app](https://apilajewels.vercel.app) |
+|---|---|---|
+| **Frontend** | Vercel | [https://apilajewels.in](https://apilajewels.in) |
+| **Backend** | Vercel | [https://apilajewels-1rlz.vercel.app](https://apilajewels-1rlz.vercel.app) |
 | **Database** | MongoDB Atlas | Cloud hosted |
 | **Images** | Cloudinary | Cloud hosted |
 
@@ -315,14 +330,14 @@ npm run dev
 
 ## Security
 
-- 🔐 **JWT Authentication** — Secure token-based auth with Bearer tokens
-- 🔑 **Password Hashing** — bcryptjs for secure password storage
-- ✅ **Input Validation** — Request validation on auth, products, bookings, and categories
-- 🚦 **Rate Limiting** — In-memory rate limiter on sensitive routes (login, register)
-- 🛡️ **Security Headers** — X-Content-Type-Options, X-Frame-Options, X-XSS-Protection
-- 🌐 **CORS** — Origin-based whitelisting for cross-origin requests
-- 🔒 **Role-Based Access** — Admin-only routes protected with `authorize('admin')` middleware
-- 📦 **Environment Secrets** — All sensitive config via environment variables with validation
+- **JWT Authentication** — Secure token-based auth with Bearer tokens
+- **Password Hashing** — bcryptjs for secure password storage with salt rounds
+- **Input Validation** — Request validation on auth, products, bookings, and categories
+- **Rate Limiting** — In-memory rate limiter on sensitive routes (login, register)
+- **Security Headers** — `X-Content-Type-Options`, `X-Frame-Options`, `X-XSS-Protection`
+- **CORS** — Origin-based whitelisting for cross-origin requests
+- **Role-Based Access** — Admin-only routes protected with `authorize('admin')` middleware
+- **Environment Secrets** — All sensitive config via environment variables with validation
 
 ---
 
@@ -350,19 +365,19 @@ npm run dev
 
 ## Future Improvements
 
-- 💳 Razorpay/Stripe payment gateway integration
-- 🔔 Real-time booking status notifications (email/SMS)
-- 📊 Advanced analytics dashboard with revenue charts
-- 🔍 Full-text search with Elasticsearch
-- 📱 Progressive Web App (PWA) support
-- 🌐 Multi-language support (Tamil, Hindi, English)
-- ⭐ Customer reviews and ratings system
+- Razorpay / Stripe payment gateway live integration
+- Real-time booking status notifications (email / SMS)
+- Advanced analytics dashboard with revenue charts
+- Full-text search with Elasticsearch
+- Progressive Web App (PWA) support
+- Multi-language support (Tamil, Hindi, English)
+- Customer reviews and ratings system
 
 ---
 
 ## License
 
-Copyright (c) 2026 [ Thulasimani ]. All rights reserved.
+Copyright (c) 2026 Thulasimani. All rights reserved.
 
 This source code is made available for viewing and inspection purposes only.
 
@@ -378,4 +393,4 @@ Unauthorized use, reproduction, or distribution of this software is prohibited.
 
 **Thulasimani**
 
-[GitHub](https://github.com/Thulasimani5) · [LinkedIn](https://www.linkedin.com/in/thulasimani-d-3a55382b4/) · [Portfolio](#) · [Email](thulasi3st@gmail.com)
+[GitHub](https://github.com/Thulasimani5) · [LinkedIn](https://www.linkedin.com/in/thulasimani-d-3a55382b4/) · [Email](mailto:thulasimanid.cb23@bitsathy.ac.in)
