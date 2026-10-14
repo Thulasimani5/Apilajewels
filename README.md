@@ -362,8 +362,6 @@ npm run dev
 
 ## License
 
-## License
-
 Copyright (c) 2026 [ Thulasimani ]. All rights reserved.
 
 This source code is made available for viewing and inspection purposes only.
@@ -374,7 +372,6 @@ Access to this repository does not grant any rights to the software beyond viewi
 
 Unauthorized use, reproduction, or distribution of this software is prohibited.
 
-Third-party components, if any, remain subject to their respective licenses.
 ---
 
 ## Author
