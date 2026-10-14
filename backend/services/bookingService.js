@@ -5,6 +5,9 @@ const ErrorResponse = require('../utils/errorHandler');
 
 class BookingService {
   validateBookingDates(pickupDate, eventDate, returnDate, isAdmin = false) {
+    // Admins can set any date order (e.g. recording real-world bookings with custom date arrangements)
+    if (isAdmin) return;
+
     if (pickupDate && returnDate) {
       const pDate = new Date(pickupDate);
       const rDate = new Date(returnDate);
@@ -12,20 +15,18 @@ class BookingService {
         throw new ErrorResponse('Pickup date must be on or before return date', 400);
       }
     }
-    if (!isAdmin) {
-      if (pickupDate && eventDate) {
-        const pDate = new Date(pickupDate);
-        const eDate = new Date(eventDate);
-        if (pDate > eDate) {
-          throw new ErrorResponse('Pickup date must be on or before event date', 400);
-        }
+    if (pickupDate && eventDate) {
+      const pDate = new Date(pickupDate);
+      const eDate = new Date(eventDate);
+      if (pDate > eDate) {
+        throw new ErrorResponse('Pickup date must be on or before event date', 400);
       }
-      if (eventDate && returnDate) {
-        const eDate = new Date(eventDate);
-        const rDate = new Date(returnDate);
-        if (eDate > rDate) {
-          throw new ErrorResponse('Event date must be on or before return date', 400);
-        }
+    }
+    if (eventDate && returnDate) {
+      const eDate = new Date(eventDate);
+      const rDate = new Date(returnDate);
+      if (eDate > rDate) {
+        throw new ErrorResponse('Event date must be on or before return date', 400);
       }
     }
   }
