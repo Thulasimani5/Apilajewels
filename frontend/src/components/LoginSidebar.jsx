@@ -63,7 +63,9 @@ const LoginSidebar = ({ isOpen, onClose, initialMode = 'login' }) => {
     try {
       if (mode === 'login') {
         const response = await axios.post(`${API_BASE_URL}/api/auth/login`, {
+          emailOrPhone: mobile,
           mobile,
+          phone: mobile,
           password
         });
         const { token: jwtToken, user: userData } = response.data;
@@ -77,6 +79,7 @@ const LoginSidebar = ({ isOpen, onClose, initialMode = 'login' }) => {
       } else {
         const response = await axios.post(`${API_BASE_URL}/api/auth/register`, {
           mobile,
+          phone: mobile,
           password,
           role: 'user'
         });

@@ -1,7 +1,8 @@
 const ErrorResponse = require('../utils/errorHandler');
 
 const validateRegisterInput = (req, res, next) => {
-  const { phone, password } = req.body;
+  const phone = req.body.phone || req.body.mobile;
+  const { password } = req.body;
   if (!phone) {
     return next(new ErrorResponse('Please provide a phone number', 400));
   }
@@ -12,13 +13,15 @@ const validateRegisterInput = (req, res, next) => {
 };
 
 const validateLoginInput = (req, res, next) => {
-  const { emailOrPhone, password } = req.body;
-  if (!emailOrPhone) {
+  const identifier = req.body.emailOrPhone || req.body.mobile || req.body.phone || req.body.email;
+  const { password } = req.body;
+  if (!identifier) {
     return next(new ErrorResponse('Please provide email or phone number', 400));
   }
   if (!password) {
     return next(new ErrorResponse('Please provide password', 400));
   }
+  req.body.emailOrPhone = identifier;
   next();
 };
 
