@@ -116,7 +116,8 @@ export const useAdminDashboard = () => {
     shopName: '',
     stoneName: [],
     stoneColour: [],
-    showPrice: true
+    showPrice: true,
+    isSale: false
   });
   const [mediaList, setMediaList] = useState([]);
   const [dragActive, setDragActive] = useState(false);
@@ -777,7 +778,7 @@ export const useAdminDashboard = () => {
           category: [], type: [], accessoryType: '', occasion: [], colour: 'Gold',
           material: '', size: '', finish: '',
           purchaseAmount: '', rentAmount: '', salesAmount: '', shopName: '',
-          stoneName: [], stoneColour: []
+          stoneName: [], stoneColour: [], showPrice: true, isSale: false
         });
         setMediaList([]);
       } else {

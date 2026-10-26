@@ -206,8 +206,15 @@ export default function DesktopProduct({ product, relatedProducts }) {
 
   const mediaList = product.media?.length ? product.media : product.images || [];
   const liked = isInWishlist(product._id);
-  const price = product.rentalPrice || product.price || 0;
-  const priceText = product.showPrice === false || price > 1200 ? 'Price on Request' : `₹${price.toFixed(2)}`;
+  const isSale = Boolean(product.isSale);
+  const price = isSale && product.salesAmount ? product.salesAmount : (product.rentalPrice || product.price || 0);
+  const priceText = product.showPrice === false
+    ? 'Price on Request'
+    : isSale
+    ? `₹${price.toFixed(2)}`
+    : price > 1200
+    ? 'Price on Request'
+    : `₹${price.toFixed(2)}`;
   let category = Array.isArray(product.category) ? product.category[0] : product.category;
   if (category === 'Bangles & Bracelets') category = 'Bangles';
   const typeArray = Array.isArray(product.type) ? product.type : (product.type ? [product.type] : []);
@@ -237,7 +244,9 @@ export default function DesktopProduct({ product, relatedProducts }) {
       console.error('Error recording product booking:', e);
     }
 
-    const msg = `Hi Apila Jewels, I would like to book:\n\n*${product.name}*\nPrice: ${priceText}\n\nPlease let me know the availability.`;
+    const msg = isSale
+      ? `Hi Apila Jewels, I would like to purchase:\n\n*${product.name}* (Sale Item)\nPrice: ${priceText}\n\nPlease let me know how to proceed.`
+      : `Hi Apila Jewels, I would like to book:\n\n*${product.name}*\nPrice: ${priceText}\n\nPlease let me know the availability.`;
     window.open(`https://wa.me/+917397721122?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
@@ -371,7 +380,14 @@ export default function DesktopProduct({ product, relatedProducts }) {
         <div className="pdp-panel">
 
           {/* Category label */}
-          <p className="pdp-category-label">{category || 'Jewellery'}</p>
+          <div className="flex items-center gap-2">
+            <p className="pdp-category-label">{category || 'Jewellery'}</p>
+            {isSale && (
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800 uppercase tracking-wide">
+                Available to Own
+              </span>
+            )}
+          </div>
 
           {/* Product title */}
           <h1 className="pdp-title">
@@ -418,9 +434,9 @@ export default function DesktopProduct({ product, relatedProducts }) {
             <span >Add to Bag</span>
           </button>
 
-          {/* BOOK ON WHATSAPP */}
+          {/* BOOK / BUY ON WHATSAPP */}
           <button className="pdp-btn-filled" onClick={handleWhatsapp}>
-            <span>Book on Whatsapp</span>
+            <span>{isSale ? 'Buy on Whatsapp' : 'Book on Whatsapp'}</span>
           </button>
 
           {/* Trust strip: 3 icons with vertical dividers */}

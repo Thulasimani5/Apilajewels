@@ -105,6 +105,11 @@ const JewellerySchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+  isSale: {
+    type: Boolean,
+    default: false,
+    index: true
+  },
   purchaseAmount: {
     type: Number,
     default: null

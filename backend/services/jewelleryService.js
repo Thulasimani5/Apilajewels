@@ -4,8 +4,12 @@ const ErrorResponse = require('../utils/errorHandler');
 
 class JewelleryService {
   async getJewelleries(query = {}) {
-    const { category, type, accessoryType, occasion, stoneName, search, page = 1, limit = 1000 } = query;
+    const { category, type, accessoryType, occasion, stoneName, search, isSale, page = 1, limit = 1000 } = query;
     const filter = {};
+
+    if (isSale !== undefined) {
+      filter.isSale = isSale === 'true' || isSale === true;
+    }
 
     if (category) {
       const escapedCat = category.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');

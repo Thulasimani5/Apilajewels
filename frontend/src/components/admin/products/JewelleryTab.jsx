@@ -119,6 +119,7 @@ const JewelleryTab = ({
                       rentAmount: '',
                       salesAmount: '',
                       shopName: '',
+                      isSale: false,
                     });
                     setMediaList([]);
                     setShowAddForm(true);
@@ -195,7 +196,14 @@ const JewelleryTab = ({
                                     />
                                   )}
                                 </div>
-                                <div className="font-bold text-gray-900 max-w-[160px] truncate">{jewel.name}</div>
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                    <div className="font-bold text-gray-900 max-w-[160px] truncate">{jewel.name}</div>
+                                    {jewel.isSale && (
+                                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 uppercase tracking-wide">
+                                        SALE
+                                      </span>
+                                    )}
+                                  </div>
                               </div>
                             </td>
                             <td className="px-6 py-4 font-mono text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded-md inline-block mt-3">
@@ -237,6 +245,7 @@ const JewelleryTab = ({
                                     stoneName: jewel.stoneName || [],
                                     stoneColour: Array.isArray(jewel.stoneColour) ? jewel.stoneColour : jewel.stoneColour ? [jewel.stoneColour] : [],
                                     showPrice: jewel.showPrice !== false,
+                                    isSale: jewel.isSale === true,
                                   });
                                   setMediaList(
                                     jewel.images
@@ -397,6 +406,7 @@ const JewelleryTab = ({
                       rentAmount: '',
                       salesAmount: '',
                       shopName: '',
+                      isSale: false,
                     });
                     setMediaList([]);
                     setShowAddForm(true);
@@ -542,6 +552,7 @@ const JewelleryTab = ({
                                     ? [jewel.stoneColour]
                                     : [],
                                   showPrice: jewel.showPrice !== false,
+                                  isSale: jewel.isSale === true,
                                 });
                                 setMediaList(
                                   jewel.images

@@ -21,6 +21,7 @@ import JewelleryCarousel from '../components/JewelleryCarousel';
 import OccasionGrid from '../components/OccasionGrid';
 import TrendingSection from '../components/TrendingSection';
 import DeliverySection from '../components/DeliverySection';
+import JewelleryToOwnBanner from '../components/JewelleryToOwnBanner';
 import StylingHelpSection from '../components/StylingHelpSection';
 import MenuDrawer from '../components/MenuDrawer';
 import DesktopFooter from '../components/DesktopFooter';
@@ -157,6 +158,9 @@ export default function DesktopHome() {
 
       {/* TRENDING COLLECTIONS */}
       <TrendingSection />
+
+      {/* JEWELLERY TO OWN - SALE BANNER */}
+      <JewelleryToOwnBanner />
 
       {/* DELIVERY & PICKUP */}
       <DeliverySection />

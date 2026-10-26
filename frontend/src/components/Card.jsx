@@ -77,6 +77,12 @@ const Card = ({ jewellery, priority = false, imageAspect, imageClassName = 'roun
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
           </svg>
         </button>
+
+        {jewellery.isSale && (
+          <span className="absolute top-[12px] left-[12px] bg-[#B07A85] text-white text-[9px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded shadow-sm z-[2]">
+            For Sale
+          </span>
+        )}
       </div>
 
       <div className="pt-[9px] pb-[2px]">
@@ -87,7 +93,11 @@ const Card = ({ jewellery, priority = false, imageAspect, imageClassName = 'roun
           {jewellery.name}
         </h3>
         <p className="mt-[4px]" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal" }}>
-          {jewellery.showPrice === false || (jewellery.rentalPrice || jewellery.price || 0) > 1200
+          {jewellery.showPrice === false
+            ? 'Price on Request'
+            : jewellery.isSale
+            ? `₹${((jewellery.salesAmount || jewellery.rentalPrice || jewellery.price || 0))?.toFixed(2)}`
+            : (jewellery.rentalPrice || jewellery.price || 0) > 1200
             ? 'Price on Request'
             : `₹${(jewellery.rentalPrice || jewellery.price || 0)?.toFixed(2)}`}
         </p>

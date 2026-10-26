@@ -67,6 +67,12 @@ exports.createJewellery = async (req, res, next) => {
     if (!req.body.accessoryType || req.body.accessoryType === '' || req.body.accessoryType === 'null') {
       req.body.accessoryType = null;
     }
+    if (req.body.isSale !== undefined) {
+      req.body.isSale = req.body.isSale === true || req.body.isSale === 'true';
+    }
+    if (req.body.showPrice !== undefined) {
+      req.body.showPrice = req.body.showPrice === true || req.body.showPrice === 'true';
+    }
 
     const jewellery = await jewelleryService.createJewellery(req.body, req.user);
     res.status(201).json({
@@ -118,6 +124,12 @@ exports.updateJewellery = async (req, res, next) => {
     if (!req.body.accessoryType || req.body.accessoryType === '' || req.body.accessoryType === 'null') {
       req.body.accessoryType = null;
     }
+    if (req.body.isSale !== undefined) {
+      req.body.isSale = req.body.isSale === true || req.body.isSale === 'true';
+    }
+    if (req.body.showPrice !== undefined) {
+      req.body.showPrice = req.body.showPrice === true || req.body.showPrice === 'true';
+    }
 
     const updated = await jewelleryService.updateJewellery(req.params.id, req.body, req.user);
     res.status(200).json({
@@ -134,7 +146,13 @@ exports.updateJewellery = async (req, res, next) => {
 // @access  Private/Admin
 exports.patchJewelleryField = async (req, res, next) => {
   try {
-    const { fieldName, value } = req.body;
+    let { fieldName, value } = req.body;
+    if (fieldName === 'isSale') {
+      value = value === true || value === 'true';
+    }
+    if (fieldName === 'showPrice') {
+      value = value === true || value === 'true';
+    }
     const updated = await jewelleryService.patchJewelleryField(req.params.id, fieldName, value, req.user);
     res.status(200).json({
       success: true,

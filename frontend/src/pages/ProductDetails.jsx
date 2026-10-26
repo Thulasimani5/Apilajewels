@@ -177,9 +177,18 @@ const ProductDetails = () => {
       console.error('Error recording product booking:', e);
     }
 
-    const price = product.rentalPrice || product.price || 0;
-    const priceText = product.showPrice === false || price > 1200 ? 'Price on Request' : `₹${price}`;
-    const message = `Hi Apila Jewels, I would like to book:\n\n*${product.name}*\nPrice: ${priceText}\n\nPlease let me know the availability.`;
+    const isSale = Boolean(product.isSale);
+    const price = isSale && product.salesAmount ? product.salesAmount : (product.rentalPrice || product.price || 0);
+    const priceText = product.showPrice === false
+      ? 'Price on Request'
+      : isSale
+      ? `₹${price}`
+      : price > 1200
+      ? 'Price on Request'
+      : `₹${price}`;
+    const message = isSale
+      ? `Hi Apila Jewels, I would like to purchase:\n\n*${product.name}* (Sale Item)\nPrice: ${priceText}\n\nPlease let me know how to proceed.`
+      : `Hi Apila Jewels, I would like to book:\n\n*${product.name}*\nPrice: ${priceText}\n\nPlease let me know the availability.`;
     const whatsappUrl = `https://wa.me/+917397721122?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -398,10 +407,21 @@ const ProductDetails = () => {
             {product.jewelId && !product.name?.includes(`(${product.jewelId})`) ? `${product.name} (${product.jewelId})` : product.name}
           </h1>
 
-          <div className="mb-5" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "14px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal" }}>
-            {product.showPrice === false || (product.rentalPrice || product.price || 0) > 1200
-              ? 'Price on Request'
-              : `₹${(product.rentalPrice || product.price || 0).toFixed(2)}`}
+          <div className="mb-5 flex items-center gap-2" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "14px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal" }}>
+            <span>
+              {product.showPrice === false
+                ? 'Price on Request'
+                : product.isSale
+                ? `₹${(product.salesAmount || product.rentalPrice || product.price || 0).toFixed(2)}`
+                : (product.rentalPrice || product.price || 0) > 1200
+                ? 'Price on Request'
+                : `₹${(product.rentalPrice || product.price || 0).toFixed(2)}`}
+            </span>
+            {product.isSale && (
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800 uppercase tracking-wide">
+                To Own
+              </span>
+            )}
           </div>
 
           <div className="space-y-2 mb-2">
@@ -417,7 +437,7 @@ const ProductDetails = () => {
               className="w-full py-3.5"
               style={{ border: "1px solid #AB6281", background: "#AB6281", color: "#FFF", fontFamily: "Gotham Book, sans-serif", fontSize: "12px", fontWeight: 500, lineHeight: "normal", letterSpacing: "1.96px", textTransform: "uppercase" }}
             >
-              BOOK ON WHATSAPP
+              {product.isSale ? 'BUY ON WHATSAPP' : 'BOOK ON WHATSAPP'}
             </button>
           </div>
 

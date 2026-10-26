@@ -761,7 +761,7 @@
   width: 100%;
   max-width: 1700px;
   margin: 0 auto;
-  height: 340px;
+  height: 375px;
   border-radius: 16px;
   overflow: hidden;
   background-size: cover;
@@ -776,10 +776,9 @@
   inset: 0;
   background: linear-gradient(
     to right,
-    rgba(20, 10, 5, 0.78) 0%,
-    rgba(20, 10, 5, 0.55) 45%,
-    rgba(20, 10, 5, 0.10) 75%,
-    transparent 100%
+    rgba(20, 10, 5, 0.45) 0%,
+    rgba(20, 10, 5, 0.25) 40%,
+    transparent 65%
   );
   pointer-events: none;
 }
@@ -787,74 +786,67 @@
 .jto-content {
   position: relative;
   z-index: 1;
-  padding: 0 60px;
-  max-width: 520px;
+  padding: 0 86px;
+  max-width: 680px;
   text-align: left;
 }
 
 .jto-eyebrow {
-  font-family: var(--f-gotham-m);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.22em;
+  font-family: var(--f-gotham-b);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 220, 160, 0.95);
-  margin-bottom: 12px;
+  color: #fff;
+  margin-bottom: 22px;
 }
 
 .jto-headline {
   font-family: var(--f-belgan);
-  font-size: 46px;
+  font-size: 40px;
   font-weight: 400;
-  line-height: 1.08;
+  line-height: 1.1;
   letter-spacing: 0.01em;
   color: #fff;
   margin-bottom: 14px;
 }
 
 .jto-sub {
-  font-family: var(--f-gotham-b);
-  font-size: 13.5px;
-  font-weight: 400;
-  line-height: 1.6;
+  font-family: var(--f-gotham-l);
+  font-size: 17px;
+  font-weight: 300;
+  line-height: 1.4;
   letter-spacing: 0.01em;
-  color: rgba(255, 255, 255, 0.80);
-  margin-bottom: 30px;
-  max-width: 320px;
+  color: #fff;
+  margin-bottom: 56px;
 }
 
 .jto-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  border: 1.5px solid rgba(255,255,255,0.9);
-  background: rgba(255,255,255,0.08);
-  backdrop-filter: blur(4px);
+  border: none;
+  background: #fff;
   cursor: pointer;
-  padding: 0 34px;
-  height: 48px;
-  border-radius: 2px;
-  transition: background 0.22s ease, border-color 0.22s ease;
+  width: 232px;
+  height: 56px;
+  padding: 0 24px;
+  border-radius: 0;
+  transition: background 0.22s ease;
 }
 
 .jto-btn span {
   font-family: var(--f-gotham-m);
-  font-size: 11.5px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 500;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: #fff;
-  transition: color 0.22s ease;
+  color: #1e1e1e;
 }
 
 .jto-btn:hover {
-  background: #fff;
-  border-color: #fff;
-}
-
-.jto-btn:hover span {
-  color: #1a0a00;
+  background: rgba(255, 255, 255, 0.85);
 }
 
 /* DELIVERY */
@@ -2474,11 +2466,27 @@
     padding: 0 28px;
   }
 
+  .jto-eyebrow {
+    font-size: 12px;
+    margin-bottom: 14px;
+  }
+
   .jto-headline {
-    font-size: 30px;
+    font-size: 28px;
+    margin-bottom: 10px;
   }
 
   .jto-sub {
+    font-size: 13px;
+    margin-bottom: 28px;
+  }
+
+  .jto-btn {
+    width: 180px;
+    height: 46px;
+  }
+
+  .jto-btn span {
     font-size: 12px;
   }
 

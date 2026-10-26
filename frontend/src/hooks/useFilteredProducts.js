@@ -13,11 +13,20 @@ export function useFilteredProducts(products, activeFilters, activeSort, categor
   }, [categories]);
 
   const filtered = useMemo(() => {
+    const isSalePage = Boolean(activeFilters.sale);
     const hasAccessoriesTypeFilter = activeFilters.Type?.some(t => t.toLowerCase() === 'accessories');
     const hasAccessorySubtypeFilter = activeFilters.AccessoryType?.length > 0;
     const showAccessories = hasAccessoriesTypeFilter || hasAccessorySubtypeFilter;
 
     return products.filter(p => {
+      // Sale page: only show sale items. Rental page: do not show sale items.
+      const isProductSale = Boolean(p.isSale);
+      if (isSalePage) {
+        if (!isProductSale) return false;
+      } else {
+        if (isProductSale) return false;
+      }
+
       if (!showAccessories) {
         const ptypes = Array.isArray(p.type) ? p.type : [p.type];
         if (ptypes.some(t => t?.toLowerCase() === 'accessories')) return false;
@@ -51,7 +60,7 @@ export function useFilteredProducts(products, activeFilters, activeSort, categor
         !activeFilters.Colour.some(c => cols.some(pc => pc?.toLowerCase() === c.toLowerCase()))) return false;
 
       if (activeFilters.Price.length > 0) {
-        const pr = p.rentalPrice || p.price || 0;
+        const pr = (p.isSale && p.salesAmount) ? p.salesAmount : (p.rentalPrice || p.price || 0);
         const match = activeFilters.Price.some(r => {
           if (r === 'Under ₹1000') return pr < 1000;
           if (r === '₹1000 - ₹2000') return pr >= 1000 && pr <= 2000;
@@ -76,9 +85,10 @@ export function useFilteredProducts(products, activeFilters, activeSort, categor
 
   const sorted = useMemo(() => {
     const arr = [...filtered];
+    const getPrice = (item) => (item.isSale && item.salesAmount) ? item.salesAmount : (item.rentalPrice || item.price || 0);
     if (activeSort === 'newest') return arr.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    if (activeSort === 'price_asc') return arr.sort((a, b) => (a.rentalPrice || a.price || 0) - (b.rentalPrice || b.price || 0));
-    if (activeSort === 'price_desc') return arr.sort((a, b) => (b.rentalPrice || b.price || 0) - (a.rentalPrice || a.price || 0));
+    if (activeSort === 'price_asc') return arr.sort((a, b) => getPrice(a) - getPrice(b));
+    if (activeSort === 'price_desc') return arr.sort((a, b) => getPrice(b) - getPrice(a));
     if (activeSort === 'popularity') return arr.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
     return arr;
   }, [filtered, activeSort]);

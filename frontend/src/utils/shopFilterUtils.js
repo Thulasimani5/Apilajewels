@@ -3,6 +3,7 @@ export const FILTER_KEYS = ['Category', 'Type', 'Occasion', 'Price', 'Colour', '
 export const filtersFromParams = (params) => {
   const result = {};
   FILTER_KEYS.forEach(key => { result[key] = params.getAll(key); });
+  result.sale = params.get('sale') === 'true' || params.get('isSale') === 'true';
   return result;
 };
 
@@ -11,13 +12,14 @@ export const buildParams = (filters, sort, page) => {
   FILTER_KEYS.forEach(key => {
     (filters[key] || []).forEach(v => p.append(key, v));
   });
+  if (filters?.sale) p.set('sale', 'true');
   if (sort && sort !== 'recommended') p.set('sort', sort);
   if (page && page > 1) p.set('page', String(page));
   return p;
 };
 
 export const bootstrapFromLegacyParams = (searchParams, categories) => {
-  if (FILTER_KEYS.some(k => searchParams.has(k))) return null;
+  if (FILTER_KEYS.some(k => searchParams.has(k)) || searchParams.has('sale') || searchParams.has('isSale')) return null;
   const categoryParam = searchParams.get('category');
   const occasionParam = searchParams.get('occasion');
   if (!categoryParam && !occasionParam) return null;

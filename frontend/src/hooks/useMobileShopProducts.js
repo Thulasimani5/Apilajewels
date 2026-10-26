@@ -47,11 +47,20 @@ export function useMobileShopProducts() {
   };
 
   const filteredProducts = useMemo(() => {
+    const isSalePage = Boolean(activeFilters.sale);
     const hasAccessoriesTypeFilter = activeFilters.Type?.some(t => t.toLowerCase() === 'accessories');
     const hasAccessorySubtypeFilter = activeFilters.AccessoryType?.length > 0;
     const showAccessories = hasAccessoriesTypeFilter || hasAccessorySubtypeFilter;
 
     return products.filter((product) => {
+      // Sale page: only show sale items. Rental page: do not show sale items.
+      const isProductSale = Boolean(product.isSale);
+      if (isSalePage) {
+        if (!isProductSale) return false;
+      } else {
+        if (isProductSale) return false;
+      }
+
       if (!showAccessories) {
         const types = Array.isArray(product.type) ? product.type : [product.type];
         if (types.some(t => t?.toLowerCase() === 'accessories')) return false;
@@ -85,11 +94,12 @@ export function useMobileShopProducts() {
       }
 
       if (activeFilters.Price.length > 0) {
+        const pr = (product.isSale && product.salesAmount) ? product.salesAmount : (product.price || product.rentalPrice || 0);
         const matchesPrice = activeFilters.Price.some((range) => {
-          if (range === 'Under ₹1000') return product.price < 1000;
-          if (range === '₹1000 - ₹2000') return product.price >= 1000 && product.price <= 2000;
-          if (range === '₹2000 - ₹3000') return product.price >= 2000 && product.price <= 3000;
-          if (range === 'Above ₹3000') return product.price > 3000;
+          if (range === 'Under ₹1000') return pr < 1000;
+          if (range === '₹1000 - ₹2000') return pr >= 1000 && pr <= 2000;
+          if (range === '₹2000 - ₹3000') return pr >= 2000 && pr <= 3000;
+          if (range === 'Above ₹3000') return pr > 3000;
           return true;
         });
         if (!matchesPrice) return false;
@@ -146,14 +156,15 @@ export function useMobileShopProducts() {
 
   const sortedProducts = useMemo(() => {
     const sorted = [...filteredProducts];
+    const getPrice = (item) => (item.isSale && item.salesAmount) ? item.salesAmount : (item.price || item.rentalPrice || 0);
     if (activeSort === 'newest') {
       return sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     } else if (activeSort === 'price_low_high') {
-      return sorted.sort((a, b) => a.price - b.price);
+      return sorted.sort((a, b) => getPrice(a) - getPrice(b));
     } else if (activeSort === 'price_high_low') {
-      return sorted.sort((a, b) => b.price - a.price);
+      return sorted.sort((a, b) => getPrice(b) - getPrice(a));
     } else if (activeSort === 'popularity') {
-      return sorted.sort((a, b) => b.popularity - a.popularity);
+      return sorted.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
     }
     return sorted;
   }, [filteredProducts, activeSort]);

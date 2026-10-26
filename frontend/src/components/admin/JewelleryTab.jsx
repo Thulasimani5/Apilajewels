@@ -119,6 +119,7 @@ const JewelleryTab = ({
                       rentAmount: '',
                       salesAmount: '',
                       shopName: '',
+                      isSale: false,
                     });
                     setMediaList([]);
                     setShowAddForm(true);
@@ -195,7 +196,14 @@ const JewelleryTab = ({
                                     />
                                   )}
                                 </div>
-                                <div className="font-bold text-gray-900 max-w-[160px] truncate">{jewel.name}</div>
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                    <div className="font-bold text-gray-900 max-w-[160px] truncate">{jewel.name}</div>
+                                    {jewel.isSale && (
+                                      <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 uppercase tracking-wide">
+                                        SALE
+                                      </span>
+                                    )}
+                                  </div>
                               </div>
                             </td>
                             <td className="px-6 py-4 font-mono text-xs text-gray-600 bg-gray-100 px-2 py-1 rounded-md inline-block mt-3">
@@ -237,6 +245,7 @@ const JewelleryTab = ({
                                     stoneName: jewel.stoneName || [],
                                     stoneColour: Array.isArray(jewel.stoneColour) ? jewel.stoneColour : jewel.stoneColour ? [jewel.stoneColour] : [],
                                     showPrice: jewel.showPrice !== false,
+                                    isSale: jewel.isSale === true,
                                   });
                                   setMediaList(
                                     jewel.images
@@ -397,6 +406,7 @@ const JewelleryTab = ({
                       rentAmount: '',
                       salesAmount: '',
                       shopName: '',
+                      isSale: false,
                     });
                     setMediaList([]);
                     setShowAddForm(true);
@@ -541,6 +551,7 @@ const JewelleryTab = ({
                                     ? [jewel.stoneColour]
                                     : [],
                                   showPrice: jewel.showPrice !== false,
+                                  isSale: jewel.isSale === true,
                                 });
                                 setMediaList(
                                   jewel.images
@@ -668,6 +679,43 @@ const JewelleryTab = ({
                       field="showPrice"
                       value={formData.showPrice !== false}
                     />
+                  </div>
+                </div>
+
+                <div className={`p-3.5 rounded-lg border transition-all mt-3 ${formData.isSale ? 'bg-amber-50/80 border-amber-300 ring-1 ring-amber-300/50' : 'bg-gray-50 border-gray-200'}`}>
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-2.5">
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.isSale === true}
+                          onChange={(e) =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              isSale: e.target.checked,
+                            }))
+                          }
+                          className="sr-only peer"
+                        />
+                        <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#B07A85]"></div>
+                      </label>
+                      <div>
+                        <span className="text-xs font-bold text-gray-800 flex items-center gap-1.5">
+                          Tag as Sale Item (Shop to Own)
+                          {formData.isSale && (
+                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-200 text-amber-900 uppercase">
+                              Sale Only
+                            </span>
+                          )}
+                        </span>
+                        <p className="text-[11px] text-gray-500 mt-0.5">
+                          {formData.isSale
+                            ? 'Only displayed on the Sale page. Excluded from Rental jewellery page.'
+                            : 'Click to make this a Sale-only item (hidden from Rental collection).'}
+                        </p>
+                      </div>
+                    </div>
+                    <FieldUpdateBtn field="isSale" value={formData.isSale === true} />
                   </div>
                 </div>
               </div>

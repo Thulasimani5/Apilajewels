@@ -221,7 +221,10 @@ export default function MobileShopView() {
                   No matching jewellery found
                 </p>
                 <button
-                  onClick={() => setSearchParams(new URLSearchParams(), { replace: false })}
+                  onClick={() => {
+                    const isSale = Boolean(activeFilters.sale || searchParams.get('sale') === 'true' || searchParams.get('isSale') === 'true');
+                    setSearchParams(isSale ? new URLSearchParams({ sale: 'true' }) : new URLSearchParams(), { replace: false });
+                  }}
                   className="text-[12px] text-[#A56D7A] font-bold underline underline-offset-2 hover:text-[#935b67] transition-colors"
                 >
                   Clear all filters

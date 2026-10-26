@@ -128,6 +128,7 @@ export const EMPTY_JEWEL_FORM = {
   stoneName: [],
   stoneColour: [],
   showPrice: true,
+  isSale: false,
 };
 
 /** Default empty state for a temporary jewellery input */
