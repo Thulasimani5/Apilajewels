@@ -101,6 +101,11 @@ const JewellerySchema = new mongoose.Schema({
     default: 0,
     index: true
   },
+  sortOrder: {
+    type: Number,
+    default: 0,
+    index: true
+  },
   showPrice: {
     type: Boolean,
     default: true

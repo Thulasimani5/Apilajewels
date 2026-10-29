@@ -220,23 +220,7 @@ export default function DesktopProduct({ product, relatedProducts }) {
     navigate('/cart');
   };
 
-  const handleWhatsapp = async () => {
-    try {
-      if (product._id) {
-        await axios.post(`${API_BASE_URL}/api/bookings`, {
-          jewelleryIds: [product._id],
-          totalAmount: price || 0,
-          bookingDate: new Date(),
-          customerDetails: {
-            name: user?.name || 'Guest Visitor',
-            phone: user?.phone || user?.mobile || 'WhatsApp Inquiry'
-          }
-        });
-      }
-    } catch (e) {
-      console.error('Error recording product booking:', e);
-    }
-
+  const handleWhatsapp = () => {
     const msg = `Hi Apila Jewels, I would like to book:\n\n*${product.name}*\nPrice: ${priceText}\n\nPlease let me know the availability.`;
     window.open(`https://wa.me/+917397721122?text=${encodeURIComponent(msg)}`, '_blank');
   };

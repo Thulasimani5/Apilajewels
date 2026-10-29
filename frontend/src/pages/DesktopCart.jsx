@@ -100,23 +100,8 @@ export default function DesktopCart() {
   const hasPremium = premiumItems.length > 0;
   const hasPriced = pricedItems.length > 0;
 
-  const handleBookOnWhatsapp = async () => {
+  const handleBookOnWhatsapp = () => {
     if (!cartItems.length) return;
-
-    try {
-      const jewelleryIds = cartItems.map(item => item._id).filter(Boolean);
-      await axios.post(`${API_BASE_URL}/api/bookings`, {
-        jewelleryIds,
-        totalAmount: pricedSubtotal || 0,
-        bookingDate: new Date(),
-        customerDetails: {
-          name: user?.name || 'Guest Visitor',
-          phone: user?.phone || user?.mobile || 'WhatsApp Inquiry'
-        }
-      });
-    } catch (e) {
-      console.error('Error recording booking:', e);
-    }
 
     let msg = `Hi Apila Jewels, I would like to book the following items:\n\n`;
     cartItems.forEach((item, i) => {

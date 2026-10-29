@@ -15,20 +15,29 @@ const BookingsTab = ({
   onOpenInvoice,
   onDeleteBooking,
 }) => {
+  const manualBookings = (bookings || []).filter(b => {
+    const phone = (b.customerDetails?.phone || '').toLowerCase();
+    const name = (b.customerDetails?.name || '').toLowerCase();
+    const notes = (b.notes || '').toLowerCase();
+    if (phone.includes('whatsapp') || name.includes('whatsapp') || notes.includes('whatsapp inquiry')) return false;
+    if (b.source === 'whatsapp' || b.isManual === false) return false;
+    return true;
+  });
+
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden font-sans">
       <div className="p-6 border-b border-gray-100 flex flex-wrap justify-between items-center gap-4 bg-gray-50/50">
         <div>
           <h2 className="font-semibold text-gray-800 text-base">
-            All Customer Bookings & WhatsApp Inquiries
+            Customer Bookings
           </h2>
           <p className="text-xs text-gray-400 mt-0.5">
-            Manage customer orders, inquiry logs and add new manual bookings
+            Manage customer rental bookings and generate invoices
           </p>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-xs font-semibold px-3 py-1 bg-blue-50 text-blue-700 rounded-full">
-            {bookings.length} Total Bookings
+            {manualBookings.length} Total Bookings
           </span>
           <button
             onClick={onNewBooking}
@@ -43,7 +52,7 @@ const BookingsTab = ({
         <div className="p-12 text-center text-gray-500">
           Loading bookings history...
         </div>
-      ) : bookings.length === 0 ? (
+      ) : manualBookings.length === 0 ? (
         <div className="p-12 text-center text-gray-500">
           No bookings recorded yet.
         </div>
@@ -55,7 +64,6 @@ const BookingsTab = ({
                 <th className="px-4 py-3.5">Booking ID</th>
                 <th className="px-4 py-3.5">Customer & Phone</th>
                 <th className="px-4 py-3.5">Dates (Event / Pickup / Return)</th>
-                <th className="px-4 py-3.5">Jewellery Code & Name</th>
                 <th className="px-4 py-3.5">Rental ₹</th>
                 <th className="px-4 py-3.5">Advance Paid ₹</th>
                 <th className="px-4 py-3.5">Balance ₹</th>
@@ -67,7 +75,7 @@ const BookingsTab = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {bookings.map((b, index) => {
+              {manualBookings.map((b, index) => {
                 const customId =
                   b.bookingCustomId || `BK-${String(index + 1).padStart(3, '0')}`;
                 const statusKey = (b.status || 'pending').toLowerCase();
@@ -158,56 +166,6 @@ const BookingsTab = ({
                       </p>
                     </td>
                     <td className="px-4 py-3.5">
-                      <div className="space-y-1 max-w-xs">
-                        {Array.isArray(b.jewelleryIds) &&
-                          b.jewelleryIds.map((item, i) => (
-                            <div
-                              key={item._id || i}
-                              className="flex items-center gap-2"
-                            >
-                              <img
-                                src={
-                                  item.images?.[0]?.url ||
-                                  (typeof item.images?.[0] === 'string'
-                                    ? item.images[0]
-                                    : '') ||
-                                  'https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=800&q=80'
-                                }
-                                alt={item.name}
-                                className="w-6 h-6 rounded object-cover flex-shrink-0"
-                              />
-                              <span className="truncate font-medium text-gray-800">
-                                {item.name}
-                              </span>
-                              {(item.code || item.jewelId) && (
-                                <span className="text-[10px] font-mono bg-amber-50 text-amber-800 border border-amber-200/60 px-1.5 py-0.2 rounded font-semibold">
-                                  {item.code || item.jewelId}
-                                </span>
-                              )}
-                            </div>
-                          ))}
-                        {Array.isArray(b.tempJewelleries) &&
-                          b.tempJewelleries.map((item, i) => (
-                            <div
-                              key={`temp-${i}`}
-                              className="flex items-center gap-2 mt-1"
-                            >
-                              <div className="w-6 h-6 rounded bg-amber-100 flex items-center justify-center flex-shrink-0 text-[10px] text-amber-800 font-bold font-mono">
-                                T
-                              </div>
-                              <span className="truncate font-medium text-amber-900">
-                                {item.name} (Temp)
-                              </span>
-                              {item.code && (
-                                <span className="text-[10px] font-mono bg-red-50 text-red-800 border border-red-200/60 px-1.5 py-0.2 rounded font-semibold">
-                                  {item.code}
-                                </span>
-                              )}
-                            </div>
-                          ))}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3.5">
                       <p className="font-bold text-gray-900">
                         ₹
                         {rentalSubtotal
@@ -261,7 +219,7 @@ const BookingsTab = ({
                           onClick={() => onOpenInvoice(b)}
                           className="text-[11px] bg-indigo-50 text-indigo-600 px-2.5 py-1 rounded-md hover:bg-indigo-600 hover:text-white transition-all font-semibold flex items-center gap-1"
                         >
-                          <FileText size={12} /> Invoice
+                          <FileText size={12} /> View Invoice
                         </button>
                         <button
                           onClick={() => onDeleteBooking(b._id)}

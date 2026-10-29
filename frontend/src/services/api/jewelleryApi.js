@@ -57,3 +57,15 @@ export const deleteJewellery = async (token, id) => {
   });
   return res;
 };
+
+export const reshuffleJewelleryCatalog = async (token) => {
+  const res = await fetch(`${API_BASE_URL}/api/jewellery/reshuffle`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+  });
+  return res.json();
+};
+

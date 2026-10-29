@@ -10,7 +10,7 @@ class JewelleryRepository {
   }
 
   async findWithQuery(filter, options = {}) {
-    const { page = 1, limit = 1000, sort = { createdAt: -1 } } = options;
+    const { page = 1, limit = 1000, sort = { sortOrder: 1, _id: 1 } } = options;
     const skip = (page - 1) * limit;
 
     const [items, total] = await Promise.all([
@@ -25,6 +25,10 @@ class JewelleryRepository {
       limit,
       totalPages: Math.ceil(total / limit)
     };
+  }
+
+  async countAll() {
+    return await Jewellery.countDocuments({});
   }
 
   async create(data) {

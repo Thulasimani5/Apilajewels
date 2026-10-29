@@ -114,7 +114,9 @@ class BookingService {
       advancePaid,
       balanceAmount,
       status: bookingData.status || 'pending',
-      paymentStatus: bookingData.paymentStatus || (advancePaid >= totalAmount && totalAmount > 0 ? 'Paid' : advancePaid > 0 ? 'Partial' : 'Pending')
+      paymentStatus: bookingData.paymentStatus || (advancePaid >= totalAmount && totalAmount > 0 ? 'Paid' : advancePaid > 0 ? 'Partial' : 'Pending'),
+      isManual: bookingData.isManual !== undefined ? bookingData.isManual : true,
+      source: bookingData.source || 'manual'
     };
 
     const booking = await bookingRepository.create(payload);
@@ -133,8 +135,15 @@ class BookingService {
     return booking;
   }
 
-  async getAllBookings() {
-    return await bookingRepository.findAll();
+  async getAllBookings(filter = {}) {
+    const query = {
+      ...filter,
+      source: { $ne: 'whatsapp' },
+      isManual: { $ne: false },
+      'customerDetails.phone': { $not: /whatsapp/i },
+      'customerDetails.name': { $not: /whatsapp/i }
+    };
+    return await bookingRepository.findAll(query);
   }
 
   async getUserBookings(userId) {
