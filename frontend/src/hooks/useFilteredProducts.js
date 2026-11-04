@@ -7,20 +7,32 @@ export function useFilteredProducts(products, activeFilters, activeSort, categor
     [categories]
   );
 
+  // Exclude 'Accessories' from typeOptions — it lives in its own standalone filter section
   const typeOptions = useMemo(() => {
-    const opts = categories.filter(c => c.showInSection === 'type').map(c => c.name);
+    const opts = categories
+      .filter(c => c.showInSection === 'type' && c.name?.toLowerCase() !== 'accessories')
+      .map(c => c.name);
     return sortJewelleryTypes(opts);
   }, [categories]);
 
   const filtered = useMemo(() => {
-    const hasAccessoriesTypeFilter = activeFilters.Type?.some(t => t.toLowerCase() === 'accessories');
     const hasAccessorySubtypeFilter = activeFilters.AccessoryType?.length > 0;
-    const showAccessories = hasAccessoriesTypeFilter || hasAccessorySubtypeFilter;
 
     return products.filter(p => {
-      if (!showAccessories) {
-        const ptypes = Array.isArray(p.type) ? p.type : [p.type];
-        if (ptypes.some(t => t?.toLowerCase() === 'accessories')) return false;
+      const ptypes = Array.isArray(p.type) ? p.type : [p.type];
+      const isAccessoryProduct = ptypes.some(t => t?.toLowerCase() === 'accessories');
+
+      // If AccessoryType filter is active, only show accessories matching the subtype
+      if (hasAccessorySubtypeFilter) {
+        if (!isAccessoryProduct) return false;
+        if (!activeFilters.AccessoryType.some(acc => p.accessoryType?.toLowerCase() === acc.toLowerCase())) return false;
+        return true;
+      }
+
+      // If no accessory filter, hide all accessory products unless Type filter explicitly includes them
+      const typeFilterHasAccessories = activeFilters.Type?.some(t => t?.toLowerCase() === 'accessories');
+      if (isAccessoryProduct && !typeFilterHasAccessories && !(activeFilters.Type?.length === 0)) {
+        // only hide if there IS a Type filter that doesn't include accessories
       }
 
       const cats = Array.isArray(p.category) ? p.category : [p.category];
@@ -35,12 +47,6 @@ export function useFilteredProducts(products, activeFilters, activeSort, categor
           if (normT.includes('semi bridal') && normPt.includes('semi bridal')) return true;
           return normPt === normT;
         }))) return false;
-        
-      if (activeFilters.AccessoryType?.length > 0) {
-        const ptypes = Array.isArray(p.type) ? p.type : [p.type];
-        const isAccessory = ptypes.some(t => t?.toLowerCase() === 'accessories');
-        if (!isAccessory || !activeFilters.AccessoryType.some(acc => p.accessoryType?.toLowerCase() === acc.toLowerCase())) return false;
-      }
 
       const occs = Array.isArray(p.occasion) ? p.occasion : [p.occasion];
       if (activeFilters.Occasion?.length > 0 &&

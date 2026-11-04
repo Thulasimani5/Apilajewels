@@ -12,6 +12,7 @@ export const INITIAL_FILTER_SECTIONS = {
 export const SECTION_LABELS = {
   Category: 'CATEGORY',
   Type: 'JEWELLERY TYPE',
+  AccessoryType: 'ACCESSORIES',
   Occasion: 'OCCASION',
   Price: 'PRICE',
   Colour: 'COLOR',
@@ -19,7 +20,7 @@ export const SECTION_LABELS = {
   StoneName: 'STONE'
 };
 
-export const SECTION_ORDER = ['Category', 'Type', 'Occasion', 'Price', 'Colour', 'StoneColour', 'StoneName'];
+export const SECTION_ORDER = ['Category', 'Type', 'AccessoryType', 'Occasion', 'Price', 'Colour', 'StoneColour', 'StoneName'];
 
 export const ORDERED_JEWELLERY_TYPES = [
   'Full Bridal Set',

@@ -9,6 +9,7 @@ const PRICE_OPTIONS = ['Under ₹1000', '₹1000 - ₹2000', '₹2000 - ₹3000'
 const OCCASION_OPTIONS = ['Bridal Set', 'Bridal Maid', 'Designer', 'Reception', 'Party Wear', 'Small Jewel'];
 const STONE_OPTIONS = ["Crystal", "Sapphire", "Pink Morganite", "Ruby", "Emerald", "Jade", "Kemp Stone", "Pearl", "Moissanite Stone", "Basra Pearl", "Kundan", "Glass Beads", "AD Stone", "Cubic Zirconia", "Amethyst", "Amber", "Pink Topaz", "Navarathna", "Polki Stone", "Polki Diamond", "Rose Quartz", "Green Onyx"];
 const STONE_COLOUR_OPTIONS = ["Clear", "Blue", "Pink", "Red", "Green", "Yellow", "White", "Gold", "Various", "Violete", "Orange", "Black", "Purple", "Silver"];
+const ACCESSORY_OPTIONS = ['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories', 'Bracelet', 'Others'];
 
 /* ── Collapsible filter section ── */
 const FilterSection = ({ title, children, defaultOpen = false }) => {
@@ -109,10 +110,11 @@ const FilterSidebar = ({ activeFilters, onFilterChange, products = [] }) => {
 
   const categoryOptions = useMemo(() => categories.filter(c => c.showInSection !== 'type').map(c => c.name), [categories]);
   const typeOptions = useMemo(() => {
-    const opts = categories.filter(c => c.showInSection === 'type').map(c => c.name);
+    const opts = categories
+      .filter(c => c.showInSection === 'type' && c.name?.toLowerCase() !== 'accessories')
+      .map(c => c.name);
     return sortJewelleryTypes(opts);
   }, [categories]);
-  const [openAccessoryTypes, setOpenAccessoryTypes] = useState(false);
 
   /* ── Toggle a filter value ── */
   const toggleFilter = (section, value) => {
@@ -142,60 +144,18 @@ const FilterSidebar = ({ activeFilters, onFilterChange, products = [] }) => {
     (sum, arr) => sum + (arr?.length || 0), 0
   );
 
-  /* ── Render a filter section ── */
+  /* ── Render a standard filter section ── */
   const renderSection = (title, sectionKey, options, defaultOpen = false) => (
     <FilterSection title={title} defaultOpen={defaultOpen || (activeFilters[sectionKey]?.length > 0)}>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {options.map(option => {
-          if (sectionKey === 'Type' && option.toLowerCase() === 'accessories') {
-            const isChecked = activeFilters[sectionKey]?.includes(option) || false;
-            return (
-              <div key={option} style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                  <CheckboxItem
-                    label={option}
-                    checked={isChecked}
-                    onChange={() => toggleFilter(sectionKey, option)}
-                  />
-                  <button 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setOpenAccessoryTypes(prev => !prev);
-                    }}
-                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px' }}
-                  >
-                    <svg className={`transform transition-transform ${openAccessoryTypes ? 'rotate-180' : ''}`} width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ transform: openAccessoryTypes ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
-                      <path d="M1 1L5 5L9 1" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                </div>
-                {openAccessoryTypes && (
-                  <div style={{ marginLeft: '24px', display: 'flex', flexDirection: 'column' }}>
-                    {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories', 'Bracelet', 'Others'].map(sub => {
-                      const subChecked = activeFilters.AccessoryType?.includes(sub) || false;
-                      return (
-                        <CheckboxItem
-                          key={sub}
-                          label={sub.toUpperCase()}
-                          checked={subChecked}
-                          onChange={() => toggleFilter('AccessoryType', sub)}
-                        />
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          }
-          return (
-            <CheckboxItem
-              key={option}
-              label={option}
-              checked={activeFilters[sectionKey]?.includes(option) || false}
-              onChange={() => toggleFilter(sectionKey, option)}
-            />
-          );
-        })}
+        {options.map(option => (
+          <CheckboxItem
+            key={option}
+            label={option}
+            checked={activeFilters[sectionKey]?.includes(option) || false}
+            onChange={() => toggleFilter(sectionKey, option)}
+          />
+        ))}
       </div>
     </FilterSection>
   );
@@ -259,6 +219,7 @@ const FilterSidebar = ({ activeFilters, onFilterChange, products = [] }) => {
       <div style={{ flex: 1, overflowY: 'auto', scrollbarWidth: 'none' }}>
         {renderSection('Category', 'Category', categoryOptions, true)}
         {renderSection('Jewellery Type', 'Type', typeOptions, true)}
+        {renderSection('Accessories', 'AccessoryType', ACCESSORY_OPTIONS, true)}
         {renderSection('Occasion', 'Occasion', OCCASION_OPTIONS, true)}
         {renderSection('Price', 'Price', PRICE_OPTIONS)}
         {renderSection('Color', 'Colour', COLOUR_OPTIONS)}
