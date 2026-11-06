@@ -4323,3 +4323,77 @@
   font-weight: 600;
   color: #EF4444;
 }
+
+
+/* ── Sales Cart Item Card Extensions Matching Reference ── */
+.cc-qty {
+  position: relative;
+  cursor: pointer;
+}
+
+.cc-qty-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  font-family: var(--f-gotham-b, 'Gotham', sans-serif);
+  font-size: 16px;
+  letter-spacing: -0.48px;
+  color: #000;
+  cursor: pointer;
+  padding-right: 12px;
+}
+
+.cc-sale-block {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+.cc-sale-tag {
+  background-color: #d32f2f;
+  color: #ffffff;
+  font-family: var(--f-gotham-m, 'Gotham', sans-serif);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  padding: 2.5px 12px;
+  border-radius: 2px;
+  line-height: normal;
+  display: inline-block;
+}
+
+.cc-sale-prices {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.cc-sale-discount {
+  color: #ff4d4f;
+  font-family: var(--f-gotham-m, 'Gotham', sans-serif);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.cc-sale-original {
+  color: #888888;
+  font-family: var(--f-gotham-b, 'Gotham Book', sans-serif);
+  font-size: 13px;
+  text-decoration: line-through;
+}
+
+.cc-sale-current {
+  color: #000000;
+  font-family: var(--f-gotham-m, 'Gotham', sans-serif);
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}

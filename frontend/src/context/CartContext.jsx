@@ -125,6 +125,13 @@ export const CartProvider = ({ children }) => {
     setCartItems([]);
   };
 
+  const updateQuantity = (id, quantity) => {
+    const q = Math.max(1, parseInt(quantity, 10) || 1);
+    setCartItems(prev =>
+      prev.map(item => (item._id === id ? { ...item, quantity: q } : item))
+    );
+  };
+
   const rentalCartItems = cartItems.filter(item => !Boolean(item.isSale || item.sale || item.sales));
   const saleCartItems = cartItems.filter(item => Boolean(item.isSale || item.sale || item.sales));
 
@@ -137,7 +144,8 @@ export const CartProvider = ({ children }) => {
       const price = isSale
         ? (item.discountedRate || item.salesAmount || item.salesPrice || item.price || 0)
         : (item.rentalPrice || item.price || 0);
-      return total + price;
+      const qty = item.quantity || 1;
+      return total + (price * qty);
     },
     0
   );
@@ -151,6 +159,7 @@ export const CartProvider = ({ children }) => {
       getCartCount,
       addToCart,
       removeFromCart,
+      updateQuantity,
       clearCart,
       totalAmount
     }}>

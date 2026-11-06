@@ -11,21 +11,42 @@ import iconDesignerCollection from '../assets/icons/Designer CollectionIcon.svg'
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
 
-/* ── Cart item card ── */
-function CartItemCard({ item, onRemove }) {
+/* ── Cart item card matching Reference UI ── */
+function CartItemCard({ item, onRemove, onUpdateQuantity }) {
   const isSale = Boolean(item.isSale || item.sale || item.sales);
   const rawImg = item.images?.[0];
   const imgUrl = rawImg?.url || (typeof rawImg === 'string' ? rawImg : '') ||
     item.media?.[0]?.url || '';
   const isVideo = rawImg?.type === 'video';
-  const price = isSale
-    ? (item.discountedRate || item.salesAmount || item.salesPrice || item.price || 0)
-    : (item.rentalPrice || item.price || 0);
-  const priceText = isSale
-    ? `Rs. ${Math.round(price).toLocaleString('en-IN')}`
-    : (item.showPrice === false || price > 1200 ? 'Price on Request' : `₹${price.toFixed(2)}`);
-  const category = Array.isArray(item.category) ? item.category[0] : (item.category || (isSale ? 'Sale Jewellery' : 'victorian-moissinate'));
-  const ref = item.code || item.jewelId || item.sku || 'N/A';
+
+  const origPrice = Number(item.salesPrice || item.salesAmount || item.price || 0);
+  const finalPrice = item.discountedRate != null
+    ? Number(item.discountedRate)
+    : (item.salesAmount != null ? Number(item.salesAmount) : origPrice);
+
+  let discountPercent = item.discountPercent;
+  if (discountPercent == null || discountPercent === 0) {
+    if (origPrice > finalPrice && origPrice > 0) {
+      discountPercent = Math.round(((origPrice - finalPrice) / origPrice) * 100);
+    } else {
+      discountPercent = 0;
+    }
+  }
+
+  const rentalPrice = Number(item.rentalPrice || item.price || 0);
+  const priceText = item.showPrice === false || rentalPrice > 1200
+    ? 'Price on Request'
+    : `₹${rentalPrice.toFixed(2)}`;
+
+  const categoryArr = Array.isArray(item.category) ? item.category : (item.category ? [item.category] : []);
+  let categoryLabel = categoryArr[0] || (item.material ? item.material : (isSale ? 'MOISSINATE JEWELS' : 'victorian-moissinate'));
+  if (categoryLabel === 'Bangles & Bracelets') categoryLabel = 'Bangles';
+  const displayCategory = categoryLabel.toUpperCase().includes('JEWEL') || categoryLabel.toUpperCase().includes('SET')
+    ? categoryLabel.toUpperCase()
+    : `${categoryLabel.toUpperCase()} JEWELS`;
+
+  const ref = item.code || item.jewelId || item.sku || 'MP006';
+  const qty = Number(item.quantity || 1);
 
   return (
     <div className="cc-card">
@@ -44,13 +65,13 @@ function CartItemCard({ item, onRemove }) {
 
       {/* Body */}
       <div className="cc-body">
-        <p className="cc-cat">{category}</p>
-        <p className="cc-name">{item.name}</p>
+        <p className="cc-cat">{displayCategory}</p>
+        <p className="cc-name" title={item.name}>{item.name}</p>
         <p className="cc-ref">Ref : {ref}</p>
         <div className="cc-tags">
           <span className="cc-tag">
             <img src={iconPremiumJewel} alt="Premium Jewel" width="12" height="11" />
-            {isSale ? 'Sale Jewel' : 'Premium Jewel'}
+            Premium Jewel
           </span>
           <span className="cc-tag">
             <img src={iconDesignerCollection} alt="Designer Collection" width="12" height="11" />
@@ -59,18 +80,47 @@ function CartItemCard({ item, onRemove }) {
         </div>
         <div className="cc-bottom">
           <div className="cc-qty">
-            <span className="cc-qty-num">1</span>
+            {isSale ? (
+              <select
+                className="cc-qty-select"
+                value={qty}
+                onChange={(e) => onUpdateQuantity && onUpdateQuantity(item._id, e.target.value)}
+                aria-label="Quantity"
+              >
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(q => (
+                  <option key={q} value={q}>{q}</option>
+                ))}
+              </select>
+            ) : (
+              <span className="cc-qty-num">{qty}</span>
+            )}
             <svg
               width="8"
               height="12"
               viewBox="0 0 7 12"
               fill="none"
-              style={{ transform: 'rotate(-90deg)', opacity: 0.5, flexShrink: 0 }}
+              style={{ transform: 'rotate(-90deg)', opacity: 0.5, flexShrink: 0, pointerEvents: 'none' }}
             >
               <path d="M6 1L1 6l5 5" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
-          <span className="cc-price">{priceText}</span>
+
+          {isSale ? (
+            <div className="cc-sale-block">
+              <span className="cc-sale-tag">SALE</span>
+              <div className="cc-sale-prices">
+                {discountPercent > 0 && (
+                  <span className="cc-sale-discount">({discountPercent}% OFF)</span>
+                )}
+                {origPrice > finalPrice && (
+                  <span className="cc-sale-original">Rs. {Math.round(origPrice).toLocaleString('en-IN')}</span>
+                )}
+                <span className="cc-sale-current">Rs. {Math.round(finalPrice).toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+          ) : (
+            <span className="cc-price">{priceText}</span>
+          )}
         </div>
       </div>
 
@@ -92,7 +142,7 @@ export default function DesktopCart({ isSale: isSaleProp }) {
   const location = useLocation();
   const isSale = isSaleProp ?? (location.pathname.startsWith('/sale') || new URLSearchParams(location.search).get('type') === 'sale');
 
-  const { cartItems, removeFromCart } = useCart();
+  const { cartItems, removeFromCart, updateQuantity } = useCart();
   const { user, openLogin } = useAuth();
   const [coupon, setCoupon] = useState('');
 
@@ -101,13 +151,15 @@ export default function DesktopCart({ isSale: isSaleProp }) {
   const cartCount = currentCartItems.length;
 
   const getItemPrice = (item) => isItemSale(item)
-    ? Number(item.discountedRate || item.salesAmount || item.salesPrice || item.price || 0)
+    ? Number(item.discountedRate != null ? item.discountedRate : (item.salesAmount || item.salesPrice || item.price || 0))
     : Number(item.rentalPrice || item.price || 0);
+
+  const getItemQty = (item) => Number(item.quantity || 1);
 
   const isPremium = (item) => !isSale && (item.showPrice === false || getItemPrice(item) > 1200);
   const premiumItems = currentCartItems.filter(isPremium);
   const pricedItems = currentCartItems.filter(item => !isPremium(item));
-  const pricedSubtotal = pricedItems.reduce((sum, item) => sum + getItemPrice(item), 0);
+  const pricedSubtotal = pricedItems.reduce((sum, item) => sum + (getItemPrice(item) * getItemQty(item)), 0);
   const allPremium = !isSale && premiumItems.length === currentCartItems.length && currentCartItems.length > 0;
   const hasPremium = !isSale && premiumItems.length > 0;
   const hasPriced = isSale || pricedItems.length > 0;
@@ -134,9 +186,11 @@ export default function DesktopCart({ isSale: isSaleProp }) {
       let msg = `Hi Apila Jewels, I would like to purchase the following sale jewellery items:\n\n`;
       currentCartItems.forEach((item, i) => {
         const price = getItemPrice(item);
-        msg += `${i + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – Rs. ${Math.round(price).toLocaleString('en-IN')}\n`;
+        const qty = getItemQty(item);
+        const itemTotal = price * qty;
+        msg += `${i + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – Qty: ${qty} × Rs. ${Math.round(price).toLocaleString('en-IN')} = Rs. ${Math.round(itemTotal).toLocaleString('en-IN')}\n`;
       });
-      msg += `\n*Total Amount (${currentCartItems.length} ${currentCartItems.length === 1 ? 'Item' : 'Items'}): Rs. ${Math.round(pricedSubtotal).toLocaleString('en-IN')}*\n\nPlease confirm availability and payment details.`;
+      msg += `\n*Total Amount: Rs. ${Math.round(pricedSubtotal).toLocaleString('en-IN')}*\n\nPlease confirm availability and payment details.`;
       window.open(`https://wa.me/+917397721122?text=${encodeURIComponent(msg)}`, '_blank');
       return;
     }
@@ -207,7 +261,12 @@ export default function DesktopCart({ isSale: isSaleProp }) {
           ) : (
             <div className="cart-items-list">
               {currentCartItems.map(item => (
-                <CartItemCard key={item._id} item={item} onRemove={removeFromCart} />
+                <CartItemCard
+                  key={item._id}
+                  item={item}
+                  onRemove={removeFromCart}
+                  onUpdateQuantity={updateQuantity}
+                />
               ))}
             </div>
           )}

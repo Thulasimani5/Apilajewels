@@ -3,7 +3,7 @@ import SearchOverlay from '../components/SearchOverlay';
 import ShareBottomSheet from '../components/ShareBottomSheet';
 import LazyImage from '../components/LazyImage';
 import { ArrowLeft, Search, Heart, Share2, X } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import DesktopCart from './DesktopCart';
@@ -11,6 +11,8 @@ import useIsDesktop from '../hooks/useIsDesktop';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
+import iconPremiumJewel from '../assets/icons/Premium JewelIcon.svg';
+import iconDesignerCollection from '../assets/icons/Designer CollectionIcon.svg';
 import '../styles/ApilaJewels.css';
 
 const Cart = ({ isSale: isSaleProp }) => {
@@ -22,7 +24,7 @@ const Cart = ({ isSale: isSaleProp }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
   const { user } = useAuth();
-  const { cartItems, removeFromCart } = useCart();
+  const { cartItems, removeFromCart, updateQuantity } = useCart();
   const [selectedItems, setSelectedItems] = useState([]);
 
   const isItemSale = (item) => Boolean(item.isSale || item.sale || item.sales);
@@ -45,13 +47,15 @@ const Cart = ({ isSale: isSaleProp }) => {
   const selectedCartItems = currentCartItems.filter(item => selectedItems.includes(item._id));
 
   const getItemPrice = (item) => isItemSale(item)
-    ? Number(item.discountedRate || item.salesAmount || item.salesPrice || item.price || 0)
+    ? Number(item.discountedRate != null ? item.discountedRate : (item.salesAmount || item.salesPrice || item.price || 0))
     : Number(item.rentalPrice || item.price || 0);
+
+  const getItemQty = (item) => Number(item.quantity || 1);
 
   const isPremium = (item) => !isSale && (item.showPrice === false || getItemPrice(item) > 1200);
   const premiumSelected = selectedCartItems.filter(isPremium);
   const pricedSelected = selectedCartItems.filter(item => !isPremium(item));
-  const pricedAmount = pricedSelected.reduce((total, item) => total + getItemPrice(item), 0);
+  const pricedAmount = pricedSelected.reduce((total, item) => total + (getItemPrice(item) * getItemQty(item)), 0);
   const allPremiumSelected = !isSale && premiumSelected.length === selectedCartItems.length && selectedCartItems.length > 0;
 
   const handleBookOnWhatsapp = async () => {
@@ -79,9 +83,11 @@ const Cart = ({ isSale: isSaleProp }) => {
       let message = `Hi Apila Jewels, I would like to purchase the following sale jewellery items:\n\n`;
       selectedCartItems.forEach((item, index) => {
         const price = getItemPrice(item);
-        message += `${index + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – Rs. ${Math.round(price).toLocaleString('en-IN')}\n`;
+        const qty = getItemQty(item);
+        const itemTotal = price * qty;
+        message += `${index + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – Qty: ${qty} × Rs. ${Math.round(price).toLocaleString('en-IN')} = Rs. ${Math.round(itemTotal).toLocaleString('en-IN')}\n`;
       });
-      message += `\n*Total Amount (${selectedCartItems.length} ${selectedCartItems.length === 1 ? 'Item' : 'Items'}): Rs. ${Math.round(pricedAmount).toLocaleString('en-IN')}*\n\nPlease confirm availability and payment details.`;
+      message += `\n*Total Amount: Rs. ${Math.round(pricedAmount).toLocaleString('en-IN')}*\n\nPlease confirm availability and payment details.`;
       const whatsappUrl = `https://wa.me/+917397721122?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, '_blank');
       return;
@@ -109,91 +115,165 @@ const Cart = ({ isSale: isSaleProp }) => {
     <div className="bg-[#FFF8F3] min-h-[100dvh] flex flex-col pb-20">
       <Navbar />
       <div className="flex-1 mt-[55px] md:mt-[80px] px-2 pt-6 pb-4">
-        <h2 className="mb-2" style={{ color: '#000', fontFamily: "'Bacasime Antique', serif", fontSize: '22px', fontStyle: 'normal', fontWeight: 400, lineHeight: '39px', letterSpacing: '-0.66px' }}>
+        <h2 className="mb-3" style={{ color: '#000', fontFamily: "'Bacasime Antique', serif", fontSize: '22px', fontStyle: 'normal', fontWeight: 400, lineHeight: '39px', letterSpacing: '-0.66px' }}>
           Your Order ({currentCartItems.length})
         </h2>
 
         {currentCartItems.length === 0 ? (
           <div className="text-center py-10 text-gray-500">
-            Your cart is empty
+            <p className="mb-4">Your cart is empty</p>
+            <Link
+              to={isSale ? "/sale" : "/shop"}
+              className="inline-block px-5 py-2 bg-[#B07A85] text-white text-xs font-semibold uppercase tracking-wider rounded"
+            >
+              Continue Shopping
+            </Link>
           </div>
         ) : (
           <div>
-            {currentCartItems.map((item) => (
-              <div key={item._id} className="bg-white mb-2 p-2 flex gap-2 relative shadow-[0_2px_8px_rgba(0,0,0,0.04)] items-start">
-                <button
-                  onClick={() => removeFromCart(item._id)}
-                  className="absolute top-3 right-3 text-[#D9D9D9] hover:text-red-500 transition-colors z-10"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 13 13" fill="none" style={{ opacity: 0.7 }}>
-                    <g opacity="0.5">
-                      <path d="M0.530273 11.5303L11.5303 0.530274" stroke="#707070" strokeWidth="1.5" />
-                      <path d="M11.5308 11.5303L0.530761 0.530275" stroke="#707070" strokeWidth="1.5" />
-                    </g>
-                  </svg>
-                </button>
+            {currentCartItems.map((item) => {
+              const origPrice = Number(item.salesPrice || item.salesAmount || item.price || 0);
+              const finalPrice = item.discountedRate != null
+                ? Number(item.discountedRate)
+                : (item.salesAmount != null ? Number(item.salesAmount) : origPrice);
 
-                <div
-                  className="w-[100px] h-[125px] aspect-[4/5] overflow-hidden bg-gray-100 flex-shrink-0 relative cursor-pointer group border border-[#EAEAEA]"
-                  onClick={() => toggleSelection(item._id)}
-                >
-                  {item.images?.[0]?.type === 'video' ? (
-                    <video src={item.images[0].url} className="w-full h-full object-cover" />
-                  ) : (
-                    <LazyImage src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" />
-                  )}
+              let discountPercent = item.discountPercent;
+              if (discountPercent == null || discountPercent === 0) {
+                if (origPrice > finalPrice && origPrice > 0) {
+                  discountPercent = Math.round(((origPrice - finalPrice) / origPrice) * 100);
+                } else {
+                  discountPercent = 0;
+                }
+              }
 
-                  {/* Selection Checkmark */}
-                  <div className={`absolute top-2 left-2 w-[18px] h-[18px] rounded-full flex items-center justify-center transition-colors ${selectedItems.includes(item._id) ? 'bg-white border border-white' : 'bg-transparent border border-white/70 text-transparent'}`}>
-                    {selectedItems.includes(item._id) && (
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#B07A85" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              const categoryArr = Array.isArray(item.category) ? item.category : (item.category ? [item.category] : []);
+              let categoryLabel = categoryArr[0] || (item.material ? item.material : (isSale ? 'MOISSINATE JEWELS' : 'victorian-moissinate'));
+              if (categoryLabel === 'Bangles & Bracelets') categoryLabel = 'Bangles';
+              const displayCategory = categoryLabel.toUpperCase().includes('JEWEL') || categoryLabel.toUpperCase().includes('SET')
+                ? categoryLabel.toUpperCase()
+                : `${categoryLabel.toUpperCase()} JEWELS`;
+
+              const qty = Number(item.quantity || 1);
+
+              return (
+                <div key={item._id} className="bg-white mb-3 p-3 flex gap-3 relative shadow-[0_2px_8px_rgba(0,0,0,0.04)] items-start rounded-sm">
+                  {/* Delete button in top-right corner */}
+                  <button
+                    onClick={() => removeFromCart(item._id)}
+                    className="absolute top-2.5 right-2.5 text-gray-400 hover:text-black transition-colors z-10 p-1"
+                    aria-label="Remove item"
+                  >
+                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
+                      <path d="M1 1l9 9M10 1l-9 9" stroke="black" strokeWidth="1.3" strokeLinecap="round" />
+                    </svg>
+                  </button>
+
+                  {/* Left: Product Image */}
+                  <div
+                    className="w-[110px] h-[135px] aspect-[4/5] overflow-hidden bg-gray-100 flex-shrink-0 relative cursor-pointer group border border-[#EAEAEA]"
+                    onClick={() => toggleSelection(item._id)}
+                  >
+                    {item.images?.[0]?.type === 'video' ? (
+                      <video src={item.images[0].url} className="w-full h-full object-cover" />
+                    ) : (
+                      <LazyImage src={item.images?.[0]?.url || item.images?.[0]} alt={item.name} className="w-full h-full object-cover" />
                     )}
-                  </div>
-                </div>
 
-                <div className="flex-1 py-1 flex flex-col mt-1 justify-between" style={{ height: '125px' }}>
-                  <div className="pr-5">
-                    <p className="mb-3 line-clamp-1" style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '11px', fontStyle: 'normal', fontWeight: 300, lineHeight: 'normal', letterSpacing: '0.84px', textTransform: 'uppercase' }}>
-                      {Array.isArray(item.category) ? item.category[0] : (item.category || (isSale ? 'Sale Jewellery' : 'victorian-moissinate'))}
-                    </p>
-                    <p className="pr-2 line-clamp-2" style={{ color: '#000', fontFamily: "'Gotham Book', sans-serif", fontSize: '12px', fontStyle: 'normal', fontWeight: 400, lineHeight: '18px', letterSpacing: '0.3px', opacity: 0.5 }}>
-                      {item.name}
-                    </p>
+                    {/* Selection Checkmark */}
+                    <div className={`absolute top-2 left-2 w-[18px] h-[18px] rounded-full flex items-center justify-center transition-colors ${selectedItems.includes(item._id) ? 'bg-white border border-white' : 'bg-transparent border border-white/70 text-transparent'}`}>
+                      {selectedItems.includes(item._id) && (
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#B07A85" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                      )}
+                    </div>
                   </div>
 
-                  <div className="flex justify-between items-center mt-2 mb-1">
-                    <p
-                      style={{
-                        color: '#000',
-                        fontFamily: "'Gotham Book', sans-serif",
-                        fontSize: '12px',
-                        fontWeight: 400,
-                        lineHeight: 'normal',
-                        letterSpacing: '-0.36px',
-                        opacity: 0.5,
-                        margin: 0
-                      }}
-                    >
-                      Ref : {item.code || item.jewelId || 'N/A'}
-                    </p>
+                  {/* Right Details */}
+                  <div className="flex-1 min-w-0 pr-4 flex flex-col justify-between" style={{ minHeight: '135px' }}>
+                    <div>
+                      <p style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '11px', fontWeight: 600, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                        {displayCategory}
+                      </p>
+                      <p className="line-clamp-2 mt-0.5" style={{ color: '#555', fontFamily: "'Gotham Book', sans-serif", fontSize: '12px', lineHeight: '16px' }}>
+                        {item.name}
+                      </p>
+                      <p className="mt-0.5" style={{ color: '#777', fontFamily: "'Gotham Book', sans-serif", fontSize: '11px' }}>
+                        Ref : {item.code || item.jewelId || 'MP006'}
+                      </p>
 
-                    <div
-                      style={{
-                        color: '#000',
-                        fontFamily: "'Gotham', sans-serif",
-                        fontSize: '12px',
-                        fontWeight: 500,
-                        marginRight: 20
-                      }}
-                    >
-                      {isSale
-                        ? `Rs. ${Math.round(getItemPrice(item)).toLocaleString('en-IN')}`
-                        : (isPremium(item) ? 'Price on Request' : `₹${getItemPrice(item).toFixed(2)}`)}
+                      <div className="flex gap-1.5 mt-1.5 flex-wrap">
+                        <span className="inline-flex items-center gap-1 bg-[#F4F4F4] px-1.5 py-0.5 text-[10px] text-black font-medium">
+                          <img src={iconPremiumJewel} alt="" width="10" height="9" />
+                          Premium Jewel
+                        </span>
+                        <span className="inline-flex items-center gap-1 bg-[#F4F4F4] px-1.5 py-0.5 text-[10px] text-black font-medium">
+                          <img src={iconDesignerCollection} alt="" width="10" height="9" />
+                          Designer Collection
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Bottom row: Quantity and Price block */}
+                    <div className="flex justify-between items-end mt-2 pt-1">
+                      {/* Quantity Selector */}
+                      <div className="cc-qty" style={{ width: '64px', height: '34px', padding: '6px 8px', background: '#FFF6EB', borderBottom: '1px solid rgba(0,0,0,0.15)' }}>
+                        {isSale ? (
+                          <select
+                            className="cc-qty-select"
+                            style={{ fontSize: '14px' }}
+                            value={qty}
+                            onChange={(e) => updateQuantity(item._id, e.target.value)}
+                            aria-label="Quantity"
+                          >
+                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(q => (
+                              <option key={q} value={q}>{q}</option>
+                            ))}
+                          </select>
+                        ) : (
+                          <span className="cc-qty-num" style={{ fontSize: '14px' }}>{qty}</span>
+                        )}
+                        <svg
+                          width="8"
+                          height="12"
+                          viewBox="0 0 7 12"
+                          fill="none"
+                          style={{ transform: 'rotate(-90deg)', opacity: 0.5, flexShrink: 0, pointerEvents: 'none' }}
+                        >
+                          <path d="M6 1L1 6l5 5" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+
+                      {/* Price Block */}
+                      {isSale ? (
+                        <div className="flex flex-col items-end gap-1">
+                          <span style={{ backgroundColor: '#D32F2F', color: '#fff', fontSize: '9px', fontWeight: 700, padding: '2px 8px', borderRadius: '2px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            SALE
+                          </span>
+                          <div className="flex items-baseline gap-1.5 flex-wrap justify-end">
+                            {discountPercent > 0 && (
+                              <span style={{ color: '#FF4D4F', fontFamily: "'Gotham', sans-serif", fontSize: '10.5px', fontWeight: 600 }}>
+                                ({discountPercent}% OFF)
+                              </span>
+                            )}
+                            {origPrice > finalPrice && (
+                              <span style={{ color: '#888', fontFamily: "'Gotham Book', sans-serif", fontSize: '11px', textDecoration: 'line-through' }}>
+                                Rs. {Math.round(origPrice).toLocaleString('en-IN')}
+                              </span>
+                            )}
+                            <span style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '14px', fontWeight: 700 }}>
+                              Rs. {Math.round(finalPrice).toLocaleString('en-IN')}
+                            </span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '13px', fontWeight: 600 }}>
+                          {isPremium(item) ? 'Price on Request' : `₹${getItemPrice(item).toFixed(2)}`}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 
