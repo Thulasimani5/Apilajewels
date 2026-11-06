@@ -3,7 +3,7 @@ import SearchOverlay from '../components/SearchOverlay';
 import ShareBottomSheet from '../components/ShareBottomSheet';
 import LazyImage from '../components/LazyImage';
 import { ArrowLeft, Search, Heart, Share2, X } from 'lucide-react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import DesktopCart from './DesktopCart';
@@ -27,8 +27,6 @@ const Cart = ({ isSale: isSaleProp }) => {
 
   const isItemSale = (item) => Boolean(item.isSale || item.sale || item.sales);
   const currentCartItems = cartItems.filter(item => isSale ? isItemSale(item) : !isItemSale(item));
-  const rentalCount = cartItems.filter(item => !isItemSale(item)).length;
-  const saleCount = cartItems.filter(item => isItemSale(item)).length;
 
   useEffect(() => {
     setSelectedItems(currentCartItems.map(item => item._id));
@@ -58,7 +56,7 @@ const Cart = ({ isSale: isSaleProp }) => {
 
   const handleBookOnWhatsapp = async () => {
     if (selectedCartItems.length === 0) {
-      alert("Please select at least one item to proceed.");
+      alert("Please select at least one item to book.");
       return;
     }
 
@@ -111,39 +109,13 @@ const Cart = ({ isSale: isSaleProp }) => {
     <div className="bg-[#FFF8F3] min-h-[100dvh] flex flex-col pb-20">
       <Navbar />
       <div className="flex-1 mt-[55px] md:mt-[80px] px-2 pt-6 pb-4">
-        {/* Header and Toggle */}
-        <div className="mb-4">
-          <h2 className="mb-2" style={{ color: '#000', fontFamily: "'Bacasime Antique', serif", fontSize: '22px', fontStyle: 'normal', fontWeight: 400, lineHeight: '32px', letterSpacing: '-0.66px' }}>
-            {isSale ? 'Your Sale Order' : 'Your Rental Order'} ({currentCartItems.length})
-          </h2>
-
-          <div className="flex items-center gap-2 mt-2">
-            <button
-              type="button"
-              onClick={() => navigate('/cart')}
-              className={`px-3 py-1 rounded-full text-[11px] font-semibold tracking-wider uppercase transition-all ${!isSale ? 'bg-[#B07A85] text-white shadow-sm' : 'bg-white text-gray-700 border border-gray-200'}`}
-            >
-              Rental Bag ({rentalCount})
-            </button>
-            <button
-              type="button"
-              onClick={() => navigate('/sale/cart')}
-              className={`px-3 py-1 rounded-full text-[11px] font-semibold tracking-wider uppercase transition-all ${isSale ? 'bg-[#B07A85] text-white shadow-sm' : 'bg-white text-gray-700 border border-gray-200'}`}
-            >
-              Sale Bag ({saleCount})
-            </button>
-          </div>
-        </div>
+        <h2 className="mb-2" style={{ color: '#000', fontFamily: "'Bacasime Antique', serif", fontSize: '22px', fontStyle: 'normal', fontWeight: 400, lineHeight: '39px', letterSpacing: '-0.66px' }}>
+          Your Order ({currentCartItems.length})
+        </h2>
 
         {currentCartItems.length === 0 ? (
-          <div className="text-center py-14 text-gray-500">
-            <p className="mb-4">{isSale ? 'Your sale cart is empty' : 'Your rental cart is empty'}</p>
-            <Link
-              to={isSale ? "/sale" : "/shop"}
-              className="inline-block px-5 py-2 bg-[#B07A85] text-white text-xs font-semibold uppercase tracking-wider rounded"
-            >
-              {isSale ? 'Explore Sale Jewellery' : 'Continue Shopping'}
-            </Link>
+          <div className="text-center py-10 text-gray-500">
+            Your cart is empty
           </div>
         ) : (
           <div>
@@ -310,7 +282,7 @@ const Cart = ({ isSale: isSaleProp }) => {
             onClick={handleBookOnWhatsapp}
             style={{ width: '223px', height: '53px', border: '1px solid #AB6281', background: selectedItems.length > 0 ? '#AB6281' : '#ccc', cursor: selectedItems.length > 0 ? 'pointer' : 'not-allowed', color: '#FFF', fontFamily: "'Gotham Book', sans-serif", fontSize: '13px', fontStyle: 'normal', fontWeight: 300, lineHeight: 'normal', letterSpacing: '1.82px' }}
           >
-            {isSale ? 'BUY ON WHATSAPP' : 'BOOK ON WHATSAPP'}
+            BOOK ON WHATSAPP
           </button>
         </div>
       )}

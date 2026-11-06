@@ -100,9 +100,6 @@ export default function DesktopCart({ isSale: isSaleProp }) {
   const currentCartItems = cartItems.filter(item => isSale ? isItemSale(item) : !isItemSale(item));
   const cartCount = currentCartItems.length;
 
-  const rentalCount = cartItems.filter(item => !isItemSale(item)).length;
-  const saleCount = cartItems.filter(item => isItemSale(item)).length;
-
   const getItemPrice = (item) => isItemSale(item)
     ? Number(item.discountedRate || item.salesAmount || item.salesPrice || item.price || 0)
     : Number(item.rentalPrice || item.price || 0);
@@ -171,7 +168,7 @@ export default function DesktopCart({ isSale: isSaleProp }) {
               <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
                 <path d="M6 1L1 6l5 5" stroke="black" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span>{isSale ? 'Back to sale' : 'Back to shop'}</span>
+              <span>Back to shop</span>
             </Link>
           </div>
           <div className="nav-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
@@ -198,31 +195,13 @@ export default function DesktopCart({ isSale: isSaleProp }) {
 
         {/* ── LEFT: Shopping Bag ── */}
         <div className="cart-left">
-          <div className="cart-header-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '24px' }}>
-            <h1 className="cart-bag-title" style={{ margin: 0 }}>{isSale ? 'Sale Bag' : 'Rental Bag'} ({cartCount})</h1>
-            <div className="cart-type-toggle">
-              <button
-                type="button"
-                className={`cart-type-tab ${!isSale ? 'active' : ''}`}
-                onClick={() => navigate('/cart')}
-              >
-                Rental Bag ({rentalCount})
-              </button>
-              <button
-                type="button"
-                className={`cart-type-tab ${isSale ? 'active' : ''}`}
-                onClick={() => navigate('/sale/cart')}
-              >
-                Sale Bag ({saleCount})
-              </button>
-            </div>
-          </div>
+          <h1 className="cart-bag-title">Shoping Bag ({cartCount})</h1>
 
           {cartCount === 0 ? (
             <div className="cart-empty">
-              <p>{isSale ? 'Your sale cart is empty.' : 'Your rental cart is empty.'}</p>
+              <p>Your cart is empty.</p>
               <Link to={isSale ? "/sale" : "/shop"} className="btn-know">
-                <span>{isSale ? 'Explore Sale Jewellery' : 'Continue Shopping'}</span>
+                <span>Continue Shopping</span>
               </Link>
             </div>
           ) : (
@@ -295,7 +274,7 @@ export default function DesktopCart({ isSale: isSaleProp }) {
 
             {/* Book on WhatsApp */}
             <button className="cart-book-btn" onClick={handleBookOnWhatsapp}>
-              {isSale ? 'BUY ON WHATSAPP' : 'BOOK ON WHATSAPP'}
+              BOOK ON WHATSAPP
             </button>
 
             {/* Secure Payments */}

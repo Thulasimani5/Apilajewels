@@ -74,9 +74,6 @@ export default function DesktopWishlist({ isSale: isSaleProp }) {
   const isItemSale = (item) => Boolean(item.isSale || item.sale || item.sales);
   const currentWishlistItems = wishlistItems.filter(item => isSale ? isItemSale(item) : !isItemSale(item));
 
-  const rentalCount = wishlistItems.filter(item => !isItemSale(item)).length;
-  const saleCount = wishlistItems.filter(item => isItemSale(item)).length;
-
   const handleRemove = (item) => {
     toggleWishlist(item);
   };
@@ -97,7 +94,7 @@ export default function DesktopWishlist({ isSale: isSaleProp }) {
               <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
                 <path d="M6 1L1 6l5 5" stroke="black" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              <span>{isSale ? 'Back to sale' : 'Back to shop'}</span>
+              <span>Back to shop</span>
             </Link>
           </div>
           <div className="nav-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
@@ -123,53 +120,28 @@ export default function DesktopWishlist({ isSale: isSaleProp }) {
 
       {/* ── MAIN CONTENT ── */}
       <div className="wl-page" style={currentWishlistItems.length === 0 ? { minHeight: 0 } : {}}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '20px' }}>
-          <div>
-            <h1 className="wl-title" style={{ margin: 0 }}>{isSale ? 'Sale Wishlist' : 'My Wishlist'}</h1>
-            <p className="wl-notice" style={{ marginTop: '6px' }}>
-              Save your favorite jewellery pieces in one place for easy access.
-            </p>
-          </div>
-
-          <div className="cart-type-toggle">
-            <button
-              type="button"
-              className={`cart-type-tab ${!isSale ? 'active' : ''}`}
-              onClick={() => navigate('/wishlist')}
-            >
-              Rental Wishlist ({rentalCount})
-            </button>
-            <button
-              type="button"
-              className={`cart-type-tab ${isSale ? 'active' : ''}`}
-              onClick={() => navigate('/sale/wishlist')}
-            >
-              Sale Wishlist ({saleCount})
-            </button>
-          </div>
-        </div>
-
         {currentWishlistItems.length === 0 ? (
           <div className="wl-empty">
-            <h1 className="wl-empty-title">{isSale ? 'YOUR SALE WISHLIST IS EMPTY' : 'YOUR WISHLIST IS EMPTY'}</h1>
-            <p className="wl-empty-subtitle">{isSale ? 'Your saved sale jewellery will appear here' : 'Your saved jewellery will appear here'}</p>
-            <div style={{ marginTop: '24px' }}>
-              <Link to={isSale ? "/sale" : "/shop"} className="btn-know">
-                <span>{isSale ? 'Explore Sale Jewellery' : 'Continue Shopping'}</span>
-              </Link>
-            </div>
+            <h1 className="wl-empty-title">YOUR WISHLIST IS EMPTY</h1>
+            <p className="wl-empty-subtitle">Your saved jewellery will appear here</p>
           </div>
         ) : (
-          <div className="wl-grid">
-            {currentWishlistItems.map(item => (
-              <WishlistCard
-                key={item._id}
-                item={item}
-                onRemove={handleRemove}
-                onMoveToBag={handleMoveToBag}
-              />
-            ))}
-          </div>
+          <>
+            <h1 className="wl-title">My Wishlist</h1>
+            <p className="wl-notice">
+              Save your favorite jewellery pieces in one place for easy access.
+            </p>
+            <div className="wl-grid">
+              {currentWishlistItems.map(item => (
+                <WishlistCard
+                  key={item._id}
+                  item={item}
+                  onRemove={handleRemove}
+                  onMoveToBag={handleMoveToBag}
+                />
+              ))}
+            </div>
+          </>
         )}
       </div>
 
