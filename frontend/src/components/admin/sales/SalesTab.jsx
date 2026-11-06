@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Plus, X, Upload, Trash2, Eye, Pencil, Save, Image, Film,
-  Search, AlertCircle, CheckCircle, Package, Tag, Percent, RefreshCw
+  Search, AlertCircle, CheckCircle, Package, Tag, Percent, RefreshCw, LogOut
 } from 'lucide-react';
 import API_BASE_URL from '../../../config/api';
 
@@ -34,6 +34,8 @@ export default function SalesTab({ token }) {
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [viewingItem, setViewingItem] = useState(null);
+  const [serverRestartNeeded, setServerRestartNeeded] = useState(false);
+  const [authExpired, setAuthExpired] = useState(false);
 
   const [form, setForm] = useState(EMPTY_FORM);
   const [mediaFiles, setMediaFiles] = useState([]);       // { file, preview, type }
@@ -49,6 +51,15 @@ export default function SalesTab({ token }) {
     setLoading(true);
     try {
       const res = await fetch(`${API_BASE_URL}/api/sales?all=true`);
+      const contentType = res.headers.get('content-type') || '';
+
+      if (res.status === 404 || !contentType.includes('application/json')) {
+        setServerRestartNeeded(true);
+        console.warn('Backend returned 404 or non-JSON for /api/sales. Backend server needs to be restarted.');
+        return;
+      }
+
+      setServerRestartNeeded(false);
       const data = await res.json();
       if (data.success) {
         setSaleItems(data.data || []);
@@ -205,7 +216,29 @@ export default function SalesTab({ token }) {
         headers: { Authorization: `Bearer ${authToken}` },
         body: fd,
       });
-      const data = await res.json();
+
+      const contentType = res.headers.get('content-type') || '';
+      let data = {};
+
+      if (contentType.includes('application/json')) {
+        data = await res.json();
+      } else {
+        if (res.status === 404) {
+          setServerRestartNeeded(true);
+          throw new Error('Backend route not found (404). Please restart your backend server (stop and re-run node server.js or npm run dev) so the new /api/sales route is loaded.');
+        } else if (res.status === 401) {
+          setAuthExpired(true);
+          throw new Error('Unauthorized (401). Your admin session token has expired. Please log out from the sidebar and log in again.');
+        } else {
+          throw new Error(`Server returned error status ${res.status}. Please check backend console.`);
+        }
+      }
+
+      if (res.status === 401) {
+        setAuthExpired(true);
+        setError('Unauthorized (401). Your admin session has expired. Please log out and log in again as admin.');
+        return;
+      }
 
       if (data.success) {
         setSuccess(editingId ? 'Sale item updated successfully!' : 'Sale item added successfully!');
@@ -216,7 +249,7 @@ export default function SalesTab({ token }) {
       }
     } catch (err) {
       console.error(err);
-      setError('Network error. Please try again.');
+      setError(err.message || 'Network error. Please try again.');
     } finally {
       setSubmitting(false);
     }
@@ -230,6 +263,11 @@ export default function SalesTab({ token }) {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${authToken}` },
       });
+      const contentType = res.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        alert(res.status === 401 ? 'Session expired (401). Please re-login.' : 'Server returned error. Please restart backend server.');
+        return;
+      }
       const data = await res.json();
       if (data.success) {
         setSaleItems(prev => prev.filter(i => i._id !== id));
@@ -256,6 +294,11 @@ export default function SalesTab({ token }) {
         },
         body: JSON.stringify({ fieldName: 'isActive', value: nextState }),
       });
+      const contentType = res.headers.get('content-type') || '';
+      if (!contentType.includes('application/json')) {
+        alert(res.status === 401 ? 'Session expired (401). Please re-login.' : 'Server returned error. Please restart backend server.');
+        return;
+      }
       const data = await res.json();
       if (data.success) {
         setSaleItems(prev => prev.map(i => i._id === item._id ? { ...i, isActive: nextState } : i));
@@ -290,6 +333,46 @@ export default function SalesTab({ token }) {
   ══════════════════════════════════════════════ */
   return (
     <div className="p-4 sm:p-6 max-w-7xl mx-auto">
+
+      {/* Backend Server Restart Alert Banner */}
+      {serverRestartNeeded && (
+        <div className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 mb-6 text-amber-900 shadow-sm">
+          <div className="flex items-start gap-3">
+            <AlertCircle size={20} className="text-amber-600 flex-shrink-0 mt-0.5" />
+            <div className="text-sm">
+              <p className="font-bold text-amber-900">Backend Server Restart Required</p>
+              <p className="text-amber-700 mt-0.5">
+                The server responded with 404 for <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs">/api/sales</code>.
+                The running backend process is still executing the old code from before the new route was added.
+              </p>
+              <p className="text-xs text-amber-800 font-medium mt-2">
+                👉 Please switch to your terminal running the backend, press <kbd className="bg-white border px-1 rounded shadow-xs">Ctrl+C</kbd>, and run <code className="bg-amber-100 px-1.5 py-0.5 rounded">node server.js</code> or <code className="bg-amber-100 px-1.5 py-0.5 rounded">npm run dev</code>. Then click the refresh button below.
+              </p>
+            </div>
+            <button
+              onClick={fetchSaleItems}
+              className="ml-auto flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 text-white rounded-lg text-xs font-semibold hover:bg-amber-700 transition-colors shadow-xs"
+            >
+              <RefreshCw size={12} /> Retry
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Auth Expired Banner */}
+      {authExpired && (
+        <div className="bg-red-50 border-2 border-red-300 rounded-2xl p-4 mb-6 text-red-900 shadow-sm">
+          <div className="flex items-start gap-3">
+            <AlertCircle size={20} className="text-red-600 flex-shrink-0 mt-0.5" />
+            <div className="text-sm">
+              <p className="font-bold text-red-900">Session Expired or Unauthorized (401)</p>
+              <p className="text-red-700 mt-0.5">
+                Your stored login token is no longer recognized by the backend. Please log out and sign in again as admin.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
