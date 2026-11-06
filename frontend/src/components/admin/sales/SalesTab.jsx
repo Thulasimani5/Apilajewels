@@ -12,6 +12,7 @@ const FINISH_OPTIONS = ['Matte', 'Glossy', 'Antique', 'Polished', 'Oxidised', 'O
 const EMPTY_FORM = {
   jewelId: '',
   name: '',
+  purchaseAmount: '',
   salesPrice: '',
   discountPercent: '',
   discountedRate: '',
@@ -116,6 +117,7 @@ export default function SalesTab({ token }) {
     setForm({
       jewelId: item.jewelId || '',
       name: item.name || '',
+      purchaseAmount: item.purchaseAmount != null ? item.purchaseAmount : '',
       salesPrice: item.salesAmount || item.rentalPrice || '',
       discountPercent: '',
       discountedRate: item.salesAmount || item.rentalPrice || '',
@@ -124,7 +126,7 @@ export default function SalesTab({ token }) {
       size: item.size || '',
       finish: item.finish || '',
       description: item.description || '',
-      stockCount: item.stockCount || '',
+      stockCount: item.stockCount != null ? item.stockCount : '',
     });
     const imgs = Array.isArray(item.images) ? item.images : [];
     setExistingMedia(imgs);
@@ -155,9 +157,10 @@ export default function SalesTab({ token }) {
 
     if (!form.jewelId.trim()) return setError('Jewel ID is required.');
     if (!form.name.trim()) return setError('Product Name is required.');
-    if (!form.description.trim()) return setError('Description is required.');
-    if (!form.colour) return setError('Colour is required.');
+    if (!form.purchaseAmount || isNaN(parseFloat(form.purchaseAmount))) return setError('Valid Purchase Amount is mandatory.');
     if (!form.salesPrice || isNaN(parseFloat(form.salesPrice))) return setError('Valid Sales Price is required.');
+    if (!form.colour) return setError('Colour is required.');
+    if (!form.description.trim()) return setError('Description is required.');
 
     setSubmitting(true);
 
@@ -170,6 +173,7 @@ export default function SalesTab({ token }) {
       fd.append('material', form.material);
       fd.append('size', form.size);
       fd.append('finish', form.finish);
+      fd.append('purchaseAmount', parseFloat(form.purchaseAmount));
       fd.append('salesAmount', parseFloat(form.salesPrice));
       fd.append('rentalPrice', parseFloat(form.discountedRate || form.salesPrice));
       fd.append('stockCount', parseInt(form.stockCount) || 0);
@@ -345,10 +349,17 @@ export default function SalesTab({ token }) {
                   </p>
                   <h3 className="font-bold text-gray-900 text-sm leading-snug mb-1 line-clamp-2">{item.name}</h3>
 
-                  <div className="flex items-baseline gap-2 mt-auto pt-3">
-                    <span className="text-base font-bold text-gray-900">
-                      ₹{(item.salesAmount || item.rentalPrice || 0).toLocaleString('en-IN')}
-                    </span>
+                  <div className="flex items-baseline justify-between gap-2 mt-auto pt-3">
+                    <div>
+                      <span className="text-base font-bold text-gray-900">
+                        ₹{(item.salesAmount || item.rentalPrice || 0).toLocaleString('en-IN')}
+                      </span>
+                      {item.purchaseAmount != null && (
+                        <span className="block text-[11px] text-gray-400">
+                          Purchase: ₹{item.purchaseAmount.toLocaleString('en-IN')}
+                        </span>
+                      )}
+                    </div>
                     {item.stockCount != null && (
                       <span className="text-xs text-gray-400">× {item.stockCount} pcs</span>
                     )}
@@ -453,8 +464,26 @@ export default function SalesTab({ token }) {
                 </div>
               </div>
 
-              {/* ── Row 2: Sales Price + Discount % + Discounted Rate ── */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {/* ── Row 2: Purchase Amount + Sales Price + Discount % + Discounted Rate ── */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                  <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                    Purchase Amount (₹) <span className="text-red-500">*</span>
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
+                    <input
+                      type="number"
+                      name="purchaseAmount"
+                      value={form.purchaseAmount}
+                      onChange={handleChange}
+                      placeholder="0.00"
+                      min="0"
+                      step="0.01"
+                      className="w-full border border-gray-200 rounded-xl pl-7 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
+                    />
+                  </div>
+                </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                     Sales Price (₹) <span className="text-red-500">*</span>
@@ -739,7 +768,11 @@ export default function SalesTab({ token }) {
               )}
 
               {/* pricing */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 bg-gray-50 rounded-xl p-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-gray-50 rounded-xl p-4">
+                <div>
+                  <span className="text-xs text-gray-400">Purchase Amt</span>
+                  <p className="font-bold text-lg text-red-600">₹{viewingItem.purchaseAmount?.toLocaleString('en-IN') || '—'}</p>
+                </div>
                 <div>
                   <span className="text-xs text-gray-400">Sales Price</span>
                   <p className="font-bold text-lg text-gray-900">₹{viewingItem.salesAmount?.toLocaleString('en-IN') || '—'}</p>
@@ -803,4 +836,3 @@ export default function SalesTab({ token }) {
     </div>
   );
 }
-
