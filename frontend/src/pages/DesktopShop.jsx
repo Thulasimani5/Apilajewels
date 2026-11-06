@@ -120,7 +120,7 @@ export default function DesktopShop() {
     setSearchParams(desktopBuildParams(activeFilters, sort, 1), { replace: false });
   }, [activeFilters, setSearchParams]);
 
-  const isSalePage = Boolean(activeFilters.sale || searchParams.get('sale') === 'true' || searchParams.get('isSale') === 'true');
+  const isSalePage = Boolean(activeFilters.sale || searchParams.get('sale') === 'true' || searchParams.get('isSale') === 'true' || location.pathname === '/sale');
 
   const clearAll = useCallback(() => {
     setSearchParams(isSalePage ? new URLSearchParams({ sale: 'true' }) : new URLSearchParams(), { replace: false });
@@ -137,15 +137,15 @@ export default function DesktopShop() {
   const visiblePages = Array.from({ length: Math.min(3, totalPages) }, (_, i) => winStart + i);
 
   const headerTitle = useMemo(() => {
+    if (isSalePage) return 'Jewellery to Own';
     if (activeFilters.Category.length) return activeFilters.Category.join(', ');
     if (activeFilters.Type?.length) return activeFilters.Type.join(', ');
     if (activeFilters.AccessoryType?.length) return activeFilters.AccessoryType.join(', ');
     if (activeFilters.Occasion.length) return activeFilters.Occasion.join(', ');
-    if (isSalePage) return 'Jewellery to Own';
     return 'All Jewels';
   }, [activeFilters, isSalePage]);
 
-  const sortLabel = SORT_OPTIONS.find(o => o.id === activeSort)?.label || 'Recommended';
+  const sortLabel = SORT_OPTIONS.find(o => o.id === activeSort || (o.id === 'price_asc' && activeSort === 'price_low_high') || (o.id === 'price_desc' && activeSort === 'price_high_low'))?.label || 'Recommended';
 
   useEffect(() => {
     const handler = (e) => { if (sortRef.current && !sortRef.current.contains(e.target)) setSortMenuOpen(false); };
@@ -178,17 +178,13 @@ export default function DesktopShop() {
       </header>
 
       {/* TOPBAR */}
-      <div className="shop-topbar">
-        <div className="shop-topbar-left" />
+      <div className={`shop-topbar${isSalePage ? ' no-sidebar' : ''}`}>
+        {!isSalePage && <div className="shop-topbar-left" />}
         <div className="shop-topbar-right">
           <nav className="shop-breadcrumb" aria-label="Breadcrumb">
             <Link to="/" className="shop-bc-home">Home</Link>
             <span className="shop-bc-sep" aria-hidden="true" />
-            <span className="shop-bc-current">
-              {isSalePage && headerTitle !== 'Jewellery to Own'
-                ? `Jewellery to Own / ${headerTitle}`
-                : headerTitle}
-            </span>
+            <span className="shop-bc-current">{headerTitle}</span>
           </nav>
 
           <div className="shop-sort-wrap" ref={sortRef}>
@@ -217,17 +213,19 @@ export default function DesktopShop() {
       </div>
 
       {/* MAIN BODY */}
-      <div className="shop-body">
-        <ShopFilterSidebar
-          open={open}
-          setOpen={setOpen}
-          activeFilters={activeFilters}
-          toggle={toggle}
-          categoryOptions={categoryOptions}
-          typeOptions={typeOptions}
-        />
+      <div className={`shop-body${isSalePage ? ' no-sidebar' : ''}`}>
+        {!isSalePage && (
+          <ShopFilterSidebar
+            open={open}
+            setOpen={setOpen}
+            activeFilters={activeFilters}
+            toggle={toggle}
+            categoryOptions={categoryOptions}
+            typeOptions={typeOptions}
+          />
+        )}
 
-        <div className="shop-content">
+        <div className={`shop-content${isSalePage ? ' no-sidebar' : ''}`}>
           {isLoading ? (
             <div className="shop-grid">
               {Array.from({ length: 18 }).map((_, i) => (
@@ -244,7 +242,7 @@ export default function DesktopShop() {
           ) : sorted.length === 0 ? (
             <div className="shop-empty">
               <p>{isSalePage ? 'No sale jewellery items found' : 'No matching jewellery found'}</p>
-              <button className="shop-clear-btn" onClick={clearAll}>Clear all filters</button>
+              {!isSalePage && <button className="shop-clear-btn" onClick={clearAll}>Clear all filters</button>}
             </div>
           ) : (
             <div className="shop-grid">

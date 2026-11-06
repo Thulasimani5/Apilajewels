@@ -13,19 +13,22 @@ export function useFilteredProducts(products, activeFilters, activeSort, categor
   }, [categories]);
 
   const filtered = useMemo(() => {
-    const isSalePage = Boolean(activeFilters.sale);
+    const isSalePage = Boolean(activeFilters?.sale);
+
+    // If it's the sales page ("Jewellery to Own"):
+    // Show only jewels that have isSale: true. Do not categorise or apply other filters.
+    if (isSalePage) {
+      return products.filter(p => Boolean(p.isSale || p.sale || p.sales));
+    }
+
+    // Rental / Regular shop page:
+    // Exclude items that are for sale only
     const hasAccessoriesTypeFilter = activeFilters.Type?.some(t => t.toLowerCase() === 'accessories');
     const hasAccessorySubtypeFilter = activeFilters.AccessoryType?.length > 0;
     const showAccessories = hasAccessoriesTypeFilter || hasAccessorySubtypeFilter;
 
     return products.filter(p => {
-      // Sale page: only show sale items. Rental page: do not show sale items.
-      const isProductSale = Boolean(p.isSale);
-      if (isSalePage) {
-        if (!isProductSale) return false;
-      } else {
-        if (isProductSale) return false;
-      }
+      if (p.isSale || p.sale || p.sales) return false;
 
       if (!showAccessories) {
         const ptypes = Array.isArray(p.type) ? p.type : [p.type];
@@ -60,7 +63,7 @@ export function useFilteredProducts(products, activeFilters, activeSort, categor
         !activeFilters.Colour.some(c => cols.some(pc => pc?.toLowerCase() === c.toLowerCase()))) return false;
 
       if (activeFilters.Price.length > 0) {
-        const pr = (p.isSale && p.salesAmount) ? p.salesAmount : (p.rentalPrice || p.price || 0);
+        const pr = p.rentalPrice || p.price || 0;
         const match = activeFilters.Price.some(r => {
           if (r === 'Under ₹1000') return pr < 1000;
           if (r === '₹1000 - ₹2000') return pr >= 1000 && pr <= 2000;
@@ -85,10 +88,10 @@ export function useFilteredProducts(products, activeFilters, activeSort, categor
 
   const sorted = useMemo(() => {
     const arr = [...filtered];
-    const getPrice = (item) => (item.isSale && item.salesAmount) ? item.salesAmount : (item.rentalPrice || item.price || 0);
+    const getPrice = p => (p.isSale && p.salesAmount ? p.salesAmount : (p.rentalPrice || p.price || 0));
     if (activeSort === 'newest') return arr.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    if (activeSort === 'price_asc') return arr.sort((a, b) => getPrice(a) - getPrice(b));
-    if (activeSort === 'price_desc') return arr.sort((a, b) => getPrice(b) - getPrice(a));
+    if (activeSort === 'price_asc' || activeSort === 'price_low_high') return arr.sort((a, b) => getPrice(a) - getPrice(b));
+    if (activeSort === 'price_desc' || activeSort === 'price_high_low') return arr.sort((a, b) => getPrice(b) - getPrice(a));
     if (activeSort === 'popularity') return arr.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
     return arr;
   }, [filtered, activeSort]);

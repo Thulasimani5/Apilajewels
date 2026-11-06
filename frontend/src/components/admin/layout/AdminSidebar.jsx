@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Package, Calendar, Users, LogOut, List, Tag } from 'lucide-react';
+import { LayoutDashboard, Package, Calendar, Users, LogOut, List, Tag, ShoppingBag } from 'lucide-react';
 
 /**
  * AdminSidebar
@@ -25,7 +25,8 @@ const AdminSidebar = ({ activeTab, setActiveTab, setShowAddForm, setSelectedAdmi
     { id: 'bookings', label: 'Bookings', icon: Calendar },
     { id: 'users', label: 'Users', icon: Users },
     { id: 'categories', label: 'Categories', icon: List },
-    { id: 'types', label: 'Jewellery Types', icon: Tag },
+    { id: 'types', label: 'Jewellery Types', icon: Tag },
+    { id: 'sales', label: 'Sales', icon: ShoppingBag },
   ];
 
   return (

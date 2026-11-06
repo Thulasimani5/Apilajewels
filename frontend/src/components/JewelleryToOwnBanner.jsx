@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import saleBannerBg from '../assets/sale-banner-bg.jpg';
+import '../styles/ApilaJewels.css';
 
 /**
  * JewelleryToOwnBanner
@@ -28,7 +29,7 @@ export default function JewelleryToOwnBanner() {
           </p>
           <button
             className="jto-btn"
-            onClick={() => navigate('/shop?sale=true')}
+            onClick={() => navigate('/sale')}
           >
             <span>Shop to Own</span>
           </button>

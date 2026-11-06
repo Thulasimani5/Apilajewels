@@ -10,6 +10,7 @@ import MobileMainJewelleryTypesSection from '../components/mobileHome/MobileMain
 import MobileJewelleryTypesScrollSection from '../components/mobileHome/MobileJewelleryTypesScrollSection';
 import MobileOccasionSection from '../components/mobileHome/MobileOccasionSection';
 import MobileTrendingSection from '../components/mobileHome/MobileTrendingSection';
+import JewelleryToOwnBanner from '../components/JewelleryToOwnBanner';
 import MobileDeliverySection from '../components/mobileHome/MobileDeliverySection';
 import MobileStylingHelpSection from '../components/mobileHome/MobileStylingHelpSection';
 
@@ -38,29 +39,34 @@ const Home = () => {
         if (data.success && data.data) {
           const filtered = data.data.filter((item) => {
             const types = Array.isArray(item.type) ? item.type : [item.type];
-            return !types.some((t) => t?.toLowerCase() === 'accessories');
+            const isAccessory = types.some((t) => t?.toLowerCase() === 'accessories');
+            const isBangle = types.some((t) => t?.toLowerCase() === 'bangles');
+            const hasImg = item.images && item.images.length > 0;
+            return !isAccessory && !isBangle && hasImg && !item.isSale;
           });
-          setTrending(filtered);
+          setTrending(filtered.slice(0, 4));
         }
       } catch (err) {
-        console.error('Failed to fetch trending items:', err);
+        console.error('Error fetching trending products:', err);
       } finally {
         setTrendingLoading(false);
       }
     };
+
     fetchTrending();
   }, []);
 
   const handleChatNow = () => {
-    const message = `✨ Welcome to Apila Jewels ✨\nWhere elegance meets affordability 💎\n\nThank you for reaching out to us.\nOur exclusive rental jewellery collections are crafted to make your special moments unforgettable.\n\nKindly share your requirements, preferred designs, or event date.\nWe'll get back to you shortly with the best options 💫`;
-    window.open(`https://wa.me/+917397721122?text=${encodeURIComponent(message)}`, '_blank');
+    const phoneNumber = '+917397721101';
+    const message = encodeURIComponent("Hi Apila, I'd like help styling my jewellery!");
+    window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
   };
 
   return (
-    <div className="pb-0 md:pb-0 bg-white min-h-screen relative">
+    <div className="min-h-screen bg-white">
       <Navbar />
 
-      {/* Desktop / tablet webview */}
+      {/* Desktop/Tablet layout */}
       <HomeWebView
         categories={displayCategories}
         trending={trending}
@@ -75,6 +81,7 @@ const Home = () => {
         <MobileJewelleryTypesScrollSection />
         <MobileOccasionSection />
         <MobileTrendingSection trending={trending} trendingLoading={trendingLoading} />
+        <JewelleryToOwnBanner />
         <MobileDeliverySection />
         <MobileStylingHelpSection onChatNow={handleChatNow} />
         <Footer />

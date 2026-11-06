@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import { useAllProducts } from './useProducts';
 import { filtersFromParams, buildParams } from '../utils/shopFilterUtils';
 
@@ -13,8 +13,23 @@ const SORT_OPTIONS = [
 
 export function useMobileShopProducts() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
 
-  const activeFilters = useMemo(() => filtersFromParams(searchParams), [searchParams]);
+  const activeFilters = useMemo(() => {
+    const f = filtersFromParams(searchParams);
+    if (location.pathname === '/sale') {
+      f.sale = true;
+    }
+    return f;
+  }, [searchParams, location.pathname]);
+
+  const isSalePage = Boolean(
+    activeFilters.sale ||
+    searchParams.get('sale') === 'true' ||
+    searchParams.get('isSale') === 'true' ||
+    location.pathname === '/sale'
+  );
+
   const activeSort = searchParams.get('sort') || 'recommended';
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
 
@@ -42,24 +57,27 @@ export function useMobileShopProducts() {
   const products = productsData?.data || [];
 
   const getSortLabel = (sortId) => {
+    if (sortId === 'price_asc' || sortId === 'price_low_high') return 'Price: Low to High';
+    if (sortId === 'price_desc' || sortId === 'price_high_low') return 'Price: High to Low';
     const opt = SORT_OPTIONS.find(o => o.id === sortId);
     return opt ? opt.label : 'Recommended';
   };
 
   const filteredProducts = useMemo(() => {
-    const isSalePage = Boolean(activeFilters.sale);
+    // If it's the sales page ("Jewellery to Own"):
+    // Show only jewels that have isSale: true. Do not categorise or apply other filters.
+    if (isSalePage) {
+      return products.filter((product) => Boolean(product.isSale || product.sale || product.sales));
+    }
+
+    // Rental page:
     const hasAccessoriesTypeFilter = activeFilters.Type?.some(t => t.toLowerCase() === 'accessories');
     const hasAccessorySubtypeFilter = activeFilters.AccessoryType?.length > 0;
     const showAccessories = hasAccessoriesTypeFilter || hasAccessorySubtypeFilter;
 
     return products.filter((product) => {
-      // Sale page: only show sale items. Rental page: do not show sale items.
-      const isProductSale = Boolean(product.isSale);
-      if (isSalePage) {
-        if (!isProductSale) return false;
-      } else {
-        if (isProductSale) return false;
-      }
+      // Exclude sale items from rental page
+      if (product.isSale || product.sale || product.sales) return false;
 
       if (!showAccessories) {
         const types = Array.isArray(product.type) ? product.type : [product.type];
@@ -88,18 +106,18 @@ export function useMobileShopProducts() {
 
       if (activeFilters.Occasion.length > 0) {
         const matchesOccasion = product.occasion?.some((occ) =>
-          activeFilters.Occasion.some((selectedOcc) => selectedOcc.toLowerCase() === occ.toLowerCase())
+          activeFilters.Occasion.some(o => o?.toLowerCase() === occ?.toLowerCase())
         );
         if (!matchesOccasion) return false;
       }
 
       if (activeFilters.Price.length > 0) {
-        const pr = (product.isSale && product.salesAmount) ? product.salesAmount : (product.price || product.rentalPrice || 0);
+        const price = product.rentalPrice || product.price || 0;
         const matchesPrice = activeFilters.Price.some((range) => {
-          if (range === 'Under ₹1000') return pr < 1000;
-          if (range === '₹1000 - ₹2000') return pr >= 1000 && pr <= 2000;
-          if (range === '₹2000 - ₹3000') return pr >= 2000 && pr <= 3000;
-          if (range === 'Above ₹3000') return pr > 3000;
+          if (range === 'Under ₹1000') return price < 1000;
+          if (range === '₹1000 - ₹2000') return price >= 1000 && price <= 2000;
+          if (range === '₹2000 - ₹3000') return price >= 2000 && price <= 3000;
+          if (range === 'Above ₹3000') return price > 3000;
           return true;
         });
         if (!matchesPrice) return false;
@@ -107,30 +125,29 @@ export function useMobileShopProducts() {
 
       if (activeFilters.Type.length > 0) {
         const matchesType = activeFilters.Type.some((type) => {
-          const normType = type.toLowerCase();
-          const checkMatch = (t) => {
-            const normT = t?.toLowerCase() || '';
-            if (normType.includes('semi bridal') && normT.includes('semi bridal')) return true;
-            return normT === normType;
-          };
           if (Array.isArray(product.type)) {
-            return product.type.some(checkMatch);
+            return product.type.some(t => {
+              const normT = t?.toLowerCase() || '';
+              const normType = type.toLowerCase();
+              if (normType.includes('semi bridal') && normT.includes('semi bridal')) return true;
+              return normT === normType;
+            });
           }
-          return checkMatch(product.type);
+          const normT = product.type?.toLowerCase() || '';
+          const normType = type.toLowerCase();
+          if (normType.includes('semi bridal') && normT.includes('semi bridal')) return true;
+          return normT === normType;
         });
         if (!matchesType) return false;
       }
 
-      if (activeFilters.AccessoryType?.length > 0) {
-        const matchesAccType = activeFilters.AccessoryType.some(acc => {
-          const pTypes = Array.isArray(product.type) ? product.type : [product.type];
-          const isAccessory = pTypes.some(t => t?.toLowerCase() === 'accessories');
-          return isAccessory && product.accessoryType?.toLowerCase() === acc.toLowerCase();
-        });
-        if (!matchesAccType) return false;
+      if (activeFilters.AccessoryType.length > 0) {
+        const types = Array.isArray(product.type) ? product.type : [product.type];
+        const isAccessory = types.some(t => t?.toLowerCase() === 'accessories');
+        if (!isAccessory || !activeFilters.AccessoryType.some(acc => product.accessoryType?.toLowerCase() === acc.toLowerCase())) return false;
       }
 
-      if (activeFilters.StoneName && activeFilters.StoneName.length > 0) {
+      if (activeFilters.StoneName.length > 0) {
         const matchesStoneName = activeFilters.StoneName.some((stone) => {
           if (Array.isArray(product.stoneName)) {
             return product.stoneName.some(s => s?.toLowerCase() === stone.toLowerCase());
@@ -140,7 +157,7 @@ export function useMobileShopProducts() {
         if (!matchesStoneName) return false;
       }
 
-      if (activeFilters.StoneColour && activeFilters.StoneColour.length > 0) {
+      if (activeFilters.StoneColour.length > 0) {
         const matchesStoneColour = activeFilters.StoneColour.some((scolor) => {
           if (Array.isArray(product.stoneColour)) {
             return product.stoneColour.some(s => s?.toLowerCase() === scolor.toLowerCase());
@@ -152,16 +169,16 @@ export function useMobileShopProducts() {
 
       return true;
     });
-  }, [products, activeFilters]);
+  }, [products, activeFilters, isSalePage]);
 
   const sortedProducts = useMemo(() => {
     const sorted = [...filteredProducts];
     const getPrice = (item) => (item.isSale && item.salesAmount) ? item.salesAmount : (item.price || item.rentalPrice || 0);
     if (activeSort === 'newest') {
       return sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    } else if (activeSort === 'price_low_high') {
+    } else if (activeSort === 'price_low_high' || activeSort === 'price_asc') {
       return sorted.sort((a, b) => getPrice(a) - getPrice(b));
-    } else if (activeSort === 'price_high_low') {
+    } else if (activeSort === 'price_high_low' || activeSort === 'price_desc') {
       return sorted.sort((a, b) => getPrice(b) - getPrice(a));
     } else if (activeSort === 'popularity') {
       return sorted.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
@@ -184,6 +201,7 @@ export function useMobileShopProducts() {
     handleApplyFilters,
     setCurrentPage,
     setActiveSort,
-    setFilters
+    setFilters,
+    isSalePage
   };
 }

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2, Eye, Tag, Edit, FileText, Printer, GripVertical, Menu } from 'lucide-react';
+import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2, Eye, Tag, Edit, FileText, Printer, GripVertical, Menu, ShoppingBag } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import CategoryContext from '../context/CategoryContext';
 import { useContext } from 'react';
 import API_BASE_URL from '../config/api';
+
+import SalesTab from '../components/admin/sales/SalesTab';
 
 const AdminDashboard = () => {
   const { user, logout, token } = useAuth();
@@ -949,6 +951,12 @@ const AdminDashboard = () => {
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'types' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <Tag size={20} /> Jewellery Types
+            </button>
+            <button 
+              onClick={() => { setActiveTab('sales'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'sales' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
+            >
+              <ShoppingBag size={20} /> Sales
             </button>
           </nav>
         </div>
@@ -2747,6 +2755,11 @@ const AdminDashboard = () => {
                 )}
               </div>
             </div>
+          )}
+
+          {/* Sales — Jewellery to Own */}
+          {activeTab === 'sales' && (
+            <SalesTab token={token} />
           )}
 
         </div>

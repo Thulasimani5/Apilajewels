@@ -46,7 +46,8 @@ export default function MobileShopView() {
     handleApplyFilters,
     setCurrentPage,
     setActiveSort,
-    setFilters
+    setFilters,
+    isSalePage
   } = useMobileShopProducts();
 
   useEffect(() => {
@@ -90,9 +91,11 @@ export default function MobileShopView() {
   const activeFilterPills = useMemo(() => {
     const pills = [];
     Object.entries(activeFilters).forEach(([section, values]) => {
-      values.forEach(value => {
-        pills.push({ section, value });
-      });
+      if (Array.isArray(values)) {
+        values.forEach(value => {
+          pills.push({ section, value });
+        });
+      }
     });
     return pills;
   }, [activeFilters]);
@@ -109,17 +112,23 @@ export default function MobileShopView() {
       <Navbar />
 
       <div className="md:hidden flex justify-between items-center px-4 pt-[1px] pb-[4px] bg-white">
-        <button
-          onClick={() => setIsFilterOpen(true)}
-          className="flex items-center gap-[9px] text-[#1A1A1A]"
-        >
-          <svg width="14" height="18" viewBox="0 0 16 10" fill="none" aria-hidden="true">
-            <line x1="0" y1="1" x2="16" y2="1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            <line x1="2" y1="5" x2="14" y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            <line x1="5" y1="9" x2="11" y2="9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-          <span style={{ fontFamily: "'Gotham', sans-serif", fontSize: '12px', letterSpacing: '0.84px' }} className="uppercase">FILTER</span>
-        </button>
+        {isSalePage ? (
+          <span style={{ fontFamily: "'Gotham', sans-serif", fontSize: '12px', letterSpacing: '0.84px' }} className="uppercase font-medium text-[#1A1A1A]">
+            Jewellery to Own
+          </span>
+        ) : (
+          <button
+            onClick={() => setIsFilterOpen(true)}
+            className="flex items-center gap-[9px] text-[#1A1A1A]"
+          >
+            <svg width="14" height="18" viewBox="0 0 16 10" fill="none" aria-hidden="true">
+              <line x1="0" y1="1" x2="16" y2="1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <line x1="2" y1="5" x2="14" y2="5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <line x1="5" y1="9" x2="11" y2="9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            <span style={{ fontFamily: "'Gotham', sans-serif", fontSize: '12px', letterSpacing: '0.84px' }} className="uppercase">FILTER</span>
+          </button>
+        )}
         <div
           onClick={() => setIsSortOpen(true)}
           className="flex items-center gap-[4px] cursor-pointer"
@@ -218,17 +227,18 @@ export default function MobileShopView() {
                   <SlidersHorizontal size={24} className="text-[#A56D7A]/60" />
                 </div>
                 <p className="text-[#999] font-semibold text-xs uppercase tracking-wider">
-                  No matching jewellery found
+                  {isSalePage ? 'No sale jewellery items found' : 'No matching jewellery found'}
                 </p>
-                <button
-                  onClick={() => {
-                    const isSale = Boolean(activeFilters.sale || searchParams.get('sale') === 'true' || searchParams.get('isSale') === 'true');
-                    setSearchParams(isSale ? new URLSearchParams({ sale: 'true' }) : new URLSearchParams(), { replace: false });
-                  }}
-                  className="text-[12px] text-[#A56D7A] font-bold underline underline-offset-2 hover:text-[#935b67] transition-colors"
-                >
-                  Clear all filters
-                </button>
+                {!isSalePage && (
+                  <button
+                    onClick={() => {
+                      setSearchParams(new URLSearchParams(), { replace: false });
+                    }}
+                    className="text-[12px] text-[#A56D7A] font-bold underline underline-offset-2 hover:text-[#935b67] transition-colors"
+                  >
+                    Clear all filters
+                  </button>
+                )}
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-[4px] gap-y-[20px] md:gap-4">
@@ -276,12 +286,14 @@ export default function MobileShopView() {
         <Footer />
       </div>
 
-      <FilterBottomSheet
-        isOpen={isFilterOpen}
-        onClose={() => setIsFilterOpen(false)}
-        initialFilters={activeFilters}
-        onApply={handleApplyFilters}
-      />
+      {!isSalePage && (
+        <FilterBottomSheet
+          isOpen={isFilterOpen}
+          onClose={() => setIsFilterOpen(false)}
+          initialFilters={activeFilters}
+          onApply={handleApplyFilters}
+        />
+      )}
 
       <SortBottomSheet
         isOpen={isSortOpen}
