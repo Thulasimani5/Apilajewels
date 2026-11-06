@@ -2,17 +2,45 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import API_BASE_URL from "../config/api";
 
 export const fetchProduct = async (id) => {
-  const response = await fetch(`${API_BASE_URL}/api/jewellery/${id}`);
-  if (!response.ok) throw new Error("Failed to load product");
-  const result = await response.json();
-  if (!result.success) throw new Error(result.error || "Failed to load product");
-  return result.data;
+  // First attempt from jewellery collection
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/jewellery/${id}`);
+    if (response.ok) {
+      const result = await response.json();
+      if (result.success && result.data) {
+        return result.data;
+      }
+    }
+  } catch (e) {
+    // proceed to fallback
+  }
+
+  // Fallback to sale jewellery endpoint
+  try {
+    const saleResponse = await fetch(`${API_BASE_URL}/api/sales/${id}`);
+    if (saleResponse.ok) {
+      const saleResult = await saleResponse.json();
+      if (saleResult.success && saleResult.data) {
+        return {
+          ...saleResult.data,
+          isSale: true,
+          salesAmount: saleResult.data.discountedRate || saleResult.data.salesPrice,
+          price: saleResult.data.discountedRate || saleResult.data.salesPrice,
+          rentalPrice: saleResult.data.discountedRate || saleResult.data.salesPrice,
+        };
+      }
+    }
+  } catch (e) {
+    // throw below
+  }
+
+  throw new Error("Failed to load product");
 };
 
 export const useProduct = (id) => {
   const queryClient = useQueryClient();
 
-  // Phase 10: Check if the product already exists in the all-products cache
+  // Check if the product already exists in the all-products cache
   const cachedProducts = queryClient.getQueryData(["products", "all"]);
   const cachedProduct = cachedProducts?.data?.find((p) => p._id === id);
 

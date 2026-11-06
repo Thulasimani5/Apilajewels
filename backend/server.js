@@ -83,6 +83,8 @@ app.get('/api/health', (req, res) => {
 // Mount routers
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/jewellery', require('./routes/jewellery'));
+app.use('/api/sales', require('./routes/saleJewellery'));
+app.use('/api/sale-jewellery', require('./routes/saleJewellery'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/categories', require('./routes/category'));
 app.use('/api/cart', require('./routes/cart'));

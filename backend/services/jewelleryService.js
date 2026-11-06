@@ -45,7 +45,22 @@ class JewelleryService {
   }
 
   async getJewelleryById(id) {
-    const jewellery = await jewelleryRepository.findById(id);
+    let jewellery = await jewelleryRepository.findById(id);
+    if (!jewellery) {
+      try {
+        const SaleJewellery = require('../models/SaleJewellery');
+        jewellery = await SaleJewellery.findById(id);
+        if (jewellery) {
+          const obj = jewellery.toObject();
+          obj.salesAmount = jewellery.discountedRate || jewellery.salesPrice;
+          obj.rentalPrice = jewellery.discountedRate || jewellery.salesPrice;
+          obj.price = jewellery.discountedRate || jewellery.salesPrice;
+          return obj;
+        }
+      } catch (e) {
+        // ignore and let next check handle
+      }
+    }
     if (!jewellery) {
       throw new ErrorResponse('Jewellery not found', 404);
     }

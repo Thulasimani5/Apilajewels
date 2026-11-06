@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Plus, X, Upload, Trash2, Eye, Pencil, Save, Image, Film,
-  Search, AlertCircle, CheckCircle, Package, Tag, Percent
+  Search, AlertCircle, CheckCircle, Package, Tag, Percent, RefreshCw
 } from 'lucide-react';
 import API_BASE_URL from '../../../config/api';
 
@@ -21,7 +21,7 @@ const EMPTY_FORM = {
   size: '',
   finish: '',
   description: '',
-  stockCount: '',
+  stockCount: '1',
 };
 
 export default function SalesTab({ token }) {
@@ -41,13 +41,20 @@ export default function SalesTab({ token }) {
   const [removedMedia, setRemovedMedia] = useState([]);   // URLs to delete
   const mediaInputRef = useRef(null);
 
+  // Fallback to localStorage token if prop is missing
+  const authToken = token || (typeof window !== 'undefined' ? localStorage.getItem('token') : null);
+
   /* ─── fetch all sale jewels ─── */
   const fetchSaleItems = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/jewellery?isSale=true&limit=1000`);
+      const res = await fetch(`${API_BASE_URL}/api/sales?all=true`);
       const data = await res.json();
-      if (data.success) setSaleItems(data.data || []);
+      if (data.success) {
+        setSaleItems(data.data || []);
+      } else {
+        console.error('Failed to fetch sale items:', data.error);
+      }
     } catch (e) {
       console.error('Error fetching sale items:', e);
     } finally {
@@ -55,7 +62,9 @@ export default function SalesTab({ token }) {
     }
   }, []);
 
-  useEffect(() => { fetchSaleItems(); }, [fetchSaleItems]);
+  useEffect(() => {
+    fetchSaleItems();
+  }, [fetchSaleItems]);
 
   /* ─── autofill discounted rate ─── */
   useEffect(() => {
@@ -113,20 +122,20 @@ export default function SalesTab({ token }) {
   };
 
   /* ─── open edit form ─── */
-  const openEditForm = async (item) => {
+  const openEditForm = (item) => {
     setForm({
       jewelId: item.jewelId || '',
       name: item.name || '',
       purchaseAmount: item.purchaseAmount != null ? item.purchaseAmount : '',
-      salesPrice: item.salesAmount || item.rentalPrice || '',
-      discountPercent: '',
-      discountedRate: item.salesAmount || item.rentalPrice || '',
-      colour: Array.isArray(item.colour) ? item.colour[0] || '' : item.colour || '',
+      salesPrice: item.salesPrice != null ? item.salesPrice : (item.salesAmount || item.rentalPrice || ''),
+      discountPercent: item.discountPercent != null ? item.discountPercent : '',
+      discountedRate: item.discountedRate != null ? item.discountedRate : (item.salesPrice || item.salesAmount || item.rentalPrice || ''),
+      colour: Array.isArray(item.colour) ? item.colour[0] || '' : (item.colour || ''),
       material: item.material || '',
       size: item.size || '',
       finish: item.finish || '',
       description: item.description || '',
-      stockCount: item.stockCount != null ? item.stockCount : '',
+      stockCount: item.stockCount != null ? item.stockCount : 1,
     });
     const imgs = Array.isArray(item.images) ? item.images : [];
     setExistingMedia(imgs);
@@ -155,7 +164,7 @@ export default function SalesTab({ token }) {
     setError('');
     setSuccess('');
 
-    if (!form.jewelId.trim()) return setError('Jewel ID is required.');
+    if (!form.jewelId.trim()) return setError('Jewel ID (Unique Code) is required.');
     if (!form.name.trim()) return setError('Product Name is required.');
     if (!form.purchaseAmount || isNaN(parseFloat(form.purchaseAmount))) return setError('Valid Purchase Amount is mandatory.');
     if (!form.salesPrice || isNaN(parseFloat(form.salesPrice))) return setError('Valid Sales Price is required.');
@@ -170,36 +179,40 @@ export default function SalesTab({ token }) {
       fd.append('name', form.name.trim());
       fd.append('description', form.description.trim());
       fd.append('colour', form.colour);
-      fd.append('material', form.material);
-      fd.append('size', form.size);
-      fd.append('finish', form.finish);
+      if (form.material) fd.append('material', form.material);
+      if (form.size) fd.append('size', form.size);
+      if (form.finish) fd.append('finish', form.finish);
       fd.append('purchaseAmount', parseFloat(form.purchaseAmount));
-      fd.append('salesAmount', parseFloat(form.salesPrice));
-      fd.append('rentalPrice', parseFloat(form.discountedRate || form.salesPrice));
-      fd.append('stockCount', parseInt(form.stockCount) || 0);
-      fd.append('isSale', 'true');
-      fd.append('showPrice', 'true');
+      fd.append('salesPrice', parseFloat(form.salesPrice));
+      if (form.discountPercent !== '' && !isNaN(parseFloat(form.discountPercent))) {
+        fd.append('discountPercent', parseFloat(form.discountPercent));
+      } else {
+        fd.append('discountPercent', 0);
+      }
+      fd.append('discountedRate', parseFloat(form.discountedRate || form.salesPrice));
+      fd.append('stockCount', parseInt(form.stockCount, 10) || 1);
+
       if (removedMedia.length) fd.append('removedImages', JSON.stringify(removedMedia));
       mediaFiles.forEach(m => fd.append('images', m.file));
 
       const url = editingId
-        ? `${API_BASE_URL}/api/jewellery/${editingId}`
-        : `${API_BASE_URL}/api/jewellery`;
+        ? `${API_BASE_URL}/api/sales/${editingId}`
+        : `${API_BASE_URL}/api/sales`;
       const method = editingId ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
         method,
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${authToken}` },
         body: fd,
       });
       const data = await res.json();
 
       if (data.success) {
-        setSuccess(editingId ? 'Sale item updated!' : 'Sale item added!');
+        setSuccess(editingId ? 'Sale item updated successfully!' : 'Sale item added successfully!');
         closeForm();
         fetchSaleItems();
       } else {
-        setError(data.error || data.message || 'Failed to save item.');
+        setError(data.error || data.message || 'Failed to save sale item.');
       }
     } catch (err) {
       console.error(err);
@@ -211,16 +224,16 @@ export default function SalesTab({ token }) {
 
   /* ─── delete ─── */
   const handleDelete = async (id) => {
-    if (!window.confirm('Remove this item from the Sales list? (It will be deleted from the system.)')) return;
+    if (!window.confirm('Are you sure you want to delete this sale jewel permanently?')) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/api/jewellery/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/sales/${id}`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${authToken}` },
       });
       const data = await res.json();
       if (data.success) {
         setSaleItems(prev => prev.filter(i => i._id !== id));
-        setSuccess('Item removed.');
+        setSuccess('Sale item deleted successfully.');
       } else {
         alert(data.error || 'Failed to delete item.');
       }
@@ -229,20 +242,26 @@ export default function SalesTab({ token }) {
     }
   };
 
-  /* ─── toggle isSale off ─── */
-  const handleRemoveFromSale = async (id) => {
-    if (!window.confirm('Remove from sale (mark as not for sale)?')) return;
+  /* ─── toggle active / unlist ─── */
+  const handleToggleActive = async (item) => {
+    const nextState = !(item.isActive !== false);
+    const msg = nextState ? 'Activate and list this item for sale?' : 'Unlist this item from sale?';
+    if (!window.confirm(msg)) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/api/jewellery/${id}/field`, {
+      const res = await fetch(`${API_BASE_URL}/api/sales/${item._id}/field`, {
         method: 'PATCH',
-        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fieldName: 'isSale', value: false }),
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ fieldName: 'isActive', value: nextState }),
       });
       const data = await res.json();
       if (data.success) {
-        setSaleItems(prev => prev.filter(i => i._id !== id));
+        setSaleItems(prev => prev.map(i => i._id === item._id ? { ...i, isActive: nextState } : i));
+        setSuccess(nextState ? 'Item is now active and listed for sale.' : 'Item unlisted from sale.');
       } else {
-        alert(data.error || 'Failed to update.');
+        alert(data.error || 'Failed to update item.');
       }
     } catch {
       alert('Network error.');
@@ -255,7 +274,8 @@ export default function SalesTab({ token }) {
     return !q ||
       item.name?.toLowerCase().includes(q) ||
       item.jewelId?.toLowerCase().includes(q) ||
-      item.description?.toLowerCase().includes(q);
+      item.description?.toLowerCase().includes(q) ||
+      item.colour?.toLowerCase().includes(q);
   });
 
   /* ─── helpers ─── */
@@ -275,14 +295,23 @@ export default function SalesTab({ token }) {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
           <h2 className="text-xl font-bold text-gray-900">Sales — Jewellery to Own</h2>
-          <p className="text-sm text-gray-400 mt-0.5">{saleItems.length} item{saleItems.length !== 1 ? 's' : ''} listed for sale</p>
+          <p className="text-sm text-gray-400 mt-0.5">{saleItems.length} item{saleItems.length !== 1 ? 's' : ''} in sales inventory</p>
         </div>
-        <button
-          onClick={openAddForm}
-          className="flex items-center gap-2 bg-[#B07A85] text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#9E6A75] transition-colors shadow-sm"
-        >
-          <Plus size={16} /> Add Sale Item
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={fetchSaleItems}
+            title="Refresh"
+            className="p-2.5 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
+          >
+            <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
+          </button>
+          <button
+            onClick={openAddForm}
+            className="flex items-center gap-2 bg-[#B07A85] text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#9E6A75] transition-colors shadow-sm"
+          >
+            <Plus size={16} /> Add Sale Item
+          </button>
+        </div>
       </div>
 
       {/* Success / Error banners */}
@@ -306,7 +335,7 @@ export default function SalesTab({ token }) {
           type="text"
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
-          placeholder="Search by name, Jewel ID or description…"
+          placeholder="Search by name, Jewel ID, colour or description…"
           className="w-full pl-9 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
         />
       </div>
@@ -319,13 +348,17 @@ export default function SalesTab({ token }) {
       ) : filtered.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center text-gray-400">
           <Tag size={48} className="mb-4 opacity-25" />
-          <p className="font-semibold text-sm">No sale items yet</p>
+          <p className="font-semibold text-sm">No sale items found</p>
           <p className="text-xs mt-1">Click "Add Sale Item" to list a jewel for sale.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {filtered.map(item => {
             const img = getImgUrl(item);
+            const isUnlisted = item.isActive === false;
+            const currentPrice = item.discountedRate != null ? item.discountedRate : (item.salesPrice || item.salesAmount || 0);
+            const origPrice = item.salesPrice || item.salesAmount;
+
             return (
               <div key={item._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-shadow">
                 {/* image */}
@@ -337,26 +370,56 @@ export default function SalesTab({ token }) {
                       <Image size={36} className="text-gray-200" />
                     </div>
                   )}
-                  <span className="absolute top-2 left-2 bg-[#B07A85] text-white text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
-                    For Sale
-                  </span>
+
+                  {/* Status badge */}
+                  {isUnlisted ? (
+                    <span className="absolute top-2 left-2 bg-gray-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
+                      Unlisted
+                    </span>
+                  ) : (
+                    <span className="absolute top-2 left-2 bg-[#B07A85] text-white text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
+                      For Sale
+                    </span>
+                  )}
+
+                  {/* Discount percentage tag */}
+                  {item.discountPercent > 0 && (
+                    <span className="absolute top-2 right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md shadow-sm">
+                      -{item.discountPercent}%
+                    </span>
+                  )}
                 </div>
 
                 {/* body */}
                 <div className="p-4 flex flex-col flex-1">
-                  <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider mb-0.5">
-                    {item.jewelId}
-                  </p>
+                  <div className="flex items-center justify-between gap-2 mb-0.5">
+                    <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
+                      {item.jewelId}
+                    </p>
+                    {item.colour && (
+                      <span className="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded">
+                        {item.colour}
+                      </span>
+                    )}
+                  </div>
+
                   <h3 className="font-bold text-gray-900 text-sm leading-snug mb-1 line-clamp-2">{item.name}</h3>
 
                   <div className="flex items-baseline justify-between gap-2 mt-auto pt-3">
                     <div>
-                      <span className="text-base font-bold text-gray-900">
-                        ₹{(item.salesAmount || item.rentalPrice || 0).toLocaleString('en-IN')}
-                      </span>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-base font-bold text-gray-900">
+                          ₹{Number(currentPrice).toLocaleString('en-IN')}
+                        </span>
+                        {item.discountPercent > 0 && origPrice && (
+                          <span className="text-xs text-gray-400 line-through">
+                            ₹{Number(origPrice).toLocaleString('en-IN')}
+                          </span>
+                        )}
+                      </div>
                       {item.purchaseAmount != null && (
                         <span className="block text-[11px] text-gray-400">
-                          Purchase: ₹{item.purchaseAmount.toLocaleString('en-IN')}
+                          Purchase: ₹{Number(item.purchaseAmount).toLocaleString('en-IN')}
                         </span>
                       )}
                     </div>
@@ -369,28 +432,32 @@ export default function SalesTab({ token }) {
                   <div className="flex gap-2 mt-3 pt-3 border-t border-gray-100">
                     <button
                       onClick={() => setViewingItem(item)}
-                      title="View"
-                      className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg border border-gray-200 text-gray-500 hover:bg-gray-50 text-xs font-medium transition-colors"
+                      title="View Details"
+                      className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 text-xs font-medium transition-colors"
                     >
                       <Eye size={13} /> View
                     </button>
                     <button
                       onClick={() => openEditForm(item)}
-                      title="Edit"
+                      title="Edit Item"
                       className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg border border-blue-200 text-blue-600 hover:bg-blue-50 text-xs font-medium transition-colors"
                     >
                       <Pencil size={13} /> Edit
                     </button>
                     <button
-                      onClick={() => handleRemoveFromSale(item._id)}
-                      title="Remove from sale"
-                      className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg border border-amber-200 text-amber-600 hover:bg-amber-50 text-xs font-medium transition-colors"
+                      onClick={() => handleToggleActive(item)}
+                      title={isUnlisted ? 'List on sale' : 'Unlist from sale'}
+                      className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
+                        isUnlisted
+                          ? 'border-green-200 text-green-600 hover:bg-green-50'
+                          : 'border-amber-200 text-amber-600 hover:bg-amber-50'
+                      }`}
                     >
-                      <Tag size={13} /> Unlist
+                      <Tag size={13} /> {isUnlisted ? 'List' : 'Unlist'}
                     </button>
                     <button
                       onClick={() => handleDelete(item._id)}
-                      title="Delete"
+                      title="Delete Item"
                       className="w-8 h-8 flex items-center justify-center rounded-lg border border-red-200 text-red-500 hover:bg-red-50 transition-colors"
                     >
                       <Trash2 size={13} />
@@ -549,7 +616,7 @@ export default function SalesTab({ token }) {
                     name="colour"
                     value={form.colour}
                     onChange={handleChange}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
+                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] bg-white"
                   >
                     <option value="">Select colour</option>
                     {COLOUR_OPTIONS.map(c => (
@@ -565,7 +632,7 @@ export default function SalesTab({ token }) {
                     name="material"
                     value={form.material}
                     onChange={handleChange}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
+                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] bg-white"
                   >
                     <option value="">Select material</option>
                     {MATERIAL_OPTIONS.map(m => (
@@ -575,14 +642,14 @@ export default function SalesTab({ token }) {
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                    Count of Jewels
+                    Count of Jewels (Stock)
                   </label>
                   <input
                     type="number"
                     name="stockCount"
                     value={form.stockCount}
                     onChange={handleChange}
-                    placeholder="e.g. 5"
+                    placeholder="1"
                     min="0"
                     className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
                   />
@@ -600,7 +667,7 @@ export default function SalesTab({ token }) {
                     name="size"
                     value={form.size}
                     onChange={handleChange}
-                    placeholder="e.g. Adjustable, Free Size, S/M/L"
+                    placeholder="e.g. Adjustable, 2.4, 2.6"
                     className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
                   />
                 </div>
@@ -612,7 +679,7 @@ export default function SalesTab({ token }) {
                     name="finish"
                     value={form.finish}
                     onChange={handleChange}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
+                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] bg-white"
                   >
                     <option value="">Select finish</option>
                     {FINISH_OPTIONS.map(f => (
@@ -629,123 +696,140 @@ export default function SalesTab({ token }) {
                 </label>
                 <textarea
                   name="description"
+                  rows={3}
                   value={form.description}
                   onChange={handleChange}
-                  rows={4}
-                  placeholder="Describe the jewel — materials, occasion, style, craftsmanship…"
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
+                  placeholder="Describe the jewel: design, craftsmanship, ideal occasions…"
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85]"
                 />
               </div>
 
-              {/* ── Media upload ── */}
+              {/* ── Media Upload ── */}
               <div>
                 <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-                  Upload Media — Images &amp; Videos <span className="text-xs text-gray-400 font-normal">(Optional)</span>
+                  Upload Media (Images &amp; Videos) <span className="text-xs text-gray-400 font-normal">(Optional)</span>
                 </label>
-
-                {/* existing media */}
-                {existingMedia.length > 0 && (
-                  <div className="flex flex-wrap gap-3 mb-3">
-                    {existingMedia.map((m, i) => {
-                      const url = m.url || m;
-                      const isVid = m.type === 'video' || url.match(/\.(mp4|webm|ogg|mov)$/i);
-                      return (
-                        <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-gray-200 group">
-                          {isVid ? (
-                            <video src={url} className="w-full h-full object-cover" />
-                          ) : (
-                            <img src={url} alt="" className="w-full h-full object-cover" />
-                          )}
-                          <button
-                            type="button"
-                            onClick={() => removeExistingMedia(url)}
-                            className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
-                          >
-                            <Trash2 size={16} className="text-white" />
-                          </button>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {/* new previews */}
-                {mediaFiles.length > 0 && (
-                  <div className="flex flex-wrap gap-3 mb-3">
-                    {mediaFiles.map((m, i) => (
-                      <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-gray-200 group">
-                        {m.type === 'video' ? (
-                          <video src={m.preview} className="w-full h-full object-cover" />
-                        ) : (
-                          <img src={m.preview} alt="" className="w-full h-full object-cover" />
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => removeNewMedia(i)}
-                          className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
-                        >
-                          <Trash2 size={16} className="text-white" />
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <button
-                  type="button"
-                  onClick={() => mediaInputRef.current?.click()}
-                  className="flex items-center gap-2 border-2 border-dashed border-gray-300 rounded-xl px-5 py-3 text-sm text-gray-500 hover:border-[#B07A85] hover:text-[#B07A85] transition-colors w-full justify-center"
-                >
-                  <Upload size={16} /> Click to upload images or videos
-                </button>
                 <input
                   ref={mediaInputRef}
                   type="file"
-                  accept="image/*,video/*"
                   multiple
-                  className="hidden"
+                  accept="image/*,video/*"
                   onChange={handleMediaSelect}
+                  className="hidden"
                 />
+
+                {/* Dropzone */}
+                <div
+                  onClick={() => mediaInputRef.current?.click()}
+                  className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center cursor-pointer hover:border-[#B07A85] transition-colors bg-gray-50/50"
+                >
+                  <Upload size={24} className="mx-auto mb-2 text-gray-400" />
+                  <p className="text-xs font-medium text-gray-600">
+                    Click to select images or videos
+                  </p>
+                  <p className="text-[11px] text-gray-400 mt-0.5">
+                    PNG, JPG, WEBP, MP4, MOV up to 20MB
+                  </p>
+                </div>
+
+                {/* Previews: Existing media */}
+                {existingMedia.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-xs font-medium text-gray-500 mb-2">Existing Media:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {existingMedia.map((m, i) => {
+                        const url = m.url || m;
+                        const isVid = m.type === 'video' || url.match(/\.(mp4|webm|ogg|mov)$/i);
+                        return (
+                          <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-gray-200 group bg-gray-50">
+                            {isVid ? (
+                              <video src={url} className="w-full h-full object-cover" />
+                            ) : (
+                              <img src={url} alt="" className="w-full h-full object-cover" />
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => removeExistingMedia(url)}
+                              className="absolute inset-0 bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Previews: New media */}
+                {mediaFiles.length > 0 && (
+                  <div className="mt-3">
+                    <p className="text-xs font-medium text-gray-500 mb-2">New Media to Upload:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {mediaFiles.map((m, i) => (
+                        <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-gray-200 group bg-gray-50">
+                          {m.type === 'video' ? (
+                            <div className="w-full h-full flex flex-col items-center justify-center bg-gray-800 text-white">
+                              <Film size={20} />
+                              <span className="text-[9px] mt-1">Video</span>
+                            </div>
+                          ) : (
+                            <img src={m.preview} alt="" className="w-full h-full object-cover" />
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => removeNewMedia(i)}
+                            className="absolute inset-0 bg-black/60 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {/* footer buttons */}
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="flex-1 flex items-center justify-center gap-2 bg-[#B07A85] text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-[#9E6A75] transition-colors disabled:opacity-60"
-                >
-                  {submitting ? (
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <Save size={15} />
-                  )}
-                  {submitting ? 'Saving…' : editingId ? 'Update Item' : 'Add to Sales'}
-                </button>
+              {/* Modal footer */}
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
                 <button
                   type="button"
                   onClick={closeForm}
-                  className="px-6 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-600 hover:bg-gray-50 transition-colors"
+                  className="px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
                 >
                   Cancel
                 </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="flex items-center gap-2 bg-[#B07A85] text-white px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-[#9E6A75] transition-colors disabled:opacity-50"
+                >
+                  {submitting ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      Saving…
+                    </>
+                  ) : (
+                    <>
+                      <Save size={15} /> {editingId ? 'Update Item' : 'Add Item'}
+                    </>
+                  )}
+                </button>
               </div>
+
             </form>
           </div>
         </div>
       )}
 
-      {/* ══ VIEW DETAIL MODAL ══ */}
+      {/* ══ VIEW DETAILS MODAL ══ */}
       {viewingItem && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-            {/* header */}
-            <div className="flex items-center justify-between p-6 border-b border-gray-100">
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100">
               <div>
-                <span className="inline-block px-2.5 py-0.5 bg-purple-100 text-purple-700 text-xs font-bold rounded-full mb-1 uppercase tracking-wider">
-                  {viewingItem.jewelId}
-                </span>
-                <h3 className="font-bold text-gray-900 text-xl">{viewingItem.name}</h3>
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{viewingItem.jewelId}</p>
+                <h3 className="font-bold text-gray-900 text-lg mt-0.5">{viewingItem.name}</h3>
               </div>
               <button
                 onClick={() => setViewingItem(null)}
@@ -771,15 +855,23 @@ export default function SalesTab({ token }) {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 bg-gray-50 rounded-xl p-4">
                 <div>
                   <span className="text-xs text-gray-400">Purchase Amt</span>
-                  <p className="font-bold text-lg text-red-600">₹{viewingItem.purchaseAmount?.toLocaleString('en-IN') || '—'}</p>
+                  <p className="font-bold text-lg text-red-600">
+                    ₹{viewingItem.purchaseAmount != null ? Number(viewingItem.purchaseAmount).toLocaleString('en-IN') : '—'}
+                  </p>
                 </div>
                 <div>
                   <span className="text-xs text-gray-400">Sales Price</span>
-                  <p className="font-bold text-lg text-gray-900">₹{viewingItem.salesAmount?.toLocaleString('en-IN') || '—'}</p>
+                  <p className="font-bold text-lg text-gray-900">
+                    ₹{Number(viewingItem.salesPrice || viewingItem.salesAmount || 0).toLocaleString('en-IN')}
+                  </p>
                 </div>
                 <div>
-                  <span className="text-xs text-gray-400">Discounted Rate</span>
-                  <p className="font-bold text-lg text-[#B07A85]">₹{viewingItem.rentalPrice?.toLocaleString('en-IN') || viewingItem.salesAmount?.toLocaleString('en-IN') || '—'}</p>
+                  <span className="text-xs text-gray-400">
+                    Discounted Rate {viewingItem.discountPercent > 0 ? `(-${viewingItem.discountPercent}%)` : ''}
+                  </span>
+                  <p className="font-bold text-lg text-[#B07A85]">
+                    ₹{Number(viewingItem.discountedRate || viewingItem.rentalPrice || viewingItem.salesAmount || 0).toLocaleString('en-IN')}
+                  </p>
                 </div>
                 <div>
                   <span className="text-xs text-gray-400">Stock</span>
@@ -788,7 +880,7 @@ export default function SalesTab({ token }) {
               </div>
 
               {/* specs */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {[
                   { label: 'Colour', value: Array.isArray(viewingItem.colour) ? viewingItem.colour.join(', ') : viewingItem.colour },
                   { label: 'Material', value: viewingItem.material },
@@ -813,7 +905,7 @@ export default function SalesTab({ token }) {
               {/* media gallery */}
               {Array.isArray(viewingItem.images) && viewingItem.images.length > 1 && (
                 <div>
-                  <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Media</h4>
+                  <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Media Gallery</h4>
                   <div className="flex flex-wrap gap-2">
                     {viewingItem.images.map((m, i) => {
                       const url = m.url || m;

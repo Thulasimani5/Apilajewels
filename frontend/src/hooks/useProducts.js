@@ -10,23 +10,48 @@ export const fetchProducts = async ({ page = 1, limit = 24 } = {}) => {
   return response.json();
 };
 
-// Fetcher for ALL products (used when filters are needed client-side)
+// Fetcher for ALL products (includes regular jewellery + dedicated sale jewellery)
 export const fetchAllProducts = async () => {
-  const response = await fetch(
-    `${API_BASE_URL}/api/jewellery?limit=5000`
-  );
-  if (!response.ok) throw new Error("Failed to load products");
-  const data = await response.json();
-  if (data && Array.isArray(data.data)) {
-    // Shuffle the products client-side once upon fetch so they are stored in a randomized order in cache
-    const shuffled = [...data.data];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  let allItems = [];
+
+  try {
+    const [jewelleryRes, salesRes] = await Promise.allSettled([
+      fetch(`${API_BASE_URL}/api/jewellery?limit=5000`),
+      fetch(`${API_BASE_URL}/api/sales?limit=5000`)
+    ]);
+
+    if (jewelleryRes.status === "fulfilled" && jewelleryRes.value.ok) {
+      const data = await jewelleryRes.value.json();
+      if (data && Array.isArray(data.data)) {
+        allItems.push(...data.data);
+      }
     }
-    data.data = shuffled;
+
+    if (salesRes.status === "fulfilled" && salesRes.value.ok) {
+      const sData = await salesRes.value.json();
+      if (sData && Array.isArray(sData.data)) {
+        const normalizedSales = sData.data.map(item => ({
+          ...item,
+          isSale: true,
+          salesAmount: item.discountedRate || item.salesPrice,
+          price: item.discountedRate || item.salesPrice,
+          rentalPrice: item.discountedRate || item.salesPrice,
+        }));
+        allItems.push(...normalizedSales);
+      }
+    }
+  } catch (err) {
+    console.error("Error fetching all products:", err);
   }
-  return data;
+
+  // Shuffle client-side
+  const shuffled = [...allItems];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return { success: true, count: shuffled.length, data: shuffled };
 };
 
 export const useProducts = ({ page = 1, limit = 24 } = {}) => {
