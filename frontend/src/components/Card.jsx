@@ -78,7 +78,11 @@ const Card = ({ jewellery, priority = false, imageAspect, imageClassName = 'roun
           </svg>
         </button>
 
-
+        {jewellery.isSale && (
+          <span className="absolute top-[12px] left-[12px] bg-[#B07A85] text-white text-[9px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded shadow-sm z-[2]">
+            For Sale
+          </span>
+        )}
       </div>
 
       {jewellery.isSale ? (
@@ -91,11 +95,7 @@ const Card = ({ jewellery, priority = false, imageAspect, imageClassName = 'roun
           <h3 className="truncate mt-0.5 w-full" style={{ color: "#555", fontFamily: "Gotham Book, sans-serif", fontSize: "11.5px", fontWeight: 400 }}>
             {jewellery.name}
           </h3>
-          <div className="mt-1">
-            <span style={{ backgroundColor: "#D32F2F", color: "#fff", fontSize: "9px", fontWeight: 700, padding: "1.5px 6px", borderRadius: "2px", letterSpacing: "0.5px", textTransform: "uppercase", display: "inline-block" }}>
-              SALE
-            </span>
-          </div>
+          
           <div className="flex items-baseline gap-1.5 mt-1 flex-wrap">
             <span style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "13px", fontWeight: 700 }}>
               Rs. {Math.round(jewellery.discountedRate || jewellery.salesAmount || jewellery.price || 0).toLocaleString('en-IN')}

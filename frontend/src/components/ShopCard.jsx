@@ -52,6 +52,27 @@ export default function ShopCard({ product, activeCategory }) {
   return (
     <Link to={`/shop/${product._id}`} className={`product-card${isSale ? ' sale-card' : ''}`}>
       <div className="product-img-wrap">
+        {isSale && (
+          <span
+            style={{
+              position: 'absolute',
+              top: '12px',
+              left: '12px',
+              background: '#B07A85',
+              color: '#fff',
+              fontSize: '10px',
+              fontWeight: '600',
+              letterSpacing: '0.6px',
+              textTransform: 'uppercase',
+              padding: '3px 8px',
+              borderRadius: '4px',
+              zIndex: 2,
+              boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+            }}
+          >
+            For Sale
+          </span>
+        )}
         <button
           className={`product-wish${liked ? ' active' : ''}`}
           aria-label={liked ? 'Remove from wishlist' : 'Add to wishlist'}
@@ -78,9 +99,6 @@ export default function ShopCard({ product, activeCategory }) {
         <div className="sale-card-info">
           <p className="sale-card-category">{displayCategory}</p>
           <p className="sale-card-title" title={product.name}>{product.name}</p>
-          <div>
-            <span className="sale-card-tag">SALE</span>
-          </div>
           <div className="sale-card-prices">
             <span className="sale-price-current">{formatRs(finalPrice)}</span>
             {origPrice > finalPrice && (
