@@ -58,7 +58,7 @@ export default function ShopCard({ product, activeCategory }) {
               position: 'absolute',
               top: '12px',
               left: '12px',
-              background: '#B07A85',
+              background: '#D32F2F',
               color: '#fff',
               fontSize: '10px',
               fontWeight: '600',
