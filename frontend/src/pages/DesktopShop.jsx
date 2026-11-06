@@ -170,8 +170,8 @@ export default function DesktopShop() {
             <img className="nav-logo-img" src={apilaLogo} alt="Apila Jewels" />
           </div>
           <div className="nav-right">
-            <button className="nav-icon-btn" aria-label="Wishlist" onClick={() => navigate('/wishlist')}>{navIcons.heart}</button>
-            <button className="nav-icon-btn" aria-label="Cart" onClick={() => navigate('/cart')}>{navIcons.cart}</button>
+            <button className="nav-icon-btn" aria-label="Wishlist" onClick={() => navigate(isSalePage ? '/sale/wishlist' : '/wishlist')}>{navIcons.heart}</button>
+            <button className="nav-icon-btn" aria-label="Cart" onClick={() => navigate(isSalePage ? '/sale/cart' : '/cart')}>{navIcons.cart}</button>
             <button className="nav-icon-btn" aria-label="Account" onClick={() => navigate('/profile')}>{navIcons.acct}</button>
           </div>
         </nav>

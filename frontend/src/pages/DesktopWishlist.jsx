@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useWishlist } from '../context/WishlistContext';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -16,12 +16,16 @@ import iconWhatsapp from '../assets/icons/whatsapp.svg';
 import '../styles/ApilaJewels.css';
 
 function WishlistCard({ item, onRemove, onMoveToBag }) {
+  const isSale = Boolean(item.isSale || item.sale || item.sales);
   const rawImg = item.images?.[0];
   const imgUrl = rawImg?.url || (typeof rawImg === 'string' ? rawImg : '') || item.media?.[0]?.url || '';
   const isVideo = rawImg?.type === 'video';
-  const price = item.rentalPrice || item.price || 0;
-  const priceText = item.showPrice === false || price > 1200 ? 'Price on Request' : `₹${price.toFixed(2)}`;
-  const description = item.description || item.material || item.type || '';
+  const price = isSale
+    ? (item.discountedRate || item.salesAmount || item.salesPrice || item.price || 0)
+    : (item.rentalPrice || item.price || 0);
+  const priceText = isSale
+    ? `Rs. ${Math.round(price).toLocaleString('en-IN')}`
+    : (item.showPrice === false || price > 1200 ? 'Price on Request' : `₹${price.toFixed(2)}`);
 
   return (
     <div className="wl-card">
@@ -43,7 +47,7 @@ function WishlistCard({ item, onRemove, onMoveToBag }) {
       </div>
 
       <div className="wl-info">
-        <p className="wl-name">{Array.isArray(item.category) ? item.category[0] : (item.category || 'Jewellery')}</p>
+        <p className="wl-name">{Array.isArray(item.category) ? item.category[0] : (item.category || (isSale ? 'Sale Jewellery' : 'Jewellery'))}</p>
         <p className="wl-desc">{item.name}</p>
         <p className="wl-price">{priceText}</p>
       </div>
@@ -57,16 +61,25 @@ function WishlistCard({ item, onRemove, onMoveToBag }) {
 
 /* ══════════════════════════════════════════════════════
    DesktopWishlist — pixel-perfect Figma 323:3549
-   Canvas: 1728px wide
-   Grid: 4 cols × 343px, col-gap 26px, left 146px
    ══════════════════════════════════════════════════════ */
-export default function DesktopWishlist() {
+export default function DesktopWishlist({ isSale: isSaleProp }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isSale = isSaleProp ?? (location.pathname.startsWith('/sale') || new URLSearchParams(location.search).get('type') === 'sale');
+
   const { wishlistItems, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
-  const { user, openLogin } = useAuth();
+  const { user } = useAuth();
 
-  const handleRemove = (item) => toggleWishlist(item);
+  const isItemSale = (item) => Boolean(item.isSale || item.sale || item.sales);
+  const currentWishlistItems = wishlistItems.filter(item => isSale ? isItemSale(item) : !isItemSale(item));
+
+  const rentalCount = wishlistItems.filter(item => !isItemSale(item)).length;
+  const saleCount = wishlistItems.filter(item => isItemSale(item)).length;
+
+  const handleRemove = (item) => {
+    toggleWishlist(item);
+  };
 
   const handleMoveToBag = (item) => {
     addToCart(item);
@@ -74,30 +87,24 @@ export default function DesktopWishlist() {
   };
 
   return (
-    <div className="apila" style={{ 
-      minHeight: '100vh', 
-      height: wishlistItems.length === 0 ? '100vh' : 'auto',
-      overflow: wishlistItems.length === 0 ? 'hidden' : 'auto',
-      display: 'flex', 
-      flexDirection: 'column' 
-    }}>
+    <div className="apila apila-wl">
 
       {/* ── NAVBAR ── */}
       <header>
-        <nav className="navbar scrolled">
+        <nav className="navbar scrolled wl-navbar">
           <div className="nav-left">
-            <Link to="/shop" className="cart-nav-back">
+            <Link to={isSale ? "/sale" : "/shop"} className="cart-nav-back">
               <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
                 <path d="M6 1L1 6l5 5" stroke="black" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
-              <span>Back to shop</span>
+              <span>{isSale ? 'Back to sale' : 'Back to shop'}</span>
             </Link>
           </div>
           <div className="nav-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
             <img className="nav-logo-img" src={apilaLogo} alt="Apila Jewels"/>
           </div>
           <div className="nav-right">
-            <button className="nav-icon-btn" aria-label="Cart" onClick={() => navigate('/cart')}>
+            <button className="nav-icon-btn" aria-label="Cart" onClick={() => navigate(isSale ? '/sale/cart' : '/cart')}>
               <svg width="15" height="17" viewBox="0 0 15 17" fill="none">
                 <path d="M13.282 13.5346C13.4101 14.7175 12.4834 15.75 11.2936 15.75H2.75034C1.56051 15.75 0.633827 14.7175 0.761975 13.5346L1.62864 5.53459C1.73863 4.51934 2.59581 3.75 3.61701 3.75H10.4269C11.4481 3.75 12.3053 4.51934 12.4153 5.53459L13.282 13.5346Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 <path d="M7.02516 0.75C8.40732 0.75 9.52197 1.69624 9.52197 2.85753V3.75H4.52197V2.85753C4.52197 1.69086 5.64299 0.75 7.01879 0.75H7.02516Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -115,29 +122,54 @@ export default function DesktopWishlist() {
       </header>
 
       {/* ── MAIN CONTENT ── */}
-      <div className="wl-page" style={wishlistItems.length === 0 ? { minHeight: 0 } : {}}>
-        {wishlistItems.length === 0 ? (
-          <div className="wl-empty">
-            <h1 className="wl-empty-title">YOUR WISHLIST IS EMPTY</h1>
-            <p className="wl-empty-subtitle">Your saved jewellery will appear here</p>
-          </div>
-        ) : (
-          <>
-            <h1 className="wl-title">My Wishlist</h1>
-            <p className="wl-notice">
+      <div className="wl-page" style={currentWishlistItems.length === 0 ? { minHeight: 0 } : {}}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '20px' }}>
+          <div>
+            <h1 className="wl-title" style={{ margin: 0 }}>{isSale ? 'Sale Wishlist' : 'My Wishlist'}</h1>
+            <p className="wl-notice" style={{ marginTop: '6px' }}>
               Save your favorite jewellery pieces in one place for easy access.
             </p>
-            <div className="wl-grid">
-              {wishlistItems.map(item => (
-                <WishlistCard
-                  key={item._id}
-                  item={item}
-                  onRemove={handleRemove}
-                  onMoveToBag={handleMoveToBag}
-                />
-              ))}
+          </div>
+
+          <div className="cart-type-toggle">
+            <button
+              type="button"
+              className={`cart-type-tab ${!isSale ? 'active' : ''}`}
+              onClick={() => navigate('/wishlist')}
+            >
+              Rental Wishlist ({rentalCount})
+            </button>
+            <button
+              type="button"
+              className={`cart-type-tab ${isSale ? 'active' : ''}`}
+              onClick={() => navigate('/sale/wishlist')}
+            >
+              Sale Wishlist ({saleCount})
+            </button>
+          </div>
+        </div>
+
+        {currentWishlistItems.length === 0 ? (
+          <div className="wl-empty">
+            <h1 className="wl-empty-title">{isSale ? 'YOUR SALE WISHLIST IS EMPTY' : 'YOUR WISHLIST IS EMPTY'}</h1>
+            <p className="wl-empty-subtitle">{isSale ? 'Your saved sale jewellery will appear here' : 'Your saved jewellery will appear here'}</p>
+            <div style={{ marginTop: '24px' }}>
+              <Link to={isSale ? "/sale" : "/shop"} className="btn-know">
+                <span>{isSale ? 'Explore Sale Jewellery' : 'Continue Shopping'}</span>
+              </Link>
             </div>
-          </>
+          </div>
+        ) : (
+          <div className="wl-grid">
+            {currentWishlistItems.map(item => (
+              <WishlistCard
+                key={item._id}
+                item={item}
+                onRemove={handleRemove}
+                onMoveToBag={handleMoveToBag}
+              />
+            ))}
+          </div>
         )}
       </div>
 

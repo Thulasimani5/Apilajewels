@@ -125,13 +125,35 @@ export const CartProvider = ({ children }) => {
     setCartItems([]);
   };
 
+  const rentalCartItems = cartItems.filter(item => !Boolean(item.isSale || item.sale || item.sales));
+  const saleCartItems = cartItems.filter(item => Boolean(item.isSale || item.sale || item.sales));
+
+  const getCartItems = (isSale) => (isSale ? saleCartItems : rentalCartItems);
+  const getCartCount = (isSale) => (isSale ? saleCartItems.length : rentalCartItems.length);
+
   const totalAmount = cartItems.reduce(
-    (total, item) => total + (item.rentalPrice || item.price || 0),
+    (total, item) => {
+      const isSale = Boolean(item.isSale || item.sale || item.sales);
+      const price = isSale
+        ? (item.discountedRate || item.salesAmount || item.salesPrice || item.price || 0)
+        : (item.rentalPrice || item.price || 0);
+      return total + price;
+    },
     0
   );
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, clearCart, totalAmount }}>
+    <CartContext.Provider value={{
+      cartItems,
+      rentalCartItems,
+      saleCartItems,
+      getCartItems,
+      getCartCount,
+      addToCart,
+      removeFromCart,
+      clearCart,
+      totalAmount
+    }}>
       {children}
     </CartContext.Provider>
   );

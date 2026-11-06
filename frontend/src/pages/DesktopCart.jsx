@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { getOptimizedCloudinaryUrl } from '../utils/imageUtils';
@@ -13,13 +13,18 @@ import API_BASE_URL from '../config/api';
 
 /* ── Cart item card ── */
 function CartItemCard({ item, onRemove }) {
+  const isSale = Boolean(item.isSale || item.sale || item.sales);
   const rawImg = item.images?.[0];
   const imgUrl = rawImg?.url || (typeof rawImg === 'string' ? rawImg : '') ||
     item.media?.[0]?.url || '';
   const isVideo = rawImg?.type === 'video';
-  const price = item.rentalPrice || item.price || 0;
-  const priceText = item.showPrice === false || price > 1200 ? 'Price on Request' : `₹${price.toFixed(2)}`;
-  const category = Array.isArray(item.category) ? item.category[0] : (item.category || 'victorian-moissinate');
+  const price = isSale
+    ? (item.discountedRate || item.salesAmount || item.salesPrice || item.price || 0)
+    : (item.rentalPrice || item.price || 0);
+  const priceText = isSale
+    ? `Rs. ${Math.round(price).toLocaleString('en-IN')}`
+    : (item.showPrice === false || price > 1200 ? 'Price on Request' : `₹${price.toFixed(2)}`);
+  const category = Array.isArray(item.category) ? item.category[0] : (item.category || (isSale ? 'Sale Jewellery' : 'victorian-moissinate'));
   const ref = item.code || item.jewelId || item.sku || 'N/A';
 
   return (
@@ -45,7 +50,7 @@ function CartItemCard({ item, onRemove }) {
         <div className="cc-tags">
           <span className="cc-tag">
             <img src={iconPremiumJewel} alt="Premium Jewel" width="12" height="11" />
-            Premium Jewel
+            {isSale ? 'Sale Jewel' : 'Premium Jewel'}
           </span>
           <span className="cc-tag">
             <img src={iconDesignerCollection} alt="Designer Collection" width="12" height="11" />
@@ -81,30 +86,40 @@ function CartItemCard({ item, onRemove }) {
 
 /* ══════════════════════════════════════════════════════
    DesktopCart — pixel-perfect Figma 308:2849
-   Page: 1728px wide
-   Left panel: 1103px bg=#fdf9f4, cards at left 163px, w 845px, h 249px
-   Right panel: flex:1, content 518px wide
    ══════════════════════════════════════════════════════ */
-export default function DesktopCart() {
+export default function DesktopCart({ isSale: isSaleProp }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isSale = isSaleProp ?? (location.pathname.startsWith('/sale') || new URLSearchParams(location.search).get('type') === 'sale');
+
   const { cartItems, removeFromCart } = useCart();
   const { user, openLogin } = useAuth();
   const [coupon, setCoupon] = useState('');
 
-  const cartCount = cartItems.length;
-  const isPremium = (item) => item.showPrice === false || (item.rentalPrice || item.price || 0) > 1200;
-  const premiumItems = cartItems.filter(isPremium);
-  const pricedItems = cartItems.filter(item => !isPremium(item));
-  const pricedSubtotal = pricedItems.reduce((sum, item) => sum + (item.rentalPrice || item.price || 0), 0);
-  const allPremium = premiumItems.length === cartItems.length && cartItems.length > 0;
-  const hasPremium = premiumItems.length > 0;
-  const hasPriced = pricedItems.length > 0;
+  const isItemSale = (item) => Boolean(item.isSale || item.sale || item.sales);
+  const currentCartItems = cartItems.filter(item => isSale ? isItemSale(item) : !isItemSale(item));
+  const cartCount = currentCartItems.length;
+
+  const rentalCount = cartItems.filter(item => !isItemSale(item)).length;
+  const saleCount = cartItems.filter(item => isItemSale(item)).length;
+
+  const getItemPrice = (item) => isItemSale(item)
+    ? Number(item.discountedRate || item.salesAmount || item.salesPrice || item.price || 0)
+    : Number(item.rentalPrice || item.price || 0);
+
+  const isPremium = (item) => !isSale && (item.showPrice === false || getItemPrice(item) > 1200);
+  const premiumItems = currentCartItems.filter(isPremium);
+  const pricedItems = currentCartItems.filter(item => !isPremium(item));
+  const pricedSubtotal = pricedItems.reduce((sum, item) => sum + getItemPrice(item), 0);
+  const allPremium = !isSale && premiumItems.length === currentCartItems.length && currentCartItems.length > 0;
+  const hasPremium = !isSale && premiumItems.length > 0;
+  const hasPriced = isSale || pricedItems.length > 0;
 
   const handleBookOnWhatsapp = async () => {
-    if (!cartItems.length) return;
+    if (!currentCartItems.length) return;
 
     try {
-      const jewelleryIds = cartItems.map(item => item._id).filter(Boolean);
+      const jewelleryIds = currentCartItems.map(item => item._id).filter(Boolean);
       await axios.post(`${API_BASE_URL}/api/bookings`, {
         jewelleryIds,
         totalAmount: pricedSubtotal || 0,
@@ -118,8 +133,19 @@ export default function DesktopCart() {
       console.error('Error recording booking:', e);
     }
 
+    if (isSale) {
+      let msg = `Hi Apila Jewels, I would like to purchase the following sale jewellery items:\n\n`;
+      currentCartItems.forEach((item, i) => {
+        const price = getItemPrice(item);
+        msg += `${i + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – Rs. ${Math.round(price).toLocaleString('en-IN')}\n`;
+      });
+      msg += `\n*Total Amount (${currentCartItems.length} ${currentCartItems.length === 1 ? 'Item' : 'Items'}): Rs. ${Math.round(pricedSubtotal).toLocaleString('en-IN')}*\n\nPlease confirm availability and payment details.`;
+      window.open(`https://wa.me/+917397721122?text=${encodeURIComponent(msg)}`, '_blank');
+      return;
+    }
+
     let msg = `Hi Apila Jewels, I would like to book the following items:\n\n`;
-    cartItems.forEach((item, i) => {
+    currentCartItems.forEach((item, i) => {
       const price = item.rentalPrice || item.price || 0;
       const pText = isPremium(item) ? 'Price on Request' : `₹${price}`;
       msg += `${i + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – ${pText}\n`;
@@ -141,18 +167,18 @@ export default function DesktopCart() {
       <header>
         <nav className="navbar scrolled cart-navbar">
           <div className="nav-left">
-            <Link to="/shop" className="cart-nav-back">
+            <Link to={isSale ? "/sale" : "/shop"} className="cart-nav-back">
               <svg width="7" height="12" viewBox="0 0 7 12" fill="none">
                 <path d="M6 1L1 6l5 5" stroke="black" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span>Back to shop</span>
+              <span>{isSale ? 'Back to sale' : 'Back to shop'}</span>
             </Link>
           </div>
           <div className="nav-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
             <img className="nav-logo-img" src={apilaLogo} alt="Apila Jewels" />
           </div>
           <div className="nav-right">
-            <button className="nav-icon-btn" aria-label="Wishlist" onClick={() => navigate('/wishlist')}>
+            <button className="nav-icon-btn" aria-label="Wishlist" onClick={() => navigate(isSale ? '/sale/wishlist' : '/wishlist')}>
               <svg width="18" height="16" viewBox="0 0 18 16" fill="none">
                 <path d="M8.99887 16C8.83828 16 8.67769 15.9592 8.53717 15.8777C4.1711 13.2582 -0.666706 8.59001 0.0760276 4.0849C0.417284 2.01581 1.97301 0.446155 4.03059 0.0792224C5.89746 -0.246939 7.71414 0.446155 8.98884 1.93427C10.2435 0.486925 11.9899 -0.216362 13.7965 0.0690301C15.8742 0.405385 17.4801 1.96485 17.8916 4.05432C18.7749 8.48808 14.1077 13.0747 9.4405 15.8777C9.29998 15.9592 9.13939 16 8.9788 16H8.99887ZM4.91384 1.82215C4.7131 1.82215 4.53243 1.84254 4.35177 1.87311C3.31796 2.05658 2.11353 2.81083 1.8626 4.38048C1.33064 7.62172 4.99413 11.4847 9.00891 14.0125C12.823 11.6172 16.8277 7.7746 16.1552 4.41106C15.8943 3.07584 14.8604 2.08716 13.5356 1.87311C12.0401 1.62849 10.6449 2.41332 9.79179 3.95239C9.6312 4.23779 9.33009 4.42125 9.00891 4.42125C8.68773 4.42125 8.38662 4.24798 8.22603 3.95239C7.35281 2.37255 6.03798 1.82215 4.92387 1.82215H4.91384Z" fill="currentColor"/>
               </svg>
@@ -172,16 +198,36 @@ export default function DesktopCart() {
 
         {/* ── LEFT: Shopping Bag ── */}
         <div className="cart-left">
-          <h1 className="cart-bag-title">Shoping Bag ({cartCount})</h1>
+          <div className="cart-header-row" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px', marginBottom: '24px' }}>
+            <h1 className="cart-bag-title" style={{ margin: 0 }}>{isSale ? 'Sale Bag' : 'Rental Bag'} ({cartCount})</h1>
+            <div className="cart-type-toggle">
+              <button
+                type="button"
+                className={`cart-type-tab ${!isSale ? 'active' : ''}`}
+                onClick={() => navigate('/cart')}
+              >
+                Rental Bag ({rentalCount})
+              </button>
+              <button
+                type="button"
+                className={`cart-type-tab ${isSale ? 'active' : ''}`}
+                onClick={() => navigate('/sale/cart')}
+              >
+                Sale Bag ({saleCount})
+              </button>
+            </div>
+          </div>
 
           {cartCount === 0 ? (
             <div className="cart-empty">
-              <p>Your cart is empty.</p>
-              <Link to="/shop" className="btn-know"><span>Continue Shopping</span></Link>
+              <p>{isSale ? 'Your sale cart is empty.' : 'Your rental cart is empty.'}</p>
+              <Link to={isSale ? "/sale" : "/shop"} className="btn-know">
+                <span>{isSale ? 'Explore Sale Jewellery' : 'Continue Shopping'}</span>
+              </Link>
             </div>
           ) : (
             <div className="cart-items-list">
-              {cartItems.map(item => (
+              {currentCartItems.map(item => (
                 <CartItemCard key={item._id} item={item} onRemove={removeFromCart} />
               ))}
             </div>
@@ -214,7 +260,7 @@ export default function DesktopCart() {
             {hasPriced && (
               <div className="cart-sumrow">
                 <span className="cart-sumlabel">Sub Total ({pricedItems.length} {pricedItems.length === 1 ? 'Item' : 'Items'})</span>
-                <span className="cart-sumval">₹{pricedSubtotal.toFixed(2)}</span>
+                <span className="cart-sumval">{isSale ? `Rs. ${Math.round(pricedSubtotal).toLocaleString('en-IN')}` : `₹${pricedSubtotal.toFixed(2)}`}</span>
               </div>
             )}
             <div className="cart-sumrow">
@@ -223,12 +269,14 @@ export default function DesktopCart() {
             </div>
             <div className="cart-sumrow cart-sumrow--last">
               <span className="cart-sumlabel">Discount</span>
-              <span className="cart-sumval">₹0</span>
+              <span className="cart-sumval">{isSale ? 'Rs. 0' : '₹0'}</span>
             </div>
             <div className="cart-sum-divider" />
             <div className="cart-totalrow">
               <span className="cart-totallabel">Total</span>
-              <span className="cart-totalval">{allPremium ? 'Price on Request' : `₹${pricedSubtotal.toFixed(2)}`}</span>
+              <span className="cart-totalval">
+                {allPremium ? 'Price on Request' : (isSale ? `Rs. ${Math.round(pricedSubtotal).toLocaleString('en-IN')}` : `₹${pricedSubtotal.toFixed(2)}`)}
+              </span>
             </div>
           </div>
 
@@ -247,7 +295,7 @@ export default function DesktopCart() {
 
             {/* Book on WhatsApp */}
             <button className="cart-book-btn" onClick={handleBookOnWhatsapp}>
-              BOOK ON WHATSAPP
+              {isSale ? 'BUY ON WHATSAPP' : 'BOOK ON WHATSAPP'}
             </button>
 
             {/* Secure Payments */}

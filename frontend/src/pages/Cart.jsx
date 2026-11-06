@@ -3,30 +3,39 @@ import SearchOverlay from '../components/SearchOverlay';
 import ShareBottomSheet from '../components/ShareBottomSheet';
 import LazyImage from '../components/LazyImage';
 import { ArrowLeft, Search, Heart, Share2, X } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import DesktopCart from './DesktopCart';
 import useIsDesktop from '../hooks/useIsDesktop';
 import Navbar from '../components/Navbar';
+import axios from 'axios';
+import API_BASE_URL from '../config/api';
 import '../styles/ApilaJewels.css';
 
-const Cart = () => {
+const Cart = ({ isSale: isSaleProp }) => {
   const isDesktop = useIsDesktop();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isSale = isSaleProp ?? (location.pathname.startsWith('/sale') || new URLSearchParams(location.search).get('type') === 'sale');
+
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
-  const location = useLocation();
   const { user } = useAuth();
   const { cartItems, removeFromCart } = useCart();
   const [selectedItems, setSelectedItems] = useState([]);
 
+  const isItemSale = (item) => Boolean(item.isSale || item.sale || item.sales);
+  const currentCartItems = cartItems.filter(item => isSale ? isItemSale(item) : !isItemSale(item));
+  const rentalCount = cartItems.filter(item => !isItemSale(item)).length;
+  const saleCount = cartItems.filter(item => isItemSale(item)).length;
+
   useEffect(() => {
-    setSelectedItems(cartItems.map(item => item._id));
-  }, [cartItems]);
+    setSelectedItems(currentCartItems.map(item => item._id));
+  }, [cartItems, isSale]);
 
   if (isDesktop) {
-    return <DesktopCart />;
+    return <DesktopCart isSale={isSale} />;
   }
 
   const toggleSelection = (id) => {
@@ -35,16 +44,21 @@ const Cart = () => {
     );
   };
 
-  const selectedCartItems = cartItems.filter(item => selectedItems.includes(item._id));
-  const isPremium = (item) => item.showPrice === false || (item.rentalPrice || item.price || 0) > 1200;
+  const selectedCartItems = currentCartItems.filter(item => selectedItems.includes(item._id));
+
+  const getItemPrice = (item) => isItemSale(item)
+    ? Number(item.discountedRate || item.salesAmount || item.salesPrice || item.price || 0)
+    : Number(item.rentalPrice || item.price || 0);
+
+  const isPremium = (item) => !isSale && (item.showPrice === false || getItemPrice(item) > 1200);
   const premiumSelected = selectedCartItems.filter(isPremium);
   const pricedSelected = selectedCartItems.filter(item => !isPremium(item));
-  const pricedAmount = pricedSelected.reduce((total, item) => total + (item.rentalPrice || item.price || 0), 0);
-  const allPremiumSelected = premiumSelected.length === selectedCartItems.length && selectedCartItems.length > 0;
+  const pricedAmount = pricedSelected.reduce((total, item) => total + getItemPrice(item), 0);
+  const allPremiumSelected = !isSale && premiumSelected.length === selectedCartItems.length && selectedCartItems.length > 0;
 
   const handleBookOnWhatsapp = async () => {
     if (selectedCartItems.length === 0) {
-      alert("Please select at least one item to book.");
+      alert("Please select at least one item to proceed.");
       return;
     }
 
@@ -61,6 +75,18 @@ const Cart = () => {
       });
     } catch (e) {
       console.error('Error recording booking:', e);
+    }
+
+    if (isSale) {
+      let message = `Hi Apila Jewels, I would like to purchase the following sale jewellery items:\n\n`;
+      selectedCartItems.forEach((item, index) => {
+        const price = getItemPrice(item);
+        message += `${index + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – Rs. ${Math.round(price).toLocaleString('en-IN')}\n`;
+      });
+      message += `\n*Total Amount (${selectedCartItems.length} ${selectedCartItems.length === 1 ? 'Item' : 'Items'}): Rs. ${Math.round(pricedAmount).toLocaleString('en-IN')}*\n\nPlease confirm availability and payment details.`;
+      const whatsappUrl = `https://wa.me/+917397721122?text=${encodeURIComponent(message)}`;
+      window.open(whatsappUrl, '_blank');
+      return;
     }
 
     let message = `Hi Apila Jewels, I would like to book the following items:\n\n`;
@@ -85,17 +111,43 @@ const Cart = () => {
     <div className="bg-[#FFF8F3] min-h-[100dvh] flex flex-col pb-20">
       <Navbar />
       <div className="flex-1 mt-[55px] md:mt-[80px] px-2 pt-6 pb-4">
-        <h2 className="mb-2" style={{ color: '#000', fontFamily: "'Bacasime Antique', serif", fontSize: '22px', fontStyle: 'normal', fontWeight: 400, lineHeight: '39px', letterSpacing: '-0.66px' }}>
-          Your Order ({cartItems.length})
-        </h2>
+        {/* Header and Toggle */}
+        <div className="mb-4">
+          <h2 className="mb-2" style={{ color: '#000', fontFamily: "'Bacasime Antique', serif", fontSize: '22px', fontStyle: 'normal', fontWeight: 400, lineHeight: '32px', letterSpacing: '-0.66px' }}>
+            {isSale ? 'Your Sale Order' : 'Your Rental Order'} ({currentCartItems.length})
+          </h2>
 
-        {cartItems.length === 0 ? (
-          <div className="text-center py-10 text-gray-500">
-            Your cart is empty
+          <div className="flex items-center gap-2 mt-2">
+            <button
+              type="button"
+              onClick={() => navigate('/cart')}
+              className={`px-3 py-1 rounded-full text-[11px] font-semibold tracking-wider uppercase transition-all ${!isSale ? 'bg-[#B07A85] text-white shadow-sm' : 'bg-white text-gray-700 border border-gray-200'}`}
+            >
+              Rental Bag ({rentalCount})
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/sale/cart')}
+              className={`px-3 py-1 rounded-full text-[11px] font-semibold tracking-wider uppercase transition-all ${isSale ? 'bg-[#B07A85] text-white shadow-sm' : 'bg-white text-gray-700 border border-gray-200'}`}
+            >
+              Sale Bag ({saleCount})
+            </button>
+          </div>
+        </div>
+
+        {currentCartItems.length === 0 ? (
+          <div className="text-center py-14 text-gray-500">
+            <p className="mb-4">{isSale ? 'Your sale cart is empty' : 'Your rental cart is empty'}</p>
+            <Link
+              to={isSale ? "/sale" : "/shop"}
+              className="inline-block px-5 py-2 bg-[#B07A85] text-white text-xs font-semibold uppercase tracking-wider rounded"
+            >
+              {isSale ? 'Explore Sale Jewellery' : 'Continue Shopping'}
+            </Link>
           </div>
         ) : (
           <div>
-            {cartItems.map((item) => (
+            {currentCartItems.map((item) => (
               <div key={item._id} className="bg-white mb-2 p-2 flex gap-2 relative shadow-[0_2px_8px_rgba(0,0,0,0.04)] items-start">
                 <button
                   onClick={() => removeFromCart(item._id)}
@@ -130,7 +182,7 @@ const Cart = () => {
                 <div className="flex-1 py-1 flex flex-col mt-1 justify-between" style={{ height: '125px' }}>
                   <div className="pr-5">
                     <p className="mb-3 line-clamp-1" style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '11px', fontStyle: 'normal', fontWeight: 300, lineHeight: 'normal', letterSpacing: '0.84px', textTransform: 'uppercase' }}>
-                      {item.category || 'victorian-moissinate'}
+                      {Array.isArray(item.category) ? item.category[0] : (item.category || (isSale ? 'Sale Jewellery' : 'victorian-moissinate'))}
                     </p>
                     <p className="pr-2 line-clamp-2" style={{ color: '#000', fontFamily: "'Gotham Book', sans-serif", fontSize: '12px', fontStyle: 'normal', fontWeight: 400, lineHeight: '18px', letterSpacing: '0.3px', opacity: 0.5 }}>
                       {item.name}
@@ -150,7 +202,7 @@ const Cart = () => {
                         margin: 0
                       }}
                     >
-                      Ref : {item.code || 'MP000'}
+                      Ref : {item.code || item.jewelId || 'N/A'}
                     </p>
 
                     <div
@@ -162,9 +214,9 @@ const Cart = () => {
                         marginRight: 20
                       }}
                     >
-                      {isPremium(item)
-                        ? 'Price on Request'
-                        : `₹${(item.rentalPrice || item.price || 0).toFixed(2)}`}
+                      {isSale
+                        ? `Rs. ${Math.round(getItemPrice(item)).toLocaleString('en-IN')}`
+                        : (isPremium(item) ? 'Price on Request' : `₹${getItemPrice(item).toFixed(2)}`)}
                     </div>
                   </div>
                 </div>
@@ -174,7 +226,7 @@ const Cart = () => {
         )}
 
         {/* Total Summary */}
-        {cartItems.length > 0 && (
+        {currentCartItems.length > 0 && (
           <div className="mt-10 space-y-2">
             <div
               className="flex mx-auto mb-10 bg-transparent"
@@ -197,7 +249,9 @@ const Cart = () => {
             <div className="pt-6 pb-4 border-t border-[#EAEAEA] space-y-5">
               <div className="flex justify-between items-center">
                 <span style={{ color: '#000', fontFamily: "'Gotham Book', sans-serif", fontSize: '11px', fontStyle: 'normal', fontWeight: 400, lineHeight: 'normal', letterSpacing: '0.48px', textTransform: 'uppercase' }}>Sub Total ( {pricedSelected.length} Items )</span>
-                <span style={{ color: '#000', textAlign: 'right', fontFamily: "'Gotham', sans-serif", fontSize: '12px', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal' }}>₹{pricedAmount.toFixed(2)}</span>
+                <span style={{ color: '#000', textAlign: 'right', fontFamily: "'Gotham', sans-serif", fontSize: '12px', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal' }}>
+                  {isSale ? `Rs. ${Math.round(pricedAmount).toLocaleString('en-IN')}` : `₹${pricedAmount.toFixed(2)}`}
+                </span>
               </div>
 
               {premiumSelected.length > 0 && (
@@ -214,12 +268,14 @@ const Cart = () => {
 
               <div className="flex justify-between items-center pb-6 border-b border-[#EAEAEA]">
                 <span style={{ color: '#000', fontFamily: "'Gotham Book', sans-serif", fontSize: '11px', fontStyle: 'normal', fontWeight: 400, lineHeight: 'normal', letterSpacing: '0.48px', textTransform: 'uppercase' }}>Discount</span>
-                <span style={{ color: '#000', textAlign: 'right', fontFamily: "'Gotham', sans-serif", fontSize: '12px', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal' }}>₹0</span>
+                <span style={{ color: '#000', textAlign: 'right', fontFamily: "'Gotham', sans-serif", fontSize: '12px', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal' }}>{isSale ? 'Rs. 0' : '₹0'}</span>
               </div>
 
               <div className="flex justify-between items-center mb-10 ">
                 <span style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '14px', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal', letterSpacing: '0.64px', textTransform: 'uppercase' }}>Total</span>
-                <span style={{ color: '#000', textAlign: 'right', fontFamily: "'Gotham', sans-serif", fontSize: '14px', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal' }}>₹{pricedAmount.toFixed(2)}</span>
+                <span style={{ color: '#000', textAlign: 'right', fontFamily: "'Gotham', sans-serif", fontSize: '14px', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal' }}>
+                  {allPremiumSelected ? 'Price on Request' : (isSale ? `Rs. ${Math.round(pricedAmount).toLocaleString('en-IN')}` : `₹${pricedAmount.toFixed(2)}`)}
+                </span>
               </div>
             </div>
 
@@ -242,17 +298,19 @@ const Cart = () => {
       </div>
 
       {/* Fixed Bottom Button */}
-      {cartItems.length > 0 && (
+      {currentCartItems.length > 0 && (
         <div className="fixed bottom-0 left-0 w-full bg-white px-2 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] flex justify-between items-center z-40 ">
           <div className="flex flex-col">
-            <span style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '15px', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal' }}>₹{pricedAmount.toFixed(2)}</span>
+            <span style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '15px', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal' }}>
+              {isSale ? `Rs. ${Math.round(pricedAmount).toLocaleString('en-IN')}` : `₹${pricedAmount.toFixed(2)}`}
+            </span>
             <span style={{ color: '#000', fontFamily: "'Gotham Book', sans-serif", fontSize: '12px', fontStyle: 'normal', fontWeight: 200, lineHeight: '185.7%', letterSpacing: '-0.13px' }}>View Price Details</span>
           </div>
           <button
             onClick={handleBookOnWhatsapp}
             style={{ width: '223px', height: '53px', border: '1px solid #AB6281', background: selectedItems.length > 0 ? '#AB6281' : '#ccc', cursor: selectedItems.length > 0 ? 'pointer' : 'not-allowed', color: '#FFF', fontFamily: "'Gotham Book', sans-serif", fontSize: '13px', fontStyle: 'normal', fontWeight: 300, lineHeight: 'normal', letterSpacing: '1.82px' }}
           >
-            BOOK ON WHATSAPP
+            {isSale ? 'BUY ON WHATSAPP' : 'BOOK ON WHATSAPP'}
           </button>
         </div>
       )}

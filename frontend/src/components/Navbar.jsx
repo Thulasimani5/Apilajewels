@@ -24,6 +24,7 @@ const Navbar = () => {
   const { categories } = useContext(CategoryContext);
 
   const location = useLocation();
+  const isSaleDirectory = location.pathname.startsWith('/sale');
   const { user, logout, openLogin } = useAuth();
   const dropdownRef = useRef(null);
   const lastScrollY = useRef(0);
@@ -184,7 +185,7 @@ const Navbar = () => {
             {/* Right Section: Custom Icon Images */}
             <div className="flex items-center gap-5 md:gap-6">
               <Link
-                to="/wishlist"
+                to={isSaleDirectory ? "/sale/wishlist" : "/wishlist"}
                 aria-label="Wishlist"
                 className="hover:opacity-70 transition-opacity"
               >
@@ -200,7 +201,7 @@ const Navbar = () => {
                 />
               </Link>
               <Link
-                to="/cart"
+                to={isSaleDirectory ? "/sale/cart" : "/cart"}
                 aria-label="Cart"
                 className="hover:opacity-70 transition-opacity"
               >

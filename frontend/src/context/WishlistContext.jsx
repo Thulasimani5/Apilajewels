@@ -28,8 +28,22 @@ export const WishlistProvider = ({ children }) => {
     return wishlistItems.some(item => item._id === id);
   };
 
+  const rentalWishlistItems = wishlistItems.filter(item => !Boolean(item.isSale || item.sale || item.sales));
+  const saleWishlistItems = wishlistItems.filter(item => Boolean(item.isSale || item.sale || item.sales));
+
+  const getWishlistItems = (isSale) => (isSale ? saleWishlistItems : rentalWishlistItems);
+  const getWishlistCount = (isSale) => (isSale ? saleWishlistItems.length : rentalWishlistItems.length);
+
   return (
-    <WishlistContext.Provider value={{ wishlistItems, toggleWishlist, isInWishlist }}>
+    <WishlistContext.Provider value={{
+      wishlistItems,
+      rentalWishlistItems,
+      saleWishlistItems,
+      getWishlistItems,
+      getWishlistCount,
+      toggleWishlist,
+      isInWishlist
+    }}>
       {children}
     </WishlistContext.Provider>
   );

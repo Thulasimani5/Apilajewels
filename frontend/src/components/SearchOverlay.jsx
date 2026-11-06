@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import LazyImage from '../components/LazyImage';
 import { ArrowLeft, Search as SearchIcon, X, Loader2, Heart, ShoppingBag, Menu } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import API_BASE_URL from '../config/api';
 import logoImage from "../assets/Apila Logo01.svg";
 import imgC1 from '../assets/images/c1.jpg';
@@ -32,6 +32,8 @@ const SearchOverlay = ({ isOpen, onClose, category, type }) => {
   const [premiumJewels, setPremiumJewels] = useState([]);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const isSale = location.pathname.startsWith("/sale");
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -143,8 +145,8 @@ const SearchOverlay = ({ isOpen, onClose, category, type }) => {
         </div>
 
         <div className="flex items-center gap-4 text-black">
-          <button onClick={() => { onClose(); navigate('/wishlist'); }}><Heart size={20} strokeWidth={1.5} /></button>
-          <button onClick={() => { onClose(); navigate('/cart'); }}><ShoppingBag size={20} strokeWidth={1.5} /></button>
+          <button onClick={() => { onClose(); navigate(isSale ? '/sale/wishlist' : '/wishlist'); }}><Heart size={20} strokeWidth={1.5} /></button>
+          <button onClick={() => { onClose(); navigate(isSale ? '/sale/cart' : '/cart'); }}><ShoppingBag size={20} strokeWidth={1.5} /></button>
         </div>
       </div>
 

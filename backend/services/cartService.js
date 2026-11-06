@@ -1,26 +1,61 @@
 const userRepository = require('../repositories/userRepository');
 const cartRepository = require('../repositories/cartRepository');
 const jewelleryRepository = require('../repositories/jewelleryRepository');
+const User = require('../models/User');
+const GuestCart = require('../models/GuestCart');
+const SaleJewellery = require('../models/SaleJewellery');
 const ErrorResponse = require('../utils/errorHandler');
 
 class CartService {
   async getCart(user, visitorId) {
+    let populatedCart = [];
+    let rawIds = [];
+
     if (user) {
       const dbUser = await userRepository.findById(user._id);
-      return dbUser ? dbUser.cart : [];
-    }
-    if (visitorId) {
+      populatedCart = dbUser && Array.isArray(dbUser.cart) ? dbUser.cart : [];
+      const u = await User.findById(user._id).select('cart').lean();
+      rawIds = u?.cart || [];
+    } else if (visitorId) {
       const guestCart = await cartRepository.findByVisitorId(visitorId);
-      return guestCart ? guestCart.cart : [];
+      populatedCart = guestCart && Array.isArray(guestCart.cart) ? guestCart.cart : [];
+      const g = await GuestCart.findOne({ visitorId }).select('cart').lean();
+      rawIds = g?.cart || [];
     }
-    return [];
+
+    populatedCart = populatedCart.filter(Boolean);
+
+    try {
+      const populatedIds = new Set(populatedCart.map(item => item._id?.toString()));
+      const missingIds = (rawIds || []).filter(id => id && !populatedIds.has(id.toString()));
+
+      if (missingIds.length > 0) {
+        const saleItems = await SaleJewellery.find({ _id: { $in: missingIds } }).lean();
+        saleItems.forEach(item => {
+          populatedCart.push({
+            ...item,
+            isSale: true,
+            salesAmount: item.discountedRate || item.salesPrice,
+            price: item.discountedRate || item.salesPrice,
+            rentalPrice: item.discountedRate || item.salesPrice
+          });
+        });
+      }
+    } catch (err) {
+      console.warn('Cart sale populate fallback warning:', err.message);
+    }
+
+    return populatedCart;
   }
 
   async addToCart(user, visitorId, jewelleryId) {
     if (!jewelleryId) {
       throw new ErrorResponse('Jewellery ID is required', 400);
     }
-    const jewel = await jewelleryRepository.findById(jewelleryId);
+    let jewel = await jewelleryRepository.findById(jewelleryId);
+    if (!jewel) {
+      jewel = await SaleJewellery.findById(jewelleryId);
+    }
     if (!jewel) {
       throw new ErrorResponse('Jewellery item not found', 404);
     }

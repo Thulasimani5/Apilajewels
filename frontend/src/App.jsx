@@ -29,8 +29,12 @@ function App() {
           <Route path="/shop" element={<Shop />} />
           <Route path="/sale" element={<Shop />} />
           <Route path="/shop/:id" element={<ProductDetails />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/cart" element={<Cart isSale={false} />} />
+          <Route path="/sale/cart" element={<Cart isSale={true} />} />
+          <Route path="/sales/cart" element={<Cart isSale={true} />} />
+          <Route path="/wishlist" element={<Wishlist isSale={false} />} />
+          <Route path="/sale/wishlist" element={<Wishlist isSale={true} />} />
+          <Route path="/sales/wishlist" element={<Wishlist isSale={true} />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

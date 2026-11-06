@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import API_BASE_URL from '../config/api';
 import whatsappIcon from '../assets/icons/whatsapp.svg';
@@ -33,6 +33,8 @@ const LoginSidebar = ({ isOpen, onClose, initialMode = 'login' }) => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const isSale = location.pathname.startsWith("/sale");
 
   const { user, login, logout } = useAuth();
 
@@ -133,10 +135,10 @@ const LoginSidebar = ({ isOpen, onClose, initialMode = 'login' }) => {
         {/* Header matching image - icons on right, bottom border */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", padding: "26px 48px", borderBottom: "1px solid #EAEAEA" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "24px", color: "#111" }}>
-            <button aria-label="Wishlist" onClick={() => { onClose(); navigate('/wishlist'); }} style={{ background: "none", border: "none", cursor: "pointer" }}>
+            <button aria-label="Wishlist" onClick={() => { onClose(); navigate(isSale ? '/sale/wishlist' : '/wishlist'); }} style={{ background: "none", border: "none", cursor: "pointer" }}>
               {Icon.heart}
             </button>
-            <button aria-label="Cart" onClick={() => { onClose(); navigate('/cart'); }} style={{ background: "none", border: "none", cursor: "pointer" }}>
+            <button aria-label="Cart" onClick={() => { onClose(); navigate(isSale ? '/sale/cart' : '/cart'); }} style={{ background: "none", border: "none", cursor: "pointer" }}>
               {Icon.cart}
             </button>
             <button aria-label="Account" onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer" }}>

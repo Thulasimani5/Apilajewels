@@ -105,8 +105,9 @@ export default function MobileProductView({
 
   const handleAddToCart = () => {
     if (product) {
+      const isSale = Boolean(product.isSale || product.sale || product.sales);
       addToCart(product);
-      navigate('/cart');
+      navigate(isSale ? '/sale/cart' : '/cart');
     }
   };
 
