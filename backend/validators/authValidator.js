@@ -12,13 +12,14 @@ const validateRegisterInput = (req, res, next) => {
 };
 
 const validateLoginInput = (req, res, next) => {
-  const { emailOrPhone, password } = req.body;
-  if (!emailOrPhone) {
+  const identifier = req.body.emailOrPhone || req.body.email || req.body.mobile || req.body.phone;
+  if (!identifier) {
     return next(new ErrorResponse('Please provide email or phone number', 400));
   }
-  if (!password) {
+  if (!req.body.password) {
     return next(new ErrorResponse('Please provide password', 400));
   }
+  req.body.emailOrPhone = identifier;
   next();
 };
 

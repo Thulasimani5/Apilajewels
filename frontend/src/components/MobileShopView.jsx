@@ -140,13 +140,15 @@ export default function MobileShopView() {
       </div>
 
       <div className="flex flex-1 items-start md:overflow-hidden md:min-h-0">
-        <div className="hidden md:block sticky top-[60px] h-[calc(100vh-60px)] z-30">
-          <FilterSidebar
-            activeFilters={activeFilters}
-            onFilterChange={handleApplyFilters}
-            products={products}
-          />
-        </div>
+        {!isSalePage && (
+          <div className="hidden md:block sticky top-[60px] h-[calc(100vh-60px)] z-30">
+            <FilterSidebar
+              activeFilters={activeFilters}
+              onFilterChange={handleApplyFilters}
+              products={products}
+            />
+          </div>
+        )}
 
         <div className="flex-1 min-w-0 md:h-full md:overflow-y-auto md:flex md:flex-col">
           <div className="hidden md:flex items-center justify-between px-5 py-3 border-b border-[#F0EDED] bg-white sticky top-0 z-40">
