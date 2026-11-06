@@ -173,7 +173,7 @@ export function useMobileShopProducts() {
 
   const sortedProducts = useMemo(() => {
     const sorted = [...filteredProducts];
-    const getPrice = (item) => (item.isSale && item.salesAmount) ? item.salesAmount : (item.price || item.rentalPrice || 0);
+    const getPrice = (item) => (item.isSale ? (item.discountedRate != null ? item.discountedRate : (item.salesAmount || item.salesPrice || 0)) : (item.price || item.rentalPrice || 0));
     if (activeSort === 'newest') {
       return sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     } else if (activeSort === 'price_low_high' || activeSort === 'price_asc') {

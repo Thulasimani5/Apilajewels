@@ -78,30 +78,57 @@ const Card = ({ jewellery, priority = false, imageAspect, imageClassName = 'roun
           </svg>
         </button>
 
-        {jewellery.isSale && (
-          <span className="absolute top-[12px] left-[12px] bg-[#B07A85] text-white text-[9px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded shadow-sm z-[2]">
-            For Sale
-          </span>
-        )}
+
       </div>
 
-      <div className="pt-[9px] pb-[2px]">
-        <p style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "9px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "0.7px", textTransform: "uppercase" }}>
-          {Array.isArray(jewellery.category) ? jewellery.category.join(', ') : jewellery.category}
-        </p>
-        <h3 className="line-clamp-2 mt-[5px] w-full whitespace-normal break-words" style={{ maxWidth: "130px", color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "11.5px", fontStyle: "normal", fontWeight: 400, lineHeight: "16px", height: "32px", opacity: 0.6, letterSpacing: "-0.13px" }}>
-          {jewellery.name}
-        </h3>
-        <p className="mt-[4px]" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal" }}>
-          {jewellery.showPrice === false
-            ? 'Price on Request'
-            : jewellery.isSale
-            ? `₹${((jewellery.salesAmount || jewellery.rentalPrice || jewellery.price || 0))?.toFixed(2)}`
-            : (jewellery.rentalPrice || jewellery.price || 0) > 1200
-            ? 'Price on Request'
-            : `₹${(jewellery.rentalPrice || jewellery.price || 0)?.toFixed(2)}`}
-        </p>
-      </div>
+      {jewellery.isSale ? (
+        <div className="pt-2 pb-1 text-left">
+          <p style={{ color: "#111", fontFamily: "Gotham, sans-serif", fontSize: "9px", fontWeight: 700, letterSpacing: "0.7px", textTransform: "uppercase" }}>
+            {Array.isArray(jewellery.category) && jewellery.category.length > 0
+              ? jewellery.category.join(', ').toUpperCase()
+              : (jewellery.material ? `${jewellery.material.toUpperCase()} JEWELS` : 'MOISSINATE JEWELS')}
+          </p>
+          <h3 className="truncate mt-0.5 w-full" style={{ color: "#555", fontFamily: "Gotham Book, sans-serif", fontSize: "11.5px", fontWeight: 400 }}>
+            {jewellery.name}
+          </h3>
+          <div className="mt-1">
+            <span style={{ backgroundColor: "#D32F2F", color: "#fff", fontSize: "9px", fontWeight: 700, padding: "1.5px 6px", borderRadius: "2px", letterSpacing: "0.5px", textTransform: "uppercase", display: "inline-block" }}>
+              SALE
+            </span>
+          </div>
+          <div className="flex items-baseline gap-1.5 mt-1 flex-wrap">
+            <span style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "13px", fontWeight: 700 }}>
+              Rs. {Math.round(jewellery.discountedRate || jewellery.salesAmount || jewellery.price || 0).toLocaleString('en-IN')}
+            </span>
+            {(jewellery.salesPrice || jewellery.salesAmount) > (jewellery.discountedRate || jewellery.salesAmount) && (
+              <span style={{ color: "#888", fontFamily: "Gotham Book, sans-serif", fontSize: "10.5px", textDecoration: "line-through" }}>
+                Rs. {Math.round(jewellery.salesPrice || jewellery.salesAmount).toLocaleString('en-IN')}
+              </span>
+            )}
+            {(jewellery.discountPercent > 0 || ((jewellery.salesPrice || jewellery.salesAmount) > (jewellery.discountedRate || jewellery.salesAmount))) && (
+              <span style={{ color: "#EF4444", fontFamily: "Gotham, sans-serif", fontSize: "10px", fontWeight: 600 }}>
+                ({jewellery.discountPercent || Math.round((((jewellery.salesPrice || jewellery.salesAmount) - (jewellery.discountedRate || jewellery.salesAmount)) / (jewellery.salesPrice || jewellery.salesAmount)) * 100)}% OFF)
+              </span>
+            )}
+          </div>
+        </div>
+      ) : (
+        <div className="pt-[9px] pb-[2px]">
+          <p style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "9px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal", letterSpacing: "0.7px", textTransform: "uppercase" }}>
+            {Array.isArray(jewellery.category) ? jewellery.category.join(', ') : jewellery.category}
+          </p>
+          <h3 className="line-clamp-2 mt-[5px] w-full whitespace-normal break-words" style={{ maxWidth: "130px", color: "#000", fontFamily: "Gotham Book, sans-serif", fontSize: "11.5px", fontStyle: "normal", fontWeight: 400, lineHeight: "16px", height: "32px", opacity: 0.6, letterSpacing: "-0.13px" }}>
+            {jewellery.name}
+          </h3>
+          <p className="mt-[4px]" style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "12px", fontStyle: "normal", fontWeight: 500, lineHeight: "normal" }}>
+            {jewellery.showPrice === false
+              ? 'Price on Request'
+              : (jewellery.rentalPrice || jewellery.price || 0) > 1200
+              ? 'Price on Request'
+              : `₹${(jewellery.rentalPrice || jewellery.price || 0)?.toFixed(2)}`}
+          </p>
+        </div>
+      )}
     </Link>
   );
 };

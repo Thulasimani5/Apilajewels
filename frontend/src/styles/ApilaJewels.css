@@ -1274,9 +1274,30 @@
   padding: 0 clamp(24px, 5vw, 85px) 0 0;
 }
 
+.shop-topbar.no-sidebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 clamp(24px, 4vw, 85px);
+  min-height: 56px;
+  border-bottom: 1px solid #EDEDED;
+}
+
+.shop-topbar.no-sidebar .shop-topbar-left {
+  width: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 0;
+}
+
 .shop-topbar.no-sidebar .shop-topbar-right {
-  padding-left: clamp(24px, 5vw, 85px);
-  padding-right: clamp(24px, 5vw, 85px);
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: clamp(24px, 5vw, 60px);
+  padding-right: 0;
 }
 
 /* breadcrumb */
@@ -4227,3 +4248,78 @@
 }
 
 /* ─── Jewellery To Own Banner ─────────────────────────────────────────── */
+
+/* ─── SALE CARD UI (Matches Reference) ─── */
+.sale-card-info {
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sale-card-category {
+  font-family: var(--f-gotham-m, 'Gotham', sans-serif);
+  font-size: 11px;
+  font-weight: 700;
+  color: #111111;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin: 0 0 3px 0;
+  line-height: normal;
+}
+
+.sale-card-title {
+  font-family: var(--f-gotham-b, 'Gotham Book', sans-serif);
+  font-size: 13.5px;
+  font-weight: 400;
+  color: #555555;
+  line-height: 1.35;
+  margin: 0 0 7px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sale-card-tag {
+  display: inline-block;
+  background-color: #D32F2F;
+  color: #ffffff;
+  font-family: var(--f-gotham-m, 'Gotham', sans-serif);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 3px;
+  margin: 0 0 6px 0;
+  width: fit-content;
+  line-height: 1.2;
+}
+
+.sale-card-prices {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-family: var(--f-gotham-m, 'Gotham', sans-serif);
+  line-height: normal;
+}
+
+.sale-price-current {
+  font-size: 15px;
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: -0.2px;
+}
+
+.sale-price-original {
+  font-size: 12.5px;
+  font-weight: 400;
+  color: #888888;
+  text-decoration: line-through;
+}
+
+.sale-price-discount {
+  font-size: 12px;
+  font-weight: 600;
+  color: #EF4444;
+}

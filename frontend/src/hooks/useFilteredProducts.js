@@ -88,7 +88,7 @@ export function useFilteredProducts(products, activeFilters, activeSort, categor
 
   const sorted = useMemo(() => {
     const arr = [...filtered];
-    const getPrice = p => (p.isSale && p.salesAmount ? p.salesAmount : (p.rentalPrice || p.price || 0));
+    const getPrice = p => (p.isSale ? (p.discountedRate != null ? p.discountedRate : (p.salesAmount || p.salesPrice || 0)) : (p.rentalPrice || p.price || 0));
     if (activeSort === 'newest') return arr.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     if (activeSort === 'price_asc' || activeSort === 'price_low_high') return arr.sort((a, b) => getPrice(a) - getPrice(b));
     if (activeSort === 'price_desc' || activeSort === 'price_high_low') return arr.sort((a, b) => getPrice(b) - getPrice(a));
