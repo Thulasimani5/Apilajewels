@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { 
-  TrendingUp, 
+  TrendingUp,
+  Package, 
   TrendingDown, 
   Calendar, 
   BarChart2, 
@@ -506,41 +507,94 @@ export default function MonthlyBookingAnalytics({
       {/* ── GRAPH VISUALIZATION CANVAS ── */}
       <div className="p-5 sm:p-6">
         
-        {/* Active Hover / Inspector Legend Bar */}
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 text-xs bg-[#FFFDF9] border border-amber-100/60 p-3 rounded-xl">
-          <div className="flex items-center gap-2">
-            <div className="w-2.5 h-2.5 rounded-full bg-[#B07A85] animate-pulse"></div>
-            <span className="font-bold text-gray-800">
-              {activeMonth ? activeMonth.fullLabel : 'Select Month'}
-            </span>
-            <span className="text-gray-400">|</span>
-            <span className="text-gray-600">
-              Bookings: <strong className="text-[#B07A85] font-bold">{activeMonth?.count || 0}</strong>
-            </span>
-            <span className="text-gray-400">|</span>
-            <span className="text-gray-600">
-              Revenue: <strong className="text-emerald-700 font-bold">{formatINR(activeMonth?.amount || 0)}</strong>
-            </span>
-            <span className="text-gray-400">|</span>
-            <span className="text-gray-600">
-              Avg: <strong className="text-gray-900 font-bold">{formatINR(activeMonth?.avgValue || 0)}</strong>
-            </span>
+        {/* ── HIGHLIGHTED INSPECTOR BANNER (Bookings, Revenue & Avg) ── */}
+        <div className="mb-5 p-3.5 sm:p-4 rounded-2xl bg-gradient-to-r from-rose-50/60 via-white to-emerald-50/60 border-2 border-[#B07A85]/20 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          
+          {/* Active Month Focus */}
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#FFF0F3] text-[#B07A85] border border-rose-200/70 flex items-center justify-center font-bold text-sm shadow-xs flex-shrink-0">
+              <Calendar size={18} />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm sm:text-base font-extrabold text-gray-900 tracking-tight">
+                  {activeMonth ? activeMonth.fullLabel : 'Select Month'}
+                </span>
+                <span className="w-2 h-2 rounded-full bg-[#B07A85] animate-ping" />
+              </div>
+              <p className="text-[11px] text-gray-400 font-medium">
+                {hoveredMonthIndex !== null ? 'Hovered Month Details' : 'Active Month Focus'}
+              </p>
+            </div>
           </div>
 
-          <div className="flex items-center gap-4 text-[11px]">
+          {/* Prominent Highlighted Badges: Bookings | Revenue | Avg */}
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 w-full md:w-auto">
+            
+            {/* Highlighted Badge 1: Bookings */}
+            <div className="flex-1 sm:flex-none flex items-center gap-2.5 px-3.5 py-2 bg-gradient-to-br from-[#FFF0F3] to-rose-100/70 border-2 border-rose-300 rounded-xl shadow-xs ring-2 ring-rose-50">
+              <div className="w-7 h-7 rounded-lg bg-white text-[#B07A85] flex items-center justify-center font-bold text-xs shadow-2xs">
+                <Package size={14} />
+              </div>
+              <div>
+                <span className="text-[9.5px] font-extrabold text-rose-700 uppercase tracking-wider block leading-tight">
+                  Bookings
+                </span>
+                <span className="text-base sm:text-lg font-black text-[#8D5B66] leading-none">
+                  {activeMonth?.count || 0}
+                  <span className="text-[10.5px] font-semibold text-rose-600/80 ml-1">orders</span>
+                </span>
+              </div>
+            </div>
+
+            {/* Highlighted Badge 2: Revenue */}
+            <div className="flex-1 sm:flex-none flex items-center gap-2.5 px-3.5 py-2 bg-gradient-to-br from-emerald-50 to-emerald-100/70 border-2 border-emerald-300 rounded-xl shadow-xs ring-2 ring-emerald-50">
+              <div className="w-7 h-7 rounded-lg bg-white text-emerald-700 flex items-center justify-center font-black text-xs shadow-2xs">
+                ₹
+              </div>
+              <div>
+                <span className="text-[9.5px] font-extrabold text-emerald-700 uppercase tracking-wider block leading-tight">
+                  Revenue
+                </span>
+                <span className="text-base sm:text-lg font-black text-emerald-800 leading-none">
+                  {formatINR(activeMonth?.amount || 0)}
+                </span>
+              </div>
+            </div>
+
+            {/* Highlighted Badge 3: Average Booking Value */}
+            <div className="flex-1 sm:flex-none flex items-center gap-2.5 px-3.5 py-2 bg-gradient-to-br from-blue-50 to-indigo-100/70 border-2 border-blue-300 rounded-xl shadow-xs ring-2 ring-blue-50">
+              <div className="w-7 h-7 rounded-lg bg-white text-blue-700 flex items-center justify-center font-bold text-xs shadow-2xs">
+                <TrendingUp size={14} />
+              </div>
+              <div>
+                <span className="text-[9.5px] font-extrabold text-blue-700 uppercase tracking-wider block leading-tight">
+                  Avg Value
+                </span>
+                <span className="text-base sm:text-lg font-black text-blue-900 leading-none">
+                  {formatINR(activeMonth?.avgValue || 0)}
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+          {/* Graph Legend */}
+          <div className="hidden xl:flex items-center gap-3 text-[11px] bg-white px-3 py-1.5 rounded-lg border border-gray-200/70 shadow-2xs">
             {(metricView === 'dual' || metricView === 'amount') && (
               <div className="flex items-center gap-1.5">
-                <span className="w-3 h-1.5 rounded-sm bg-gradient-to-r from-[#B07A85] to-emerald-600 inline-block"></span>
-                <span className="text-gray-500 font-medium">Revenue Line (₹)</span>
+                <span className="w-3 h-1.5 rounded-sm bg-gradient-to-r from-[#B07A85] to-emerald-600 inline-block" />
+                <span className="text-gray-600 font-medium">Revenue</span>
               </div>
             )}
             {(metricView === 'dual' || metricView === 'count') && (
               <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-sm bg-[#B07A85]/80 inline-block"></span>
-                <span className="text-gray-500 font-medium">Booking Count</span>
+                <span className="w-2.5 h-2.5 rounded-sm bg-[#B07A85] inline-block" />
+                <span className="text-gray-600 font-medium">Count</span>
               </div>
             )}
           </div>
+
         </div>
 
         {/* SVG Chart */}
@@ -787,47 +841,67 @@ export default function MonthlyBookingAnalytics({
 
         {/* Floating Tooltip Summary when month is active */}
         {activeMonth && (
-          <div className="mt-4 p-4 rounded-xl bg-gradient-to-r from-gray-50 via-white to-gray-50 border border-gray-200/80 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#FFF0F3] text-[#B07A85] flex items-center justify-center font-bold text-sm shadow-2xs">
+          <div className="mt-5 p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-rose-50/40 via-white to-amber-50/30 border-2 border-rose-200/70 shadow-sm flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+            
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#B07A85] to-[#8D5B66] text-white flex items-center justify-center font-bold text-base shadow-sm">
                 {activeMonth.label.slice(0, 3)}
               </div>
               <div>
-                <div className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                <div className="text-base font-extrabold text-gray-900 flex items-center gap-2">
                   {activeMonth.fullLabel}
                   {selectedMonthKey === activeMonth.key && (
-                    <span className="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-semibold">
-                      Selected
+                    <span className="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+                      Selected Month
                     </span>
                   )}
                 </div>
-                <div className="text-xs text-gray-500 flex items-center gap-3 mt-0.5">
-                  <span>Gross: <strong className="text-gray-800">{formatINR(activeMonth.amount)}</strong></span>
+                <div className="text-xs text-gray-500 flex items-center gap-2 mt-0.5">
+                  <span>Advance Collected: <strong className="text-gray-800 font-semibold">{formatINR(activeMonth.advance)}</strong></span>
                   <span>•</span>
-                  <span>Bookings: <strong className="text-gray-800">{activeMonth.count}</strong></span>
+                  <span>Completed: <strong className="text-emerald-700 font-semibold">{activeMonth.completedCount}</strong></span>
                   <span>•</span>
-                  <span>Advance: <strong className="text-gray-800">{formatINR(activeMonth.advance)}</strong></span>
+                  <span>Pending: <strong className="text-blue-700 font-semibold">{activeMonth.pendingCount}</strong></span>
                 </div>
               </div>
             </div>
 
-            {/* Status counts in this month */}
-            <div className="flex flex-wrap items-center gap-2 text-[11px]">
-              <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-md font-semibold border border-emerald-100">
-                <CheckCircle2 size={12} /> {activeMonth.confirmedCount + activeMonth.completedCount} Confirmed/Done
-              </span>
-              <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 px-2.5 py-1 rounded-md font-semibold border border-blue-100">
-                <Clock size={12} /> {activeMonth.pendingCount} Pending
-              </span>
+            {/* Prominent Highlighted Pills */}
+            <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
+              <div className="px-3.5 py-2 rounded-xl bg-white border-2 border-rose-300 shadow-2xs flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#B07A85]"></span>
+                <div>
+                  <span className="text-[9px] uppercase font-bold text-rose-500 block leading-tight">Bookings</span>
+                  <span className="text-base font-black text-[#B07A85] leading-none">{activeMonth.count} <span className="text-[10px] font-normal text-gray-400">orders</span></span>
+                </div>
+              </div>
+
+              <div className="px-3.5 py-2 rounded-xl bg-white border-2 border-emerald-300 shadow-2xs flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <div>
+                  <span className="text-[9px] uppercase font-bold text-emerald-600 block leading-tight">Revenue</span>
+                  <span className="text-base font-black text-emerald-700 leading-none">{formatINR(activeMonth.amount)}</span>
+                </div>
+              </div>
+
+              <div className="px-3.5 py-2 rounded-xl bg-white border-2 border-blue-300 shadow-2xs flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                <div>
+                  <span className="text-[9px] uppercase font-bold text-blue-600 block leading-tight">Avg Value</span>
+                  <span className="text-base font-black text-blue-700 leading-none">{formatINR(activeMonth.avgValue)}</span>
+                </div>
+              </div>
+
               {onViewAllBookings && (
                 <button
                   onClick={onViewAllBookings}
-                  className="inline-flex items-center gap-1 bg-white hover:bg-gray-100 text-gray-700 px-2.5 py-1 rounded-md font-semibold border border-gray-200 transition-colors ml-1 shadow-2xs"
+                  className="inline-flex items-center gap-1.5 bg-[#B07A85] hover:bg-[#9E6A75] text-white px-3.5 py-2.5 rounded-xl font-bold text-xs transition-colors shadow-sm ml-auto sm:ml-2"
                 >
-                  <Eye size={12} /> View Bookings
+                  <Eye size={13} /> View Bookings
                 </button>
               )}
             </div>
+
           </div>
         )}
 
@@ -942,3 +1016,4 @@ export default function MonthlyBookingAnalytics({
     </div>
   );
 }
+
