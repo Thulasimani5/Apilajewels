@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { LayoutDashboard, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2, Eye, Tag, Edit, FileText, Printer, GripVertical, Menu, ShoppingBag } from 'lucide-react';
+import { LayoutDashboard, BarChart2, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2, Eye, Tag, Edit, FileText, Printer, GripVertical, Menu, ShoppingBag } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import CategoryContext from '../context/CategoryContext';
 import { useContext } from 'react';
 import API_BASE_URL from '../config/api';
 
 import SalesTab from '../components/admin/sales/SalesTab';
+import MonthlyBookingAnalytics from '../components/admin/analytics/MonthlyBookingAnalytics';
 
 const AdminDashboard = () => {
   const { user, logout, token } = useAuth();
@@ -1065,6 +1066,9 @@ const AdminDashboard = () => {
                     <strong className="block text-base sm:text-lg text-indigo-700 mt-0.5">{completedBookings}</strong>
                   </div>
                 </div>
+
+                {/* Monthly Booking Analytics (Graphs & Performance Tracking) */}
+                <MonthlyBookingAnalytics bookings={bookings} onViewAllBookings={() => setActiveTab('bookings')} />
 
                 {/* Bottom section: Recent Bookings & Overview */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -2758,6 +2762,15 @@ const AdminDashboard = () => {
           )}
 
           {/* Sales — Jewellery to Own */}
+          {activeTab === 'analytics' && (
+            <div className="space-y-6">
+              <MonthlyBookingAnalytics 
+                bookings={bookings} 
+                onViewAllBookings={() => setActiveTab('bookings')} 
+              />
+            </div>
+          )}
+
           {activeTab === 'sales' && (
             <SalesTab token={token} />
           )}

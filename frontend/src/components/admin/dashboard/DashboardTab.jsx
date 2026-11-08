@@ -1,4 +1,5 @@
 import React from 'react';
+import MonthlyBookingAnalytics from '../analytics/MonthlyBookingAnalytics';
 import { Package, Calendar, Users } from 'lucide-react';
 
 /**
@@ -113,6 +114,9 @@ const DashboardTab = ({
           <strong className="block text-lg text-indigo-700 mt-0.5">{completedBookings}</strong>
         </div>
       </div>
+
+      {/* Monthly Booking Analytics (Graphs & Performance Tracking) */}
+      <MonthlyBookingAnalytics bookings={bookings} onViewAllBookings={() => onNavigate('bookings')} />
 
       {/* Bottom section: Recent Bookings & Overview */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

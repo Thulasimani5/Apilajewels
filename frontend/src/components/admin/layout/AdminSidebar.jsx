@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, Package, Calendar, Users, LogOut, List, Tag, ShoppingBag } from 'lucide-react';
+import { LayoutDashboard, Package, Calendar, Users, LogOut, List, Tag, ShoppingBag, BarChart2 } from 'lucide-react';
 
 /**
  * AdminSidebar
@@ -21,6 +21,7 @@ const AdminSidebar = ({ activeTab, setActiveTab, setShowAddForm, setSelectedAdmi
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { id: 'analytics', label: 'Analytics', icon: BarChart2 },
     { id: 'jewellery', label: 'Manage Jewellery', icon: Package },
     { id: 'bookings', label: 'Bookings', icon: Calendar },
     { id: 'users', label: 'Users', icon: Users },

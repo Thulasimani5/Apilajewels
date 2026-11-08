@@ -11,3 +11,4 @@ export { default as UserCartModal } from './users/UserCartModal';
 export { default as UserOrdersModal } from './users/UserOrdersModal';
 export { default as CategoriesTab } from './categories/CategoriesTab';
 export { default as TypesTab } from './categories/TypesTab';
+export { default as MonthlyBookingAnalytics } from './analytics/MonthlyBookingAnalytics';
