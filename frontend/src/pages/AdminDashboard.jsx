@@ -201,6 +201,67 @@ const AdminDashboard = () => {
     }
   };
 
+  
+  const getNextBookingCustomId = (bookingList = bookings) => {
+    let maxNum = 0;
+    if (Array.isArray(bookingList)) {
+      bookingList.forEach(b => {
+        if (b && b.bookingCustomId) {
+          const match = b.bookingCustomId.match(/(\d+)/);
+          if (match) {
+            const num = parseInt(match[1], 10);
+            if (num > maxNum) maxNum = num;
+          }
+        }
+      });
+    }
+    const nextNum = maxNum + 1;
+    return 'BK-' + String(nextNum).padStart(3, '0');
+  };
+
+  const handleOpenAddBooking = async () => {
+    setEditingBookingId(null);
+    const nextId = getNextBookingCustomId(bookings);
+    setNewBookingData({
+      bookingCustomId: nextId,
+      customerName: '',
+      customerPhone: '',
+      customerAddress: '',
+      bookingPlace: '',
+      bookingDate: new Date().toISOString().split('T')[0],
+      eventDate: '',
+      pickupDate: '',
+      returnDate: '',
+      discountPercent: 0,
+      discountAmount: 0,
+      advancePaid: 0,
+      depositAmount: 0,
+      paymentStatus: 'Pending',
+      status: 'pending',
+      notes: '',
+      jewelleryIds: [],
+      tempJewelleries: []
+    });
+    if (!adminJewelleries.length) fetchAllJewelleries();
+    setShowAddBookingModal(true);
+
+    // Also attempt fetching from backend to ensure latest DB sync
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/bookings/next-id`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (data && data.success && data.nextBookingId) {
+        setNewBookingData(prev => ({
+          ...prev,
+          bookingCustomId: prev.bookingCustomId ? prev.bookingCustomId : data.nextBookingId
+        }));
+      }
+    } catch (err) {
+      // Keep local calculated nextId
+    }
+  };
+
   const handleOpenEditBooking = (b) => {
     setEditingBookingId(b._id);
 
@@ -308,7 +369,7 @@ const AdminDashboard = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          bookingCustomId: newBookingData.bookingCustomId || `BK-${String(bookings.length + 1).padStart(3, '0')}`,
+          bookingCustomId: (newBookingData.bookingCustomId && newBookingData.bookingCustomId.trim()) || getNextBookingCustomId(bookings),
           jewelleryIds: newBookingData.jewelleryIds,
           tempJewelleries: newBookingData.tempJewelleries || [],
           bookingDate: newBookingData.bookingDate,
@@ -1152,10 +1213,7 @@ const AdminDashboard = () => {
                       <h3 className="font-semibold text-gray-800 text-sm">Quick Administrative Tasks</h3>
                       <div className="grid grid-cols-2 gap-3 text-center text-xs">
                         <button 
-                          onClick={() => {
-                            if (!adminJewelleries.length) fetchAllJewelleries();
-                            setShowAddBookingModal(true);
-                          }}
+                          onClick={handleOpenAddBooking}
                           className="p-3 bg-amber-50/50 hover:bg-amber-50 text-amber-900 border border-amber-100 rounded-xl transition-all font-semibold"
                         >
                           + New Booking
@@ -2357,10 +2415,7 @@ const AdminDashboard = () => {
                     {bookings.length} Total Bookings
                   </span>
                   <button
-                    onClick={() => {
-                      if (!adminJewelleries.length) fetchAllJewelleries();
-                      setShowAddBookingModal(true);
-                    }}
+                    onClick={handleOpenAddBooking}
                     className="px-4 py-2 bg-[#B07A85] text-white text-xs font-semibold rounded-lg hover:bg-[#9E6A75] transition-all flex items-center gap-2 shadow-sm"
                   >
                     <Plus size={15} /> Add New Booking
@@ -3106,7 +3161,7 @@ const AdminDashboard = () => {
                   <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Booking ID</label>
                   <input
                     type="text"
-                    placeholder={`e.g. BK-${String(bookings.length + 1).padStart(3, '0')}`}
+                    placeholder={`e.g. ${getNextBookingCustomId(bookings)}`}
                     value={newBookingData.bookingCustomId}
                     onChange={e => setNewBookingData(prev => ({ ...prev, bookingCustomId: e.target.value }))}
                     className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] font-mono"

@@ -6,7 +6,8 @@ const {
   createBooking,
   updateBooking,
   updateBookingStatus,
-  deleteBooking
+  deleteBooking,
+  getNextBookingId
 } = require('../controllers/bookingController');
 const { protect, authorize, optionalAuth } = require('../middleware/auth');
 const visitorMiddleware = require('../middleware/visitor');
@@ -21,6 +22,7 @@ router.route('/')
   .post(optionalAuth, validateBookingCreate, createBooking);
 
 router.get('/my-bookings', protect, getMyBookings);
+router.get('/next-id', optionalAuth, getNextBookingId);
 
 router.route('/:id')
   .get(optionalAuth, getBooking)

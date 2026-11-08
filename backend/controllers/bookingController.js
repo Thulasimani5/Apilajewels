@@ -116,3 +116,19 @@ exports.deleteBooking = async (req, res, next) => {
     res.status(err.statusCode || 400).json({ success: false, error: err.message || formatError(err) });
   }
 };
+
+
+// @desc    Get next suggested booking custom ID
+// @route   GET /api/bookings/next-id
+// @access  Public / Optional Auth
+exports.getNextBookingId = async (req, res, next) => {
+  try {
+    const nextBookingId = await bookingService.getNextBookingCustomId();
+    res.status(200).json({
+      success: true,
+      nextBookingId
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message || formatError(err) });
+  }
+};

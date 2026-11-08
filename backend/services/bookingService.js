@@ -4,6 +4,22 @@ const auditLogService = require('./auditLogService');
 const ErrorResponse = require('../utils/errorHandler');
 
 class BookingService {
+  async getNextBookingCustomId() {
+    const allBookings = await bookingRepository.findAll();
+    let maxNum = 0;
+    for (const b of allBookings) {
+      if (b.bookingCustomId) {
+        const match = b.bookingCustomId.match(/(\d+)/);
+        if (match) {
+          const num = parseInt(match[1], 10);
+          if (num > maxNum) maxNum = num;
+        }
+      }
+    }
+    const nextNum = maxNum + 1;
+    return 'BK-' + String(nextNum).padStart(3, '0');
+  }
+
   validateBookingDates(pickupDate, eventDate, returnDate) {
     if (pickupDate && eventDate) {
       const pDate = new Date(pickupDate);
@@ -100,8 +116,15 @@ class BookingService {
     const advancePaid = parseFloat(bookingData.advancePaid) || 0;
     const balanceAmount = Math.max(0, totalAmount - advancePaid);
 
+    // Auto-generate bookingCustomId based on previous bookings if not provided
+    let finalBookingCustomId = (bookingData.bookingCustomId || '').trim();
+    if (!finalBookingCustomId) {
+      finalBookingCustomId = await this.getNextBookingCustomId();
+    }
+
     const payload = {
       ...bookingData,
+      bookingCustomId: finalBookingCustomId,
       userId: user ? user._id : bookingData.userId || undefined,
       visitorId: visitorId || bookingData.visitorId || undefined,
       rentalAmount: calculatedRentalAmount,
