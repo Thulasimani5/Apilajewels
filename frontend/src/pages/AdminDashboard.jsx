@@ -1037,56 +1037,56 @@ const AdminDashboard = ({ initialTab }) => {
           <nav className="p-4 space-y-1">
             <Link 
               to="/admin/dashboard"
-              onClick={() => { setActiveTab('dashboard'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
+              onClick={() => { setShowAddForm(false); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'dashboard' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <LayoutDashboard size={20} /> Dashboard
             </Link>
             <Link 
               to="/admin/manage-jewellery"
-              onClick={() => { setActiveTab('jewellery'); setShowAddForm(false); setSelectedAdminCategory(null); setIsMobileMenuOpen(false); }}
+              onClick={() => { setShowAddForm(false); setSelectedAdminCategory(null); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'jewellery' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <Package size={20} /> Manage Jewellery
             </Link>
             <Link 
               to="/admin/bookings"
-              onClick={() => { setActiveTab('bookings'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
+              onClick={() => { setShowAddForm(false); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'bookings' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <Calendar size={20} /> Bookings
             </Link>
             <Link 
               to="/admin/analytics"
-              onClick={() => { setActiveTab('analytics'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
+              onClick={() => { setShowAddForm(false); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'analytics' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <BarChart2 size={20} /> Analytics & Graphs
             </Link>
             <Link 
               to="/admin/users"
-              onClick={() => { setActiveTab('users'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
+              onClick={() => { setShowAddForm(false); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'users' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <Users size={20} /> Users
             </Link>
             <Link 
               to="/admin/categories"
-              onClick={() => { setActiveTab('categories'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
+              onClick={() => { setShowAddForm(false); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'categories' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <List size={20} /> Categories
             </Link>
             <Link 
               to="/admin/jewellery-types"
-              onClick={() => { setActiveTab('types'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
+              onClick={() => { setShowAddForm(false); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'types' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <Tag size={20} /> Jewellery Types
             </Link>
             <Link 
               to="/admin/sales"
-              onClick={() => { setActiveTab('sales'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
+              onClick={() => { setShowAddForm(false); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'sales' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <ShoppingBag size={20} /> Sales
