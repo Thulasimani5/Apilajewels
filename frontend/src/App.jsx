@@ -40,6 +40,8 @@ function App() {
             <Route path="/admin/dashboard" element={<AdminDashboard initialTab="dashboard" />} />
             <Route path="/admin/manage-jewellery" element={<AdminDashboard initialTab="jewellery" />} />
             <Route path="/admin/jewellery" element={<AdminDashboard initialTab="jewellery" />} />
+            <Route path="/admin/bookings/new" element={<AdminDashboard initialTab="bookings" isNewBooking={true} />} />
+            <Route path="/admin/bookings/:bookingId" element={<AdminDashboard initialTab="bookings" />} />
             <Route path="/admin/bookings" element={<AdminDashboard initialTab="bookings" />} />
             <Route path="/admin/users" element={<AdminDashboard initialTab="users" />} />
             <Route path="/admin/categories" element={<AdminDashboard initialTab="categories" />} />

@@ -11,10 +11,10 @@ import MonthlyBookingAnalytics from '../components/admin/analytics/MonthlyBookin
 import AnalyticsTab from '../components/admin/analytics/AnalyticsTab';
 import JewelScheduleSearch from '../components/admin/JewelScheduleSearch';
 
-const AdminDashboard = ({ initialTab }) => {
+const AdminDashboard = ({ initialTab, isNewBooking }) => {
   const { user, logout, token } = useAuth();
   const { categories, refreshCategories, addCategory, deleteCategory, updateCategory } = useContext(CategoryContext);
-  const { tab: urlTabParam } = useParams();
+  const { tab: urlTabParam, bookingId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -45,6 +45,7 @@ const AdminDashboard = ({ initialTab }) => {
 
   const resolveTabFromUrl = () => {
     if (initialTab && ROUTE_TO_TAB[initialTab]) return ROUTE_TO_TAB[initialTab];
+    if (window.location.pathname.startsWith('/admin/bookings')) return 'bookings';
     if (urlTabParam && ROUTE_TO_TAB[urlTabParam]) return ROUTE_TO_TAB[urlTabParam];
     const path = window.location.pathname.replace(/^\/admin\/?/, '');
     if (path && ROUTE_TO_TAB[path]) return ROUTE_TO_TAB[path];
@@ -52,6 +53,27 @@ const AdminDashboard = ({ initialTab }) => {
   };
 
   const [activeTab, setActiveTabState] = useState(resolveTabFromUrl);
+
+
+  // Sync Add / View Booking Modal based on URL endpoint (/admin/bookings/new or /admin/bookings/:bookingId)
+  useEffect(() => {
+    if (isNewBooking || location.pathname === '/admin/bookings/new') {
+      if (!showAddBookingModal) {
+        handleOpenAddBooking();
+      }
+    } else if (bookingId && bookings && bookings.length > 0) {
+      const target = bookings.find(b => 
+        b._id === bookingId || 
+        (b.bookingCustomId && b.bookingCustomId.toLowerCase() === bookingId.toLowerCase())
+      );
+      if (target && editingBookingId !== target._id) {
+        handleOpenEditBooking(target);
+      }
+    } else if (location.pathname === '/admin/bookings' && showAddBookingModal) {
+      setShowAddBookingModal(false);
+      setEditingBookingId(null);
+    }
+  }, [location.pathname, isNewBooking, bookingId, bookings]);
 
   // Sync state whenever URL pathname or route params change
   useEffect(() => {
@@ -275,6 +297,9 @@ const AdminDashboard = ({ initialTab }) => {
   };
 
   const handleOpenAddBooking = async () => {
+    if (location.pathname !== '/admin/bookings/new') {
+      navigate('/admin/bookings/new');
+    }
     setEditingBookingId(null);
     const nextId = getNextBookingCustomId(bookings);
     setNewBookingData({
@@ -300,7 +325,6 @@ const AdminDashboard = ({ initialTab }) => {
     if (!adminJewelleries.length) fetchAllJewelleries();
     setShowAddBookingModal(true);
 
-    // Also attempt fetching from backend to ensure latest DB sync
     try {
       const res = await fetch(`${API_BASE_URL}/api/bookings/next-id`, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -318,6 +342,12 @@ const AdminDashboard = ({ initialTab }) => {
   };
 
   const handleOpenEditBooking = (b) => {
+    if (b && b._id) {
+      const targetUrl = `/admin/bookings/${b.bookingCustomId || b._id}`;
+      if (location.pathname !== targetUrl) {
+        navigate(targetUrl);
+      }
+    }
     setEditingBookingId(b._id);
 
     const bItems = Array.isArray(b.jewelleryIds) ? b.jewelleryIds : [];
@@ -454,6 +484,9 @@ const AdminDashboard = ({ initialTab }) => {
       if (result.success) {
         setShowAddBookingModal(false);
         setEditingBookingId(null);
+        if (location.pathname.startsWith('/admin/bookings/')) {
+          navigate('/admin/bookings');
+        }
         setNewBookingData({
           bookingCustomId: '',
           customerName: '',
@@ -3224,6 +3257,9 @@ const AdminDashboard = ({ initialTab }) => {
                 onClick={() => {
                   setShowAddBookingModal(false);
                   setEditingBookingId(null);
+                  if (location.pathname.startsWith('/admin/bookings/')) {
+                    navigate('/admin/bookings');
+                  }
                 }}
                 className="px-4 py-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-xl font-bold text-sm transition-all flex items-center gap-2"
               >
