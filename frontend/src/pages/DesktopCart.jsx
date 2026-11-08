@@ -119,7 +119,10 @@ function CartItemCard({ item, onRemove, onUpdateQuantity }) {
               </div>
             </div>
           ) : (
-            <span className="cc-price">{priceText}</span>
+            <div className="cc-rent-block">
+              <span className="cc-rent-btn">RENT</span>
+              <span className="cc-price">{priceText}</span>
+            </div>
           )}
         </div>
       </div>

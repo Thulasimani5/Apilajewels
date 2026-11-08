@@ -265,8 +265,13 @@ const Cart = ({ isSale: isSaleProp }) => {
                           </div>
                         </div>
                       ) : (
-                        <div style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '13px', fontWeight: 600 }}>
-                          {isPremium(item) ? 'Price on Request' : `₹${getItemPrice(item).toFixed(2)}`}
+                        <div className="flex flex-col items-end gap-1">
+                          <span style={{ border: '1.5px solid #0088FF', backgroundColor: '#F4F8FB', color: '#000', fontSize: '9px', fontWeight: 600, padding: '2px 8px', borderRadius: '1px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                            RENT
+                          </span>
+                          <div style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '13px', fontWeight: 600 }}>
+                            {isPremium(item) ? 'Price on Request' : `₹${getItemPrice(item).toFixed(2)}`}
+                          </div>
                         </div>
                       )}
                     </div>
