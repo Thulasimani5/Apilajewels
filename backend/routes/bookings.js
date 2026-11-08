@@ -7,7 +7,8 @@ const {
   updateBooking,
   updateBookingStatus,
   deleteBooking,
-  getNextBookingId
+  getNextBookingId,
+  getJewelSchedule
 } = require('../controllers/bookingController');
 const { protect, authorize, optionalAuth } = require('../middleware/auth');
 const visitorMiddleware = require('../middleware/visitor');
@@ -23,6 +24,7 @@ router.route('/')
 
 router.get('/my-bookings', protect, getMyBookings);
 router.get('/next-id', optionalAuth, getNextBookingId);
+router.get('/jewel-schedule/:code', optionalAuth, getJewelSchedule);
 
 router.route('/:id')
   .get(optionalAuth, getBooking)

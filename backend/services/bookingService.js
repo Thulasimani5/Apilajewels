@@ -242,6 +242,88 @@ class BookingService {
     return existing;
   }
 
+
+  async getJewelScheduleByCode(jewelCode) {
+    if (!jewelCode || !jewelCode.trim()) {
+      throw new ErrorResponse('Jewel code is required', 400);
+    }
+    const cleanCode = jewelCode.trim();
+    // 1. Find the jewellery by jewelId (case-insensitive)
+    const jewellery = await jewelleryRepository.findByJewelId(cleanCode);
+
+    // 2. Query bookings that include this jewellery or tempJewelleries with this code
+    const allBookings = await bookingRepository.findAll();
+    
+    // Today at 00:00:00 to accurately evaluate upcoming/future bookings
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const upcomingBookings = [];
+
+    for (const b of allBookings) {
+      // Exclude cancelled / rejected bookings
+      const status = (b.status || '').toLowerCase();
+      if (status === 'rejected' || status === 'cancelled') continue;
+
+      let matched = false;
+
+      // Check referenced jewelleryIds
+      if (jewellery && Array.isArray(b.jewelleryIds)) {
+        matched = b.jewelleryIds.some(j => {
+          const jId = j._id ? j._id.toString() : j.toString();
+          return jId === jewellery._id.toString() || (j.jewelId && j.jewelId.toLowerCase() === cleanCode.toLowerCase());
+        });
+      }
+
+      // Check tempJewelleries
+      if (!matched && Array.isArray(b.tempJewelleries)) {
+        matched = b.tempJewelleries.some(t => {
+          return (t.code && t.code.trim().toLowerCase() === cleanCode.toLowerCase()) ||
+                 (t.name && t.name.trim().toLowerCase() === cleanCode.toLowerCase());
+        });
+      }
+
+      if (matched) {
+        const pickupDate = b.pickupDate ? new Date(b.pickupDate) : null;
+        const returnDate = b.returnDate ? new Date(b.returnDate) : null;
+        const eventDate = b.eventDate ? new Date(b.eventDate) : null;
+
+        // An upcoming booking is one whose returnDate (or pickupDate/eventDate) is >= today
+        const effectiveEnd = returnDate || eventDate || pickupDate;
+        if (effectiveEnd && effectiveEnd >= today) {
+          upcomingBookings.push({
+            bookingId: b._id,
+            bookingCustomId: b.bookingCustomId,
+            customerName: b.customerDetails?.name || b.userId?.name || 'Customer',
+            customerPhone: b.customerDetails?.phone || b.userId?.phone || '',
+            pickupDate: b.pickupDate,
+            eventDate: b.eventDate,
+            returnDate: b.returnDate,
+            status: b.status,
+            paymentStatus: b.paymentStatus
+          });
+        }
+      }
+    }
+
+    // Sort upcoming bookings chronologically by pickupDate
+    upcomingBookings.sort((a, b) => new Date(a.pickupDate || 0) - new Date(b.pickupDate || 0));
+
+    return {
+      searchedCode: cleanCode,
+      jewellery: jewellery ? {
+        _id: jewellery._id,
+        jewelId: jewellery.jewelId,
+        name: jewellery.name,
+        category: jewellery.category,
+        price: jewellery.price,
+        rentalPrice: jewellery.rentalPrice,
+        images: jewellery.images || (jewellery.media ? jewellery.media.map(m => m.url) : [])
+      } : null,
+      upcomingBookings
+    };
+  }
+
   async deleteBooking(id, adminUser = null) {
     const existing = await bookingRepository.findById(id);
     if (!existing) {

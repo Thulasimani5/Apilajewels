@@ -132,3 +132,19 @@ exports.getNextBookingId = async (req, res, next) => {
     res.status(500).json({ success: false, error: err.message || formatError(err) });
   }
 };
+
+
+// @desc    Get jewel upcoming booking schedule by jewel code
+// @route   GET /api/bookings/jewel-schedule/:code
+// @access  Public / Admin
+exports.getJewelSchedule = async (req, res, next) => {
+  try {
+    const result = await bookingService.getJewelScheduleByCode(req.params.code);
+    res.status(200).json({
+      success: true,
+      data: result
+    });
+  } catch (err) {
+    res.status(err.statusCode || 400).json({ success: false, error: err.message || formatError(err) });
+  }
+};

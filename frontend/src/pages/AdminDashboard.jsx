@@ -9,6 +9,7 @@ import API_BASE_URL from '../config/api';
 import SalesTab from '../components/admin/sales/SalesTab';
 import MonthlyBookingAnalytics from '../components/admin/analytics/MonthlyBookingAnalytics';
 import AnalyticsTab from '../components/admin/analytics/AnalyticsTab';
+import JewelScheduleSearch from '../components/admin/JewelScheduleSearch';
 
 const AdminDashboard = () => {
   const { user, logout, token } = useAuth();
@@ -1129,6 +1130,13 @@ const AdminDashboard = () => {
                     <strong className="block text-base sm:text-lg text-indigo-700 mt-0.5">{completedBookings}</strong>
                   </div>
                 </div>
+
+                {/* Jewel Availability & Upcoming Schedule Search */}
+                <JewelScheduleSearch 
+                  bookings={bookings} 
+                  jewelleries={adminJewelleries}
+                  onOpenBooking={(b) => handleOpenEditBooking(b)}
+                />
 
                 {/* Monthly Booking Analytics (Graphs & Performance Tracking) */}
                 <MonthlyBookingAnalytics 
