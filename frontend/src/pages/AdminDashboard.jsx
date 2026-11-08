@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { LayoutDashboard, BarChart2, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2, Eye, Tag, Edit, FileText, Printer, GripVertical, Menu, ShoppingBag } from 'lucide-react';
+import { LayoutDashboard, BarChart2, ExternalLink, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2, Eye, Tag, Edit, FileText, Printer, GripVertical, Menu, ShoppingBag } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import CategoryContext from '../context/CategoryContext';
 import { useContext } from 'react';
@@ -25,6 +25,7 @@ const AdminDashboard = () => {
   const [guestCarts, setGuestCarts] = useState([]);
   const [guestCartsLoading, setGuestCartsLoading] = useState(false);
   const [bookings, setBookings] = useState([]);
+  const [bookingMonthFilter, setBookingMonthFilter] = useState(null);
   const [bookingsLoading, setBookingsLoading] = useState(false);
   const [selectedUserOrders, setSelectedUserOrders] = useState(null);
   const [guestCartFilter, setGuestCartFilter] = useState('active');
@@ -1069,7 +1070,19 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* Monthly Booking Analytics (Graphs & Performance Tracking) */}
-                <MonthlyBookingAnalytics bookings={bookings} onViewAllBookings={() => setActiveTab('bookings')} />
+                <MonthlyBookingAnalytics 
+                  bookings={bookings} 
+                  onViewAllBookings={() => {
+                    setBookingMonthFilter(null);
+                    setActiveTab('bookings');
+                  }} 
+                  onOpenBooking={(b) => handleOpenEditBooking(b)}
+                  onOpenInvoice={(b) => handleOpenInvoice(b)}
+                  onFilterMonth={(k) => {
+                    setBookingMonthFilter(k);
+                    setActiveTab('bookings');
+                  }}
+                />
 
                 {/* Bottom section: Recent Bookings & Overview */}
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -1091,10 +1104,18 @@ const AdminDashboard = () => {
                         bookings.slice(0, 5).map((b, idx) => {
                           const customId = b.bookingCustomId || `BK-${String(idx + 1).padStart(3, '0')}`;
                           return (
-                            <div key={b._id} className="p-4 flex items-center justify-between hover:bg-gray-50/40 transition-colors">
+                            <div 
+                                key={b._id} 
+                                onClick={() => handleOpenEditBooking(b)}
+                                className="p-4 flex items-center justify-between hover:bg-rose-50/40 transition-colors cursor-pointer group rounded-xl"
+                                title="Click to open & edit booking details"
+                              >
                               <div>
                                 <div className="flex items-center gap-2">
-                                  <span className="font-mono text-xs font-bold text-gray-900">{customId}</span>
+                                  <span className="font-mono text-xs font-bold text-gray-900 group-hover:text-[#B07A85] transition-colors flex items-center gap-1.5">
+                                    {customId}
+                                    <ExternalLink size={12} className="opacity-0 group-hover:opacity-100 transition-opacity text-[#B07A85]" />
+                                  </span>
                                   <span className="text-[10px] bg-gray-100 text-gray-600 px-1.5 py-0.2 rounded font-medium">
                                     {b.bookingDate ? new Date(b.bookingDate).toLocaleDateString() : 'N/A'}
                                   </span>
@@ -2347,7 +2368,35 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              {bookingsLoading ? (
+              {(() => {
+                const displayedBookings = bookingMonthFilter 
+                  ? bookings.filter(b => {
+                      const d = new Date(b.bookingDate || b.createdAt);
+                      if (isNaN(d.getTime())) return false;
+                      const k = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+                      return k === bookingMonthFilter;
+                    })
+                  : bookings;
+
+                return (
+                  <>
+                    {/* Month Filter Indicator Banner */}
+              {bookingMonthFilter && (
+                <div className="mx-6 mt-4 p-3.5 bg-gradient-to-r from-amber-50 to-rose-50 border border-amber-200 rounded-2xl flex items-center justify-between shadow-2xs">
+                  <div className="flex items-center gap-2.5 text-xs text-amber-900 font-bold">
+                    <Calendar size={16} className="text-[#B07A85]" />
+                    <span>Showing orders filtered for month: <strong className="text-black bg-white px-2 py-0.5 rounded-lg border border-amber-200">{bookingMonthFilter}</strong> ({displayedBookings.length} bookings found)</span>
+                  </div>
+                  <button
+                    onClick={() => setBookingMonthFilter(null)}
+                    className="px-3 py-1 bg-white hover:bg-amber-100 text-amber-900 border border-amber-300 rounded-xl text-xs font-black transition-colors"
+                  >
+                    Clear Filter (Show All Bookings)
+                  </button>
+                </div>
+              )}
+              
+                    {bookingsLoading ? (
                 <div className="p-12 text-center text-gray-500">Loading bookings history...</div>
               ) : bookings.length === 0 ? (
                 <div className="p-12 text-center text-gray-500">No bookings recorded yet.</div>
@@ -2371,7 +2420,16 @@ const AdminDashboard = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
-                      {bookings.map((b, index) => {
+                      {displayedBookings.length === 0 && bookingMonthFilter ? (
+                        <tr>
+                          <td colSpan="12" className="p-12 text-center text-gray-400 font-semibold">
+                            No bookings found for the month of {bookingMonthFilter}.
+                            <button onClick={() => setBookingMonthFilter(null)} className="block mx-auto mt-2 text-[#B07A85] font-bold underline">
+                              Clear filter to view all bookings
+                            </button>
+                          </td>
+                        </tr>
+                      ) : displayedBookings.map((b, index) => {
                         const customId = b.bookingCustomId || `BK-${String(index + 1).padStart(3, '0')}`;
                         const statusKey = (b.status || 'pending').toLowerCase();
                         let statusText = 'PENDING';
@@ -2513,6 +2571,9 @@ const AdminDashboard = () => {
                   </table>
                 </div>
               )}
+                  </>
+                );
+              })()}
             </div>
           )}
 
@@ -2766,7 +2827,16 @@ const AdminDashboard = () => {
           {activeTab === 'analytics' && (
             <AnalyticsTab 
               bookings={bookings} 
-              onViewAllBookings={() => setActiveTab('bookings')} 
+              onViewAllBookings={() => {
+                setBookingMonthFilter(null);
+                setActiveTab('bookings');
+              }} 
+              onOpenBooking={(b) => handleOpenEditBooking(b)}
+              onOpenInvoice={(b) => handleOpenInvoice(b)}
+              onFilterMonth={(monthKey) => {
+                setBookingMonthFilter(monthKey);
+                setActiveTab('bookings');
+              }}
             />
           )}
 

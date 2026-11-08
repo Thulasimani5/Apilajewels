@@ -10,7 +10,9 @@ import {
   ArrowDownRight,
   Sparkles,
   BarChart3,
-  Layers
+  Layers,
+  X,
+  FileText
 } from 'lucide-react';
 
 /**
@@ -22,8 +24,12 @@ import {
 export default function MonthlyBookingAnalytics({ 
   bookings = [], 
   onViewAllBookings,
+  onOpenBooking,
+  onOpenInvoice,
+  onFilterMonth,
   className = '' 
 }) {
+  const [viewingMonthOrders, setViewingMonthOrders] = useState(null);
   const [timeRange, setTimeRange] = useState('12M'); // '6M' | '12M' | '2026' | 'ALL'
   const [metricView, setMetricView] = useState('dual'); // 'dual' | 'amount' | 'count'
   const [statusFilter, setStatusFilter] = useState('all'); // 'all' | 'confirmed' | 'pending'
@@ -125,7 +131,8 @@ export default function MonthlyBookingAnalytics({
         advance: 0,
         pending: 0,
         confirmed: 0,
-        completed: 0
+        completed: 0,
+        orders: []
       };
     });
 
@@ -146,6 +153,7 @@ export default function MonthlyBookingAnalytics({
       bucket[key].count += 1;
       bucket[key].amount += amt;
       bucket[key].advance += Number(b.advancePaid || 0);
+      bucket[key].orders.push(b);
 
       if (st === 'pending') bucket[key].pending += 1;
       else if (['confirmed', 'approved', 'inevent'].includes(st)) bucket[key].confirmed += 1;
@@ -155,7 +163,7 @@ export default function MonthlyBookingAnalytics({
     const series = targetMonths.map(m => {
       const item = bucket[m.key];
       const avgValue = item.count > 0 ? Math.round(item.amount / item.count) : 0;
-      return { ...item, avgValue };
+      return { ...item, avgValue, orders: item.orders || [] };
     });
 
     const totalCount = series.reduce((sum, s) => sum + s.count, 0);
@@ -734,11 +742,12 @@ export default function MonthlyBookingAnalytics({
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            if (onViewAllBookings) onViewAllBookings();
+                            setViewingMonthOrders(m);
                           }}
-                          className="text-[#B07A85] font-black hover:underline text-sm"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FFF0F3] hover:bg-[#B07A85] text-[#B07A85] hover:text-white rounded-xl font-black text-xs sm:text-sm transition-all shadow-2xs border border-[#FBCFE8]"
+                          title="Show only orders in this month"
                         >
-                          View
+                          <Eye size={13} /> Orders ({m.count})
                         </button>
                       </td>
                     </tr>
@@ -750,6 +759,172 @@ export default function MonthlyBookingAnalytics({
         )}
       </div>
 
+      {/* ── MODAL: SHOW ONLY ORDERS OF SELECTED MONTH ── */}
+      {viewingMonthOrders && (
+        <div 
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-3 sm:p-5"
+          onClick={() => setViewingMonthOrders(null)}
+        >
+          <div 
+            className="bg-white rounded-3xl max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden border border-gray-100 animate-in fade-in zoom-in-95 duration-200"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="p-5 sm:p-6 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-rose-50/50 via-white to-gray-50">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-[#FFF0F3] text-[#B07A85] border border-rose-200/60 flex items-center justify-center font-bold">
+                  <Calendar size={18} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-black text-gray-900 tracking-tight">
+                    Orders in {viewingMonthOrders.fullLabel}
+                  </h3>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Showing only the <strong className="text-[#B07A85]">{viewingMonthOrders.count} bookings</strong> in this month (Gross: <strong className="text-emerald-700">{formatINR(viewingMonthOrders.amount)}</strong>)
+                  </p>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setViewingMonthOrders(null)}
+                className="w-9 h-9 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 flex items-center justify-center transition-colors"
+                title="Close"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-5 sm:p-6 overflow-y-auto divide-y divide-gray-100 flex-1">
+              {!viewingMonthOrders.orders || viewingMonthOrders.orders.length === 0 ? (
+                <div className="py-12 text-center text-gray-400">
+                  <Package size={36} className="mx-auto mb-2 opacity-40" />
+                  <p className="text-sm font-semibold">No booking orders recorded for {viewingMonthOrders.fullLabel}.</p>
+                </div>
+              ) : (
+                viewingMonthOrders.orders.map((b, idx) => {
+                  const customId = b.bookingCustomId || `BK-${String(idx + 1).padStart(3, '0')}`;
+                  const bDate = b.bookingDate ? new Date(b.bookingDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : 'N/A';
+                  const customerName = b.customerDetails?.name || (b.userId?.role !== 'admin' ? b.userId?.name : '') || 'Guest Customer';
+                  const customerPhone = b.customerDetails?.phone || (b.userId?.role !== 'admin' ? b.userId?.phone : '') || 'No Phone';
+                  
+                  const regularItems = Array.isArray(b.jewelleryIds) ? b.jewelleryIds : [];
+                  const tempItems = Array.isArray(b.tempJewelleries) ? b.tempJewelleries : [];
+                  const itemNames = [
+                    ...regularItems.map(j => j.name || j.jewelId || 'Jewel Item'),
+                    ...tempItems.map(j => j.name || 'Custom Item')
+                  ].join(', ') || 'No Items Listed';
+
+                  const st = (b.status || 'pending').toLowerCase();
+                  let stBadge = 'bg-blue-50 text-blue-700 border-blue-200';
+                  if (st === 'confirmed' || st === 'approved') stBadge = 'bg-emerald-50 text-emerald-700 border-emerald-200';
+                  else if (st === 'completed') stBadge = 'bg-indigo-50 text-indigo-700 border-indigo-200';
+                  else if (st === 'inevent') stBadge = 'bg-amber-50 text-amber-800 border-amber-200';
+
+                  return (
+                    <div 
+                      key={b._id || idx} 
+                      className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-gray-50/60 transition-colors px-2 rounded-2xl"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono text-xs font-black text-gray-900 bg-gray-100 px-2 py-0.5 rounded">
+                            {customId}
+                          </span>
+                          <span className="text-xs text-gray-400 font-medium">
+                            {bDate}
+                          </span>
+                          <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded-full border ${stBadge}`}>
+                            {b.status || 'Pending'}
+                          </span>
+                        </div>
+
+                        <div className="mt-1">
+                          <p className="text-sm font-bold text-gray-900">
+                            {customerName} 
+                            <span className="text-xs text-gray-400 font-normal ml-2">({customerPhone})</span>
+                          </p>
+                          <p className="text-xs text-[#B07A85] font-semibold mt-0.5 truncate max-w-lg">
+                            {itemNames}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Amounts & Actions */}
+                      <div className="flex items-center justify-between sm:justify-end gap-3 flex-shrink-0 pt-2 sm:pt-0 border-t sm:border-0 border-gray-100">
+                        <div className="text-left sm:text-right">
+                          <div className="text-base font-black text-gray-900">
+                            {formatINR(b.totalAmount)}
+                          </div>
+                          <div className="text-[11px] text-gray-400">
+                            Adv: <strong className="text-emerald-700 font-semibold">{formatINR(b.advancePaid || 0)}</strong>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-1.5">
+                          {onOpenBooking && (
+                            <button
+                              onClick={() => {
+                                setViewingMonthOrders(null);
+                                onOpenBooking(b);
+                              }}
+                              className="px-3 py-1.5 bg-[#B07A85] hover:bg-[#9E6A75] text-white rounded-xl text-xs font-bold transition-all shadow-2xs"
+                              title="Open & Edit Booking"
+                            >
+                              Open Booking
+                            </button>
+                          )}
+                          {onOpenInvoice && (
+                            <button
+                              onClick={() => {
+                                setViewingMonthOrders(null);
+                                onOpenInvoice(b);
+                              }}
+                              className="px-2.5 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl text-xs font-bold transition-all"
+                              title="View Invoice"
+                            >
+                              <FileText size={14} />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 bg-gray-50 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
+              <span className="text-xs text-gray-500 font-medium">
+                {viewingMonthOrders.orders?.length || 0} bookings listed for {viewingMonthOrders.fullLabel}
+              </span>
+
+              <div className="flex items-center gap-2">
+                {onFilterMonth && (
+                  <button
+                    onClick={() => {
+                      const k = viewingMonthOrders.key;
+                      setViewingMonthOrders(null);
+                      onFilterMonth(k);
+                    }}
+                    className="px-4 py-2 bg-white hover:bg-gray-100 text-gray-800 border border-gray-200 rounded-xl text-xs font-bold transition-colors shadow-2xs"
+                  >
+                    Open in Bookings Tab
+                  </button>
+                )}
+                <button
+                  onClick={() => setViewingMonthOrders(null)}
+                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl text-xs font-bold transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 }
