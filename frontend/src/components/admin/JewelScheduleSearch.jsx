@@ -97,17 +97,38 @@ const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking })
     }
   }, [upcomingBookings]);
 
-  // Helper to test if a calendar date falls between Pickup Date and Return Date
-  const getBookingForDate = (date) => {
+  // Helper to determine status and booking for a specific calendar date
+  // Distinguishes: 'event' (Event Date) vs 'rent-window' (Pickup Date to Return Date)
+  const getDateStatus = (date) => {
     const dTime = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
-    return upcomingBookings.find(b => {
-      if (!b.parsedPickup) return false;
-      const start = new Date(b.parsedPickup.getFullYear(), b.parsedPickup.getMonth(), b.parsedPickup.getDate()).getTime();
-      const end = b.parsedReturn 
-        ? new Date(b.parsedReturn.getFullYear(), b.parsedReturn.getMonth(), b.parsedReturn.getDate()).getTime()
-        : (b.parsedEvent ? new Date(b.parsedEvent.getFullYear(), b.parsedEvent.getMonth(), b.parsedEvent.getDate()).getTime() : start);
-      return dTime >= start && dTime <= end;
-    });
+
+    // Check if it matches an EVENT date first
+    for (const b of upcomingBookings) {
+      if (b.parsedEvent) {
+        const eTime = new Date(b.parsedEvent.getFullYear(), b.parsedEvent.getMonth(), b.parsedEvent.getDate()).getTime();
+        if (dTime === eTime) {
+          return { type: 'event', booking: b };
+        }
+      }
+    }
+
+    // Check if it falls inside Pickup Date to Return Date (window)
+    for (const b of upcomingBookings) {
+      if (b.parsedPickup) {
+        const pTime = new Date(b.parsedPickup.getFullYear(), b.parsedPickup.getMonth(), b.parsedPickup.getDate()).getTime();
+        const rTime = b.parsedReturn
+          ? new Date(b.parsedReturn.getFullYear(), b.parsedReturn.getMonth(), b.parsedReturn.getDate()).getTime()
+          : (b.parsedEvent ? new Date(b.parsedEvent.getFullYear(), b.parsedEvent.getMonth(), b.parsedEvent.getDate()).getTime() : pTime);
+        
+        if (dTime >= pTime && dTime <= rTime) {
+          const isPickup = dTime === pTime;
+          const isReturn = b.parsedReturn && dTime === new Date(b.parsedReturn.getFullYear(), b.parsedReturn.getMonth(), b.parsedReturn.getDate()).getTime();
+          return { type: 'rent-window', booking: b, isPickup, isReturn };
+        }
+      }
+    }
+
+    return null;
   };
 
   // Calendar matrix calculation
@@ -123,20 +144,20 @@ const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking })
     // Prev month padding
     for (let i = firstDayIndex - 1; i >= 0; i--) {
       const d = new Date(year, month - 1, daysInPrevMonth - i);
-      days.push({ date: d, isCurrentMonth: false, booking: getBookingForDate(d) });
+      days.push({ date: d, isCurrentMonth: false, info: getDateStatus(d) });
     }
 
     // Current month days
     for (let i = 1; i <= daysInMonth; i++) {
       const d = new Date(year, month, i);
-      days.push({ date: d, isCurrentMonth: true, booking: getBookingForDate(d) });
+      days.push({ date: d, isCurrentMonth: true, info: getDateStatus(d) });
     }
 
     // Next month padding to fill complete grid rows (multiple of 7)
     const remaining = (7 - (days.length % 7)) % 7;
     for (let i = 1; i <= remaining; i++) {
       const d = new Date(year, month + 1, i);
-      days.push({ date: d, isCurrentMonth: false, booking: getBookingForDate(d) });
+      days.push({ date: d, isCurrentMonth: false, info: getDateStatus(d) });
     }
 
     return days;
@@ -187,7 +208,7 @@ const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking })
             <div>
               <h2 className="text-xl font-bold text-gray-900 tracking-tight">Jewel Availability & Upcoming Schedule</h2>
               <p className="text-xs text-gray-500 mt-0.5">
-                Check whether a jewel is free or booked for future dates from <span className="font-semibold text-rose-600">Pickup Date</span> to <span className="font-semibold text-rose-600">Return Date</span>
+                Check whether a jewel is free or booked for future dates: <span className="font-semibold text-purple-700 bg-purple-50 px-1.5 py-0.5 rounded">Event Date (Purple)</span> vs <span className="font-semibold text-rose-700 bg-rose-50 px-1.5 py-0.5 rounded">Pickup & Return Window (Red)</span>
               </p>
             </div>
           </div>
@@ -308,7 +329,7 @@ const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking })
             </div>
           </div>
 
-          {/* Condition 1: HAS UPCOMING BOOKINGS -> SHOW CALENDAR WITH RED MARKS */}
+          {/* Condition 1: HAS UPCOMING BOOKINGS -> SHOW CALENDAR WITH DISTINCT COLOURS */}
           {upcomingBookings.length > 0 ? (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* Left / Top: Interactive Calendar View */}
@@ -318,9 +339,6 @@ const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking })
                     <h3 className="text-base font-bold text-gray-900">
                       {monthNames[currentMonthDate.getMonth()]} {currentMonthDate.getFullYear()}
                     </h3>
-                    <span className="text-xs px-2 py-0.5 bg-rose-50 text-rose-700 rounded-md font-medium border border-rose-100">
-                      Red = Booked Dates
-                    </span>
                   </div>
                   <div className="flex items-center gap-1.5">
                     <button
@@ -361,50 +379,73 @@ const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking })
                 {/* Calendar Days Grid */}
                 <div className="grid grid-cols-7 gap-1.5">
                   {calendarDays.map((cell, idx) => {
-                    const isBooked = Boolean(cell.booking);
+                    const info = cell.info;
+                    const isEvent = info?.type === 'event';
+                    const isRentWindow = info?.type === 'rent-window';
+                    const isBooked = isEvent || isRentWindow;
+                    const booking = info?.booking;
+
                     const isCurrent = cell.isCurrentMonth;
                     const isTodayDate = isToday(cell.date);
 
                     let bgClass = 'bg-white text-gray-700 hover:bg-gray-50';
                     let borderClass = 'border-gray-100';
+                    let badgeText = '';
+                    let badgeClass = '';
 
                     if (!isCurrent) {
                       bgClass = 'bg-gray-50/50 text-gray-300';
                       borderClass = 'border-transparent';
                     }
 
-                    if (isBooked) {
-                      // Marked in RED as requested
+                    if (isEvent) {
+                      // EVENT DATE: Highlighted in VIBRANT PURPLE
+                      bgClass = 'bg-purple-600 text-white font-bold shadow-md shadow-purple-600/30 hover:bg-purple-700';
+                      borderClass = 'border-purple-700 ring-2 ring-purple-300';
+                      badgeText = 'EVENT';
+                      badgeClass = 'bg-purple-800 text-white';
+                    } else if (isRentWindow) {
+                      // PICKUP / RETURN / RENT WINDOW DATES: Highlighted in RED
                       bgClass = 'bg-rose-500 text-white font-bold shadow-sm shadow-rose-500/30 hover:bg-rose-600';
-                      borderClass = 'border-rose-600 ring-2 ring-rose-300';
+                      borderClass = 'border-rose-600 ring-2 ring-rose-200';
+                      if (info.isPickup && info.isReturn) {
+                        badgeText = 'PICK/RET';
+                      } else if (info.isPickup) {
+                        badgeText = 'PICKUP';
+                      } else if (info.isReturn) {
+                        badgeText = 'RETURN';
+                      } else {
+                        badgeText = 'RENTED';
+                      }
+                      badgeClass = 'bg-rose-700 text-white';
                     } else if (isTodayDate) {
                       borderClass = 'border-[#B07A85] ring-2 ring-[#B07A85]/20 font-bold';
                     }
+
+                    const tooltipText = isBooked && booking
+                      ? `${isEvent ? '🎉 MAIN EVENT DATE' : '📦 RENTAL WINDOW'}\nCustomer: ${booking.customerDetails?.name || 'Customer'}\nEvent: ${formatDateDisplay(booking.eventDate)}\nPickup: ${formatDateDisplay(booking.pickupDate)}\nReturn: ${formatDateDisplay(booking.returnDate)}`
+                      : cell.date.toDateString();
 
                     return (
                       <div
                         key={idx}
                         onClick={() => {
-                          if (cell.booking && onOpenBooking) {
-                            onOpenBooking(cell.booking);
+                          if (booking && onOpenBooking) {
+                            onOpenBooking(booking);
                           }
                         }}
                         className={`h-12 sm:h-14 rounded-xl border flex flex-col items-center justify-between p-1 transition-all relative ${
-                          cell.booking ? 'cursor-pointer hover:scale-105' : ''
+                          booking ? 'cursor-pointer hover:scale-105' : ''
                         } ${bgClass} ${borderClass}`}
-                        title={
-                          cell.booking
-                            ? `Reserved for ${cell.booking.customerDetails?.name || 'Customer'}\nPickup: ${formatDateDisplay(cell.booking.pickupDate)}\nReturn: ${formatDateDisplay(cell.booking.returnDate)}`
-                            : cell.date.toDateString()
-                        }
+                        title={tooltipText}
                       >
                         <span className={`text-xs ${isBooked ? 'text-white' : isCurrent ? 'text-gray-800' : 'text-gray-400'}`}>
                           {cell.date.getDate()}
                         </span>
 
                         {isBooked ? (
-                          <span className="text-[9px] uppercase tracking-tighter font-extrabold px-1 bg-rose-700 text-white rounded leading-tight text-center truncate max-w-full">
-                            BOOKED
+                          <span className={`text-[8.5px] uppercase tracking-tighter font-extrabold px-1 rounded leading-tight text-center truncate max-w-full ${badgeClass}`}>
+                            {badgeText}
                           </span>
                         ) : isTodayDate ? (
                           <span className="w-1.5 h-1.5 rounded-full bg-[#B07A85]"></span>
@@ -414,11 +455,15 @@ const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking })
                   })}
                 </div>
 
-                {/* Calendar Legend */}
-                <div className="flex flex-wrap items-center gap-4 mt-5 pt-4 border-t border-gray-100 text-xs text-gray-500">
+                {/* Calendar Legend: Showing Event Date vs Pickup/Return Window */}
+                <div className="flex flex-wrap items-center gap-4 mt-5 pt-4 border-t border-gray-100 text-xs text-gray-600">
                   <div className="flex items-center gap-2">
-                    <span className="w-3.5 h-3.5 rounded bg-rose-500 border border-rose-600"></span>
-                    <span>Booked Date (Pickup ➔ Return)</span>
+                    <span className="w-3.5 h-3.5 rounded bg-purple-600 border border-purple-700 shadow-sm"></span>
+                    <span className="font-semibold text-purple-900">Event Date</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-3.5 h-3.5 rounded bg-rose-500 border border-rose-600 shadow-sm"></span>
+                    <span className="font-semibold text-rose-900">Pickup & Return Window</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="w-3.5 h-3.5 rounded bg-white border border-[#B07A85] ring-1 ring-[#B07A85]/30"></span>
@@ -431,7 +476,7 @@ const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking })
                 </div>
               </div>
 
-              {/* Right / Bottom: Detailed Booking Cards with Pickup -> Return */}
+              {/* Right / Bottom: Detailed Booking Cards with Pickup -> Event -> Return */}
               <div className="lg:col-span-5 space-y-3">
                 <div className="flex items-center justify-between pb-1">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500">
@@ -446,7 +491,7 @@ const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking })
                     return (
                       <div
                         key={b._id || i}
-                        className="bg-white rounded-2xl border border-rose-100 p-4 shadow-sm hover:border-rose-300 transition-all space-y-3 group"
+                        className="bg-white rounded-2xl border border-gray-200 p-4 shadow-sm hover:border-[#B07A85]/50 transition-all space-y-3 group"
                       >
                         <div className="flex items-center justify-between border-b border-gray-100 pb-2.5">
                           <div className="flex items-center gap-2">
@@ -466,24 +511,34 @@ const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking })
                           </span>
                         </div>
 
-                        {/* Highlighted Pickup & Return Date Banner */}
-                        <div className="bg-rose-50/70 border border-rose-200/80 rounded-xl p-3 flex items-center justify-between text-xs">
-                          <div className="text-left">
-                            <div className="text-[10px] font-bold uppercase tracking-wider text-rose-600">
+                        {/* Tri-stage Date Indicator: Pickup (Red) -> Event (Purple) -> Return (Red) */}
+                        <div className="grid grid-cols-3 gap-1.5 text-center text-xs">
+                          {/* Pickup Date in Red style */}
+                          <div className="bg-rose-50/80 border border-rose-200 rounded-xl p-2.5">
+                            <div className="text-[9.5px] font-extrabold uppercase tracking-wider text-rose-700">
                               Pickup Date
                             </div>
-                            <div className="font-bold text-gray-900 mt-0.5">
+                            <div className="font-bold text-gray-900 mt-0.5 text-[11px] sm:text-xs">
                               {formatDateDisplay(b.pickupDate)}
                             </div>
                           </div>
 
-                          <div className="text-rose-400 font-bold px-2">➔</div>
+                          {/* Event Date in Purple style */}
+                          <div className="bg-purple-50/90 border border-purple-200 rounded-xl p-2.5 shadow-sm">
+                            <div className="text-[9.5px] font-extrabold uppercase tracking-wider text-purple-700">
+                              Event Date
+                            </div>
+                            <div className="font-bold text-purple-900 mt-0.5 text-[11px] sm:text-xs">
+                              {formatDateDisplay(b.eventDate)}
+                            </div>
+                          </div>
 
-                          <div className="text-right">
-                            <div className="text-[10px] font-bold uppercase tracking-wider text-rose-600">
+                          {/* Return Date in Red style */}
+                          <div className="bg-rose-50/80 border border-rose-200 rounded-xl p-2.5">
+                            <div className="text-[9.5px] font-extrabold uppercase tracking-wider text-rose-700">
                               Return Date
                             </div>
-                            <div className="font-bold text-gray-900 mt-0.5">
+                            <div className="font-bold text-gray-900 mt-0.5 text-[11px] sm:text-xs">
                               {formatDateDisplay(b.returnDate)}
                             </div>
                           </div>
@@ -496,11 +551,6 @@ const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking })
                               <span className="flex items-center gap-1 font-mono">
                                 <Phone size={11} className="text-gray-400" />
                                 {b.customerDetails.phone}
-                              </span>
-                            )}
-                            {b.eventDate && (
-                              <span className="text-[11px] text-gray-400">
-                                Event: <strong>{formatDateDisplay(b.eventDate)}</strong>
                               </span>
                             )}
                           </div>
