@@ -55,25 +55,6 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
   const [activeTab, setActiveTabState] = useState(resolveTabFromUrl);
 
 
-  // Sync Add / View Booking Modal based on URL endpoint (/admin/bookings/new or /admin/bookings/:bookingId)
-  useEffect(() => {
-    if (isNewBooking || location.pathname === '/admin/bookings/new') {
-      if (!showAddBookingModal) {
-        handleOpenAddBooking();
-      }
-    } else if (bookingId && bookings && bookings.length > 0) {
-      const target = bookings.find(b => 
-        b._id === bookingId || 
-        (b.bookingCustomId && b.bookingCustomId.toLowerCase() === bookingId.toLowerCase())
-      );
-      if (target && editingBookingId !== target._id) {
-        handleOpenEditBooking(target);
-      }
-    } else if (location.pathname === '/admin/bookings' && showAddBookingModal) {
-      setShowAddBookingModal(false);
-      setEditingBookingId(null);
-    }
-  }, [location.pathname, isNewBooking, bookingId, bookings]);
 
   // Sync state whenever URL pathname or route params change
   useEffect(() => {
@@ -391,6 +372,26 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
     if (!adminJewelleries.length) fetchAllJewelleries();
     setShowAddBookingModal(true);
   };
+
+  // Sync Add / View Booking Modal based on URL endpoint (/admin/bookings/new or /admin/bookings/:bookingId)
+  useEffect(() => {
+    if (isNewBooking || location.pathname === '/admin/bookings/new') {
+      if (!showAddBookingModal) {
+        handleOpenAddBooking();
+      }
+    } else if (bookingId && Array.isArray(bookings) && bookings.length > 0) {
+      const target = bookings.find(b => 
+        b._id === bookingId || 
+        (b.bookingCustomId && b.bookingCustomId.toLowerCase() === bookingId.toLowerCase())
+      );
+      if (target && editingBookingId !== target._id) {
+        handleOpenEditBooking(target);
+      }
+    } else if (location.pathname === '/admin/bookings' && showAddBookingModal) {
+      setShowAddBookingModal(false);
+      setEditingBookingId(null);
+    }
+  }, [location.pathname, isNewBooking, bookingId, bookings]);
 
   const handleDeleteBooking = async (bookingId) => {
     if (!window.confirm('Are you sure you want to delete this booking entry?')) return;
