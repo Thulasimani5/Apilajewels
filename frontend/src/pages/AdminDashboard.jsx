@@ -2645,7 +2645,7 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                             <td className="px-4 py-3.5">
                               <div className="space-y-1 max-w-xs">
                                 {Array.isArray(b.jewelleryIds) && b.jewelleryIds.map((item, i) => (
-                                  <div key={item._id || i} className="flex items-center gap-2">
+                                  <div key={`jewel-${item._id || i}-${i}`} className="flex items-center gap-2">
                                     <img 
                                       src={item.images?.[0]?.url || (typeof item.images?.[0] === 'string' ? item.images[0] : '') || 'https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=800&q=80'} 
                                       alt={item.name} 
@@ -3116,7 +3116,7 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                     <div className="p-4 space-y-3">
                       <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Booked Jewellery Items:</p>
                       {Array.isArray(order.jewelleryIds) && order.jewelleryIds.map((item, i) => (
-                        <div key={item._id || i} className="flex gap-3 items-center text-sm">
+                        <div key={`order-item-${item._id || i}-${i}`} className="flex gap-3 items-center text-sm">
                           <div className="w-10 h-10 rounded bg-gray-100 overflow-hidden flex-shrink-0">
                             <img 
                               src={item.images?.[0]?.url || item.images?.[0] || 'https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=800&q=80'} 
@@ -3456,8 +3456,8 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
 
                       <div className="space-y-2">
                         {/* Selected Catalogue Items */}
-                        {selectedDbItems.map(item => (
-                          <div key={item._id} className="flex items-center justify-between text-xs bg-white border border-gray-200 p-3 rounded-xl shadow-sm">
+                        {selectedDbItems.map((item, idx) => (
+                          <div key={`selected-${item._id}-${idx}`} className="flex items-center justify-between text-xs bg-white border border-gray-200 p-3 rounded-xl shadow-sm">
                             <div className="flex items-center gap-3">
                               <img
                                 src={item.images?.[0]?.url || (typeof item.images?.[0] === 'string' ? item.images[0] : '') || 'https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=800&q=80'}
