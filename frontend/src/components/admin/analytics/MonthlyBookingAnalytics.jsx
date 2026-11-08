@@ -439,11 +439,26 @@ export default function MonthlyBookingAnalytics({
               style={{ minHeight: '230px', maxHeight: '280px' }}
             >
               <defs>
+                {/* Neon Glow Filter */}
+                <filter id="neonGlowLine" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="5" stdDeviation="4" floodColor="#B07A85" floodOpacity="0.35" />
+                </filter>
+                <filter id="capsuleShadow" x="-20%" y="-10%" width="140%" height="130%">
+                  <feDropShadow dx="0" dy="3" stdDeviation="2.5" floodColor="#8D5B66" floodOpacity="0.18" />
+                </filter>
+
+                {/* Radiant Spline Gradient */}
+                <linearGradient id="splineGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#B07A85" />
+                  <stop offset="50%" stopColor="#E11D48" />
+                  <stop offset="100%" stopColor="#B07A85" />
+                </linearGradient>
+
                 {/* Clean Translucent Area Gradient */}
                 <linearGradient id="cleanAreaGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#B07A85" stopOpacity="0.16" />
-                  <stop offset="70%" stopColor="#B07A85" stopOpacity="0.03" />
-                  <stop offset="100%" stopColor="#B07A85" stopOpacity="0.00" />
+                  <stop offset="0%" stopColor="#B07A85" stopOpacity="0.22" />
+                  <stop offset="60%" stopColor="#E11D48" stopOpacity="0.06" />
+                  <stop offset="100%" stopColor="#8B5CF6" stopOpacity="0.00" />
                 </linearGradient>
 
                 {/* Soft Bar Gradient */}
@@ -510,6 +525,7 @@ export default function MonthlyBookingAnalytics({
                           height={h}
                           rx="6"
                           fill={isFocus ? 'url(#activeBarGrad)' : 'url(#cleanBarGrad)'}
+                          filter="url(#capsuleShadow)"
                           className="transition-all duration-200"
                         />
                         {p.count > 0 && (
@@ -547,7 +563,8 @@ export default function MonthlyBookingAnalytics({
                     <path
                       d={bezierPath}
                       fill="none"
-                      stroke="#B07A85"
+                      stroke="url(#splineGrad)"
+                      filter="url(#neonGlowLine)"
                       strokeWidth={metricView === 'amount' ? '3.5' : '2.8'}
                       strokeLinecap="round"
                       strokeLinejoin="round"

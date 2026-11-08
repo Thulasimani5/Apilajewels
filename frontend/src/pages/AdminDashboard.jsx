@@ -8,6 +8,7 @@ import API_BASE_URL from '../config/api';
 
 import SalesTab from '../components/admin/sales/SalesTab';
 import MonthlyBookingAnalytics from '../components/admin/analytics/MonthlyBookingAnalytics';
+import AnalyticsTab from '../components/admin/analytics/AnalyticsTab';
 
 const AdminDashboard = () => {
   const { user, logout, token } = useAuth();
@@ -2763,12 +2764,10 @@ const AdminDashboard = () => {
 
           {/* Sales — Jewellery to Own */}
           {activeTab === 'analytics' && (
-            <div className="space-y-6">
-              <MonthlyBookingAnalytics 
-                bookings={bookings} 
-                onViewAllBookings={() => setActiveTab('bookings')} 
-              />
-            </div>
+            <AnalyticsTab 
+              bookings={bookings} 
+              onViewAllBookings={() => setActiveTab('bookings')} 
+            />
           )}
 
           {activeTab === 'sales' && (
