@@ -1,11 +1,99 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Search, Calendar as CalendarIcon, ChevronLeft, ChevronRight, Sparkles, CheckCircle2, Clock, AlertCircle, Eye, Tag, Phone, User, CalendarX } from 'lucide-react';
+import API_BASE_URL from '../../config/api';
 
-const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking }) => {
+const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking, token }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchedCode, setSearchedCode] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
   const [currentMonthDate, setCurrentMonthDate] = useState(new Date());
+  const [fetchedJewel, setFetchedJewel] = useState(null);
+
+  // Helper to resolve an image URL from any object shape
+  const extractImageUrl = (item) => {
+    if (!item) return null;
+    if (typeof item === 'string') return item;
+    if (item.image && typeof item.image === 'string') return item.image;
+    if (item.imageUrl && typeof item.imageUrl === 'string') return item.imageUrl;
+    if (item.url && typeof item.url === 'string') return item.url;
+    if (Array.isArray(item.images) && item.images.length > 0) {
+      const first = item.images[0];
+      if (typeof first === 'string') return first;
+      if (first && first.url) return first.url;
+    }
+    if (Array.isArray(item.media) && item.media.length > 0) {
+      const first = item.media[0];
+      if (typeof first === 'string') return first;
+      if (first && first.url) return first.url;
+    }
+    return null;
+  };
+
+  // Find jewellery matching code from local prop array or from booking entries
+  const matchedJewel = useMemo(() => {
+    if (!searchedCode) return null;
+    const lower = searchedCode.toLowerCase();
+
+    // 1. Search in passed jewelleries prop
+    const foundInJewelleries = (jewelleries || []).find(j => 
+      (j.jewelId && j.jewelId.toLowerCase() === lower) ||
+      (j.name && j.name.toLowerCase() === lower)
+    );
+    if (foundInJewelleries) return foundInJewelleries;
+
+    // 2. Search in bookings.jewelleryIds (populated items)
+    for (const b of (bookings || [])) {
+      if (Array.isArray(b.jewelleryIds)) {
+        for (const j of b.jewelleryIds) {
+          if (j && typeof j === 'object') {
+            if ((j.jewelId && j.jewelId.toLowerCase() === lower) || (j.name && j.name.toLowerCase() === lower)) {
+              return j;
+            }
+          }
+        }
+      }
+      // 3. Search in tempJewelleries
+      if (Array.isArray(b.tempJewelleries)) {
+        for (const t of b.tempJewelleries) {
+          if (t && typeof t === 'object') {
+            if ((t.code && t.code.trim().toLowerCase() === lower) || (t.name && t.name.trim().toLowerCase() === lower)) {
+              return t;
+            }
+          }
+        }
+      }
+    }
+
+    // 4. Fallback to fetchedJewel from backend API
+    return fetchedJewel || null;
+  }, [searchedCode, jewelleries, bookings, fetchedJewel]);
+
+  // Fetch from backend API if jewel not found locally or lacks image
+  useEffect(() => {
+    if (!searchedCode) {
+      setFetchedJewel(null);
+      return;
+    }
+
+    const currentImg = extractImageUrl(matchedJewel);
+    if (!matchedJewel || !currentImg) {
+      // Query backend jewel-schedule endpoint
+      const fetchScheduleData = async () => {
+        try {
+          const res = await fetch(`${API_BASE_URL}/api/bookings/jewel-schedule/${encodeURIComponent(searchedCode)}`, {
+            headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+          });
+          const result = await res.json();
+          if (result.success && result.data && result.data.jewellery) {
+            setFetchedJewel(result.data.jewellery);
+          }
+        } catch (e) {
+          console.error("Error fetching jewel schedule metadata:", e);
+        }
+      };
+      fetchScheduleData();
+    }
+  }, [searchedCode, matchedJewel, token]);
 
   // Execute Search
   const handleSearch = (e) => {
@@ -20,17 +108,8 @@ const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking })
     setSearchTerm('');
     setSearchedCode('');
     setHasSearched(false);
+    setFetchedJewel(null);
   };
-
-  // Find jewellery matching code
-  const matchedJewel = useMemo(() => {
-    if (!searchedCode) return null;
-    const lower = searchedCode.toLowerCase();
-    return (jewelleries || []).find(j => 
-      (j.jewelId && j.jewelId.toLowerCase() === lower) ||
-      (j.name && j.name.toLowerCase() === lower)
-    ) || null;
-  }, [searchedCode, jewelleries]);
 
   // Find upcoming bookings for this jewel
   const upcomingBookings = useMemo(() => {
@@ -89,7 +168,7 @@ const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking })
   }, [searchedCode, matchedJewel, bookings]);
 
   // Update calendar month to the first upcoming booking's month when search succeeds
-  React.useEffect(() => {
+  useEffect(() => {
     if (upcomingBookings.length > 0 && upcomingBookings[0].parsedPickup) {
       setCurrentMonthDate(new Date(upcomingBookings[0].parsedPickup.getFullYear(), upcomingBookings[0].parsedPickup.getMonth(), 1));
     } else {
@@ -196,6 +275,9 @@ const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking })
     return jewelleries.filter(j => j.jewelId).slice(0, 6).map(j => j.jewelId);
   }, [jewelleries]);
 
+  // Safely extract thumbnail image
+  const resolvedJewelImage = extractImageUrl(matchedJewel);
+
   return (
     <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-6 sm:p-8 space-y-6">
       {/* Header & Search Bar */}
@@ -271,17 +353,29 @@ const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking })
           {/* Jewel Meta Card */}
           <div className="bg-gradient-to-r from-amber-50/50 via-rose-50/30 to-purple-50/40 p-4 sm:p-5 rounded-2xl border border-rose-100/60 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              {matchedJewel && (matchedJewel.images?.[0] || matchedJewel.media?.[0]?.url) ? (
+              {resolvedJewelImage ? (
                 <img
-                  src={matchedJewel.images?.[0] || matchedJewel.media?.[0]?.url}
-                  alt={matchedJewel.name}
-                  className="w-14 h-14 object-cover rounded-xl border border-white shadow-sm flex-shrink-0"
+                  src={resolvedJewelImage}
+                  alt={matchedJewel?.name || searchedCode}
+                  className="w-16 h-16 object-cover rounded-2xl border-2 border-white shadow-md flex-shrink-0 bg-white"
+                  onError={(e) => {
+                    // Fallback gracefully on broken images
+                    e.currentTarget.style.display = 'none';
+                    if (e.currentTarget.nextSibling) {
+                      e.currentTarget.nextSibling.style.display = 'flex';
+                    }
+                  }}
                 />
-              ) : (
-                <div className="w-14 h-14 rounded-xl bg-white border border-rose-200 flex items-center justify-center text-[#B07A85] flex-shrink-0 font-bold font-mono text-sm">
-                  {searchedCode.slice(0, 4)}
-                </div>
-              )}
+              ) : null}
+              
+              <div 
+                className={`w-16 h-16 rounded-2xl bg-white border border-rose-200 items-center justify-center text-[#B07A85] flex-shrink-0 font-bold font-mono text-sm shadow-sm ${
+                  resolvedJewelImage ? 'hidden' : 'flex'
+                }`}
+              >
+                {searchedCode.slice(0, 4)}
+              </div>
+
               <div>
                 <div className="flex items-center gap-2">
                   <span className="px-2.5 py-0.5 bg-rose-600 text-white font-mono text-xs font-bold rounded-md tracking-wider">
@@ -300,6 +394,10 @@ const JewelScheduleSearch = ({ bookings = [], jewelleries = [], onOpenBooking })
                   {matchedJewel?.rentalPrice ? (
                     <span>
                       Rent: <strong>₹{matchedJewel.rentalPrice.toLocaleString()}</strong>
+                    </span>
+                  ) : matchedJewel?.price ? (
+                    <span>
+                      Rent: <strong>₹{matchedJewel.price.toLocaleString()}</strong>
                     </span>
                   ) : null}
                   <span>

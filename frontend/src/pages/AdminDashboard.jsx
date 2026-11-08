@@ -1135,6 +1135,7 @@ const AdminDashboard = () => {
                 <JewelScheduleSearch 
                   bookings={bookings} 
                   jewelleries={adminJewelleries}
+                  token={token}
                   onOpenBooking={(b) => handleOpenEditBooking(b)}
                 />
 
