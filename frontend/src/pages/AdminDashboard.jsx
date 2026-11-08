@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useParams, useNavigate, useLocation } from 'react-router-dom';
 import { LayoutDashboard, BarChart2, ExternalLink, Package, Calendar, Users, LogOut, Plus, ArrowLeft, Save, X, List, Search, Upload, Film, Image, Check, Pencil, Trash2, Eye, Tag, Edit, FileText, Printer, GripVertical, Menu, ShoppingBag } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import CategoryContext from '../context/CategoryContext';
@@ -11,10 +11,64 @@ import MonthlyBookingAnalytics from '../components/admin/analytics/MonthlyBookin
 import AnalyticsTab from '../components/admin/analytics/AnalyticsTab';
 import JewelScheduleSearch from '../components/admin/JewelScheduleSearch';
 
-const AdminDashboard = () => {
+const AdminDashboard = ({ initialTab }) => {
   const { user, logout, token } = useAuth();
   const { categories, refreshCategories, addCategory, deleteCategory, updateCategory } = useContext(CategoryContext);
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const { tab: urlTabParam } = useParams();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Tab mapping for clean human-readable URLs
+  const TAB_TO_ROUTE = {
+    dashboard: '/admin/dashboard',
+    jewellery: '/admin/manage-jewellery',
+    bookings: '/admin/bookings',
+    users: '/admin/users',
+    categories: '/admin/categories',
+    types: '/admin/jewellery-types',
+    sales: '/admin/sales',
+    analytics: '/admin/analytics'
+  };
+
+  const ROUTE_TO_TAB = {
+    dashboard: 'dashboard',
+    'manage-jewellery': 'jewellery',
+    jewellery: 'jewellery',
+    bookings: 'bookings',
+    users: 'users',
+    categories: 'categories',
+    types: 'types',
+    'jewellery-types': 'types',
+    sales: 'sales',
+    analytics: 'analytics'
+  };
+
+  const resolveTabFromUrl = () => {
+    if (initialTab && ROUTE_TO_TAB[initialTab]) return ROUTE_TO_TAB[initialTab];
+    if (urlTabParam && ROUTE_TO_TAB[urlTabParam]) return ROUTE_TO_TAB[urlTabParam];
+    const path = window.location.pathname.replace(/^\/admin\/?/, '');
+    if (path && ROUTE_TO_TAB[path]) return ROUTE_TO_TAB[path];
+    return 'dashboard';
+  };
+
+  const [activeTab, setActiveTabState] = useState(resolveTabFromUrl);
+
+  // Sync state whenever URL pathname or route params change
+  useEffect(() => {
+    const matchedTab = resolveTabFromUrl();
+    if (matchedTab && matchedTab !== activeTab) {
+      setActiveTabState(matchedTab);
+    }
+  }, [urlTabParam, initialTab, location.pathname]);
+
+  // Navigate URL endpoint when switching tabs
+  const setActiveTab = (tabId) => {
+    setActiveTabState(tabId);
+    const targetUrl = TAB_TO_ROUTE[tabId] || `/admin/${tabId}`;
+    if (location.pathname !== targetUrl) {
+      navigate(targetUrl);
+    }
+  };
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
@@ -981,48 +1035,62 @@ const AdminDashboard = () => {
             </button>
           </div>
           <nav className="p-4 space-y-1">
-            <button 
+            <Link 
+              to="/admin/dashboard"
               onClick={() => { setActiveTab('dashboard'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'dashboard' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <LayoutDashboard size={20} /> Dashboard
-            </button>
-            <button 
+            </Link>
+            <Link 
+              to="/admin/manage-jewellery"
               onClick={() => { setActiveTab('jewellery'); setShowAddForm(false); setSelectedAdminCategory(null); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'jewellery' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <Package size={20} /> Manage Jewellery
-            </button>
-            <button 
+            </Link>
+            <Link 
+              to="/admin/bookings"
               onClick={() => { setActiveTab('bookings'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'bookings' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <Calendar size={20} /> Bookings
-            </button>
-            <button 
+            </Link>
+            <Link 
+              to="/admin/analytics"
+              onClick={() => { setActiveTab('analytics'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'analytics' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
+            >
+              <BarChart2 size={20} /> Analytics & Graphs
+            </Link>
+            <Link 
+              to="/admin/users"
               onClick={() => { setActiveTab('users'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'users' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <Users size={20} /> Users
-            </button>
-            <button 
+            </Link>
+            <Link 
+              to="/admin/categories"
               onClick={() => { setActiveTab('categories'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'categories' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <List size={20} /> Categories
-            </button>
-            <button 
+            </Link>
+            <Link 
+              to="/admin/jewellery-types"
               onClick={() => { setActiveTab('types'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'types' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <Tag size={20} /> Jewellery Types
-            </button>
-            <button 
+            </Link>
+            <Link 
+              to="/admin/sales"
               onClick={() => { setActiveTab('sales'); setShowAddForm(false); setIsMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${activeTab === 'sales' ? 'bg-[#FFF8F3] text-[#B07A85]' : 'text-gray-600 hover:bg-gray-50'}`}
             >
               <ShoppingBag size={20} /> Sales
-            </button>
+            </Link>
           </nav>
         </div>
         <div className="p-4 border-t border-gray-200">
