@@ -183,7 +183,7 @@ export default function MonthlyBookingAnalytics({
 
   // 2. Geometry coordinates
   const svgWidth = 800;
-  const svgHeight = 260;
+  const svgHeight = 380;
   const padLeft = 60;
   const padRight = 30;
   const padTop = 30;
@@ -436,7 +436,7 @@ export default function MonthlyBookingAnalytics({
               viewBox={`0 0 ${svgWidth} ${svgHeight}`} 
               className="w-full h-auto overflow-visible"
               preserveAspectRatio="none"
-              style={{ minHeight: '230px', maxHeight: '280px' }}
+              style={{ minHeight: '360px', maxHeight: '440px' }}
             >
               <defs>
                 {/* Neon Glow Filter */}
@@ -681,15 +681,15 @@ export default function MonthlyBookingAnalytics({
 
         {showBreakdownTable && (
           <div className="px-6 pb-6 pt-1 overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
+            <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-gray-200/80 text-gray-400 font-bold uppercase text-[10px] tracking-wider">
-                  <th className="py-2.5 px-3">Month</th>
-                  <th className="py-2.5 px-3">Orders</th>
-                  <th className="py-2.5 px-3">Gross Revenue</th>
-                  <th className="py-2.5 px-3">Avg Order Value</th>
-                  <th className="py-2.5 px-3">Status Breakdown</th>
-                  <th className="py-2.5 px-3 text-right">Action</th>
+                <tr className="border-b border-gray-200/90 bg-gray-50/80 text-gray-500 font-black uppercase text-xs tracking-wider">
+                  <th className="py-3.5 px-4 text-sm font-black">Month</th>
+                  <th className="py-3.5 px-4 text-sm font-black">Orders</th>
+                  <th className="py-3.5 px-4 text-sm font-black">Gross Revenue</th>
+                  <th className="py-3.5 px-4 text-sm font-black">Avg Order Value</th>
+                  <th className="py-3.5 px-4 text-sm font-black">Status Breakdown</th>
+                  <th className="py-3.5 px-4 text-right text-sm font-black">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 font-medium text-gray-700">
@@ -701,42 +701,42 @@ export default function MonthlyBookingAnalytics({
                       className={`hover:bg-white transition-colors cursor-pointer ${isCurrent ? 'bg-amber-50/40 font-bold' : ''}`}
                       onClick={() => setSelectedIndex(m.index)}
                     >
-                      <td className="py-3 px-3 font-semibold text-gray-900">
+                      <td className="py-4 px-4 text-base font-extrabold text-gray-900">
                         {m.fullLabel}
                       </td>
-                      <td className="py-3 px-3">
-                        <span className="inline-block bg-gray-100 px-2 py-0.5 rounded text-gray-800 font-bold text-[11px]">
+                      <td className="py-4 px-4">
+                        <span className="inline-block bg-gray-100 text-gray-900 font-black px-3 py-1 rounded-xl text-sm">
                           {m.count}
                         </span>
                       </td>
-                      <td className="py-3 px-3 font-bold text-gray-900">
+                      <td className="py-4 px-4 text-base sm:text-lg font-black text-gray-900">
                         {formatINR(m.amount)}
                       </td>
-                      <td className="py-3 px-3 text-gray-600">
+                      <td className="py-4 px-4 text-sm sm:text-base font-bold text-gray-700">
                         {formatINR(m.avgValue)}
                       </td>
-                      <td className="py-3 px-3">
-                        <div className="flex items-center gap-1.5 text-[10px]">
+                      <td className="py-4 px-4">
+                        <div className="flex items-center gap-2 text-xs">
                           {m.confirmed + m.completed > 0 && (
-                            <span className="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded">
+                            <span className="bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-lg font-bold">
                               {m.confirmed + m.completed} done
                             </span>
                           )}
                           {m.pending > 0 && (
-                            <span className="bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded">
+                            <span className="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-lg font-bold">
                               {m.pending} pending
                             </span>
                           )}
-                          {m.count === 0 && <span className="text-gray-400 italic">No bookings</span>}
+                          {m.count === 0 && <span className="text-gray-400 italic text-xs">No bookings</span>}
                         </div>
                       </td>
-                      <td className="py-3 px-3 text-right">
+                      <td className="py-4 px-4 text-right">
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
                             if (onViewAllBookings) onViewAllBookings();
                           }}
-                          className="text-[#B07A85] font-bold hover:underline text-[11px]"
+                          className="text-[#B07A85] font-black hover:underline text-sm"
                         >
                           View
                         </button>

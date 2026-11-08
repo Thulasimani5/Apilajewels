@@ -255,7 +255,7 @@ export default function AnalyticsTab({
 
   // 2. Geometry & Scale
   const svgW = 860;
-  const svgH = 280;
+  const svgH = 400;
   const padL = 60;
   const padR = 40;
   const padT = 32;
@@ -676,7 +676,7 @@ export default function AnalyticsTab({
                 viewBox={`0 0 ${svgW} ${svgH}`} 
                 className="w-full h-auto overflow-visible"
                 preserveAspectRatio="none"
-                style={{ minHeight: '240px', maxHeight: '310px' }}
+                style={{ minHeight: '380px', maxHeight: '460px' }}
               >
                 <defs>
                   {/* Neon Glow Filter */}
@@ -1058,17 +1058,17 @@ export default function AnalyticsTab({
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
+          <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-gray-200/80 bg-gray-50/60 text-gray-400 font-extrabold uppercase text-[10px] tracking-wider">
-                <th className="py-3 px-5">Month Period</th>
-                <th className="py-3 px-4">Bookings</th>
-                <th className="py-3 px-4">Gross Revenue</th>
-                <th className="py-3 px-4">Average Value</th>
-                <th className="py-3 px-4">Advance Collected</th>
-                <th className="py-3 px-4">Balance Due</th>
-                <th className="py-3 px-4">Status Mix</th>
-                <th className="py-3 px-5 text-right">Action</th>
+              <tr className="border-b border-gray-200/90 bg-gray-50/80 text-gray-500 font-black uppercase text-xs tracking-wider">
+                <th className="py-4 px-6 text-sm font-black">Month Period</th>
+                <th className="py-4 px-5 text-sm font-black">Bookings</th>
+                <th className="py-4 px-5 text-sm font-black">Gross Revenue</th>
+                <th className="py-4 px-5 text-sm font-black">Average Value</th>
+                <th className="py-4 px-5 text-sm font-black">Advance Collected</th>
+                <th className="py-4 px-5 text-sm font-black">Balance Due</th>
+                <th className="py-4 px-5 text-sm font-black">Status Mix</th>
+                <th className="py-4 px-6 text-right text-sm font-black">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 font-medium text-gray-700">
@@ -1082,49 +1082,49 @@ export default function AnalyticsTab({
                     }`}
                     onClick={() => setSelectedIndex(m.index)}
                   >
-                    <td className="py-3.5 px-5 font-bold text-gray-900">
+                    <td className="py-4 px-6 text-base font-extrabold text-gray-900">
                       {m.fullLabel}
                     </td>
-                    <td className="py-3.5 px-4">
-                      <span className="inline-block bg-gray-100 text-gray-900 font-black px-2.5 py-0.5 rounded-lg text-xs">
+                    <td className="py-4 px-5">
+                      <span className="inline-block bg-gray-100 text-gray-900 font-black px-3 py-1 rounded-xl text-sm">
                         {m.count}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 font-black text-gray-900">
+                    <td className="py-4 px-5 text-base sm:text-lg font-black text-gray-900">
                       {formatINR(m.amount)}
                     </td>
-                    <td className="py-3.5 px-4 text-gray-600">
+                    <td className="py-4 px-5 text-sm sm:text-base font-bold text-gray-700">
                       {formatINR(m.avgValue)}
                     </td>
-                    <td className="py-3.5 px-4 font-bold text-emerald-700">
+                    <td className="py-4 px-5 text-sm sm:text-base font-bold text-emerald-700">
                       {formatINR(m.advance)}
                     </td>
-                    <td className="py-3.5 px-4 font-bold text-amber-700">
+                    <td className="py-4 px-5 text-sm sm:text-base font-bold text-amber-700">
                       {formatINR(m.balance)}
                     </td>
-                    <td className="py-3.5 px-4">
-                      <div className="flex items-center gap-1.5 text-[10px]">
+                    <td className="py-4 px-5">
+                      <div className="flex items-center gap-2 text-xs">
                         {m.confirmedCount + m.completedCount > 0 && (
-                          <span className="bg-emerald-50 text-emerald-700 px-2 py-0.5 rounded-md font-bold">
+                          <span className="bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-lg font-bold">
                             {m.confirmedCount + m.completedCount} conf
                           </span>
                         )}
                         {m.pendingCount > 0 && (
-                          <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded-md font-bold">
+                          <span className="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-lg font-bold">
                             {m.pendingCount} pend
                           </span>
                         )}
-                        {m.count === 0 && <span className="text-gray-400 italic">No orders</span>}
+                        {m.count === 0 && <span className="text-gray-400 italic text-xs">No orders</span>}
                       </div>
                     </td>
-                    <td className="py-3.5 px-5 text-right">
+                    <td className="py-4 px-6 text-right">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedIndex(m.index);
                           if (onViewAllBookings) onViewAllBookings();
                         }}
-                        className="text-[#B07A85] font-extrabold hover:underline text-xs"
+                        className="text-[#B07A85] font-black hover:underline text-sm"
                       >
                         Inspect
                       </button>
@@ -1140,3 +1140,4 @@ export default function AnalyticsTab({
     </div>
   );
 }
+
