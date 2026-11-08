@@ -13,12 +13,14 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Terms from './pages/Terms';
+import ScrollRestorationManager from './components/ScrollRestorationManager';
 
 function App() {
   const { isLoginOpen, closeLogin } = useAuth();
 
   return (
     <Router>
+      <ScrollRestorationManager />
       <div className="min-h-screen bg-brand-white relative">
         <div className="">
           <Routes>
