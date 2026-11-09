@@ -5,7 +5,8 @@ const {
   createJewellery,
   updateJewellery,
   patchJewelleryField,
-  deleteJewellery
+  deleteJewellery,
+  reshuffleCatalog
 } = require('../controllers/jewelleryController');
 const { protect, authorize } = require('../middleware/auth');
 const { upload } = require('../config/cloudinary');
@@ -16,6 +17,8 @@ const router = express.Router();
 router.route('/')
   .get(getJewelleries)
   .post(protect, authorize('admin'), upload.array('images', 20), validateProductCreate, createJewellery);
+
+router.post('/reshuffle', protect, authorize('admin'), reshuffleCatalog);
 
 router.route('/:id')
   .get(getJewellery)

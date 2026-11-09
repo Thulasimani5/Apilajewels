@@ -20,7 +20,17 @@ class BookingService {
     return 'BK-' + String(nextNum).padStart(3, '0');
   }
 
-  validateBookingDates(pickupDate, eventDate, returnDate) {
+  validateBookingDates(pickupDate, eventDate, returnDate, isAdmin = false) {
+    // Admins can set any date order (e.g. recording real-world bookings with custom date arrangements)
+    if (isAdmin) return;
+
+    if (pickupDate && returnDate) {
+      const pDate = new Date(pickupDate);
+      const rDate = new Date(returnDate);
+      if (pDate > rDate) {
+        throw new ErrorResponse('Pickup date must be on or before return date', 400);
+      }
+    }
     if (pickupDate && eventDate) {
       const pDate = new Date(pickupDate);
       const eDate = new Date(eventDate);
@@ -33,13 +43,6 @@ class BookingService {
       const rDate = new Date(returnDate);
       if (eDate > rDate) {
         throw new ErrorResponse('Event date must be on or before return date', 400);
-      }
-    }
-    if (pickupDate && returnDate) {
-      const pDate = new Date(pickupDate);
-      const rDate = new Date(returnDate);
-      if (pDate > rDate) {
-        throw new ErrorResponse('Pickup date must be on or before return date', 400);
       }
     }
   }
@@ -134,7 +137,9 @@ class BookingService {
       advancePaid,
       balanceAmount,
       status: bookingData.status || 'pending',
-      paymentStatus: bookingData.paymentStatus || (advancePaid >= totalAmount && totalAmount > 0 ? 'Paid' : advancePaid > 0 ? 'Partial' : 'Pending')
+      paymentStatus: bookingData.paymentStatus || (advancePaid >= totalAmount && totalAmount > 0 ? 'Paid' : advancePaid > 0 ? 'Partial' : 'Pending'),
+      isManual: bookingData.isManual !== undefined ? bookingData.isManual : true,
+      source: bookingData.source || 'manual'
     };
 
     const booking = await bookingRepository.create(payload);
@@ -153,8 +158,15 @@ class BookingService {
     return booking;
   }
 
-  async getAllBookings() {
-    return await bookingRepository.findAll();
+  async getAllBookings(filter = {}) {
+    const query = {
+      ...filter,
+      source: { $ne: 'whatsapp' },
+      isManual: { $ne: false },
+      'customerDetails.phone': { $not: /whatsapp/i },
+      'customerDetails.name': { $not: /whatsapp/i }
+    };
+    return await bookingRepository.findAll(query);
   }
 
   async getUserBookings(userId) {
@@ -178,19 +190,30 @@ class BookingService {
       throw new ErrorResponse('Booking not found', 404);
     }
 
-    const pickupDate = bookingData.pickupDate || existing.pickupDate;
-    const eventDate = bookingData.eventDate || existing.eventDate;
-    const returnDate = bookingData.returnDate || existing.returnDate;
-    const jewelleryIds = bookingData.jewelleryIds || existing.jewelleryIds;
+    const pickupDate = bookingData.pickupDate !== undefined ? bookingData.pickupDate : existing.pickupDate;
+    const eventDate = bookingData.eventDate !== undefined ? bookingData.eventDate : existing.eventDate;
+    const returnDate = bookingData.returnDate !== undefined ? bookingData.returnDate : existing.returnDate;
+    const jewelleryIds = bookingData.jewelleryIds !== undefined ? bookingData.jewelleryIds : existing.jewelleryIds;
 
-    this.validateBookingDates(pickupDate, eventDate, returnDate);
+    const datesModified = bookingData.pickupDate !== undefined || bookingData.eventDate !== undefined || bookingData.returnDate !== undefined;
+    if (datesModified) {
+      this.validateBookingDates(pickupDate, eventDate, returnDate, !!adminUser);
+    }
 
     if (bookingData.status) {
       this.validateStatusTransition(existing.status, bookingData.status);
     }
 
-    if (jewelleryIds && jewelleryIds.length > 0 && pickupDate && returnDate) {
+    if (datesModified && jewelleryIds && jewelleryIds.length > 0 && pickupDate && returnDate) {
       await this.checkDateConflicts(jewelleryIds, pickupDate, returnDate, id);
+    }
+
+    // Merge customerDetails if partially provided
+    if (bookingData.customerDetails) {
+      bookingData.customerDetails = {
+        ...(existing.customerDetails || {}),
+        ...bookingData.customerDetails
+      };
     }
 
     const oldValue = existing.toObject();

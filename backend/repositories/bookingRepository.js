@@ -13,8 +13,8 @@ class BookingRepository {
       .populate('jewelleryIds');
   }
 
-  async findAll() {
-    return await Booking.find({})
+  async findAll(filter = {}) {
+    return await Booking.find(filter)
       .populate('userId', 'name email phone role')
       .populate('jewelleryIds')
       .sort('-createdAt');
@@ -27,7 +27,7 @@ class BookingRepository {
   }
 
   async findOverlappingBookings(jewelleryIds, pickupDate, returnDate, excludeBookingId = null) {
-    if (!jewelIds || !jewelleryIds.length || !pickupDate || !returnDate) return [];
+    if (!jewelleryIds || !jewelleryIds.length || !pickupDate || !returnDate) return [];
 
     const query = {
       jewelleryIds: { $in: jewelleryIds },

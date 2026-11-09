@@ -228,7 +228,6 @@ export default function DesktopCart({ isSale: isSaleProp }) {
       window.open(`https://wa.me/+917397721122?text=${encodeURIComponent(msg)}`, '_blank');
       return;
     }
-
     let msg = `Hi Apila Jewels, I would like to book the following items:\n\n`;
     currentCartItems.forEach((item, i) => {
       const price = item.rentalPrice || item.price || 0;

@@ -5,6 +5,7 @@ const PRICE_OPTIONS = ['Under ₹1000', '₹1000 - ₹2000', '₹2000 - ₹3000'
 const COLOR_OPTIONS = ['Gold', 'Silver', 'Rose Gold', 'Emerald Green', 'Ruby Red', 'Mehndi Polish'];
 const STONE_COLOR_OPT = ['Clear', 'Blue', 'Pink', 'Red', 'Green', 'Yellow', 'White', 'Gold', 'Various', 'Orange', 'Black', 'Purple'];
 const STONE_OPTIONS = ['Crystal', 'Sapphire', 'Pink Morganite', 'Ruby', 'Emerald', 'Pearl', 'Moissanite Stone', 'AD Stone', 'Kundan', 'Polki Stone', 'Polki Diamond'];
+const ACCESSORY_OPTIONS = ['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories', 'Bracelet', 'Others'];
 
 const FilterIcon = () => (
   <svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
@@ -74,51 +75,30 @@ export default function ShopFilterSidebar({
         ))}
       </FilterSection>
 
-      {/* JEWELLERY TYPE */}
+      {/* JEWELLERY TYPE — Accessories excluded, lives in its own section below */}
       <FilterSection title="Jewellery Type" open={open.Type} onToggle={() => setOpen(o => ({ ...o, Type: !o.Type }))}>
-        {typeOptions.map(opt => {
-          if (opt.toLowerCase() === 'accessories') {
-            return (
-              <div key={opt} className="mb-2">
-                <div className="flex items-center justify-between">
-                  <FilterItem
-                    label={opt}
-                    checked={activeFilters.Type.includes(opt)}
-                    onToggle={() => toggle('Type', opt)}
-                  />
-                  <button 
-                    onClick={() => setOpen(o => ({ ...o, AccessoryTypes: !o.AccessoryTypes }))}
-                    className="p-1 focus:outline-none"
-                  >
-                    <svg className={`transform transition-transform ${open.AccessoryTypes ? 'rotate-180' : ''}`} width="10" height="6" viewBox="0 0 10 6" fill="none">
-                      <path d="M1 1L5 5L9 1" stroke="#000" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
-                </div>
-                {open.AccessoryTypes && (
-                  <div style={{ marginLeft: '29px' }} className="flex flex-col">
-                    {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories', 'Bracelet', 'Others'].map(sub => (
-                      <FilterItem
-                        key={sub}
-                        label={sub.toUpperCase()}
-                        checked={activeFilters.AccessoryType?.includes(sub)}
-                        onToggle={() => toggle('AccessoryType', sub)}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-            );
-          }
-          return (
+        {typeOptions
+          .filter(opt => opt.toLowerCase() !== 'accessories')
+          .map(opt => (
             <FilterItem
               key={opt}
               label={opt}
               checked={activeFilters.Type.includes(opt)}
               onToggle={() => toggle('Type', opt)}
             />
-          );
-        })}
+          ))}
+      </FilterSection>
+
+      {/* ACCESSORIES — standalone section */}
+      <FilterSection title="Accessories" open={open.AccessoryType} onToggle={() => setOpen(o => ({ ...o, AccessoryType: !o.AccessoryType }))}>
+        {ACCESSORY_OPTIONS.map(opt => (
+          <FilterItem
+            key={opt}
+            label={opt.toUpperCase()}
+            checked={activeFilters.AccessoryType?.includes(opt)}
+            onToggle={() => toggle('AccessoryType', opt)}
+          />
+        ))}
       </FilterSection>
 
       {/* OCCASION */}

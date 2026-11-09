@@ -78,23 +78,8 @@ export default function MobileProductView({
     setActiveMediaIndex(index);
   };
 
-  const handleBookOnWhatsapp = async () => {
+  const handleBookOnWhatsapp = () => {
     if (!product) return;
-    try {
-      if (product._id) {
-        await axios.post(`${API_BASE_URL}/api/bookings`, {
-          jewelleryIds: [product._id],
-          totalAmount: product.rentalPrice || product.price || 0,
-          bookingDate: new Date(),
-          customerDetails: {
-            name: user?.name || 'Guest Visitor',
-            phone: user?.phone || user?.mobile || 'WhatsApp Inquiry'
-          }
-        });
-      }
-    } catch (e) {
-      console.error('Error recording product booking:', e);
-    }
 
     const price = product.rentalPrice || product.price || 0;
     const priceText = product.showPrice === false || price > 1500 ? 'Price on Request' : `₹${price}`;

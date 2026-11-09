@@ -9,16 +9,15 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
   const { categories } = React.useContext(CategoryContext);
 
   const FILTER_SECTIONS = React.useMemo(() => {
-    const types = categories.filter(c => c.showInSection === 'type').map(c => c.name);
+    const types = categories
+      .filter(c => c.showInSection === 'type' && c.name?.toLowerCase() !== 'accessories')
+      .map(c => c.name);
     return {
       ...INITIAL_FILTER_SECTIONS,
       Category: categories.filter(c => c.showInSection !== 'type').map(c => c.name),
       Type: sortJewelleryTypes(types)
     };
   }, [categories]);
-
-  // Currently active category in the left pane
-  const [activeCategory, setActiveCategory] = useState('Colour');
 
   // Local state for active filters in the modal before applying
   const [localFilters, setLocalFilters] = useState({
@@ -31,7 +30,6 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
     StoneColour: [],
     AccessoryType: []
   });
-  const [openAccessoryTypes, setOpenAccessoryTypes] = useState(false);
 
   // Sync local state when modal opens
   useEffect(() => {
@@ -108,6 +106,7 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
   const [expandedSections, setExpandedSections] = useState({
     Category: true,
     Type: true,
+    AccessoryType: true,
     Occasion: true,
     Price: false,
     Colour: false,
@@ -196,48 +195,12 @@ const FilterBottomSheet = ({ isOpen, onClose, initialFilters, onApply }) => {
                             {options.map((option) => {
                               const isChecked = localFilters[section]?.includes(option);
                               const displayOption = option === 'victorian-moissinate' ? 'Victorian & Mossianate' : option;
-                              if (section === 'Type' && option.toLowerCase() === 'accessories') {
-                                return (
-                                  <div key={option} className="flex flex-col w-full">
-                                    <div className="flex items-center justify-between w-full">
-                                      <FilterCheckbox 
-                                        label={displayOption} 
-                                        isChecked={isChecked} 
-                                        onChange={() => handleCheckboxChange(section, option)} 
-                                      />
-                                      <button 
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setOpenAccessoryTypes(prev => !prev);
-                                        }}
-                                        className="p-1 focus:outline-none"
-                                      >
-                                        <svg className={`transform transition-transform ${openAccessoryTypes ? 'rotate-180' : ''}`} width="10" height="6" viewBox="0 0 10 6" fill="none">
-                                          <path d="M1 1L5 5L9 1" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                        </svg>
-                                      </button>
-                                    </div>
-                                    {openAccessoryTypes && (
-                                      <div style={{ marginLeft: '28px' }} className="flex flex-col gap-4 mt-4 mb-2">
-                                        {['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories', 'Bracelet', 'Others'].map(sub => (
-                                          <FilterCheckbox 
-                                            key={sub}
-                                            label={sub} 
-                                            isChecked={localFilters.AccessoryType?.includes(sub)} 
-                                            onChange={() => handleCheckboxChange('AccessoryType', sub)} 
-                                          />
-                                        ))}
-                                      </div>
-                                    )}
-                                  </div>
-                                );
-                              }
                               return (
-                                <FilterCheckbox 
+                                <FilterCheckbox
                                   key={option}
-                                  label={displayOption} 
-                                  isChecked={isChecked} 
-                                  onChange={() => handleCheckboxChange(section, option)} 
+                                  label={displayOption}
+                                  isChecked={isChecked}
+                                  onChange={() => handleCheckboxChange(section, option)}
                                 />
                               );
                             })}

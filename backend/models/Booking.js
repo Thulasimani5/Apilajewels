@@ -115,6 +115,17 @@ const BookingSchema = new mongoose.Schema({
     type: Number,
     required: true,
     default: 0
+  },
+  isManual: {
+    type: Boolean,
+    default: true,
+    index: true
+  },
+  source: {
+    type: String,
+    enum: ['manual', 'whatsapp'],
+    default: 'manual',
+    index: true
   }
 }, { timestamps: true });
 

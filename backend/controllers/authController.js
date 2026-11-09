@@ -38,8 +38,8 @@ exports.register = async (req, res, next) => {
 // @access  Public
 exports.login = async (req, res, next) => {
   try {
-    const { email, password, mobile, phone } = req.body;
-    const identifier = email || mobile || phone;
+    const { email, password, mobile, phone, emailOrPhone } = req.body;
+    const identifier = emailOrPhone || email || mobile || phone;
 
     const { token, user } = await authService.loginUser(
       { emailOrPhone: identifier, password },

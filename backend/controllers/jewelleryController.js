@@ -177,3 +177,19 @@ exports.deleteJewellery = async (req, res, next) => {
     res.status(err.statusCode || 400).json({ success: false, error: err.message || formatError(err) });
   }
 };
+
+// @desc    Reshuffle catalog static order
+// @route   POST /api/jewellery/reshuffle
+// @access  Private/Admin
+exports.reshuffleCatalog = async (req, res, next) => {
+  try {
+    const result = await jewelleryService.reshuffleCatalog(req.user);
+    res.status(200).json({
+      success: true,
+      message: `Successfully reshuffled ${result.count} jewels and saved new static order.`,
+      count: result.count
+    });
+  } catch (err) {
+    res.status(err.statusCode || 500).json({ success: false, error: err.message || formatError(err) });
+  }
+};

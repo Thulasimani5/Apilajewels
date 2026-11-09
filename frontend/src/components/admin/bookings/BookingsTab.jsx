@@ -9,12 +9,21 @@ const BookingsTab = ({
   onOpenInvoice,
   onDeleteBooking,
 }) => {
+  const manualBookings = (bookings || []).filter(b => {
+    const phone = (b.customerDetails?.phone || '').toLowerCase();
+    const name = (b.customerDetails?.name || '').toLowerCase();
+    const notes = (b.notes || '').toLowerCase();
+    if (phone.includes('whatsapp') || name.includes('whatsapp') || notes.includes('whatsapp inquiry')) return false;
+    if (b.source === 'whatsapp' || b.isManual === false) return false;
+    return true;
+  });
+
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
       <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
         <div>
-          <h2 className="font-bold text-gray-900 text-lg">Booking Entries</h2>
-          <p className="text-xs text-gray-500 font-medium">Manage and generate invoice receipts for customer rentals</p>
+          <h2 className="font-bold text-gray-900 text-lg">Customer Bookings</h2>
+          <p className="text-xs text-gray-500 font-medium">Manage customer rental bookings and generate invoices</p>
         </div>
         <button
           onClick={onNewBooking}
@@ -29,7 +38,7 @@ const BookingsTab = ({
           <div className="w-8 h-8 border-4 border-[#B07A85] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <span className="text-sm font-medium text-gray-400">Loading booking entries...</span>
         </div>
-      ) : bookings.length === 0 ? (
+      ) : manualBookings.length === 0 ? (
         <div className="p-16 text-center text-gray-500">
           No bookings created yet. Click "New Booking" to create one.
         </div>
@@ -47,7 +56,7 @@ const BookingsTab = ({
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
-              {bookings.map((b, idx) => {
+              {manualBookings.map((b, idx) => {
                 const customId = b.bookingCustomId || `BK-${String(idx + 1).padStart(3, '0')}`;
                 return (
                   <tr key={b._id} className="hover:bg-gray-50/50 transition-colors">

@@ -58,8 +58,8 @@ export default function DesktopShop() {
   const { categories } = useContext(CategoryContext);
 
   const [open, setOpen] = useState({
-    Category: true, Type: true, Occasion: true,
-    Price: false, Colour: false, StoneColour: false, Stone: false, AccessoryTypes: false
+    Category: true, Type: true, AccessoryType: true, Occasion: true,
+    Price: false, Colour: false, StoneColour: false, Stone: false
   });
 
   const [sortMenuOpen, setSortMenuOpen] = useState(false);

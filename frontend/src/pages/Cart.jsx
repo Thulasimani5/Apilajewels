@@ -71,6 +71,12 @@ const Cart = ({ isSale: isSaleProp }) => {
 
   const allPremiumSelected = !isSale && premiumSelected.length === selectedCartItems.length && selectedCartItems.length > 0;
 
+  const handleBookOnWhatsapp = () => {
+    if (selectedCartItems.length === 0) {
+      alert("Please select at least one item to book.");
+      return;
+    }
+
   const handleBookOnWhatsapp = async () => {
     if (selectedCartItems.length === 0) {
       alert("Please select at least one item to book.");
@@ -105,7 +111,6 @@ const Cart = ({ isSale: isSaleProp }) => {
       window.open(whatsappUrl, '_blank');
       return;
     }
-
     let message = `Hi Apila Jewels, I would like to book the following items:\n\n`;
     selectedCartItems.forEach((item, index) => {
       const price = item.rentalPrice || item.price || 0;
