@@ -188,7 +188,7 @@ const Cart = ({ isSale: isSaleProp }) => {
                   </div>
 
                   {/* Right Details */}
-                  <div className="flex-1 min-w-0 pr-4 flex flex-col justify-between" style={{ minHeight: '135px' }}>
+                  <div className="flex-1 min-w-0 pr-4 flex flex-col justify-between" style={{ minHeight: '150px' }}>
                     <div>
                       <p style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '11px', fontWeight: 600, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
                         {displayCategory}
@@ -213,7 +213,7 @@ const Cart = ({ isSale: isSaleProp }) => {
                     </div>
 
                     {/* Bottom row: Quantity and Price block */}
-                    <div className="flex justify-between items-end mt-2 pt-1">
+                    <div className="flex justify-between items-end mt-4 pt-1">
                       {/* Quantity Selector */}
                       <div className="cc-qty" style={{ width: '64px', height: '34px', padding: '6px 8px', background: '#FFF6EB', borderBottom: '1px solid rgba(0,0,0,0.15)' }}>
                         {isSale ? (

@@ -2718,7 +2718,7 @@
 /* ── Cart item card ── */
 .cc-card {
   background: #fff;
-  height: 249px;
+  height:  270px;
   width: 100%;
   max-width: 100%;
   display: flex;
@@ -2728,7 +2728,7 @@
 
 .cc-img-wrap {
   width: 229px;
-  height: 249px;
+  height:  270px;
   flex-shrink: 0;
   /* margin-left: 9px; */
   padding: 10px 10px;
@@ -2817,7 +2817,7 @@
 
 .cc-bottom {
   position: absolute;
-  top:  145px;
+  top:   180px;
   left: 24px;
   right: 30px;
   display: flex;
