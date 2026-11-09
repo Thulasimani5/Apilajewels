@@ -245,7 +245,7 @@ const Cart = ({ isSale: isSaleProp }) => {
                       {/* Price Block */}
                       {isSale ? (
                         <div className="flex flex-col items-end gap-1">
-                          <span style={{ backgroundColor: '#D32F2F', color: '#fff', fontSize: '9px', fontWeight: 700, padding: '2px 8px', borderRadius: '2px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                          <span style={{ border: 'none', backgroundColor: '#D32F2F', color: '#fff', fontSize: '11px', fontWeight: 400, padding: '5px 16px', borderRadius: '0', textTransform: 'uppercase', letterSpacing: '0.5px', fontFamily: "'Gotham Book', sans-serif" }}>
                             SALE
                           </span>
                           <div className="flex items-baseline gap-1.5 flex-wrap justify-end">

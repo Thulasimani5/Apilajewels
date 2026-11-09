@@ -4389,19 +4389,20 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 5px;
+  gap: 8px;
 }
 
 .cc-sale-tag {
-  background-color: #d32f2f;
+  border: none;
+  background-color: #D32F2F;
   color: #ffffff;
-  font-family: var(--f-gotham-m, 'Gotham', sans-serif);
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.6px;
+  font-family: var(--f-gotham-b, 'Gotham Book', sans-serif);
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
-  padding: 2.5px 12px;
-  border-radius: 2px;
+  padding: 6px 18px;
+  border-radius: 0;
   line-height: normal;
   display: inline-block;
 }
