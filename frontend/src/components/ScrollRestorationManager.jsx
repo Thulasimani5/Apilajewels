@@ -43,3 +43,4 @@ export default function ScrollRestorationManager() {
 
   return null;
 }
+

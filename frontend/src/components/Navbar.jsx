@@ -182,8 +182,19 @@ const Navbar = () => {
               </Link>
             </div>
 
-            {/* Right Section: Custom Icon Images */}
-            <div className="flex items-center gap-5 md:gap-6">
+            {/* Right Section: Mode Button & Custom Icon Images */}
+            <div className="flex items-center gap-4 sm:gap-5 md:gap-6">
+              <Link
+                to={isSaleDirectory ? "/shop" : "/sale"}
+                className={`inline-flex items-center justify-center px-3 py-1 text-[11px] font-medium tracking-[1.5px] uppercase transition-all duration-200 border ${
+                  isHomePage && !scrolled
+                    ? "text-white border-white/70 hover:border-white hover:bg-white/10"
+                    : "text-black border-black/80 hover:bg-black hover:text-white"
+                }`}
+                style={{ fontFamily: "Gotham, sans-serif" }}
+              >
+                {isSaleDirectory ? "RENT" : "SALE"}
+              </Link>
               <Link
                 to={isSaleDirectory ? "/sale/wishlist" : "/wishlist"}
                 aria-label="Wishlist"

@@ -131,6 +131,7 @@ export default function DesktopHome() {
             <img className="nav-logo-img" src={apilaLogo} alt="Apila Jewels" />
           </div>
           <div className="nav-right">
+            <button className="nav-mode-btn" onClick={() => navigate('/sale')}>SALE</button>
             <button className="nav-icon-btn" aria-label="Wishlist" onClick={() => navigate('/wishlist')}>{Icon.heart}</button>
             <button className="nav-icon-btn" aria-label="Cart" onClick={() => navigate('/cart')}>{Icon.cart}</button>
             <button className="nav-icon-btn" aria-label="Account" onClick={() => navigate('/profile')}>{Icon.account}</button>

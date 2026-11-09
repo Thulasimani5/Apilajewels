@@ -101,6 +101,7 @@ export default function DesktopWishlist({ isSale: isSaleProp }) {
             <img className="nav-logo-img" src={apilaLogo} alt="Apila Jewels"/>
           </div>
           <div className="nav-right">
+            <button className="nav-mode-btn" onClick={() => navigate(isSale ? '/wishlist' : '/sale/wishlist')}>{isSale ? 'RENT' : 'SALE'}</button>
             <button className="nav-icon-btn" aria-label="Cart" onClick={() => navigate(isSale ? '/sale/cart' : '/cart')}>
               <svg width="15" height="17" viewBox="0 0 15 17" fill="none">
                 <path d="M13.282 13.5346C13.4101 14.7175 12.4834 15.75 11.2936 15.75H2.75034C1.56051 15.75 0.633827 14.7175 0.761975 13.5346L1.62864 5.53459C1.73863 4.51934 2.59581 3.75 3.61701 3.75H10.4269C11.4481 3.75 12.3053 4.51934 12.4153 5.53459L13.282 13.5346Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>

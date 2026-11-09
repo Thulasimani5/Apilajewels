@@ -202,6 +202,7 @@ export default function DesktopSearchOverlay({ onClose }) {
 
           {/* Right nav icons */}
           <div className="srch-nav-right">
+            <button className="nav-mode-btn" onClick={() => { onClose(); navigate(isSale ? '/shop' : '/sale'); }}>{isSale ? 'RENT' : 'SALE'}</button>
             <button className="nav-icon-btn" aria-label="Wishlist"
               onClick={() => { onClose(); navigate(isSale ? '/sale/wishlist' : '/wishlist'); }}>
               <svg width="18" height="16" viewBox="0 0 18 16" fill="none">
