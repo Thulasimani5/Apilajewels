@@ -183,7 +183,7 @@
   border: 1px solid rgba(255, 255, 255, 0.7);
   background: transparent;
   color: #ffffff;
-  font-family: var(--f-gotham-m, 'Gotham', sans-serif);
+  font-family: var(--f-gotham-b, 'Gotham Book', sans-serif);
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 1.5px;
@@ -4449,8 +4449,8 @@
   background-color: #ECECEC;
   color: #111111;
   font-family: var(--f-gotham-m, 'Gotham', sans-serif);
-  font-size: 13.5px;
-  font-weight: 500;
+  font-size:  13px;
+  font-weight:  400;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   padding: 6px 18px;

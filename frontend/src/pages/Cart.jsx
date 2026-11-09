@@ -266,7 +266,7 @@ const Cart = ({ isSale: isSaleProp }) => {
                         </div>
                       ) : (
                         <div className="flex flex-col items-end gap-1">
-                          <span style={{ border: 'none', backgroundColor: '#ECECEC', color: '#111', fontSize: '11.5px', fontWeight: 500, padding: '5px 16px', borderRadius: '0', textTransform: 'uppercase', letterSpacing: '0.5px', fontFamily: "'Gotham', sans-serif" }}>
+                          <span style={{ border: 'none', backgroundColor: '#ECECEC', color: '#111', fontSize: '11px', fontWeight: 400, padding: '5px 16px', borderRadius: '0', textTransform: 'uppercase', letterSpacing: '0.5px', fontFamily: "'Gotham Book', sans-serif" }}>
                             RENT
                           </span>
                           <div style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '13px', fontWeight: 600 }}>
