@@ -277,8 +277,8 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
     return 'BK-' + String(nextNum).padStart(3, '0');
   };
 
-  const handleOpenAddBooking = async () => {
-    if (location.pathname !== '/admin/bookings/new') {
+  const handleOpenAddBooking = async (updateUrl = true) => {
+    if (updateUrl && location.pathname !== '/admin/bookings/new') {
       navigate('/admin/bookings/new');
     }
     setEditingBookingId(null);
@@ -322,8 +322,8 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
     }
   };
 
-  const handleOpenEditBooking = (b) => {
-    if (b && b._id) {
+  const handleOpenEditBooking = (b, updateUrl = true) => {
+    if (updateUrl && b && b._id) {
       const targetUrl = `/admin/bookings/${b.bookingCustomId || b._id}`;
       if (location.pathname !== targetUrl) {
         navigate(targetUrl);
@@ -375,23 +375,30 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
 
   // Sync Add / View Booking Modal based on URL endpoint (/admin/bookings/new or /admin/bookings/:bookingId)
   useEffect(() => {
-    if (isNewBooking || location.pathname === '/admin/bookings/new') {
-      if (!showAddBookingModal) {
-        handleOpenAddBooking();
+    const isNewRoute = isNewBooking || location.pathname === '/admin/bookings/new';
+    const isEditRoute = Boolean(bookingId && location.pathname.startsWith('/admin/bookings/'));
+
+    if (isNewRoute) {
+      if (!showAddBookingModal || editingBookingId !== null) {
+        handleOpenAddBooking(false);
       }
-    } else if (bookingId && Array.isArray(bookings) && bookings.length > 0) {
+    } else if (isEditRoute && Array.isArray(bookings) && bookings.length > 0) {
       const target = bookings.find(b => 
         b._id === bookingId || 
         (b.bookingCustomId && b.bookingCustomId.toLowerCase() === bookingId.toLowerCase())
       );
-      if (target && editingBookingId !== target._id) {
-        handleOpenEditBooking(target);
+      if (target && (!showAddBookingModal || editingBookingId !== target._id)) {
+        handleOpenEditBooking(target, false);
       }
-    } else if (location.pathname === '/admin/bookings' && showAddBookingModal) {
-      setShowAddBookingModal(false);
-      setEditingBookingId(null);
+    } else {
+      // Any other URL (e.g. /admin/bookings, /admin/dashboard, /admin/manage-jewellery)
+      // If modal was open, close it immediately!
+      if (showAddBookingModal) {
+        setShowAddBookingModal(false);
+        setEditingBookingId(null);
+      }
     }
-  }, [location.pathname, isNewBooking, bookingId, bookings]);
+  }, [location.pathname, isNewBooking, bookingId, bookings, showAddBookingModal, editingBookingId]);
 
   const handleDeleteBooking = async (bookingId) => {
     if (!window.confirm('Are you sure you want to delete this booking entry?')) return;
