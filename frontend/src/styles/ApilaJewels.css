@@ -4463,3 +4463,64 @@
 .cc-rent-block .cc-price {
   margin-left: 0;
 }
+
+/* ── Stepper Quantity Modifier for Sale Cart ── */
+.cc-qty-stepper {
+  background: #FFF6EB;
+  border-bottom: 1.5px solid rgba(0, 0, 0, 0.2);
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+  gap: 2px;
+  user-select: none;
+  border-radius: 1px;
+}
+
+.cc-stepper-btn {
+  background: transparent;
+  border: none;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--f-gotham-m, 'Gotham', sans-serif);
+  font-size: 15px;
+  color: #111;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-radius: 2px;
+  padding: 0;
+  line-height: 1;
+}
+
+.cc-stepper-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.07);
+  color: #000;
+}
+
+.cc-stepper-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.cc-stepper-val {
+  font-family: var(--f-gotham-b, 'Gotham Book', sans-serif);
+  font-size: 15px;
+  color: #000;
+  min-width: 22px;
+  text-align: center;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.cc-stock-warning {
+  font-family: var(--f-gotham-b, 'Gotham Book', sans-serif);
+  font-size: 10px;
+  color: #d32f2f;
+  margin-top: 3px;
+  letter-spacing: 0.3px;
+  line-height: 1;
+}

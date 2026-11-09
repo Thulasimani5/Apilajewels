@@ -125,10 +125,20 @@ export const CartProvider = ({ children }) => {
     setCartItems([]);
   };
 
-  const updateQuantity = (id, quantity) => {
-    const q = Math.max(1, parseInt(quantity, 10) || 1);
+  const updateQuantity = (id, quantity, maxStock) => {
+    let q = Math.max(1, parseInt(quantity, 10) || 1);
+    if (typeof maxStock === 'number' && maxStock > 0) {
+      q = Math.min(q, maxStock);
+    }
     setCartItems(prev =>
-      prev.map(item => (item._id === id ? { ...item, quantity: q } : item))
+      prev.map(item => {
+        if (item._id !== id) return item;
+        const stockLimit = maxStock || item.stockCount || item.stock;
+        if (typeof stockLimit === 'number' && stockLimit > 0) {
+          q = Math.min(q, stockLimit);
+        }
+        return { ...item, quantity: q };
+      })
     );
   };
 

@@ -55,7 +55,20 @@ const Cart = ({ isSale: isSaleProp }) => {
   const isPremium = (item) => !isSale && (item.showPrice === false || getItemPrice(item) > 1200);
   const premiumSelected = selectedCartItems.filter(isPremium);
   const pricedSelected = selectedCartItems.filter(item => !isPremium(item));
-  const pricedAmount = pricedSelected.reduce((total, item) => total + (getItemPrice(item) * getItemQty(item)), 0);
+
+  // Actual original total before discount
+  const actualOriginalAmount = pricedSelected.reduce((total, item) => {
+    const orig = Number(item.salesPrice || item.salesAmount || item.price || 0);
+    return total + (orig * getItemQty(item));
+  }, 0);
+
+  // Final amount to pay after discount
+  const finalPayableAmount = pricedSelected.reduce((total, item) => total + (getItemPrice(item) * getItemQty(item)), 0);
+
+  const displaySubtotal = isSale ? actualOriginalAmount : finalPayableAmount;
+  const totalDiscount = isSale ? Math.max(0, actualOriginalAmount - finalPayableAmount) : 0;
+  const finalTotalAmount = finalPayableAmount;
+
   const allPremiumSelected = !isSale && premiumSelected.length === selectedCartItems.length && selectedCartItems.length > 0;
 
   const handleBookOnWhatsapp = async () => {
@@ -68,7 +81,7 @@ const Cart = ({ isSale: isSaleProp }) => {
       const jewelleryIds = selectedCartItems.map(item => item._id).filter(Boolean);
       await axios.post(`${API_BASE_URL}/api/bookings`, {
         jewelleryIds,
-        totalAmount: pricedAmount || 0,
+        totalAmount: finalTotalAmount || 0,
         bookingDate: new Date(),
         customerDetails: {
           name: user?.name || 'Guest Visitor',
@@ -87,7 +100,7 @@ const Cart = ({ isSale: isSaleProp }) => {
         const itemTotal = price * qty;
         message += `${index + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – Qty: ${qty} × Rs. ${Math.round(price).toLocaleString('en-IN')} = Rs. ${Math.round(itemTotal).toLocaleString('en-IN')}\n`;
       });
-      message += `\n*Total Amount: Rs. ${Math.round(pricedAmount).toLocaleString('en-IN')}*\n\nPlease confirm availability and payment details.`;
+      message += `\n*Total Amount: Rs. ${Math.round(finalTotalAmount).toLocaleString('en-IN')}*\n\nPlease confirm availability and payment details.`;
       const whatsappUrl = `https://wa.me/+917397721122?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, '_blank');
       return;
@@ -153,7 +166,8 @@ const Cart = ({ isSale: isSaleProp }) => {
                 ? categoryLabel.toUpperCase()
                 : `${categoryLabel.toUpperCase()} JEWELS`;
 
-              const qty = Number(item.quantity || 1);
+              const stockLimit = typeof item.stockCount === 'number' && item.stockCount > 0 ? item.stockCount : 10;
+            const qty = Math.min(Number(item.quantity || 1), stockLimit);
 
               return (
                 <div key={item._id} className="bg-white mb-3 p-3 flex gap-3 relative shadow-[0_2px_8px_rgba(0,0,0,0.04)] items-start rounded-sm">
@@ -215,32 +229,59 @@ const Cart = ({ isSale: isSaleProp }) => {
                     {/* Bottom row: Quantity and Price block */}
                     <div className="flex justify-between items-end mt-4 pt-1">
                       {/* Quantity Selector */}
-                      <div className="cc-qty" style={{ width: '64px', height: '34px', padding: '6px 8px', background: '#FFF6EB', borderBottom: '1px solid rgba(0,0,0,0.15)' }}>
-                        {isSale ? (
-                          <select
-                            className="cc-qty-select"
-                            style={{ fontSize: '14px' }}
-                            value={qty}
-                            onChange={(e) => updateQuantity(item._id, e.target.value)}
-                            aria-label="Quantity"
+                      {isSale ? (
+                        <div className="flex flex-col">
+                          <div
+                            className="flex items-center justify-between"
+                            style={{
+                              width: '80px',
+                              height: '34px',
+                              padding: '2px 4px',
+                              background: '#FFF6EB',
+                              borderBottom: '1.5px solid rgba(0,0,0,0.2)',
+                              borderRadius: '1px'
+                            }}
                           >
-                            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(q => (
-                              <option key={q} value={q}>{q}</option>
-                            ))}
-                          </select>
-                        ) : (
+                            <button
+                              type="button"
+                              onClick={() => updateQuantity(item._id, Math.max(1, qty - 1), stockLimit)}
+                              disabled={qty <= 1}
+                              className="w-6 h-6 flex items-center justify-center text-sm font-medium text-black disabled:opacity-25"
+                            >
+                              −
+                            </button>
+                            <span style={{ fontFamily: "'Gotham Book', sans-serif", fontSize: '14px', fontWeight: 500, color: '#000' }}>
+                              {qty}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => updateQuantity(item._id, qty + 1, stockLimit)}
+                              disabled={qty >= stockLimit}
+                              className="w-6 h-6 flex items-center justify-center text-sm font-medium text-black disabled:opacity-25"
+                            >
+                              +
+                            </button>
+                          </div>
+                          {qty >= stockLimit && stockLimit > 0 && (
+                            <span style={{ fontSize: '9px', color: '#d32f2f', marginTop: '2px', fontFamily: "'Gotham Book', sans-serif" }}>
+                              Max ({stockLimit})
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="cc-qty" style={{ width: '64px', height: '34px', padding: '6px 8px', background: '#FFF6EB', borderBottom: '1px solid rgba(0,0,0,0.15)' }}>
                           <span className="cc-qty-num" style={{ fontSize: '14px' }}>{qty}</span>
-                        )}
-                        <svg
-                          width="8"
-                          height="12"
-                          viewBox="0 0 7 12"
-                          fill="none"
-                          style={{ transform: 'rotate(-90deg)', opacity: 0.5, flexShrink: 0, pointerEvents: 'none' }}
-                        >
-                          <path d="M6 1L1 6l5 5" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                      </div>
+                          <svg
+                            width="8"
+                            height="12"
+                            viewBox="0 0 7 12"
+                            fill="none"
+                            style={{ transform: 'rotate(-90deg)', opacity: 0.5, flexShrink: 0, pointerEvents: 'none' }}
+                          >
+                            <path d="M6 1L1 6l5 5" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </div>
+                      )}
 
                       {/* Price Block */}
                       {isSale ? (
@@ -307,7 +348,7 @@ const Cart = ({ isSale: isSaleProp }) => {
               <div className="flex justify-between items-center">
                 <span style={{ color: '#000', fontFamily: "'Gotham Book', sans-serif", fontSize: '11px', fontStyle: 'normal', fontWeight: 400, lineHeight: 'normal', letterSpacing: '0.48px', textTransform: 'uppercase' }}>Sub Total ( {pricedSelected.length} Items )</span>
                 <span style={{ color: '#000', textAlign: 'right', fontFamily: "'Gotham', sans-serif", fontSize: '12px', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal' }}>
-                  {isSale ? `Rs. ${Math.round(pricedAmount).toLocaleString('en-IN')}` : `₹${pricedAmount.toFixed(2)}`}
+                  {isSale ? `Rs. ${Math.round(displaySubtotal).toLocaleString('en-IN')}` : `₹${displaySubtotal.toFixed(2)}`}
                 </span>
               </div>
 
@@ -325,13 +366,13 @@ const Cart = ({ isSale: isSaleProp }) => {
 
               <div className="flex justify-between items-center pb-6 border-b border-[#EAEAEA]">
                 <span style={{ color: '#000', fontFamily: "'Gotham Book', sans-serif", fontSize: '11px', fontStyle: 'normal', fontWeight: 400, lineHeight: 'normal', letterSpacing: '0.48px', textTransform: 'uppercase' }}>Discount</span>
-                <span style={{ color: '#000', textAlign: 'right', fontFamily: "'Gotham', sans-serif", fontSize: '12px', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal' }}>{isSale ? 'Rs. 0' : '₹0'}</span>
+                <span style={{ color: totalDiscount > 0 ? '#10B981' : '#000', textAlign: 'right', fontFamily: "'Gotham', sans-serif", fontSize: '12px', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal' }}>{isSale ? (totalDiscount > 0 ? `- Rs. ${Math.round(totalDiscount).toLocaleString('en-IN')}` : 'Rs. 0') : '₹0'}</span>
               </div>
 
               <div className="flex justify-between items-center mb-10 ">
                 <span style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '14px', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal', letterSpacing: '0.64px', textTransform: 'uppercase' }}>Total</span>
                 <span style={{ color: '#000', textAlign: 'right', fontFamily: "'Gotham', sans-serif", fontSize: '14px', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal' }}>
-                  {allPremiumSelected ? 'Price on Request' : (isSale ? `Rs. ${Math.round(pricedAmount).toLocaleString('en-IN')}` : `₹${pricedAmount.toFixed(2)}`)}
+                  {allPremiumSelected ? 'Price on Request' : (isSale ? `Rs. ${Math.round(finalTotalAmount).toLocaleString('en-IN')}` : `₹${finalTotalAmount.toFixed(2)}`)}
                 </span>
               </div>
             </div>
@@ -359,7 +400,7 @@ const Cart = ({ isSale: isSaleProp }) => {
         <div className="fixed bottom-0 left-0 w-full bg-white px-2 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] flex justify-between items-center z-40 ">
           <div className="flex flex-col">
             <span style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '15px', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal' }}>
-              {isSale ? `Rs. ${Math.round(pricedAmount).toLocaleString('en-IN')}` : `₹${pricedAmount.toFixed(2)}`}
+              {isSale ? `Rs. ${Math.round(finalTotalAmount).toLocaleString('en-IN')}` : `₹${finalTotalAmount.toFixed(2)}`}
             </span>
             <span style={{ color: '#000', fontFamily: "'Gotham Book', sans-serif", fontSize: '12px', fontStyle: 'normal', fontWeight: 200, lineHeight: '185.7%', letterSpacing: '-0.13px' }}>View Price Details</span>
           </div>

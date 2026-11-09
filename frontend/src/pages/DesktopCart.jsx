@@ -46,7 +46,8 @@ function CartItemCard({ item, onRemove, onUpdateQuantity }) {
     : `${categoryLabel.toUpperCase()} JEWELS`;
 
   const ref = item.code || item.jewelId || item.sku || 'MP006';
-  const qty = Number(item.quantity || 1);
+  const stockLimit = typeof item.stockCount === 'number' && item.stockCount > 0 ? item.stockCount : 10;
+  const qty = Math.min(Number(item.quantity || 1), stockLimit);
 
   return (
     <div className="cc-card">
@@ -79,31 +80,47 @@ function CartItemCard({ item, onRemove, onUpdateQuantity }) {
           </span>
         </div>
         <div className="cc-bottom">
-          <div className="cc-qty">
-            {isSale ? (
-              <select
-                className="cc-qty-select"
-                value={qty}
-                onChange={(e) => onUpdateQuantity && onUpdateQuantity(item._id, e.target.value)}
-                aria-label="Quantity"
-              >
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(q => (
-                  <option key={q} value={q}>{q}</option>
-                ))}
-              </select>
-            ) : (
+          {isSale ? (
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <div className="cc-qty-stepper">
+                <button
+                  type="button"
+                  className="cc-stepper-btn"
+                  onClick={() => onUpdateQuantity && onUpdateQuantity(item._id, Math.max(1, qty - 1), stockLimit)}
+                  disabled={qty <= 1}
+                  aria-label="Decrease quantity"
+                >
+                  −
+                </button>
+                <span className="cc-stepper-val">{qty}</span>
+                <button
+                  type="button"
+                  className="cc-stepper-btn"
+                  onClick={() => onUpdateQuantity && onUpdateQuantity(item._id, qty + 1, stockLimit)}
+                  disabled={qty >= stockLimit}
+                  aria-label="Increase quantity"
+                >
+                  +
+                </button>
+              </div>
+              {qty >= stockLimit && stockLimit > 0 && (
+                <span className="cc-stock-warning">Max available ({stockLimit})</span>
+              )}
+            </div>
+          ) : (
+            <div className="cc-qty">
               <span className="cc-qty-num">{qty}</span>
-            )}
-            <svg
-              width="8"
-              height="12"
-              viewBox="0 0 7 12"
-              fill="none"
-              style={{ transform: 'rotate(-90deg)', opacity: 0.5, flexShrink: 0, pointerEvents: 'none' }}
-            >
-              <path d="M6 1L1 6l5 5" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
+              <svg
+                width="8"
+                height="12"
+                viewBox="0 0 7 12"
+                fill="none"
+                style={{ transform: 'rotate(-90deg)', opacity: 0.5, flexShrink: 0, pointerEvents: 'none' }}
+              >
+                <path d="M6 1L1 6l5 5" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          )}
 
           {isSale ? (
             <div className="cc-sale-block">
@@ -162,7 +179,21 @@ export default function DesktopCart({ isSale: isSaleProp }) {
   const isPremium = (item) => !isSale && (item.showPrice === false || getItemPrice(item) > 1200);
   const premiumItems = currentCartItems.filter(isPremium);
   const pricedItems = currentCartItems.filter(item => !isPremium(item));
-  const pricedSubtotal = pricedItems.reduce((sum, item) => sum + (getItemPrice(item) * getItemQty(item)), 0);
+
+  // Actual original total (before discount)
+  const actualOriginalSubtotal = pricedItems.reduce((sum, item) => {
+    const orig = Number(item.salesPrice || item.salesAmount || item.price || 0);
+    return sum + (orig * getItemQty(item));
+  }, 0);
+
+  // Discounted subtotal (final amount to pay)
+  const finalDiscountedSubtotal = pricedItems.reduce((sum, item) => sum + (getItemPrice(item) * getItemQty(item)), 0);
+
+  // Subtotal for calculation: on sales cart, subtotal is the actual price before discount; on rental, it's the standard price
+  const displaySubtotal = isSale ? actualOriginalSubtotal : finalDiscountedSubtotal;
+  const totalDiscount = isSale ? Math.max(0, actualOriginalSubtotal - finalDiscountedSubtotal) : 0;
+  const finalTotalAmount = finalDiscountedSubtotal;
+
   const allPremium = !isSale && premiumItems.length === currentCartItems.length && currentCartItems.length > 0;
   const hasPremium = !isSale && premiumItems.length > 0;
   const hasPriced = isSale || pricedItems.length > 0;
@@ -174,7 +205,7 @@ export default function DesktopCart({ isSale: isSaleProp }) {
       const jewelleryIds = currentCartItems.map(item => item._id).filter(Boolean);
       await axios.post(`${API_BASE_URL}/api/bookings`, {
         jewelleryIds,
-        totalAmount: pricedSubtotal || 0,
+        totalAmount: finalTotalAmount || 0,
         bookingDate: new Date(),
         customerDetails: {
           name: user?.name || 'Guest Visitor',
@@ -193,7 +224,7 @@ export default function DesktopCart({ isSale: isSaleProp }) {
         const itemTotal = price * qty;
         msg += `${i + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – Qty: ${qty} × Rs. ${Math.round(price).toLocaleString('en-IN')} = Rs. ${Math.round(itemTotal).toLocaleString('en-IN')}\n`;
       });
-      msg += `\n*Total Amount: Rs. ${Math.round(pricedSubtotal).toLocaleString('en-IN')}*\n\nPlease confirm availability and payment details.`;
+      msg += `\n*Total Amount: Rs. ${Math.round(finalTotalAmount).toLocaleString('en-IN')}*\n\nPlease confirm availability and payment details.`;
       window.open(`https://wa.me/+917397721122?text=${encodeURIComponent(msg)}`, '_blank');
       return;
     }
@@ -302,7 +333,7 @@ export default function DesktopCart({ isSale: isSaleProp }) {
             {hasPriced && (
               <div className="cart-sumrow">
                 <span className="cart-sumlabel">Sub Total ({pricedItems.length} {pricedItems.length === 1 ? 'Item' : 'Items'})</span>
-                <span className="cart-sumval">{isSale ? `Rs. ${Math.round(pricedSubtotal).toLocaleString('en-IN')}` : `₹${pricedSubtotal.toFixed(2)}`}</span>
+                <span className="cart-sumval">{isSale ? `Rs. ${Math.round(displaySubtotal).toLocaleString('en-IN')}` : `₹${displaySubtotal.toFixed(2)}`}</span>
               </div>
             )}
             <div className="cart-sumrow">
@@ -311,13 +342,15 @@ export default function DesktopCart({ isSale: isSaleProp }) {
             </div>
             <div className="cart-sumrow cart-sumrow--last">
               <span className="cart-sumlabel">Discount</span>
-              <span className="cart-sumval">{isSale ? 'Rs. 0' : '₹0'}</span>
+              <span className="cart-sumval" style={{ color: totalDiscount > 0 ? '#10B981' : 'inherit' }}>
+                {isSale ? (totalDiscount > 0 ? `- Rs. ${Math.round(totalDiscount).toLocaleString('en-IN')}` : 'Rs. 0') : '₹0'}
+              </span>
             </div>
             <div className="cart-sum-divider" />
             <div className="cart-totalrow">
               <span className="cart-totallabel">Total</span>
               <span className="cart-totalval">
-                {allPremium ? 'Price on Request' : (isSale ? `Rs. ${Math.round(pricedSubtotal).toLocaleString('en-IN')}` : `₹${pricedSubtotal.toFixed(2)}`)}
+                {allPremium ? 'Price on Request' : (isSale ? `Rs. ${Math.round(finalTotalAmount).toLocaleString('en-IN')}` : `₹${finalTotalAmount.toFixed(2)}`)}
               </span>
             </div>
           </div>
