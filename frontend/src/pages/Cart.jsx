@@ -71,12 +71,6 @@ const Cart = ({ isSale: isSaleProp }) => {
 
   const allPremiumSelected = !isSale && premiumSelected.length === selectedCartItems.length && selectedCartItems.length > 0;
 
-  const handleBookOnWhatsapp = () => {
-    if (selectedCartItems.length === 0) {
-      alert("Please select at least one item to book.");
-      return;
-    }
-
   const handleBookOnWhatsapp = async () => {
     if (selectedCartItems.length === 0) {
       alert("Please select at least one item to book.");
