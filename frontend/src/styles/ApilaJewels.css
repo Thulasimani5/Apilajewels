@@ -4444,16 +4444,16 @@
 }
 
 .cc-rent-btn {
-  border: 1.5px solid #0088FF;
-  background-color: #F4F8FB;
-  color: #000000;
+  border: none;
+  background-color: #ECECEC;
+  color: #111111;
   font-family: var(--f-gotham-m, 'Gotham', sans-serif);
   font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.8px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
-  padding: 3px 12px;
-  border-radius: 1px;
+  padding: 3px 10px;
+  border-radius: 0;
   line-height: normal;
   display: inline-block;
 }
