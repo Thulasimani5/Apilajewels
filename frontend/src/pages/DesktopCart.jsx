@@ -189,10 +189,11 @@ export default function DesktopCart({ isSale: isSaleProp }) {
   // Discounted subtotal (final amount to pay)
   const finalDiscountedSubtotal = pricedItems.reduce((sum, item) => sum + (getItemPrice(item) * getItemQty(item)), 0);
 
-  // Subtotal for calculation: on sales cart, subtotal is the actual price before discount; on rental, it's the standard price
-  const displaySubtotal = isSale ? actualOriginalSubtotal : finalDiscountedSubtotal;
+  // Subtotal calculated on discounted price (final payable for items)
+  const displaySubtotal = finalDiscountedSubtotal;
   const totalDiscount = isSale ? Math.max(0, actualOriginalSubtotal - finalDiscountedSubtotal) : 0;
-  const finalTotalAmount = finalDiscountedSubtotal;
+  const shippingFee = isSale ? (displaySubtotal >= 1000 ? 0 : 70) : 0;
+  const finalTotalAmount = finalDiscountedSubtotal + shippingFee;
 
   const allPremium = !isSale && premiumItems.length === currentCartItems.length && currentCartItems.length > 0;
   const hasPremium = !isSale && premiumItems.length > 0;
@@ -224,6 +225,11 @@ export default function DesktopCart({ isSale: isSaleProp }) {
         const itemTotal = price * qty;
         msg += `${i + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – Qty: ${qty} × Rs. ${Math.round(price).toLocaleString('en-IN')} = Rs. ${Math.round(itemTotal).toLocaleString('en-IN')}\n`;
       });
+      if (shippingFee > 0) {
+        msg += `\nShipping Fee: Rs. ${shippingFee}\n`;
+      } else {
+        msg += `\nShipping Fee: Free\n`;
+      }
       msg += `\n*Total Amount: Rs. ${Math.round(finalTotalAmount).toLocaleString('en-IN')}*\n\nPlease confirm availability and payment details.`;
       window.open(`https://wa.me/+917397721122?text=${encodeURIComponent(msg)}`, '_blank');
       return;
@@ -337,7 +343,7 @@ export default function DesktopCart({ isSale: isSaleProp }) {
             )}
             <div className="cart-sumrow">
               <span className="cart-sumlabel">Shipping</span>
-              <span className="cart-sumval">Free</span>
+              <span className="cart-sumval">{isSale ? (shippingFee === 0 ? 'Free' : 'Rs. 70') : 'Free'}</span>
             </div>
             <div className="cart-sumrow cart-sumrow--last">
               <span className="cart-sumlabel">Discount</span>
@@ -355,9 +361,16 @@ export default function DesktopCart({ isSale: isSaleProp }) {
           </div>
 
           {/* Delivery Banner */}
-          <div className="cart-delivery">
-            <img src={iconDeliveryTruck} width="27" height="20" alt="" />
-            <span className="cart-delivery-text">Estimated Delivery: 3 - 4 days</span>
+          <div className="cart-delivery" style={{ flexDirection: 'column', alignItems: 'center', height: 'auto', padding: '12px 16px', gap: '4px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <img src={iconDeliveryTruck} width="27" height="20" alt="" />
+              <span className="cart-delivery-text">Estimated Delivery: 3 - 4 days</span>
+            </div>
+            {isSale && (
+              <span style={{ color: '#000', fontFamily: 'Gotham Book, sans-serif', fontSize: '11px', letterSpacing: '0.2px', opacity: 0.6, marginTop: '2px', textAlign: 'center' }}>
+                Free Delivery for orders above Rs. 1000
+              </span>
+            )}
           </div>
 
           {/* Actions Container anchored to bottom */}
@@ -367,9 +380,9 @@ export default function DesktopCart({ isSale: isSaleProp }) {
               Need Live Video or Help? Get Instant Assistance From Our Jewellery Expert
             </p>
 
-            {/* Book on WhatsApp */}
+            {/* Book / Buy on WhatsApp */}
             <button className="cart-book-btn" onClick={handleBookOnWhatsapp}>
-              BOOK ON WHATSAPP
+              {isSale ? 'BUY ON WHATSAPP' : 'BOOK ON WHATSAPP'}
             </button>
 
             {/* Secure Payments */}

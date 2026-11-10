@@ -4344,7 +4344,7 @@
 
 .sale-price-current {
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 500;
   color: #000000;
   letter-spacing: -0.2px;
 }
@@ -4433,7 +4433,7 @@
   color: #000000;
   font-family: var(--f-gotham-m, 'Gotham', sans-serif);
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: -0.2px;
 }
 

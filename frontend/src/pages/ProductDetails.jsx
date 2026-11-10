@@ -102,13 +102,24 @@ const ProductDetails = () => {
   // Fetch related products — same category first, then general fallback
   useEffect(() => {
     if (!product) return;
+    const isSale = Boolean(product.isSale || product.sale || product.sales);
     const fetchRelated = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/api/jewellery?limit=100`);
+        const endpoint = isSale ? `${API_BASE_URL}/api/sales?limit=100` : `${API_BASE_URL}/api/jewellery?limit=100`;
+        const res = await fetch(endpoint);
         const data = await res.json();
         if (!data.success) return;
 
-        const allItems = data.data;
+        let allItems = data.data || [];
+        if (isSale) {
+          allItems = allItems.map(item => ({
+            ...item,
+            isSale: true,
+            salesAmount: item.discountedRate || item.salesPrice,
+            price: item.discountedRate || item.salesPrice,
+            rentalPrice: item.discountedRate || item.salesPrice,
+          }));
+        }
 
         // Helper: get category(s) of a product as lowercase array
         const getCats = (p) => {
@@ -425,6 +436,25 @@ const ProductDetails = () => {
             )}
           </div>
 
+          {/* Stock count — sale items only */}
+          {product.isSale && typeof product.stockCount === 'number' && (
+            <div style={{ marginTop: '-8px', marginBottom: '14px' }}>
+              {product.stockCount === 0 ? (
+                <span style={{ display: 'inline-block', color: '#000000', fontFamily: 'Gotham, sans-serif', fontSize: '11px', fontWeight: 500, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                  Out of Stock
+                </span>
+              ) : product.stockCount <= 5 ? (
+                <span style={{ display: 'inline-block', color: '#000000', fontFamily: 'Gotham, sans-serif', fontSize: '11px', fontWeight: 500, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                  Only {product.stockCount} {product.stockCount === 1 ? 'piece' : 'pieces'} left
+                </span>
+              ) : (
+                <span style={{ display: 'inline-block', color: '#000000', fontFamily: 'Gotham, sans-serif', fontSize: '11px', fontWeight: 500, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                  {product.stockCount} {product.stockCount === 1 ? 'piece' : 'pieces'} available
+                </span>
+              )}
+            </div>
+          )}
+
           <div className="space-y-2 mb-2">
             <button
               onClick={handleAddToCart}
@@ -492,7 +522,7 @@ const ProductDetails = () => {
             {/* Explore More Button */}
             <div className="mt-8 flex justify-center">
               <Link
-                to="/shop?explore=true"
+                to={product?.isSale ? "/sale" : "/shop?explore=true"}
                 className="flex items-center justify-center border border-[#ab6281] text-[#ab6281] hover:bg-[#ab6281] hover:text-white transition-all"
                 style={{
                   fontFamily: "'Gotham', sans-serif",

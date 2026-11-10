@@ -128,6 +128,7 @@ function RelatedCard({ product }) {
   const { user } = useAuth();
   const liked = isInWishlist(product._id);
   const imgUrl = product.images?.[0]?.url || product.media?.[0]?.url || '';
+  const isSale = Boolean(product.isSale || product.sale || product.sales);
   const price = product.rentalPrice || product.price || 0;
   let category = Array.isArray(product.category) ? product.category[0] : product.category;
   if (category === 'Bangles & Bracelets') category = 'Bangles';
@@ -136,9 +137,43 @@ function RelatedCard({ product }) {
     category = product.accessoryType;
   }
 
+  const origPrice = Number(product.salesPrice || product.salesAmount || product.price || 0);
+  const finalPrice = product.discountedRate != null
+    ? Number(product.discountedRate)
+    : (product.salesAmount != null ? Number(product.salesAmount) : origPrice);
+
+  let discountPercent = product.discountPercent;
+  if (discountPercent == null || discountPercent === 0) {
+    if (origPrice > finalPrice && origPrice > 0) {
+      discountPercent = Math.round(((origPrice - finalPrice) / origPrice) * 100);
+    } else {
+      discountPercent = 0;
+    }
+  }
+
   return (
     <Link to={`/shop/${product._id}`} className="pdp-rel-card">
       <div className="pdp-rel-img-wrap">
+        {isSale && (
+          <span
+            style={{
+              position: 'absolute',
+              top: '10px',
+              left: '10px',
+              background: '#D32F2F',
+              color: '#fff',
+              fontSize: '9px',
+              fontWeight: '600',
+              letterSpacing: '0.6px',
+              textTransform: 'uppercase',
+              padding: '2px 7px',
+              borderRadius: '3px',
+              zIndex: 2,
+            }}
+          >
+            For Sale
+          </span>
+        )}
         <img
           className="pdp-rel-img"
           src={getOptimizedCloudinaryUrl(imgUrl, { width: 330, height: 410 })}
@@ -162,9 +197,27 @@ function RelatedCard({ product }) {
       </div>
       <p className="pdp-rel-name">{category || 'Jewels'}</p>
       <p className="pdp-rel-desc">{product.name}</p>
-      <p className="pdp-rel-price">
-        {product.showPrice === false || price > 1200 ? 'Price on Request' : `₹${price.toFixed(2)}`}
-      </p>
+      {isSale ? (
+        <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', flexWrap: 'wrap', marginTop: '2px' }}>
+          <span style={{ color: '#000', fontFamily: 'Gotham, sans-serif', fontSize: '13px', fontWeight: 500 }}>
+            Rs. {Math.round(finalPrice).toLocaleString('en-IN')}
+          </span>
+          {origPrice > finalPrice && (
+            <span style={{ color: '#888', fontFamily: 'Gotham Book, sans-serif', fontSize: '11px', textDecoration: 'line-through' }}>
+              Rs. {Math.round(origPrice).toLocaleString('en-IN')}
+            </span>
+          )}
+          {discountPercent > 0 && (
+            <span style={{ color: '#EF4444', fontFamily: 'Gotham, sans-serif', fontSize: '10px', fontWeight: 600 }}>
+              ({discountPercent}% OFF)
+            </span>
+          )}
+        </div>
+      ) : (
+        <p className="pdp-rel-price">
+          {product.showPrice === false || price > 1200 ? 'Price on Request' : `₹${price.toFixed(2)}`}
+        </p>
+      )}
     </Link>
   );
 }
@@ -381,10 +434,10 @@ export default function DesktopProduct({ product, relatedProducts }) {
         <div className="pdp-panel">
 
           {/* Category label */}
-          <div className="flex items-center gap-2">
-            <p className="pdp-category-label">{category || 'Jewellery'}</p>
+          <div className="flex items-center gap-2 mb-[10px]">
+            <p className="pdp-category-label" style={{ marginBottom: 0 }}>{category || 'Jewellery'}</p>
             {isSale && (
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800 uppercase tracking-wide">
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800 uppercase tracking-wide" style={{ lineHeight: '1.4' }}>
                 Available to Own
               </span>
             )}
@@ -429,6 +482,25 @@ export default function DesktopProduct({ product, relatedProducts }) {
               </button>
             </div>
           </div>
+
+          {/* Stock count — sale items only */}
+          {isSale && typeof product.stockCount === 'number' && (
+            <div style={{ marginBottom: '-2px', marginTop: '-16px' }}>
+              {product.stockCount === 0 ? (
+                <span style={{ display: 'inline-block', color: '#000000', fontFamily: 'Gotham, sans-serif', fontSize: '13px', fontWeight: 600, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                  Out of Stock
+                </span>
+              ) : product.stockCount <= 5 ? (
+                <span style={{ display: 'inline-block', color: '#000000', fontFamily: 'Gotham, sans-serif', fontSize: '13px', fontWeight: 600, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                  Only {product.stockCount} {product.stockCount === 1 ? 'piece' : 'pieces'} left
+                </span>
+              ) : (
+                <span style={{ display: 'inline-block', color: '#000000', fontFamily: 'Gotham, sans-serif', fontSize: '13px', fontWeight: 600, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
+                  {product.stockCount} {product.stockCount === 1 ? 'piece' : 'pieces'} available
+                </span>
+              )}
+            </div>
+          )}
 
           {/* ADD TO BAG */}
           <button className="pdp-btn-outline" onClick={handleAddToCart}>

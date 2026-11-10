@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Search, Menu, X, ChevronRight, Phone, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
 import CategoryContext from "../context/CategoryContext";
 import SearchOverlay from "./SearchOverlay";
 import DesktopSearchOverlay from "../pages/DesktopSearchOverlay";
@@ -26,6 +27,8 @@ const Navbar = () => {
   const location = useLocation();
   const isSaleDirectory = location.pathname.startsWith('/sale');
   const { user, logout, openLogin } = useAuth();
+  const { getCartCount } = useCart();
+  const cartCount = getCartCount(isSaleDirectory);
   const dropdownRef = useRef(null);
   const lastScrollY = useRef(0);
 
@@ -186,7 +189,7 @@ const Navbar = () => {
             <div className="flex items-center gap-4 sm:gap-5 md:gap-6">
               <Link
                 to={isSaleDirectory ? "/shop" : "/sale"}
-                className={`inline-flex items-center justify-center px-3 py-1 text-[11px] font-medium tracking-[1.5px] uppercase transition-all duration-200 border ${
+                className={`hidden md:inline-flex items-center justify-center px-3 py-1 text-[11px] font-medium tracking-[1.5px] uppercase transition-all duration-200 border ${
                   isHomePage && !scrolled
                     ? "text-white border-white/70 hover:border-white hover:bg-white/10"
                     : "text-black border-black/80 hover:bg-black hover:text-white"
@@ -214,7 +217,7 @@ const Navbar = () => {
               <Link
                 to={isSaleDirectory ? "/sale/cart" : "/cart"}
                 aria-label="Cart"
-                className="hover:opacity-70 transition-opacity"
+                className="hover:opacity-70 transition-opacity relative"
               >
                 <img
                   src={iconCart}
@@ -226,6 +229,24 @@ const Navbar = () => {
                     transition: "filter 0.3s ease",
                   }}
                 />
+                {cartCount > 0 && (
+                  <span
+                    className="absolute -top-2 -right-2 flex items-center justify-center rounded-full text-white"
+                    style={{
+                      minWidth: "16px",
+                      height: "16px",
+                      fontSize: "9px",
+                      fontFamily: "Gotham, sans-serif",
+                      fontWeight: 600,
+                      lineHeight: 1,
+                      padding: "0 3px",
+                      backgroundColor: isSaleDirectory ? "#C0392B" : "#AB6281",
+                      pointerEvents: "none",
+                    }}
+                  >
+                    {cartCount > 99 ? "99+" : cartCount}
+                  </span>
+                )}
               </Link>
 
               {user ? (

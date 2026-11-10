@@ -108,6 +108,26 @@ export default function ShopCard({ product, activeCategory }) {
               <span className="sale-price-discount">({discountPercent}% OFF)</span>
             )}
           </div>
+          {/* Stock count */}
+          {(() => {
+            const stock = typeof product.stockCount === 'number' ? product.stockCount : null;
+            if (stock === null) return null;
+            if (stock === 0) return (
+              <p style={{ color: "#B91C1C", fontFamily: "Gotham, sans-serif", fontSize: "11px", fontWeight: 600, letterSpacing: "0.5px", marginTop: "4px", textTransform: "uppercase" }}>
+                Out of Stock
+              </p>
+            );
+            if (stock <= 5) return (
+              <p style={{ color: "#D97706", fontFamily: "Gotham, sans-serif", fontSize: "11px", fontWeight: 600, letterSpacing: "0.5px", marginTop: "4px", textTransform: "uppercase" }}>
+                Only {stock} left
+              </p>
+            );
+            return (
+              <p style={{ color: "#16A34A", fontFamily: "Gotham, sans-serif", fontSize: "11px", fontWeight: 600, letterSpacing: "0.5px", marginTop: "4px", textTransform: "uppercase" }}>
+                {stock} Available
+              </p>
+            );
+          })()}
         </div>
       ) : (
         <>

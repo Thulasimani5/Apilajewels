@@ -65,9 +65,11 @@ const Cart = ({ isSale: isSaleProp }) => {
   // Final amount to pay after discount
   const finalPayableAmount = pricedSelected.reduce((total, item) => total + (getItemPrice(item) * getItemQty(item)), 0);
 
-  const displaySubtotal = isSale ? actualOriginalAmount : finalPayableAmount;
+  // Subtotal calculated on discounted price (final payable for items)
+  const displaySubtotal = finalPayableAmount;
   const totalDiscount = isSale ? Math.max(0, actualOriginalAmount - finalPayableAmount) : 0;
-  const finalTotalAmount = finalPayableAmount;
+  const shippingFee = isSale ? (displaySubtotal >= 1000 ? 0 : 70) : 0;
+  const finalTotalAmount = finalPayableAmount + shippingFee;
 
   const allPremiumSelected = !isSale && premiumSelected.length === selectedCartItems.length && selectedCartItems.length > 0;
 
@@ -100,6 +102,11 @@ const Cart = ({ isSale: isSaleProp }) => {
         const itemTotal = price * qty;
         message += `${index + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – Qty: ${qty} × Rs. ${Math.round(price).toLocaleString('en-IN')} = Rs. ${Math.round(itemTotal).toLocaleString('en-IN')}\n`;
       });
+      if (shippingFee > 0) {
+        message += `\nShipping Fee: Rs. ${shippingFee}\n`;
+      } else {
+        message += `\nShipping Fee: Free\n`;
+      }
       message += `\n*Total Amount: Rs. ${Math.round(finalTotalAmount).toLocaleString('en-IN')}*\n\nPlease confirm availability and payment details.`;
       const whatsappUrl = `https://wa.me/+917397721122?text=${encodeURIComponent(message)}`;
       window.open(whatsappUrl, '_blank');
@@ -168,22 +175,32 @@ const Cart = ({ isSale: isSaleProp }) => {
               const stockLimit = typeof item.stockCount === 'number' && item.stockCount > 0 ? item.stockCount : 10;
             const qty = Math.min(Number(item.quantity || 1), stockLimit);
 
+              const categoryText = Array.isArray(item.category) ? item.category[0] : (item.category || item.material || (isSale ? 'MOISSINATE JEWELS' : 'MOISSINATE JEWELS'));
+              const displayCategoryText = categoryText.toUpperCase().includes('JEWEL') || categoryText.toUpperCase().includes('SET')
+                ? categoryText.toUpperCase()
+                : `${categoryText.toUpperCase()} JEWELS`;
+
+              const rentalPrice = Number(item.rentalPrice || item.price || 0);
+              const priceText = isSale
+                ? `Rs. ${Math.round(finalPrice).toLocaleString('en-IN')}`
+                : (isPremium(item) ? 'Price on Request' : `₹${rentalPrice.toFixed(2)}`);
+
               return (
                 <div key={item._id} className="bg-white mb-3 p-3 flex gap-3 relative shadow-[0_2px_8px_rgba(0,0,0,0.04)] items-start rounded-sm">
-                  {/* Delete button in top-right corner */}
+                  {/* Delete button in top-right corner with proper breathing room */}
                   <button
                     onClick={() => removeFromCart(item._id)}
-                    className="absolute top-2.5 right-2.5 text-gray-400 hover:text-black transition-colors z-10 p-1"
+                    className="absolute top-2.5 right-2 text-gray-400 hover:text-black transition-colors z-10 p-1.5"
                     aria-label="Remove item"
                   >
-                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none">
-                      <path d="M1 1l9 9M10 1l-9 9" stroke="black" strokeWidth="1.3" strokeLinecap="round" />
+                    <svg width="12" height="12" viewBox="0 0 13 13" fill="none">
+                      <path d="M0.53 11.53L11.53 0.53M11.53 11.53L0.53 0.53" stroke="#888" strokeWidth="1.3" strokeLinecap="round" />
                     </svg>
                   </button>
 
                   {/* Left: Product Image */}
                   <div
-                    className="w-[110px] h-[135px] aspect-[4/5] overflow-hidden bg-gray-100 flex-shrink-0 relative cursor-pointer group border border-[#EAEAEA]"
+                    className="w-[105px] h-[135px] aspect-[4/5] overflow-hidden bg-gray-100 flex-shrink-0 relative cursor-pointer border border-[#EAEAEA] rounded-[2px]"
                     onClick={() => toggleSelection(item._id)}
                   >
                     {item.images?.[0]?.type === 'video' ? (
@@ -195,126 +212,117 @@ const Cart = ({ isSale: isSaleProp }) => {
                     {/* Selection Checkmark */}
                     <div className={`absolute top-2 left-2 w-[18px] h-[18px] rounded-full flex items-center justify-center transition-colors ${selectedItems.includes(item._id) ? 'bg-white border border-white' : 'bg-transparent border border-white/70 text-transparent'}`}>
                       {selectedItems.includes(item._id) && (
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#B07A85" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#B07A85" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                       )}
                     </div>
                   </div>
 
                   {/* Right Details */}
-                  <div className="flex-1 min-w-0 pr-4 flex flex-col justify-between" style={{ minHeight: '150px' }}>
+                  <div className="flex-1 min-w-0 pr-6 flex flex-col justify-between" style={{ minHeight: '135px' }}>
+                    {/* Header: Category & Badge */}
                     <div>
-                      <p style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '11px', fontWeight: 600, letterSpacing: '0.8px', textTransform: 'uppercase' }}>
-                        {displayCategory}
-                      </p>
-                      <p className="line-clamp-2 mt-0.5" style={{ color: '#555', fontFamily: "'Gotham Book', sans-serif", fontSize: '12px', lineHeight: '16px' }}>
-                        {item.name}
-                      </p>
-                      <p className="mt-0.5" style={{ color: '#777', fontFamily: "'Gotham Book', sans-serif", fontSize: '11px' }}>
-                        Ref : {item.code || item.jewelId || 'MP006'}
-                      </p>
-
-                      <div className="flex gap-1.5 mt-1.5 flex-wrap">
-                        <span className="inline-flex items-center gap-1 bg-[#F4F4F4] px-1.5 py-0.5 text-[10px] text-black font-medium">
-                          <img src={iconPremiumJewel} alt="" width="10" height="9" />
-                          Premium Jewel
-                        </span>
-                        <span className="inline-flex items-center gap-1 bg-[#F4F4F4] px-1.5 py-0.5 text-[10px] text-black font-medium">
-                          <img src={iconDesignerCollection} alt="" width="10" height="9" />
-                          Designer Collection
+                      <div className="flex items-center justify-between gap-2 pr-2">
+                        <p className="truncate" style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '11px', fontWeight: 600, letterSpacing: '0.84px', textTransform: 'uppercase' }}>
+                          {displayCategoryText}
+                        </p>
+                        <span style={{
+                          backgroundColor: isSale ? '#D32F2F' : '#ECECEC',
+                          color: isSale ? '#FFF' : '#111',
+                          fontSize: '9px',
+                          fontWeight: 500,
+                          padding: '3px 8px',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.6px',
+                          fontFamily: "'Gotham', sans-serif",
+                          borderRadius: '1px',
+                          flexShrink: 0
+                        }}>
+                          {isSale ? 'SALE' : 'RENT'}
                         </span>
                       </div>
+                      <p className="line-clamp-2 mt-1.5" style={{ color: '#444', fontFamily: "'Gotham Book', sans-serif", fontSize: '12px', fontWeight: 400, lineHeight: '17px' }}>
+                        {item.name}
+                      </p>
                     </div>
 
-                    {/* Bottom row: Quantity and Price block */}
-                    <div className="flex justify-between items-end mt-4 pt-1">
-                      {/* Quantity Selector */}
-                      {isSale ? (
-                        <div className="flex flex-col">
-                          <div
-                            className="flex items-center justify-between"
-                            style={{
-                              width: '80px',
-                              height: '34px',
-                              padding: '2px 4px',
-                              background: '#FFF6EB',
-                              borderBottom: '1.5px solid rgba(0,0,0,0.2)',
-                              borderRadius: '1px'
-                            }}
-                          >
-                            <button
-                              type="button"
-                              onClick={() => updateQuantity(item._id, Math.max(1, qty - 1), stockLimit)}
-                              disabled={qty <= 1}
-                              className="w-6 h-6 flex items-center justify-center text-sm font-medium text-black disabled:opacity-25"
+                    {isSale ? (
+                      <>
+                        {/* SALE: Line 2 (Ref Code & Quantity Counter) */}
+                        <div className="flex items-center justify-between mt-3">
+                          <span style={{ color: '#777', fontFamily: "'Gotham Book', sans-serif", fontSize: '12px', fontWeight: 400, letterSpacing: '-0.2px' }}>
+                            Ref : {item.code || item.jewelId || 'MP006'}
+                          </span>
+
+                          <div className="flex items-center gap-1.5">
+                            <div
+                              className="flex items-center justify-between"
+                              style={{
+                                width: '74px',
+                                height: '30px',
+                                padding: '2px 6px',
+                                background: '#FFF6EB',
+                                border: '1px solid rgba(0,0,0,0.18)',
+                                borderRadius: '2px'
+                              }}
                             >
-                              −
-                            </button>
-                            <span style={{ fontFamily: "'Gotham Book', sans-serif", fontSize: '14px', fontWeight: 500, color: '#000' }}>
-                              {qty}
-                            </span>
-                            <button
-                              type="button"
-                              onClick={() => updateQuantity(item._id, qty + 1, stockLimit)}
-                              disabled={qty >= stockLimit}
-                              className="w-6 h-6 flex items-center justify-center text-sm font-medium text-black disabled:opacity-25"
-                            >
-                              +
-                            </button>
+                              <button
+                                type="button"
+                                onClick={() => updateQuantity(item._id, Math.max(1, qty - 1), stockLimit)}
+                                disabled={qty <= 1}
+                                className="w-5 h-5 flex items-center justify-center text-xs font-semibold text-black disabled:opacity-20"
+                                aria-label="Decrease quantity"
+                              >
+                                −
+                              </button>
+                              <span style={{ fontFamily: "'Gotham', sans-serif", fontSize: '13px', fontWeight: 500, color: '#000' }}>
+                                {qty}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => updateQuantity(item._id, qty + 1, stockLimit)}
+                                disabled={qty >= stockLimit}
+                                className="w-5 h-5 flex items-center justify-center text-xs font-semibold text-black disabled:opacity-20"
+                                aria-label="Increase quantity"
+                              >
+                                +
+                              </button>
+                            </div>
+                            {qty >= stockLimit && stockLimit > 0 && (
+                              <span style={{ fontSize: '9px', color: '#d32f2f', fontFamily: "'Gotham Book', sans-serif", fontWeight: 500 }}>
+                                Max
+                              </span>
+                            )}
                           </div>
-                          {qty >= stockLimit && stockLimit > 0 && (
-                            <span style={{ fontSize: '9px', color: '#d32f2f', marginTop: '2px', fontFamily: "'Gotham Book', sans-serif" }}>
-                              Max ({stockLimit})
+                        </div>
+
+                        {/* SALE: Line 3 (Price on separate line, lighter font weight) */}
+                        <div className="flex justify-end items-baseline gap-2 flex-wrap mt-2.5 pt-1">
+                          {discountPercent > 0 && (
+                            <span style={{ color: '#FF4D4F', fontFamily: "'Gotham Book', sans-serif", fontSize: '10.5px', fontWeight: 400 }}>
+                              ({discountPercent}% OFF)
                             </span>
                           )}
-                        </div>
-                      ) : (
-                        <div className="cc-qty" style={{ width: '64px', height: '34px', padding: '6px 8px', background: '#FFF6EB', borderBottom: '1px solid rgba(0,0,0,0.15)' }}>
-                          <span className="cc-qty-num" style={{ fontSize: '14px' }}>{qty}</span>
-                          <svg
-                            width="8"
-                            height="12"
-                            viewBox="0 0 7 12"
-                            fill="none"
-                            style={{ transform: 'rotate(-90deg)', opacity: 0.5, flexShrink: 0, pointerEvents: 'none' }}
-                          >
-                            <path d="M6 1L1 6l5 5" stroke="#000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
-                        </div>
-                      )}
-
-                      {/* Price Block */}
-                      {isSale ? (
-                        <div className="flex flex-col items-end gap-1">
-                          <span style={{ border: 'none', backgroundColor: '#D32F2F', color: '#fff', fontSize: '11px', fontWeight: 400, padding: '5px 16px', borderRadius: '0', textTransform: 'uppercase', letterSpacing: '0.5px', fontFamily: "'Gotham Book', sans-serif" }}>
-                            SALE
-                          </span>
-                          <div className="flex items-baseline gap-1.5 flex-wrap justify-end">
-                            {discountPercent > 0 && (
-                              <span style={{ color: '#FF4D4F', fontFamily: "'Gotham', sans-serif", fontSize: '10.5px', fontWeight: 600 }}>
-                                ({discountPercent}% OFF)
-                              </span>
-                            )}
-                            {origPrice > finalPrice && (
-                              <span style={{ color: '#888', fontFamily: "'Gotham Book', sans-serif", fontSize: '11px', textDecoration: 'line-through' }}>
-                                Rs. {Math.round(origPrice).toLocaleString('en-IN')}
-                              </span>
-                            )}
-                            <span style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '14px', fontWeight: 700 }}>
-                              Rs. {Math.round(finalPrice).toLocaleString('en-IN')}
+                          {origPrice > finalPrice && (
+                            <span style={{ color: '#888', fontFamily: "'Gotham Book', sans-serif", fontSize: '11px', textDecoration: 'line-through' }}>
+                              Rs. {Math.round(origPrice).toLocaleString('en-IN')}
                             </span>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="flex flex-col items-end gap-1">
-                          <span style={{ border: 'none', backgroundColor: '#ECECEC', color: '#111', fontSize: '11px', fontWeight: 400, padding: '5px 16px', borderRadius: '0', textTransform: 'uppercase', letterSpacing: '0.5px', fontFamily: "'Gotham Book', sans-serif" }}>
-                            RENT
+                          )}
+                          <span style={{ color: '#000', fontFamily: "'Gotham Book', sans-serif", fontSize: '13.5px', fontWeight: 400 }}>
+                            {priceText}
                           </span>
-                          <div style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '13px', fontWeight: 600 }}>
-                            {isPremium(item) ? 'Price on Request' : `₹${getItemPrice(item).toFixed(2)}`}
-                          </div>
                         </div>
-                      )}
-                    </div>
+                      </>
+                    ) : (
+                      /* RENT: Ref code and price aligned on the same single line */
+                      <div className="flex justify-between items-center mt-4 pt-1">
+                        <span style={{ color: '#777', fontFamily: "'Gotham Book', sans-serif", fontSize: '12px', fontWeight: 400, letterSpacing: '-0.2px' }}>
+                          Ref : {item.code || item.jewelId || 'MP006'}
+                        </span>
+                        <span style={{ color: '#000', fontFamily: "'Gotham', sans-serif", fontSize: '13px', fontWeight: 500 }}>
+                          {priceText}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
@@ -360,7 +368,9 @@ const Cart = ({ isSale: isSaleProp }) => {
 
               <div className="flex justify-between items-center">
                 <span style={{ color: '#000', fontFamily: "'Gotham Book', sans-serif", fontSize: '11px', fontStyle: 'normal', fontWeight: 400, lineHeight: 'normal', letterSpacing: '0.48px', textTransform: 'uppercase' }}>Shipping</span>
-                <span style={{ color: '#000', textAlign: 'right', fontFamily: "'Gotham', sans-serif", fontSize: '12px', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal' }}>Free</span>
+                <span style={{ color: '#000', textAlign: 'right', fontFamily: "'Gotham', sans-serif", fontSize: '12px', fontStyle: 'normal', fontWeight: 500, lineHeight: 'normal' }}>
+                  {isSale ? (shippingFee === 0 ? 'Free' : 'Rs. 70') : 'Free'}
+                </span>
               </div>
 
               <div className="flex justify-between items-center pb-6 border-b border-[#EAEAEA]">
@@ -376,14 +386,21 @@ const Cart = ({ isSale: isSaleProp }) => {
               </div>
             </div>
 
-            <div className="flex items-center justify-center gap-3 bg-white py-1.5 ">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" viewBox="0 0 20 16" fill="none">
-                <path d="M5.79188 14.6593C6.90583 14.6593 7.80886 13.7696 7.80886 12.6722C7.80886 11.5747 6.90583 10.6851 5.79188 10.6851C4.67793 10.6851 3.7749 11.5747 3.7749 12.6722C3.7749 13.7696 4.67793 14.6593 5.79188 14.6593Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M14.869 14.6593C15.983 14.6593 16.886 13.7696 16.886 12.6722C16.886 11.5747 15.983 10.6851 14.869 10.6851C13.7551 10.6851 12.8521 11.5747 12.8521 12.6722C12.8521 13.7696 13.7551 14.6593 14.869 14.6593Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M3.77547 12.6726H0.75V2.64768C0.75 1.59452 1.6173 0.75 2.67621 0.75H9.90708C10.9761 0.75 11.8333 1.60445 11.8333 2.64768V12.6726H7.79934" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M16.8855 12.6725H17.3494C18.2067 12.6725 18.9025 11.987 18.9025 11.1424V8.59896L17.2587 5.43948C17.0267 4.99238 16.5628 4.72412 16.0586 4.72412H11.833V12.6725H12.8415" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <span style={{ color: '#000', fontFamily: "'Gotham Book', sans-serif", fontSize: '13px', fontStyle: 'normal', fontWeight: 400, lineHeight: '39px', letterSpacing: '-0.42px' }}>Estimated Delivery: 3 - 4 days</span>
+            <div className="flex flex-col items-center justify-center bg-white py-1.5">
+              <div className="flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="16" viewBox="0 0 20 16" fill="none">
+                  <path d="M5.79188 14.6593C6.90583 14.6593 7.80886 13.7696 7.80886 12.6722C7.80886 11.5747 6.90583 10.6851 5.79188 10.6851C4.67793 10.6851 3.7749 11.5747 3.7749 12.6722C3.7749 13.7696 4.67793 14.6593 5.79188 14.6593Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M14.869 14.6593C15.983 14.6593 16.886 13.7696 16.886 12.6722C16.886 11.5747 15.983 10.6851 14.869 10.6851C13.7551 10.6851 12.8521 11.5747 12.8521 12.6722C12.8521 13.7696 13.7551 14.6593 14.869 14.6593Z" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M3.77547 12.6726H0.75V2.64768C0.75 1.59452 1.6173 0.75 2.67621 0.75H9.90708C10.9761 0.75 11.8333 1.60445 11.8333 2.64768V12.6726H7.79934" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M16.8855 12.6725H17.3494C18.2067 12.6725 18.9025 11.987 18.9025 11.1424V8.59896L17.2587 5.43948C17.0267 4.99238 16.5628 4.72412 16.0586 4.72412H11.833V12.6725H12.8415" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span style={{ color: '#000', fontFamily: "'Gotham Book', sans-serif", fontSize: '13px', fontStyle: 'normal', fontWeight: 400, lineHeight: '28px', letterSpacing: '-0.42px' }}>Estimated Delivery: 3 - 4 days</span>
+              </div>
+              {isSale && (
+                <span style={{ color: '#000', fontFamily: "'Gotham Book', sans-serif", fontSize: '11px', fontWeight: 400, letterSpacing: '0.2px', opacity: 0.6, marginTop: '2px' }}>
+                  Free Delivery for orders above Rs. 1000
+                </span>
+              )}
             </div>
 
             <p className="pt-4" style={{ color: '#000', textAlign: 'center', fontFamily: "'Gotham Book', sans-serif", fontSize: '13px', fontStyle: 'normal', fontWeight: 400, lineHeight: '25px', letterSpacing: '-0.42px', opacity: 0.5 }}>
@@ -407,7 +424,7 @@ const Cart = ({ isSale: isSaleProp }) => {
             onClick={handleBookOnWhatsapp}
             style={{ width: '223px', height: '53px', border: '1px solid #AB6281', background: selectedItems.length > 0 ? '#AB6281' : '#ccc', cursor: selectedItems.length > 0 ? 'pointer' : 'not-allowed', color: '#FFF', fontFamily: "'Gotham Book', sans-serif", fontSize: '13px', fontStyle: 'normal', fontWeight: 300, lineHeight: 'normal', letterSpacing: '1.82px' }}
           >
-            BOOK ON WHATSAPP
+            {isSale ? 'BUY ON WHATSAPP' : 'BOOK ON WHATSAPP'}
           </button>
         </div>
       )}

@@ -97,7 +97,7 @@ const Card = ({ jewellery, priority = false, imageAspect, imageClassName = 'roun
           </h3>
 
           <div className="flex items-baseline gap-1.5 mt-1 flex-wrap">
-            <span style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "13px", fontWeight: 700 }}>
+            <span style={{ color: "#000", fontFamily: "Gotham, sans-serif", fontSize: "13px", fontWeight: 500 }}>
               Rs. {Math.round(jewellery.discountedRate || jewellery.salesAmount || jewellery.price || 0).toLocaleString('en-IN')}
             </span>
             {(jewellery.salesPrice || jewellery.salesAmount) > (jewellery.discountedRate || jewellery.salesAmount) && (
@@ -111,6 +111,26 @@ const Card = ({ jewellery, priority = false, imageAspect, imageClassName = 'roun
               </span>
             )}
           </div>
+          {/* Stock count */}
+          {(() => {
+            const stock = typeof jewellery.stockCount === 'number' ? jewellery.stockCount : null;
+            if (stock === null) return null;
+            if (stock === 0) return (
+              <p style={{ color: "#B91C1C", fontFamily: "Gotham, sans-serif", fontSize: "9.5px", fontWeight: 600, letterSpacing: "0.5px", marginTop: "3px", textTransform: "uppercase" }}>
+                Out of Stock
+              </p>
+            );
+            if (stock <= 5) return (
+              <p style={{ color: "#D97706", fontFamily: "Gotham, sans-serif", fontSize: "9.5px", fontWeight: 600, letterSpacing: "0.5px", marginTop: "3px", textTransform: "uppercase" }}>
+                Only {stock} left
+              </p>
+            );
+            return (
+              <p style={{ color: "#16A34A", fontFamily: "Gotham, sans-serif", fontSize: "9.5px", fontWeight: 600, letterSpacing: "0.5px", marginTop: "3px", textTransform: "uppercase" }}>
+                {stock} Available
+              </p>
+            );
+          })()}
         </div>
       ) : (
         <div className="pt-[9px] pb-[2px]">

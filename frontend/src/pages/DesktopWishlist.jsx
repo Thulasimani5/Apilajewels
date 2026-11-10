@@ -20,16 +20,54 @@ function WishlistCard({ item, onRemove, onMoveToBag }) {
   const rawImg = item.images?.[0];
   const imgUrl = rawImg?.url || (typeof rawImg === 'string' ? rawImg : '') || item.media?.[0]?.url || '';
   const isVideo = rawImg?.type === 'video';
-  const price = isSale
-    ? (item.discountedRate || item.salesAmount || item.salesPrice || item.price || 0)
-    : (item.rentalPrice || item.price || 0);
-  const priceText = isSale
-    ? `Rs. ${Math.round(price).toLocaleString('en-IN')}`
-    : (item.showPrice === false || price > 1200 ? 'Price on Request' : `₹${price.toFixed(2)}`);
+
+  const origPrice = Number(item.salesPrice || item.salesAmount || item.price || 0);
+  const finalPrice = item.discountedRate != null
+    ? Number(item.discountedRate)
+    : (item.salesAmount != null ? Number(item.salesAmount) : origPrice);
+
+  let discountPercent = item.discountPercent;
+  if (discountPercent == null || discountPercent === 0) {
+    if (origPrice > finalPrice && origPrice > 0) {
+      discountPercent = Math.round(((origPrice - finalPrice) / origPrice) * 100);
+    } else {
+      discountPercent = 0;
+    }
+  }
+
+  const categoryArr = Array.isArray(item.category) ? item.category : (item.category ? [item.category] : []);
+  let categoryLabel = categoryArr[0] || (item.material ? item.material : (isSale ? 'MOISSINATE JEWELS' : 'Jewels'));
+  if (categoryLabel === 'Bangles & Bracelets') categoryLabel = 'Bangles';
+  const displayCategory = categoryLabel.toUpperCase().includes('JEWEL') || categoryLabel.toUpperCase().includes('SET')
+    ? categoryLabel.toUpperCase()
+    : `${categoryLabel.toUpperCase()} JEWELS`;
+
+  const rentalPrice = item.rentalPrice || item.price || 0;
 
   return (
     <div className="wl-card">
       <div className="wl-img-wrap">
+        {isSale && (
+          <span
+            style={{
+              position: 'absolute',
+              top: '12px',
+              left: '12px',
+              background: '#D32F2F',
+              color: '#fff',
+              fontSize: '10px',
+              fontWeight: '600',
+              letterSpacing: '0.6px',
+              textTransform: 'uppercase',
+              padding: '3px 8px',
+              borderRadius: '4px',
+              zIndex: 2,
+              boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
+            }}
+          >
+            For Sale
+          </span>
+        )}
         {isVideo ? (
           <video src={imgUrl} className="wl-img" autoPlay muted loop playsInline />
         ) : (
@@ -47,9 +85,55 @@ function WishlistCard({ item, onRemove, onMoveToBag }) {
       </div>
 
       <div className="wl-info">
-        <p className="wl-name">{Array.isArray(item.category) ? item.category[0] : (item.category || (isSale ? 'Sale Jewellery' : 'Jewellery'))}</p>
-        <p className="wl-desc">{item.name}</p>
-        <p className="wl-price">{priceText}</p>
+        {isSale ? (
+          <>
+            <p style={{ color: '#111', fontFamily: 'Gotham, sans-serif', fontSize: '11px', fontWeight: 700, letterSpacing: '0.7px', textTransform: 'uppercase', marginBottom: '4px' }}>
+              {displayCategory}
+            </p>
+            <p className="wl-desc" style={{ marginBottom: '6px' }}>{item.name}</p>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', flexWrap: 'wrap', marginBottom: '4px' }}>
+              <span style={{ color: '#000', fontFamily: 'Gotham, sans-serif', fontSize: '15px', fontWeight: 500 }}>
+                Rs. {Math.round(finalPrice).toLocaleString('en-IN')}
+              </span>
+              {origPrice > finalPrice && (
+                <span style={{ color: '#888', fontFamily: 'Gotham Book, sans-serif', fontSize: '12px', textDecoration: 'line-through' }}>
+                  Rs. {Math.round(origPrice).toLocaleString('en-IN')}
+                </span>
+              )}
+              {discountPercent > 0 && (
+                <span style={{ color: '#EF4444', fontFamily: 'Gotham, sans-serif', fontSize: '11px', fontWeight: 600 }}>
+                  ({discountPercent}% OFF)
+                </span>
+              )}
+            </div>
+            {/* Stock count */}
+            {(() => {
+              const stock = typeof item.stockCount === 'number' ? item.stockCount : null;
+              if (stock === null) return null;
+              if (stock === 0) return (
+                <p style={{ color: '#B91C1C', fontFamily: 'Gotham, sans-serif', fontSize: '11px', fontWeight: 600, letterSpacing: '0.5px', marginBottom: '8px', textTransform: 'uppercase' }}>
+                  Out of Stock
+                </p>
+              );
+              if (stock <= 5) return (
+                <p style={{ color: '#D97706', fontFamily: 'Gotham, sans-serif', fontSize: '11px', fontWeight: 600, letterSpacing: '0.5px', marginBottom: '8px', textTransform: 'uppercase' }}>
+                  Only {stock} left
+                </p>
+              );
+              return (
+                <p style={{ color: '#16A34A', fontFamily: 'Gotham, sans-serif', fontSize: '11px', fontWeight: 600, letterSpacing: '0.5px', marginBottom: '8px', textTransform: 'uppercase' }}>
+                  {stock} Available
+                </p>
+              );
+            })()}
+          </>
+        ) : (
+          <>
+            <p className="wl-name">{Array.isArray(item.category) ? item.category[0] : (item.category || 'Jewellery')}</p>
+            <p className="wl-desc">{item.name}</p>
+            <p className="wl-price">{item.showPrice === false || rentalPrice > 1200 ? 'Price on Request' : `₹${rentalPrice.toFixed(2)}`}</p>
+          </>
+        )}
       </div>
 
       <button className="wl-bag-btn" onClick={() => onMoveToBag(item)}>
