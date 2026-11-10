@@ -297,9 +297,13 @@ export default function DesktopProduct({ product, relatedProducts }) {
       console.error('Error recording product booking:', e);
     }
 
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://apilajewels.com';
+    const code = product.code || product.jewelId || product.sku || 'N/A';
+    const productUrl = product._id || product.id ? `${baseUrl}/shop/${product._id || product.id}` : window.location.href;
+
     const msg = isSale
-      ? `Hi Apila Jewels, I would like to purchase:\n\n*${product.name}* (Sale Item)\nPrice: ${priceText}\n\nPlease let me know how to proceed.`
-      : `Hi Apila Jewels, I would like to book:\n\n*${product.name}*\nPrice: ${priceText}\n\nPlease let me know the availability.`;
+      ? `Hi Apila Jewels, I would like to purchase:\n\n*${product.name}* (Sale Item)\n• Jewel Code: ${code}\n• Price: ${priceText}\n• Link: ${productUrl}\n\nPlease let me know how to proceed.`
+      : `Hi Apila Jewels, I would like to book:\n\n*${product.name}*\n• Jewel Code: ${code}\n• Price: ${priceText}\n• Link: ${productUrl}\n\nPlease let me know the availability.`;
     window.open(`https://wa.me/+917397721122?text=${encodeURIComponent(msg)}`, '_blank');
   };
 

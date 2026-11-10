@@ -81,9 +81,16 @@ export default function MobileProductView({
   const handleBookOnWhatsapp = () => {
     if (!product) return;
 
-    const price = product.rentalPrice || product.price || 0;
-    const priceText = product.showPrice === false || price > 1500 ? 'Price on Request' : `₹${price}`;
-    const message = `Hi Apila Jewels, I would like to book:\n\n*${product.name}*\nPrice: ${priceText}\n\nPlease let me know the availability.`;
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://apilajewels.com';
+    const code = product.code || product.jewelId || product.sku || 'N/A';
+    const productUrl = product._id || product.id ? `${baseUrl}/shop/${product._id || product.id}` : window.location.href;
+
+    const isSale = Boolean(product.isSale || product.sale || product.sales);
+    const price = isSale && product.salesAmount ? product.salesAmount : (product.rentalPrice || product.price || 0);
+    const priceText = product.showPrice === false || (!isSale && price > 1500) ? 'Price on Request' : `₹${price}`;
+    const message = isSale
+      ? `Hi Apila Jewels, I would like to purchase:\n\n*${product.name}* (Sale Item)\n• Jewel Code: ${code}\n• Price: ${priceText}\n• Link: ${productUrl}\n\nPlease let me know how to proceed.`
+      : `Hi Apila Jewels, I would like to book:\n\n*${product.name}*\n• Jewel Code: ${code}\n• Price: ${priceText}\n• Link: ${productUrl}\n\nPlease let me know the availability.`;
     const whatsappUrl = `https://wa.me/+917397721122?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };

@@ -217,20 +217,24 @@ export default function DesktopCart({ isSale: isSaleProp }) {
       console.error('Error recording booking:', e);
     }
 
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : 'https://apilajewels.com';
+
     if (isSale) {
       let msg = `Hi Apila Jewels, I would like to purchase the following sale jewellery items:\n\n`;
       currentCartItems.forEach((item, i) => {
         const price = getItemPrice(item);
         const qty = getItemQty(item);
         const itemTotal = price * qty;
-        msg += `${i + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – Qty: ${qty} × Rs. ${Math.round(price).toLocaleString('en-IN')} = Rs. ${Math.round(itemTotal).toLocaleString('en-IN')}\n`;
+        const code = item.code || item.jewelId || item.sku || 'N/A';
+        const itemUrl = item._id || item.id ? `${baseUrl}/shop/${item._id || item.id}` : '';
+        msg += `${i + 1}. *${item.name}*\n   • Jewel Code: ${code}\n   • Qty: ${qty} × Rs. ${Math.round(price).toLocaleString('en-IN')} = Rs. ${Math.round(itemTotal).toLocaleString('en-IN')}${itemUrl ? `\n   • Link: ${itemUrl}` : ''}\n\n`;
       });
       if (shippingFee > 0) {
-        msg += `\nShipping Fee: Rs. ${shippingFee}\n`;
+        msg += `Shipping Fee: Rs. ${shippingFee}\n`;
       } else {
-        msg += `\nShipping Fee: Free\n`;
+        msg += `Shipping Fee: Free\n`;
       }
-      msg += `\n*Total Amount: Rs. ${Math.round(finalTotalAmount).toLocaleString('en-IN')}*\n\nPlease confirm availability and payment details.`;
+      msg += `*Total Amount: Rs. ${Math.round(finalTotalAmount).toLocaleString('en-IN')}*\n\nPlease confirm availability and payment details.`;
       window.open(`https://wa.me/+917397721122?text=${encodeURIComponent(msg)}`, '_blank');
       return;
     }
@@ -238,14 +242,16 @@ export default function DesktopCart({ isSale: isSaleProp }) {
     currentCartItems.forEach((item, i) => {
       const price = item.rentalPrice || item.price || 0;
       const pText = isPremium(item) ? 'Price on Request' : `₹${price}`;
-      msg += `${i + 1}. *${item.name}* (Code: ${item.code || item.jewelId || 'N/A'}) – ${pText}\n`;
+      const code = item.code || item.jewelId || item.sku || 'N/A';
+      const itemUrl = item._id || item.id ? `${baseUrl}/shop/${item._id || item.id}` : '';
+      msg += `${i + 1}. *${item.name}*\n   • Jewel Code: ${code}\n   • Price: ${pText}${itemUrl ? `\n   • Link: ${itemUrl}` : ''}\n\n`;
     });
     if (allPremium) {
-      msg += `\n*Total Amount: Price on Request*\n\nPlease let me know the availability.`;
+      msg += `*Total Amount: Price on Request*\n\nPlease let me know the availability.`;
     } else if (hasPremium) {
-      msg += `\n*Sub Total (${pricedItems.length} ${pricedItems.length === 1 ? 'Item' : 'Items'}): ₹${pricedSubtotal.toFixed(2)}*\n*Premium Jewels (${premiumItems.length} ${premiumItems.length === 1 ? 'Item' : 'Items'}): Price on Request*\n\nPlease let me know the availability.`;
+      msg += `*Sub Total (${pricedItems.length} ${pricedItems.length === 1 ? 'Item' : 'Items'}): ₹${pricedSubtotal.toFixed(2)}*\n*Premium Jewels (${premiumItems.length} ${premiumItems.length === 1 ? 'Item' : 'Items'}): Price on Request*\n\nPlease let me know the availability.`;
     } else {
-      msg += `\n*Sub Total (${cartCount} ${cartCount === 1 ? 'Item' : 'Items'}): ₹${pricedSubtotal.toFixed(2)}*\n\nPlease let me know the availability.`;
+      msg += `*Sub Total (${cartCount} ${cartCount === 1 ? 'Item' : 'Items'}): ₹${pricedSubtotal.toFixed(2)}*\n\nPlease let me know the availability.`;
     }
     window.open(`https://wa.me/+917397721122?text=${encodeURIComponent(msg)}`, '_blank');
   };
