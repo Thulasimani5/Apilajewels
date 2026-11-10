@@ -74,6 +74,17 @@ export default function JewelleryCarousel() {
     setTranslatePx(current * (cardW + gap));
   }, [current]);
 
+  // Support native horizontal wheel/trackpad swipe to move slides
+  const handleWheel = (e) => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 15) {
+      if (e.deltaX > 0) {
+        goTo(current + 1);
+      } else {
+        goTo(current - 1);
+      }
+    }
+  };
+
   const dotCount = 3;
   const activeDotIndex = maxSlide() > 0 ? Math.round((current / maxSlide()) * (dotCount - 1)) : 0;
 
@@ -84,6 +95,7 @@ export default function JewelleryCarousel() {
         className="carousel-wrapper"
         onMouseEnter={() => (pausedRef.current = true)}
         onMouseLeave={() => (pausedRef.current = false)}
+        onWheel={handleWheel}
       >
         <div ref={trackRef} className="carousel-track" style={{ transform: `translateX(-${translatePx}px)` }}>
           {CAROUSEL.map((c, i) => (
