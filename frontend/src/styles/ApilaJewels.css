@@ -360,25 +360,19 @@
 /* 15px white gap between hero and carousel matches Figma (hero bg ends y:1051, cards start y:1066) */
 .carousel-wrapper {
   position: relative;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: hidden;
   background: #fff;
   margin-top: 15px;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;          /* Firefox */
-  -ms-overflow-style: none;       /* IE/Edge */
-  scroll-snap-type: x proximity;
+  cursor: default;
 }
 
-.carousel-wrapper::-webkit-scrollbar {
-  display: none;                  /* Chrome/Safari */
-}
-
+/* padding-left on track (not wrapper) keeps wrapper full-width so JS card-width calc stays accurate */
+/* 15px left indent + 16px gap between cards match Figma (a1 at x:15, gap a1→a2 = 16px) */
 .carousel-track {
   display: flex;
   column-gap: 16px;
   padding-left: 15px;
+  transition: transform .55s cubic-bezier(.25, .46, .45, .94);
 }
 
 /* 531/1728 ≈ 30.73% — shows 3 full cards + a ~4% peek of the 4th, matching Figma */
@@ -390,7 +384,6 @@
   overflow: hidden;
   cursor: pointer;
   background: #111;
-  scroll-snap-align: start;
 }
 
 .carousel-card img {
@@ -504,26 +497,15 @@
 }
 
 .occasion-grid {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  max-width: 100%;
-  padding: 0 15px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  scroll-snap-type: x proximity;
-}
-
-.occasion-grid::-webkit-scrollbar {
-  display: none;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0;
 }
 
 .occasion-card {
-  flex: 0 0 calc((100% - 48px) / 3);
-  min-width: calc((100% - 48px) / 3);
   position: relative;
   aspect-ratio: 365 / 418;
   height: auto;
@@ -531,7 +513,6 @@
   border-radius: 2px;
   cursor: pointer;
   background: #222;
-  scroll-snap-align: start;
 }
 
 .occasion-card img {
@@ -2473,13 +2454,12 @@
   }
 
   .occasion-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 620px;
     gap: 14px;
-    padding: 0 15px;
   }
 
   .occasion-card {
-    flex: 0 0 calc((100% - 14px) / 2);
-    min-width: calc((100% - 14px) / 2);
     height: 320px;
   }
 
@@ -2544,13 +2524,12 @@
   }
 
   .occasion-grid {
+    grid-template-columns: 1fr;
     padding: 0 20px;
-    gap: 14px;
+    max-width: 100%;
   }
 
   .occasion-card {
-    flex: 0 0 75%;
-    min-width: 75%;
     height: 265px;
   }
 
