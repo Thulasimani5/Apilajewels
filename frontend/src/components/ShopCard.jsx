@@ -33,7 +33,10 @@ export default function ShopCard({ product, activeCategory }) {
     ? categoryLabel.toUpperCase()
     : `${categoryLabel.toUpperCase()} JEWELS`;
 
-  const origPrice = Number(product.salesPrice || product.salesAmount || product.price || 0);
+  const rentalPriceVal = Number(product.rentalPrice != null ? product.rentalPrice : (product.price || 0));
+  const origPrice = isSale
+    ? Number(product.salesPrice || product.salesAmount || product.price || 0)
+    : rentalPriceVal;
   const finalPrice = product.discountedRate != null
     ? Number(product.discountedRate)
     : (product.salesAmount != null ? Number(product.salesAmount) : origPrice);

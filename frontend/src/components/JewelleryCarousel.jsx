@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
 import imgAccessories from '../assets/images/jtype-accessories.jpg';
@@ -24,68 +24,80 @@ const ArrowIcon = (
 );
 
 export default function JewelleryCarousel() {
-  const trackRef = useRef(null);
-  const [current, setCurrent] = useState(0);
-  const [translatePx, setTranslatePx] = useState(0);
+  const scrollRef = useRef(null);
   const pausedRef = useRef(false);
 
-  const visibleCount = () =>
-    window.innerWidth <= 640 ? 1 : window.innerWidth <= 1024 ? 2 : 100 / 30.73;
+  /* ── card width helper (matches CSS flex-basis) ── */
+  const getCardWidth = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return 300;
+    const ww = el.offsetWidth;
+    const isSmall = window.innerWidth <= 640;
+    const isMed = !isSmall && window.innerWidth <= 1024;
+    const cardW = isSmall ? ww * 0.85 : isMed ? ww * 0.5 : ww * 0.3073;
+    const gap = (!isSmall && !isMed) ? 16 : 0;
+    return cardW + gap;
+  }, []);
 
-  const maxSlide = useCallback(
-    () => Math.max(0, CAROUSEL.length - Math.floor(visibleCount())),
-    []
-  );
-
-  const goTo = useCallback((idx) => {
-    setCurrent((prev) => Math.max(0, Math.min(idx, maxSlide())));
-  }, [maxSlide]);
-
-  useEffect(() => {
-    const onResize = () => {
-      goTo(current);
-      const wrapper = trackRef.current?.parentElement;
-      const ww = wrapper ? wrapper.offsetWidth : window.innerWidth;
-      const isSmall = window.innerWidth <= 640;
-      const isMed = !isSmall && window.innerWidth <= 1024;
-      const cardW = isSmall ? ww : isMed ? ww * 0.5 : ww * 0.3073;
-      const gap = (!isSmall && !isMed) ? 16 : 0;
-      setTranslatePx(current * (cardW + gap));
-    };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, [current, goTo]);
-
+  /* ── autoplay: smooth-scroll one card width every 3.5s ── */
   useEffect(() => {
     const id = setInterval(() => {
       if (pausedRef.current) return;
-      setCurrent((c) => (c >= maxSlide() ? 0 : c + 1));
+      const el = scrollRef.current;
+      if (!el) return;
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      if (el.scrollLeft >= maxScroll - 2) {
+        el.scrollTo({ left: 0, behavior: 'smooth' });
+      } else {
+        el.scrollBy({ left: getCardWidth(), behavior: 'smooth' });
+      }
     }, 3500);
     return () => clearInterval(id);
-  }, [maxSlide]);
+  }, [getCardWidth]);
+
+  /* ── arrow click handlers ── */
+  const scrollPrev = () => {
+    scrollRef.current?.scrollBy({ left: -getCardWidth(), behavior: 'smooth' });
+  };
+  const scrollNext = () => {
+    scrollRef.current?.scrollBy({ left: getCardWidth(), behavior: 'smooth' });
+  };
+
+  /* ── dot tracking ── */
+  const dotCount = 3;
+  const [activeDot, setActiveDot] = React.useState(0);
 
   useEffect(() => {
-    const wrapper = trackRef.current?.parentElement;
-    const ww = wrapper ? wrapper.offsetWidth : window.innerWidth;
-    const isSmall = window.innerWidth <= 640;
-    const isMed = !isSmall && window.innerWidth <= 1024;
-    const cardW = isSmall ? ww : isMed ? ww * 0.5 : ww * 0.3073;
-    const gap = (!isSmall && !isMed) ? 16 : 0;
-    setTranslatePx(current * (cardW + gap));
-  }, [current]);
+    const el = scrollRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      if (maxScroll <= 0) { setActiveDot(0); return; }
+      const ratio = el.scrollLeft / maxScroll;
+      setActiveDot(Math.round(ratio * (dotCount - 1)));
+    };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, []);
 
-  const dotCount = 3;
-  const activeDotIndex = maxSlide() > 0 ? Math.round((current / maxSlide()) * (dotCount - 1)) : 0;
+  const scrollToDot = (dotIdx) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    const target = (dotIdx / (dotCount - 1)) * maxScroll;
+    el.scrollTo({ left: target, behavior: 'smooth' });
+  };
 
   return (
     <>
       <h2 className="section-title">Shop By Jewellery Type</h2>
       <div
         className="carousel-wrapper"
+        ref={scrollRef}
         onMouseEnter={() => (pausedRef.current = true)}
         onMouseLeave={() => (pausedRef.current = false)}
       >
-        <div ref={trackRef} className="carousel-track" style={{ transform: `translateX(-${translatePx}px)` }}>
+        <div className="carousel-track">
           {CAROUSEL.map((c, i) => (
             <Link to={`/shop?category=${c.slug}`} className="carousel-card" key={i}>
               <img src={c.img} alt={c.title} loading={i === 0 ? "eager" : "lazy"} />
@@ -98,16 +110,16 @@ export default function JewelleryCarousel() {
         </div>
       </div>
       <div className="carousel-nav">
-        <button className="carousel-nav-btn" aria-label="Previous" onClick={() => goTo(current - 1)}>
+        <button className="carousel-nav-btn" aria-label="Previous" onClick={scrollPrev}>
           <span style={{ transform: 'scaleX(-1)', display: 'flex' }}>{ArrowIcon}</span>
         </button>
         {Array.from({ length: dotCount }).map((_, i) => (
           <span key={i}
-            className={`carousel-dot${i === activeDotIndex ? " active" : ""}`}
+            className={`carousel-dot${i === activeDot ? " active" : ""}`}
             role="button" aria-label={`Slide ${i + 1}`}
-            onClick={() => goTo(maxSlide() > 0 ? Math.round((i / (dotCount - 1)) * maxSlide()) : 0)} />
+            onClick={() => scrollToDot(i)} />
         ))}
-        <button className="carousel-nav-btn" aria-label="Next" onClick={() => goTo(current + 1)}>
+        <button className="carousel-nav-btn" aria-label="Next" onClick={scrollNext}>
           {ArrowIcon}
         </button>
       </div>
