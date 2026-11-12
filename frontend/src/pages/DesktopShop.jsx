@@ -181,10 +181,14 @@ export default function DesktopShop() {
       {/* TOPBAR */}
       <div className={`shop-topbar${isSalePage ? ' no-sidebar' : ''}`}>
         <div className="shop-topbar-left">
-          <svg width="15" height="12" viewBox="0 0 15 12" fill="none" style={{ display: 'inline-block' }}>
-            <path d="M0 1.5h15M2.5 6h10M5 10.5h5" stroke="#000" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-          <span className="shop-topbar-filter-label" style={{ fontWeight: 600, letterSpacing: '0.8px', fontSize: '13px' }}>FILTER</span>
+          {isSalePage && (
+            <>
+              <svg width="15" height="12" viewBox="0 0 15 12" fill="none" style={{ display: 'inline-block' }}>
+                <path d="M0 1.5h15M2.5 6h10M5 10.5h5" stroke="#000" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+              <span className="shop-topbar-filter-label" style={{ fontWeight: 600, letterSpacing: '0.8px', fontSize: '13px' }}>FILTER</span>
+            </>
+          )}
         </div>
         <div className="shop-topbar-right">
           <nav className="shop-breadcrumb" aria-label="Breadcrumb">

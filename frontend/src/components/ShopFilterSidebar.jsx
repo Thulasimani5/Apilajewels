@@ -8,10 +8,8 @@ const STONE_OPTIONS = ['Crystal', 'Sapphire', 'Pink Morganite', 'Ruby', 'Emerald
 const ACCESSORY_OPTIONS = ['Hip Belt', 'Ear Rings', 'Matha Patti', 'Tikka', 'Ear Chain', 'Ring', 'Ring Bracelet', 'Hair Accessories', 'Bracelet', 'Others'];
 
 const FilterIcon = () => (
-  <svg width="16" height="10" viewBox="0 0 16 10" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
-    <rect x="0" y="0" width="16" height="1.5" fill="#000" />
-    <rect x="2" y="4.25" width="12" height="1.5" fill="#000" />
-    <rect x="5" y="8.5" width="6" height="1.5" fill="#000" />
+  <svg width="15" height="12" viewBox="0 0 15 12" fill="none" aria-hidden="true" style={{ flexShrink: 0 }}>
+    <path d="M0 1.5h15M2.5 6h10M5 10.5h5" stroke="#000" strokeWidth="1.5" strokeLinecap="round" />
   </svg>
 );
 
@@ -60,7 +58,7 @@ export default function ShopFilterSidebar({
     <aside className="shop-filter-panel">
       <div className="shop-filter-header">
         <FilterIcon />
-        <span className="shop-topbar-filter-label">Filter</span>
+        <span className="shop-topbar-filter-label" style={{ fontWeight: 600, letterSpacing: '0.8px', fontSize: '13px' }}>FILTER</span>
       </div>
 
       {/* CATEGORY */}
