@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import apilaLogo from '../assets/Apila Logo01.svg';
 import API_BASE_URL from '../config/api';
 import { useAuth } from '../context/AuthContext';
@@ -77,6 +77,8 @@ function isAccessory(product) {
 
 export default function DesktopSearchOverlay({ onClose }) {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isSale = location.pathname.startsWith('/sale');
   const inputRef = useRef(null);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);

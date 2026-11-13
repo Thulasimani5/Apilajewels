@@ -79,11 +79,9 @@ const BookingsTab = ({
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-block text-[10px] font-bold uppercase px-2.5 py-1 rounded-full ${
-                        ['confirmed', 'approved'].includes((b.status || '').toLowerCase())
-                          ? 'bg-green-50 text-green-700'
-                          : (b.status || 'pending').toLowerCase() === 'pending'
-                          ? 'bg-blue-50 text-blue-700'
-                          : 'bg-amber-50 text-amber-800'
+                        (b.status || 'pending').toLowerCase() === 'completed'
+                          ? 'bg-green-600 text-white font-extrabold'
+                          : 'bg-blue-50 text-blue-700'
                       }`}>
                         {b.status || 'Pending'}
                       </span>

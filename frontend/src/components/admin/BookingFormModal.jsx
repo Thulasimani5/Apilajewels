@@ -494,15 +494,23 @@ const BookingFormModal = ({
               <label className="block text-xs font-bold uppercase text-gray-600 mb-1">
                 Booking Status
               </label>
-              <select
-                value={bookingData.status}
-                onChange={(e) => update('status', e.target.value)}
-                className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] bg-white font-semibold"
-              >
-                {BOOKING_STATUSES.map((s) => (
-                  <option key={s.value} value={s.value}>{s.label}</option>
-                ))}
-              </select>
+              {!isEditing ? (
+                /* New booking — always starts as Pending, not changeable */
+                <div className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm bg-gray-50 font-semibold text-gray-500">
+                  Pending
+                </div>
+              ) : (
+                /* Edit booking — only Pending → Completed */
+                <select
+                  value={bookingData.status}
+                  onChange={(e) => update('status', e.target.value)}
+                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] bg-white font-semibold"
+                >
+                  {BOOKING_STATUSES.map((s) => (
+                    <option key={s.value} value={s.value}>{s.label}</option>
+                  ))}
+                </select>
+              )}
             </div>
             <div>
               <label className="block text-xs font-bold uppercase text-gray-600 mb-1">

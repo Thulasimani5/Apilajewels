@@ -26,26 +26,40 @@ export function useFilteredProducts(products, activeFilters, activeSort, categor
 
     // Rental / Regular shop page:
     // Exclude items that are for sale only
+    const hasAccessoriesTypeFilter = activeFilters.Type?.some(t => t?.toLowerCase() === 'accessories');
     const hasAccessorySubtypeFilter = activeFilters.AccessoryType?.length > 0;
+    const showAccessories = hasAccessoriesTypeFilter || hasAccessorySubtypeFilter;
+    const hasBanglesFilter = activeFilters.Type?.some(t => t?.toLowerCase() === 'bangles') ||
+      activeFilters.Category?.some(c => c?.toLowerCase() === 'bangles');
 
     return products.filter(p => {
       if (p.isSale || p.sale || p.sales) return false;
 
       const ptypes = Array.isArray(p.type) ? p.type : [p.type];
-      const isAccessoryProduct = ptypes.some(t => t?.toLowerCase() === 'accessories');
+      const pcats = Array.isArray(p.category) ? p.category : [p.category];
+      const isAccessoryProduct = Boolean(
+        p.accessoryType ||
+        ptypes.some(t => t?.toLowerCase() === 'accessories') ||
+        pcats.some(c => c?.toLowerCase() === 'accessories')
+      );
+      const isBangleProduct = ptypes.some(t => t?.toLowerCase() === 'bangles') ||
+        pcats.some(c => c?.toLowerCase() === 'bangles');
+
+      // If no accessory-related filter is active (such as "All Jewels"), exclude accessories
+      if (!showAccessories && isAccessoryProduct) {
+        return false;
+      }
+
+      // If no bangles filter is active, exclude bangles from default/All Jewels
+      if (!hasBanglesFilter && isBangleProduct) {
+        return false;
+      }
 
       // If AccessoryType filter is active, only show accessories matching the subtype
       if (hasAccessorySubtypeFilter) {
         if (!isAccessoryProduct) return false;
         if (!activeFilters.AccessoryType.some(acc => p.accessoryType?.toLowerCase() === acc.toLowerCase())) return false;
         return true;
-      }
-
-      // If no accessory filter, hide all accessory products unless Type filter explicitly includes them
-      const typeFilterHasAccessories = activeFilters.Type?.some(t => t?.toLowerCase() === 'accessories');
-      if (isAccessoryProduct && !typeFilterHasAccessories && !(activeFilters.Type?.length === 0)) {
-        // only hide if there IS a Type filter that doesn't include accessories
-        return false;
       }
 
       const cats = Array.isArray(p.category) ? p.category : [p.category];

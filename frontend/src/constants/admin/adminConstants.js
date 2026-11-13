@@ -72,10 +72,7 @@ export const DEFAULT_TYPE_NAMES = [
 
 export const BOOKING_STATUSES = [
   { value: 'pending', label: 'Pending' },
-  { value: 'confirmed', label: 'Confirmed' },
-  { value: 'inevent', label: 'In Event' },
   { value: 'completed', label: 'Completed' },
-  { value: 'rejected', label: 'Rejected' },
 ];
 
 export const PAYMENT_STATUSES = [

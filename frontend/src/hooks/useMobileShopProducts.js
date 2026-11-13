@@ -74,14 +74,29 @@ export function useMobileShopProducts() {
     const hasAccessoriesTypeFilter = activeFilters.Type?.some(t => t.toLowerCase() === 'accessories');
     const hasAccessorySubtypeFilter = activeFilters.AccessoryType?.length > 0;
     const showAccessories = hasAccessoriesTypeFilter || hasAccessorySubtypeFilter;
+    const hasBanglesFilter = activeFilters.Type?.some(t => t?.toLowerCase() === 'bangles') ||
+      activeFilters.Category?.some(c => c?.toLowerCase() === 'bangles');
 
     return products.filter((product) => {
       // Exclude sale items from rental page
       if (product.isSale || product.sale || product.sales) return false;
 
+      const types = Array.isArray(product.type) ? product.type : [product.type];
+      const categories = Array.isArray(product.category) ? product.category : [product.category];
+
       if (!showAccessories) {
-        const types = Array.isArray(product.type) ? product.type : [product.type];
-        if (types.some(t => t?.toLowerCase() === 'accessories')) return false;
+        const isAccessory = Boolean(
+          product.accessoryType ||
+          types.some(t => t?.toLowerCase() === 'accessories') ||
+          categories.some(c => c?.toLowerCase() === 'accessories')
+        );
+        if (isAccessory) return false;
+      }
+
+      if (!hasBanglesFilter) {
+        const isBangle = types.some(t => t?.toLowerCase() === 'bangles') ||
+          categories.some(c => c?.toLowerCase() === 'bangles');
+        if (isBangle) return false;
       }
 
       if (activeFilters.Category.length > 0) {

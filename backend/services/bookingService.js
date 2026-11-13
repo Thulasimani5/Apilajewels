@@ -72,12 +72,8 @@ class BookingService {
     if (!currentStatus || !newStatus || currentStatus === newStatus) return;
 
     const allowedTransitions = {
-      pending: ['approved', 'confirmed', 'rejected'],
-      approved: ['confirmed', 'inevent', 'rejected'],
-      confirmed: ['inevent', 'rejected'],
-      inevent: ['completed'],
-      completed: [],
-      rejected: ['pending']
+      pending: ['completed'],
+      completed: []
     };
 
     const allowed = allowedTransitions[currentStatus.toLowerCase()];

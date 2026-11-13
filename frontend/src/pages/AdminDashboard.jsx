@@ -423,6 +423,83 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
     }
   };
 
+  const [savingBookingField, setSavingBookingField] = useState(null);
+  const [savedBookingField, setSavedBookingField] = useState(null);
+
+  const getBookingFinancials = () => {
+    // Iterate over jewelleryIds (which may have duplicates) instead of filtering adminJewelleries
+    const regularRentalAmount = newBookingData.jewelleryIds.reduce((sum, id) => {
+      const j = adminJewelleries.find(x => x._id === id);
+      return sum + (j ? (j.rentalPrice || j.price || 0) : 0);
+    }, 0);
+    const tempRentalAmount = (newBookingData.tempJewelleries || []).reduce((sum, j) => sum + (parseFloat(j.rentalPrice) || 0), 0);
+    const rentalAmount = regularRentalAmount + tempRentalAmount;
+
+    const dPercent = parseFloat(newBookingData.discountPercent) || 0;
+    const dAmount = parseFloat(newBookingData.discountAmount) || 0;
+    const discountAmount = dAmount > 0 ? dAmount : (rentalAmount * dPercent) / 100;
+    const netAmount = Math.max(0, rentalAmount - discountAmount);
+    const advancePaid = parseFloat(newBookingData.advancePaid) || 0;
+    const balanceAmount = Math.max(0, netAmount - advancePaid);
+    const depositAmount = parseFloat(newBookingData.depositAmount) || 0;
+
+    return {
+      rentalAmount,
+      discountPercent: dPercent,
+      discountAmount,
+      totalAmount: netAmount,
+      advancePaid,
+      balanceAmount,
+      depositAmount
+    };
+  };
+
+  const handleSaveBookingField = async (fieldKey, payloadOrFn) => {
+    if (!editingBookingId) return;
+    setSavingBookingField(fieldKey);
+    try {
+      const payload = typeof payloadOrFn === 'function' ? payloadOrFn() : payloadOrFn;
+      const res = await fetch(`${API_BASE_URL}/api/bookings/${editingBookingId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+      const result = await res.json();
+      if (result.success) {
+        setSavedBookingField(fieldKey);
+        setTimeout(() => setSavedBookingField(prev => prev === fieldKey ? null : prev), 2500);
+        if (result.data) {
+          setBookings(prev => prev.map(b => b._id === editingBookingId ? { ...b, ...result.data } : b));
+        }
+      } else {
+        alert(result.error || 'Failed to update field.');
+      }
+    } catch (err) {
+      console.error('Error updating booking field:', err);
+      alert('Network error while saving booking field.');
+    } finally {
+      setSavingBookingField(null);
+    }
+  };
+
+  const BookingFieldUpdateBtn = ({ fieldKey, onClick }) => !editingBookingId ? null : (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={savingBookingField === fieldKey}
+      className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full transition-all flex-shrink-0 flex items-center gap-1 ${
+        savingBookingField === fieldKey ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+        : savedBookingField === fieldKey ? 'bg-emerald-100 text-emerald-600'
+        : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-500 hover:text-white border border-emerald-200 shadow-xs'
+      }`}
+    >
+      {savingBookingField === fieldKey ? '…' : savedBookingField === fieldKey ? <><Check size={9} /> Saved</> : 'Update'}
+    </button>
+  );
+
   const handleSaveBooking = async (e) => {
     e.preventDefault();
     if (!newBookingData.jewelleryIds.length && (!newBookingData.tempJewelleries || !newBookingData.tempJewelleries.length)) {
@@ -436,8 +513,11 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
 
     setAddBookingLoading(true);
 
-    const selectedJewels = adminJewelleries.filter(j => newBookingData.jewelleryIds.includes(j._id));
-    const regularRentalAmount = selectedJewels.reduce((sum, j) => sum + (j.rentalPrice || j.price || 0), 0);
+    // Iterate over jewelleryIds (which may have duplicates) for correct rental total
+    const regularRentalAmount = newBookingData.jewelleryIds.reduce((sum, id) => {
+      const j = adminJewelleries.find(x => x._id === id);
+      return sum + (j ? (j.rentalPrice || j.price || 0) : 0);
+    }, 0);
     const tempRentalAmount = (newBookingData.tempJewelleries || []).reduce((sum, j) => sum + (parseFloat(j.rentalPrice) || 0), 0);
     const rentalAmount = regularRentalAmount + tempRentalAmount;
 
@@ -462,7 +542,7 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          bookingCustomId: (newBookingData.bookingCustomId && newBookingData.bookingCustomId.trim()) || getNextBookingCustomId(bookings),
+          bookingCustomId: newBookingData.bookingCustomId || `BK-${String(bookings.length + 1).padStart(3, '0')}`,
           jewelleryIds: newBookingData.jewelleryIds,
           tempJewelleries: newBookingData.tempJewelleries || [],
           bookingDate: newBookingData.bookingDate,
@@ -1310,7 +1390,7 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                               <div className="text-right">
                                 <div className="text-xs font-bold text-gray-900">₹{(b.totalAmount || 0).toLocaleString()}</div>
                                 <span className={`inline-block text-[9px] font-bold uppercase px-2 py-0.5 rounded-full mt-1 ${
-                                  ['confirmed', 'approved'].includes((b.status || '').toLowerCase()) ? 'bg-green-50 text-green-700' :
+                                  (b.status || 'pending').toLowerCase() === 'completed' ? 'bg-green-600 text-white font-extrabold' :
                                   (b.status || 'pending').toLowerCase() === 'pending' ? 'bg-blue-50 text-blue-700' :
                                   'bg-amber-50 text-amber-800'
                                 }`}>
@@ -2610,13 +2690,13 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
 
                         if (statusKey === 'confirmed' || statusKey === 'approved') {
                           statusText = 'CONFIRMED';
-                          statusClass = 'bg-emerald-50 text-emerald-700 border border-emerald-200';
+                          statusClass = 'bg-green-600 text-white font-extrabold border border-green-700';
                         } else if (statusKey === 'inevent') {
                           statusText = 'IN EVENT';
-                          statusClass = 'bg-amber-50 text-amber-800 border border-amber-200';
+                          statusClass = 'bg-green-600 text-white font-extrabold border border-green-700';
                         } else if (statusKey === 'completed') {
                           statusText = 'COMPLETED';
-                          statusClass = 'bg-indigo-50 text-indigo-700 border border-indigo-200';
+                          statusClass = 'bg-green-600 text-white font-extrabold border border-green-700';
                         } else if (statusKey === 'rejected') {
                           statusText = 'REJECTED';
                           statusClass = 'bg-rose-50 text-rose-700 border border-rose-200';
@@ -3279,17 +3359,29 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
               {/* Row 1: Booking ID, Customer Name, Phone */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Booking ID</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Booking ID</label>
+                    <BookingFieldUpdateBtn fieldKey="bookingCustomId" onClick={() => handleSaveBookingField('bookingCustomId', { bookingCustomId: newBookingData.bookingCustomId })} />
+                  </div>
                   <input
                     type="text"
-                    placeholder={`e.g. ${getNextBookingCustomId(bookings)}`}
+                    placeholder={`e.g. BK-${String(bookings.length + 1).padStart(3, '0')}`}
                     value={newBookingData.bookingCustomId}
                     onChange={e => setNewBookingData(prev => ({ ...prev, bookingCustomId: e.target.value }))}
                     className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] font-mono"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Customer Name*</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Customer Name*</label>
+                    <BookingFieldUpdateBtn fieldKey="customerName" onClick={() => handleSaveBookingField('customerName', {
+                      customerDetails: {
+                        name: newBookingData.customerName,
+                        phone: newBookingData.customerPhone,
+                        address: newBookingData.customerAddress
+                      }
+                    })} />
+                  </div>
                   <input
                     type="text"
                     required
@@ -3300,7 +3392,16 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Customer Mobile / Phone</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Customer Mobile / Phone</label>
+                    <BookingFieldUpdateBtn fieldKey="customerPhone" onClick={() => handleSaveBookingField('customerPhone', {
+                      customerDetails: {
+                        name: newBookingData.customerName,
+                        phone: newBookingData.customerPhone,
+                        address: newBookingData.customerAddress
+                      }
+                    })} />
+                  </div>
                   <input
                     type="text"
                     placeholder="e.g. 98765xxxxx"
@@ -3314,7 +3415,10 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
               {/* Row 2: Event Date, Pickup Date, Return Date, Booking Place */}
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Event Date</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Event Date</label>
+                    <BookingFieldUpdateBtn fieldKey="eventDate" onClick={() => handleSaveBookingField('eventDate', { eventDate: newBookingData.eventDate || null })} />
+                  </div>
                   <input
                     type="date"
                     value={newBookingData.eventDate}
@@ -3323,7 +3427,10 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Pickup Date</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Pickup Date</label>
+                    <BookingFieldUpdateBtn fieldKey="pickupDate" onClick={() => handleSaveBookingField('pickupDate', { pickupDate: newBookingData.pickupDate || null })} />
+                  </div>
                   <input
                     type="date"
                     value={newBookingData.pickupDate}
@@ -3332,7 +3439,10 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Return Date</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Return Date</label>
+                    <BookingFieldUpdateBtn fieldKey="returnDate" onClick={() => handleSaveBookingField('returnDate', { returnDate: newBookingData.returnDate || null })} />
+                  </div>
                   <input
                     type="date"
                     value={newBookingData.returnDate}
@@ -3341,7 +3451,10 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Booking Place / Venue</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Booking Place / Venue</label>
+                    <BookingFieldUpdateBtn fieldKey="bookingPlace" onClick={() => handleSaveBookingField('bookingPlace', { bookingPlace: newBookingData.bookingPlace })} />
+                  </div>
                   <input
                     type="text"
                     placeholder="e.g. Chennai Hall"
@@ -3381,43 +3494,63 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                       );
                     })
                     .map(j => {
-                      const isSelected = newBookingData.jewelleryIds.includes(j._id);
+                      const selectedCount = newBookingData.jewelleryIds.filter(id => id === j._id).length;
                       const p = j.rentalPrice || j.price || 0;
                       return (
                         <div
                           key={j._id}
-                          onClick={() => {
-                            setNewBookingData(prev => ({
-                              ...prev,
-                              jewelleryIds: isSelected
-                                ? prev.jewelleryIds.filter(id => id !== j._id)
-                                : [...prev.jewelleryIds, j._id]
-                            }));
-                          }}
-                          className={`p-2.5 flex items-center justify-between cursor-pointer transition-colors ${
-                            isSelected ? 'bg-[#FFF8F3]' : 'hover:bg-gray-50'
+                          className={`p-2.5 flex items-center justify-between transition-colors ${
+                            selectedCount > 0 ? 'bg-[#FFF8F3]' : 'hover:bg-gray-50'
                           }`}
                         >
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-3 flex-1 min-w-0">
                             <img
                               src={j.images?.[0]?.url || (typeof j.images?.[0] === 'string' ? j.images[0] : '') || 'https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=800&q=80'}
                               alt={j.name}
-                              className="w-9 h-9 rounded-lg object-cover"
+                              className="w-9 h-9 rounded-lg object-cover flex-shrink-0"
                             />
-                            <div>
+                            <div className="min-w-0">
                               <p className="text-xs font-semibold text-gray-900 line-clamp-1">{j.name}</p>
                               <p className="text-[11px] text-gray-500 font-mono">
                                 Code: <span className="font-bold text-amber-800">{j.code || j.jewelId || 'N/A'}</span>
                               </p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2 flex-shrink-0">
                             <span className="text-xs font-bold text-gray-800">₹{p}</span>
-                            <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
-                              isSelected ? 'bg-[#B07A85] text-white' : 'border border-gray-300 text-transparent'
-                            }`}>
-                              ✓
-                            </span>
+                            {selectedCount === 0 ? (
+                              <button
+                                type="button"
+                                onClick={() => setNewBookingData(prev => ({ ...prev, jewelleryIds: [...prev.jewelleryIds, j._id] }))}
+                                className="text-[11px] px-2.5 py-1 rounded-lg bg-[#B07A85] hover:bg-[#9E6A75] text-white font-bold transition-colors"
+                              >
+                                + Add
+                              </button>
+                            ) : (
+                              <div className="flex items-center gap-1">
+                                <button
+                                  type="button"
+                                  onClick={() => setNewBookingData(prev => {
+                                    const idx = prev.jewelleryIds.lastIndexOf(j._id);
+                                    if (idx === -1) return prev;
+                                    const next = [...prev.jewelleryIds];
+                                    next.splice(idx, 1);
+                                    return { ...prev, jewelleryIds: next };
+                                  })}
+                                  className="w-6 h-6 rounded-full bg-red-100 hover:bg-red-200 text-red-600 font-bold flex items-center justify-center text-sm transition-colors"
+                                >
+                                  −
+                                </button>
+                                <span className="text-sm font-bold text-[#B07A85] min-w-[1.25rem] text-center">{selectedCount}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => setNewBookingData(prev => ({ ...prev, jewelleryIds: [...prev.jewelleryIds, j._id] }))}
+                                  className="w-6 h-6 rounded-full bg-[#B07A85] hover:bg-[#9E6A75] text-white font-bold flex items-center justify-center text-sm transition-colors"
+                                >
+                                  +
+                                </button>
+                              </div>
+                            )}
                           </div>
                         </div>
                       );
@@ -3444,7 +3577,13 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
 
                 {/* UNIFIED ALL SELECTED JEWELLERY ITEMS LIST (Catalogue + Temporary) */}
                 {(() => {
-                  const selectedDbItems = adminJewelleries.filter(j => newBookingData.jewelleryIds.includes(j._id));
+                  // Preserve duplicates: map over jewelleryIds array (not filter adminJewelleries)
+                  const selectedDbItems = newBookingData.jewelleryIds
+                    .map((id, index) => {
+                      const found = adminJewelleries.find(j => j._id === id);
+                      return found ? { ...found, _selectedIdx: index } : null;
+                    })
+                    .filter(Boolean);
                   const tempItems = newBookingData.tempJewelleries || [];
                   const totalCount = selectedDbItems.length + tempItems.length;
 
@@ -3456,15 +3595,22 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                         <h4 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
                           ALL SELECTED JEWELLERY ITEMS FOR THIS BOOKING ({totalCount}):
                         </h4>
-                        <span className="text-[11px] text-[#B07A85] font-bold">
-                          {selectedDbItems.length} Catalogue + {tempItems.length} Temp Custom
-                        </span>
+                        <div className="flex items-center gap-3">
+                          <span className="text-[11px] text-[#B07A85] font-bold">
+                            {selectedDbItems.length} Catalogue + {tempItems.length} Temp Custom
+                          </span>
+                          <BookingFieldUpdateBtn fieldKey="jewelleryItems" onClick={() => handleSaveBookingField('jewelleryItems', () => ({
+                            jewelleryIds: newBookingData.jewelleryIds,
+                            tempJewelleries: newBookingData.tempJewelleries || [],
+                            ...getBookingFinancials()
+                          }))} />
+                        </div>
                       </div>
 
                       <div className="space-y-2">
-                        {/* Selected Catalogue Items */}
-                        {selectedDbItems.map((item, idx) => (
-                          <div key={`selected-${item._id}-${idx}`} className="flex items-center justify-between text-xs bg-white border border-gray-200 p-3 rounded-xl shadow-sm">
+                        {/* Selected Catalogue Items — one row per instance (duplicates shown separately) */}
+                        {selectedDbItems.map((item, displayIdx) => (
+                          <div key={`${item._id}-${item._selectedIdx}`} className="flex items-center justify-between text-xs bg-white border border-gray-200 p-3 rounded-xl shadow-sm">
                             <div className="flex items-center gap-3">
                               <img
                                 src={item.images?.[0]?.url || (typeof item.images?.[0] === 'string' ? item.images[0] : '') || 'https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=800&q=80'}
@@ -3483,18 +3629,29 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                                 </span>
                               </div>
                             </div>
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-3">
                               <span className="font-bold text-gray-900">Rent: ₹{item.rentalPrice || item.price || 0}</span>
+                              {/* +1 duplicate button */}
+                              <button
+                                type="button"
+                                onClick={() => setNewBookingData(prev => ({ ...prev, jewelleryIds: [...prev.jewelleryIds, item._id] }))}
+                                className="w-7 h-7 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center text-sm transition-colors"
+                                title="Add another of this item"
+                              >
+                                +
+                              </button>
+                              {/* Remove this specific instance by its index */}
                               <button
                                 type="button"
                                 onClick={() => {
-                                  setNewBookingData(prev => ({
-                                    ...prev,
-                                    jewelleryIds: prev.jewelleryIds.filter(id => id !== item._id)
-                                  }));
+                                  setNewBookingData(prev => {
+                                    const updated = [...prev.jewelleryIds];
+                                    updated.splice(item._selectedIdx, 1);
+                                    return { ...prev, jewelleryIds: updated };
+                                  });
                                 }}
                                 className="w-7 h-7 rounded-full bg-red-50 hover:bg-red-100 text-red-600 font-bold flex items-center justify-center text-xs transition-colors"
-                                title="Remove Item"
+                                title="Remove This Instance"
                               >
                                 ✕
                               </button>
@@ -3558,9 +3715,11 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
 
               {/* Row 4: Financial Inputs (Discount %, Discount Amount ₹, Advance Paid ₹, Deposit ₹) */}
               {(() => {
-                const regularSubtotal = adminJewelleries
-                  .filter(j => newBookingData.jewelleryIds.includes(j._id))
-                  .reduce((sum, j) => sum + (j.rentalPrice || j.price || 0), 0);
+                // Count duplicates correctly by iterating jewelleryIds array
+                const regularSubtotal = newBookingData.jewelleryIds.reduce((sum, id) => {
+                  const j = adminJewelleries.find(x => x._id === id);
+                  return sum + (j ? (j.rentalPrice || j.price || 0) : 0);
+                }, 0);
                 const tempSubtotal = (newBookingData.tempJewelleries || [])
                   .reduce((sum, j) => sum + (parseFloat(j.rentalPrice) || 0), 0);
                 const subtotal = regularSubtotal + tempSubtotal;
@@ -3568,7 +3727,10 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                 return (
                   <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-amber-50/40 p-4 rounded-xl border border-amber-100">
                     <div>
-                      <label className="block text-xs font-bold uppercase text-gray-700 mb-1">Discount %</label>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="block text-xs font-bold uppercase text-gray-700">Discount %</label>
+                        <BookingFieldUpdateBtn fieldKey="discountPercent" onClick={() => handleSaveBookingField('discountPercent', () => getBookingFinancials())} />
+                      </div>
                       <input
                         type="number"
                         min="0"
@@ -3593,7 +3755,10 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold uppercase text-gray-700 mb-1">Discount Amount ₹</label>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="block text-xs font-bold uppercase text-gray-700">Discount Amount ₹</label>
+                        <BookingFieldUpdateBtn fieldKey="discountAmount" onClick={() => handleSaveBookingField('discountAmount', () => getBookingFinancials())} />
+                      </div>
                       <input
                         type="number"
                         min="0"
@@ -3617,7 +3782,10 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold uppercase text-gray-700 mb-1">Advance Paid ₹</label>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="block text-xs font-bold uppercase text-gray-700">Advance Paid ₹</label>
+                        <BookingFieldUpdateBtn fieldKey="advancePaid" onClick={() => handleSaveBookingField('advancePaid', () => getBookingFinancials())} />
+                      </div>
                       <input
                         type="number"
                         min="0"
@@ -3634,7 +3802,10 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold uppercase text-gray-700 mb-1">Deposit ₹</label>
+                      <div className="flex justify-between items-center mb-1">
+                        <label className="block text-xs font-bold uppercase text-gray-700">Deposit ₹</label>
+                        <BookingFieldUpdateBtn fieldKey="depositAmount" onClick={() => handleSaveBookingField('depositAmount', () => getBookingFinancials())} />
+                      </div>
                       <input
                         type="number"
                         min="0"
@@ -3657,7 +3828,10 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
               {/* Row 5: Payment Status, Booking Status, Notes */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Payment Status</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Payment Status</label>
+                    <BookingFieldUpdateBtn fieldKey="paymentStatus" onClick={() => handleSaveBookingField('paymentStatus', { paymentStatus: newBookingData.paymentStatus })} />
+                  </div>
                   <select
                     value={newBookingData.paymentStatus}
                     onChange={e => setNewBookingData(prev => ({ ...prev, paymentStatus: e.target.value }))}
@@ -3669,21 +3843,32 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Booking Status</label>
-                  <select
-                    value={newBookingData.status}
-                    onChange={e => setNewBookingData(prev => ({ ...prev, status: e.target.value }))}
-                    className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] bg-white font-semibold"
-                  >
-                    <option value="pending">Pending</option>
-                    <option value="confirmed">Confirmed</option>
-                    <option value="inevent">In Event</option>
-                    <option value="completed">Completed</option>
-                    <option value="rejected">Rejected</option>
-                  </select>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Booking Status</label>
+                    <BookingFieldUpdateBtn fieldKey="status" onClick={() => handleSaveBookingField('status', { status: newBookingData.status })} />
+                  </div>
+                  {!editingBookingId ? (
+                    /* New booking — locked to Pending */
+                    <div className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm bg-gray-50 font-semibold text-gray-500">
+                      Pending
+                    </div>
+                  ) : (
+                    /* Edit — only Pending or Completed */
+                    <select
+                      value={newBookingData.status}
+                      onChange={e => setNewBookingData(prev => ({ ...prev, status: e.target.value }))}
+                      className="w-full px-3.5 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#B07A85]/30 focus:border-[#B07A85] bg-white font-semibold"
+                    >
+                      <option value="pending">Pending</option>
+                      <option value="completed">Completed</option>
+                    </select>
+                  )}
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase text-gray-600 mb-1">Notes / Special Remarks</label>
+                  <div className="flex justify-between items-center mb-1">
+                    <label className="block text-xs font-bold uppercase text-gray-600">Notes / Special Remarks</label>
+                    <BookingFieldUpdateBtn fieldKey="notes" onClick={() => handleSaveBookingField('notes', { notes: newBookingData.notes })} />
+                  </div>
                   <input
                     type="text"
                     placeholder="e.g. Pink set"
@@ -3696,9 +3881,11 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
 
               {/* Total & Balance Calculation Summary Box */}
               {(() => {
-                const regularRentalSubtotal = adminJewelleries
-                  .filter(j => newBookingData.jewelleryIds.includes(j._id))
-                  .reduce((sum, j) => sum + (j.rentalPrice || j.price || 0), 0);
+                // Count duplicates correctly by iterating jewelleryIds array
+                const regularRentalSubtotal = newBookingData.jewelleryIds.reduce((sum, id) => {
+                  const j = adminJewelleries.find(x => x._id === id);
+                  return sum + (j ? (j.rentalPrice || j.price || 0) : 0);
+                }, 0);
                 const tempRentalSubtotal = (newBookingData.tempJewelleries || [])
                   .reduce((sum, j) => sum + (parseFloat(j.rentalPrice) || 0), 0);
                 const rentalSubtotal = regularRentalSubtotal + tempRentalSubtotal;
@@ -3750,6 +3937,9 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                   onClick={() => {
                     setShowAddBookingModal(false);
                     setEditingBookingId(null);
+                    if (location.pathname.startsWith('/admin/bookings/')) {
+                      navigate('/admin/bookings');
+                    }
                   }}
                   className="px-5 py-2 border border-gray-300 rounded-xl text-xs font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
                 >

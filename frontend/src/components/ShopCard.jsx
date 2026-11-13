@@ -33,10 +33,15 @@ export default function ShopCard({ product, activeCategory }) {
     ? categoryLabel.toUpperCase()
     : `${categoryLabel.toUpperCase()} JEWELS`;
 
-  const origPrice = Number(product.salesPrice || product.salesAmount || product.price || 0);
-  const finalPrice = product.discountedRate != null
-    ? Number(product.discountedRate)
-    : (product.salesAmount != null ? Number(product.salesAmount) : origPrice);
+  // For non-sale items match PDP exactly: use rentalPrice (= price) only
+  const rentalPrice = Number(product.rentalPrice || product.price || 0);
+  // For sale items: origPrice = MRP before discount
+  const origPrice = isSale
+    ? Number(product.salesPrice || product.salesAmount || product.price || 0)
+    : rentalPrice;
+  const finalPrice = isSale
+    ? (product.discountedRate != null ? Number(product.discountedRate) : Number(product.salesAmount ?? origPrice))
+    : rentalPrice;
 
   let discountPercent = product.discountPercent;
   if (discountPercent == null || discountPercent === 0) {
@@ -136,9 +141,9 @@ export default function ShopCard({ product, activeCategory }) {
           <p className="product-price">
             {product.showPrice === false
               ? 'Price on Request'
-              : origPrice > 1200
+              : rentalPrice > 1200
               ? 'Price on Request'
-              : `₹${origPrice.toFixed(2)}`}
+              : `₹${rentalPrice.toFixed(2)}`}
           </p>
         </>
       )}
