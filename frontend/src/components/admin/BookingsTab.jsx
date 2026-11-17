@@ -119,7 +119,9 @@ const BookingsTab = ({
                 return (
                   <tr
                     key={b._id}
-                    className="hover:bg-gray-50/60 transition-colors"
+                    onClick={() => onEditBooking(b)}
+                    className="hover:bg-rose-50/40 transition-colors cursor-pointer group"
+                    title="Click row to edit booking"
                   >
                     <td className="px-4 py-3.5 font-mono text-xs font-bold text-gray-900">
                       {customId}
@@ -207,7 +209,7 @@ const BookingsTab = ({
                     >
                       {b.notes || '-'}
                     </td>
-                    <td className="px-4 py-3.5">
+                    <td className="px-4 py-3.5" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center justify-center gap-1.5 font-sans">
                         <button
                           onClick={() => onEditBooking(b)}

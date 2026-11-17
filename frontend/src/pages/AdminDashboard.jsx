@@ -179,6 +179,9 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
     }
 
     const customId = showInvoiceBooking.customId || `BK-${showInvoiceBooking._id?.slice(-8)}`;
+    const rawName = showInvoiceBooking.customerDetails?.name || (showInvoiceBooking.userId?.role !== 'admin' ? showInvoiceBooking.userId?.name : '') || 'Customer';
+    const firstName = rawName.trim().split(/\s+/)[0].replace(/[^a-zA-Z0-9]/g, '') || 'Customer';
+    const pdfFileName = `${firstName}_${customId}`;
     const invoiceHtml = printEl.innerHTML;
 
     const printWin = window.open('', '_blank', 'width=1150,height=900');
@@ -192,7 +195,7 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
       <html>
         <head>
           <meta charset="utf-8" />
-          <title>Invoice_${customId}</title>
+          <title>${pdfFileName}</title>
           <script src="https://cdn.tailwindcss.com"></script>
           <style>
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -2661,7 +2664,6 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                         <th className="px-4 py-3.5">Booking ID</th>
                         <th className="px-4 py-3.5">Customer & Phone</th>
                         <th className="px-4 py-3.5">Dates (Event / Pickup / Return)</th>
-                        <th className="px-4 py-3.5">Jewellery Code & Name</th>
                         <th className="px-4 py-3.5">Rental ₹</th>
                         <th className="px-4 py-3.5">Advance Paid ₹</th>
                         <th className="px-4 py-3.5">Balance ₹</th>
@@ -2675,7 +2677,7 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                     <tbody className="divide-y divide-gray-100">
                       {displayedBookings.length === 0 && bookingMonthFilter ? (
                         <tr>
-                          <td colSpan="12" className="p-12 text-center text-gray-400 font-semibold">
+                          <td colSpan="11" className="p-12 text-center text-gray-400 font-semibold">
                             No bookings found for the month of {bookingMonthFilter}.
                             <button onClick={() => setBookingMonthFilter(null)} className="block mx-auto mt-2 text-[#B07A85] font-bold underline">
                               Clear filter to view all bookings
@@ -2715,8 +2717,13 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                         const depAmt = b.depositAmount || 0;
 
                         return (
-                          <tr key={b._id} className="hover:bg-gray-50/60 transition-colors">
-                            <td className="px-4 py-3.5 font-mono text-xs font-bold text-gray-900">
+                          <tr 
+                            key={b._id} 
+                            onClick={() => handleOpenEditBooking(b)}
+                            className="hover:bg-rose-50/40 transition-colors cursor-pointer group"
+                            title="Click row to edit booking"
+                          >
+                            <td className="px-4 py-3.5 font-mono text-xs font-bold text-gray-900 group-hover:text-[#B07A85] transition-colors">
                               {customId}
                             </td>
                             <td className="px-4 py-3.5">
@@ -2728,38 +2735,6 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                               <p className="text-gray-500 mt-0.5">
                                 Pickup: {b.pickupDate ? new Date(b.pickupDate).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }) : 'N/A'} | Return: {b.returnDate ? new Date(b.returnDate).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }) : 'N/A'}
                               </p>
-                            </td>
-                            <td className="px-4 py-3.5">
-                              <div className="space-y-1 max-w-xs">
-                                {Array.isArray(b.jewelleryIds) && b.jewelleryIds.map((item, i) => (
-                                  <div key={`jewel-${item._id || i}-${i}`} className="flex items-center gap-2">
-                                    <img 
-                                      src={item.images?.[0]?.url || (typeof item.images?.[0] === 'string' ? item.images[0] : '') || 'https://images.unsplash.com/photo-1599643478524-fb66f70a0066?w=800&q=80'} 
-                                      alt={item.name} 
-                                      className="w-6 h-6 rounded object-cover flex-shrink-0"
-                                    />
-                                    <span className="truncate font-medium text-gray-800">{item.name}</span>
-                                    {(item.code || item.jewelId) && (
-                                      <span className="text-[10px] font-mono bg-amber-50 text-amber-800 border border-amber-200/60 px-1.5 py-0.2 rounded font-semibold">
-                                        {item.code || item.jewelId}
-                                      </span>
-                                    )}
-                                  </div>
-                                ))}
-                                {Array.isArray(b.tempJewelleries) && b.tempJewelleries.map((item, i) => (
-                                  <div key={`temp-${i}`} className="flex items-center gap-2 mt-1">
-                                    <div className="w-6 h-6 rounded bg-amber-100 flex items-center justify-center flex-shrink-0 text-[10px] text-amber-800 font-bold font-mono">
-                                      T
-                                    </div>
-                                    <span className="truncate font-medium text-amber-900">{item.name} (Temp)</span>
-                                    {item.code && (
-                                      <span className="text-[10px] font-mono bg-red-50 text-red-800 border border-red-200/60 px-1.5 py-0.2 rounded font-semibold">
-                                        {item.code}
-                                      </span>
-                                    )}
-                                  </div>
-                                ))}
-                              </div>
                             </td>
                             <td className="px-4 py-3.5">
                               <p className="font-bold text-gray-900">₹{rentalSubtotal ? rentalSubtotal.toLocaleString() : '0'}</p>
@@ -2795,7 +2770,7 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                             <td className="px-4 py-3.5 text-gray-600 max-w-[120px] truncate" title={b.notes || ''}>
                               {b.notes || '-'}
                             </td>
-                            <td className="px-4 py-3.5">
+                            <td className="px-4 py-3.5" onClick={(e) => e.stopPropagation()}>
                               <div className="flex items-center justify-center gap-1.5 font-sans">
                                 <button
                                   onClick={() => handleOpenEditBooking(b)}

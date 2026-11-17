@@ -44,6 +44,9 @@ const InvoiceModal = ({ booking, initialItems, onClose }) => {
     const printEl = document.getElementById('printable-invoice');
     if (!printEl) { window.print(); return; }
     const customId = booking.customId || `BK-${booking._id?.slice(-8)}`;
+    const rawName = booking.customerDetails?.name || (booking.userId?.role !== 'admin' ? booking.userId?.name : '') || 'Customer';
+    const firstName = rawName.trim().split(/\s+/)[0].replace(/[^a-zA-Z0-9]/g, '') || 'Customer';
+    const pdfFileName = `${firstName}_${customId}`;
     const invoiceHtml = printEl.innerHTML;
     const printWin = window.open('', '_blank', 'width=1150,height=900');
     if (!printWin) { window.print(); return; }
@@ -52,7 +55,7 @@ const InvoiceModal = ({ booking, initialItems, onClose }) => {
       <html>
         <head>
           <meta charset="utf-8" />
-          <title>Invoice_${customId}</title>
+          <title>${pdfFileName}</title>
           <script src="https://cdn.tailwindcss.com"></script>
           <style>
             @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');

@@ -59,8 +59,13 @@ const BookingsTab = ({
               {manualBookings.map((b, idx) => {
                 const customId = b.bookingCustomId || `BK-${String(idx + 1).padStart(3, '0')}`;
                 return (
-                  <tr key={b._id} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-4 font-mono text-xs font-bold text-gray-900">
+                  <tr 
+                    key={b._id} 
+                    onClick={() => onEditBooking(b)}
+                    className="hover:bg-rose-50/40 transition-colors cursor-pointer group"
+                    title="Click row to edit booking"
+                  >
+                    <td className="px-6 py-4 font-mono text-xs font-bold text-gray-900 group-hover:text-[#B07A85] transition-colors">
                       {customId}
                     </td>
                     <td className="px-6 py-4">
@@ -86,7 +91,7 @@ const BookingsTab = ({
                         {b.status || 'Pending'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right flex justify-end gap-2">
+                    <td className="px-6 py-4 text-right flex justify-end gap-2" onClick={(e) => e.stopPropagation()}>
                       <button
                         onClick={() => onOpenInvoice(b)}
                         title="Print Invoice"
