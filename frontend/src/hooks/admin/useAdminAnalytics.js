@@ -8,14 +8,15 @@ export const useAdminAnalytics = (bookings, adminJewelleries, users) => {
     const pendingBookings = bookings.filter(
       (b) => (b.status || 'pending').toLowerCase() === 'pending'
     ).length;
-    
-    const confirmedBookings = bookings.filter((b) =>
-      ['confirmed', 'approved'].includes((b.status || '').toLowerCase())
-    ).length;
 
-    const ineventBookings = bookings.filter(
-      (b) => (b.status || '').toLowerCase() === 'inevent'
-    ).length;
+    const now = new Date();
+    const ineventBookings = bookings.filter((b) => {
+      if (!b.pickupDate || !b.returnDate) return false;
+      const start = new Date(b.pickupDate);
+      const end = new Date(b.returnDate);
+      end.setHours(23, 59, 59, 999);
+      return now >= start && now <= end;
+    }).length;
 
     const completedBookings = bookings.filter(
       (b) => (b.status || '').toLowerCase() === 'completed'
@@ -37,7 +38,6 @@ export const useAdminAnalytics = (bookings, adminJewelleries, users) => {
       totalJewelleries,
       totalBookings,
       pendingBookings,
-      confirmedBookings,
       ineventBookings,
       completedBookings,
       totalRevenue,

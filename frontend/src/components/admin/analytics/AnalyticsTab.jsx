@@ -149,7 +149,6 @@ export default function AnalyticsTab({
       };
     });
 
-    let overallConfirmed = 0;
     let overallCompleted = 0;
     let overallPending = 0;
     let overallInEvent = 0;
@@ -168,9 +167,16 @@ export default function AnalyticsTab({
 
       // Status totals
       if (st === 'pending') overallPending += 1;
-      else if (['confirmed', 'approved'].includes(st)) overallConfirmed += 1;
-      else if (st === 'inevent') overallInEvent += 1;
       else if (st === 'completed') overallCompleted += 1;
+
+      // Calculate "In Event" from pickupDate/returnDate, not status
+      const pDate = b.pickupDate ? new Date(b.pickupDate) : null;
+      const rDate = b.returnDate ? new Date(b.returnDate) : null;
+      if (pDate && rDate) {
+        const endOfReturn = new Date(rDate);
+        endOfReturn.setHours(23, 59, 59, 999);
+        if (now >= pDate && now <= endOfReturn) overallInEvent += 1;
+      }
 
       const amt = Number(b.totalAmount || 0);
       const adv = Number(b.advancePaid || 0);
@@ -222,7 +228,6 @@ export default function AnalyticsTab({
     const countGrowth = prev.count > 0 ? Math.round(((last.count - prev.count) / prev.count) * 100) : (last.count > 0 ? 100 : 0);
 
     const statusDistribution = [
-      { label: 'Confirmed / Approved', count: overallConfirmed, color: '#10B981', bg: 'bg-emerald-500' },
       { label: 'Completed', count: overallCompleted, color: '#6366F1', bg: 'bg-indigo-500' },
       { label: 'In Event', count: overallInEvent, color: '#F59E0B', bg: 'bg-amber-500' },
       { label: 'Pending Inquiry', count: overallPending, color: '#3B82F6', bg: 'bg-blue-500' }

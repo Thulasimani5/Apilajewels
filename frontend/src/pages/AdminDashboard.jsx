@@ -1254,8 +1254,14 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
             const totalJewelleries = adminJewelleries.length;
             const totalBookings = bookings.length;
             const pendingBookings = bookings.filter(b => (b.status || 'pending').toLowerCase() === 'pending').length;
-            const confirmedBookings = bookings.filter(b => ['confirmed', 'approved'].includes((b.status || '').toLowerCase())).length;
-            const ineventBookings = bookings.filter(b => (b.status || '').toLowerCase() === 'inevent').length;
+            const now = new Date();
+            const ineventBookings = bookings.filter(b => {
+              if (!b.pickupDate || !b.returnDate) return false;
+              const start = new Date(b.pickupDate);
+              const end = new Date(b.returnDate);
+              end.setHours(23, 59, 59, 999);
+              return now >= start && now <= end;
+            }).length;
             const completedBookings = bookings.filter(b => (b.status || '').toLowerCase() === 'completed').length;
             const totalRevenue = bookings
               .filter(b => (b.status || '').toLowerCase() !== 'rejected')
@@ -1304,14 +1310,10 @@ const AdminDashboard = ({ initialTab, isNewBooking }) => {
                 </div>
 
                 {/* Booking Status Sub-analysis */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-gray-50/50 p-3 sm:p-4 rounded-xl border border-gray-100">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-gray-50/50 p-3 sm:p-4 rounded-xl border border-gray-100">
                   <div className="text-center p-2 bg-white sm:bg-transparent rounded-lg border border-gray-100 sm:border-0">
                     <span className="text-xs text-gray-500 font-medium">Pending Requests</span>
                     <strong className="block text-base sm:text-lg text-blue-700 mt-0.5">{pendingBookings}</strong>
-                  </div>
-                  <div className="text-center p-2 bg-white sm:bg-transparent rounded-lg border border-gray-100 sm:border-0 sm:border-l sm:border-gray-200">
-                    <span className="text-xs text-gray-500 font-medium">Confirmed / Approved</span>
-                    <strong className="block text-base sm:text-lg text-emerald-700 mt-0.5">{confirmedBookings}</strong>
                   </div>
                   <div className="text-center p-2 bg-white sm:bg-transparent rounded-lg border border-gray-100 sm:border-0 sm:border-l sm:border-gray-200">
                     <span className="text-xs text-gray-500 font-medium">In Event (Rented Out)</span>
